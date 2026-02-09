@@ -1,168 +1,187 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<!--
+	Spectral by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iolinki | Professional IO-Link Device Stack</title>
-    <meta name="description" content="Hardware-agnostic, professional-grade IO-Link Device Stack (V1.1.5) for Zephyr RTOS and Bare-Metal systems. MISRA-oriented, test-driven, and royalty-free.">
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+	<title>iolinki | Professional IO-Link Device Stack</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<noscript>
+		<link rel="stylesheet" href="assets/css/noscript.css" />
+	</noscript>
+	<style>
+		#banner {
+			background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("images/banner.jpg");
+		}
+
+		.logo span {
+			color: #2f81f7;
+			font-weight: 800;
+		}
+
+		#header h1 a {
+			letter-spacing: 0.1em;
+		}
+	</style>
 </head>
-<body class="dark-theme">
-    <nav class="navbar">
-        <div class="container">
-            <a href="#" class="logo">io<span>linki</span></a>
-            <ul class="nav-links">
-                <li><a href="#features">Features</a></li>
-                <li><a href="#tech">Tech Specs</a></li>
-                <li><a href="#compliance">Compliance</a></li>
-                <li><a href="#pricing">Pricing</a></li>
-                <li><a href="mailto:andrii@shylenko.com" class="btn btn-outline">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
 
-    <header class="hero">
-        <div class="container hero-grid">
-            <div class="hero-content">
-                <span class="badge">V1.1.5 Protcol Stack</span>
-                <h1>The Enterprise-Grade <br><span>Open-Source</span> IO-Link Stack</h1>
-                <p>Maximize performance with a professional, hardware-agnostic stack designed for Zephyr RTOS and bare-metal embedded systems. MISRA-oriented and test-driven from ground zero.</p>
-                <div class="hero-btns">
-                    <a href="#pricing" class="btn btn-primary">Get Started</a>
-                    <a href="https://github.com/w1ne/iolinki" class="btn btn-secondary">View on GitHub</a>
-                </div>
-            </div>
-            <div class="hero-visual">
-                <div class="glass-card">
-                    <img src="assets/hero-graphic.png" alt="iolinki architecture" class="hero-img">
-                </div>
-            </div>
-        </div>
-    </header>
+<body class="landing is-preload">
 
-    <section id="features" class="features">
-        <div class="container">
-            <div class="section-header">
-                <h2>Why Choose iolinki?</h2>
-                <p>Built for production, verified for compliance.</p>
-            </div>
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <div class="icon">🚀</div>
-                    <h3>Fast & Deterministic</h3>
-                    <p>Optimized for COM3 (230.4 kbit/s) with precise timing control and low-jitter response.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="icon">🔌</div>
-                    <h3>Hardware Agnostic</h3>
-                    <p>Runs on STM32, Nordic, or any MCU via a clean physical layer abstraction (PHY).</p>
-                </div>
-                <div class="feature-card">
-                    <div class="icon">🛡️</div>
-                    <h3>Safety Oriented</h3>
-                    <p>MISRA-aligned C99 codebase with zero dynamic allocation (malloc-free).</p>
-                </div>
-                <div class="feature-card">
-                    <div class="icon">🧪</div>
-                    <h3>100% Test Coverage</h3>
-                    <p>Mock-based unit testing and automated conformance verification against virtual masters.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+	<!-- Page Wrapper -->
+	<div id="page-wrapper">
 
-    <section id="tech" class="tech-specs">
-        <div class="container tech-grid">
-            <div class="tech-info">
-                <h2>Technical Prowess</h2>
-                <ul class="spec-list">
-                    <li><strong>IO-Link Version:</strong> Fully compliant with V1.1.5</li>
-                    <li><strong>Deployment:</strong> Zephyr Native (Subsystem) or Bare-Metal</li>
-                    <li><strong>Features:</strong> ISDU Fragmentation, Data Storage, Events</li>
-                    <li><strong>Footprint:</strong> Optimized for ultra-constrained 8KB+ targets</li>
-                    <li><strong>Ecosystem:</strong> Automated IODD Generation included</li>
-                </ul>
-            </div>
-            <div class="tech-visual">
-                <div class="terminal-card">
-                    <div class="terminal-header">
-                        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-                        <span class="title">conformance_test.log</span>
-                    </div>
-                    <div class="terminal-body">
-                        <p><span class="green">PASS</span> [DLL] State Machine Transitions</p>
-                        <p><span class="green">PASS</span> [ISDU] Multi-hop Fragmentation</p>
-                        <p><span class="green">PASS</span> [TIME] Max Response Delay (t_A) < 43.4us</p>
-                        <p><span class="green">PASS</span> [DS] Parameter Consistency Check</p>
-                        <p><span class="cyan">TOTAL: 33 tests PASSED, 0 failed</span></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+		<!-- Header -->
+		<header id="header" class="alt">
+			<h1><a href="index.html">io<span>linki</span></a></h1>
+			<nav id="nav">
+				<ul>
+					<li class="special">
+						<a href="#menu" class="menuToggle"><span>Menu</span></a>
+						<div id="menu">
+							<ul>
+								<li><a href="index.html">Home</a></li>
+								<li><a href="#one">Vision</a></li>
+								<li><a href="#two">Architecture</a></li>
+								<li><a href="#three">Capabilities</a></li>
+								<li><a href="#cta">Licensing</a></li>
+								<li><a href="https://github.com/w1ne/iolinki">GitHub</a></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+			</nav>
+		</header>
 
-    <section id="pricing" class="pricing">
-        <div class="container">
-            <div class="section-header">
-                <h2>Simple, Royalty-Free Licensing</h2>
-                <p>Choose the plan that fits your production needs.</p>
-            </div>
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <h3>Evaluation</h3>
-                    <div class="price">Free</div>
-                    <p class="limit">90-Day evaluation period</p>
-                    <ul class="features-list">
-                        <li>Full Source Code Access</li>
-                        <li>GPLv3 License</li>
-                        <li>Community Support</li>
-                        <li>Non-Production Only</li>
-                    </ul>
-                    <a href="https://github.com/w1ne/iolinki" class="btn btn-outline">Clone Repo</a>
-                </div>
-                <div class="pricing-card featured">
-                    <div class="popular">Most Popular</div>
-                    <h3>Team</h3>
-                    <div class="price">€4,699</div>
-                    <p class="limit">Up to 5 developers</p>
-                    <ul class="features-list">
-                        <li>Royalty-Free Deployment</li>
-                        <li>Commercial Use License</li>
-                        <li>12 Months of Updates</li>
-                        <li>8h Integration Assistance</li>
-                    </ul>
-                    <a href="mailto:andrii@shylenko.com" class="btn btn-primary">Purchase License</a>
-                </div>
-                <div class="pricing-card">
-                    <h3>Single Dev</h3>
-                    <div class="price">€1,399</div>
-                    <p class="limit">Individual license</p>
-                    <ul class="features-list">
-                        <li>Royalty-Free Deployment</li>
-                        <li>Commercial Use License</li>
-                        <li>12 Months of Updates</li>
-                        <li>Email Support</li>
-                    </ul>
-                    <a href="mailto:andrii@shylenko.com" class="btn btn-outline">Buy Now</a>
-                </div>
-            </div>
-        </div>
-    </section>
+		<!-- Banner -->
+		<section id="banner">
+			<div class="inner">
+				<h2>iolinki</h2>
+				<p>Professional IO-Link Device Stack<br />
+					Optimized for Zephyr RTOS & Bare-Metal<br />
+					Deterministic. Malloc-Free. MISRA-Aligned.</p>
+				<ul class="actions special">
+					<li><a href="#cta" class="button primary">Get Started</a></li>
+				</ul>
+			</div>
+			<a href="#one" class="more scrolly">Learn More</a>
+		</section>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 iolinki.com. All rights reserved. Developed by Andrii Shylenko.</p>
-            <div class="socials">
-                <a href="mailto:andrii@shylenko.com">Email</a>
-                <a href="https://github.com/w1ne/iolinki">GitHub</a>
-                <a href="https://iolinki.com">iolinki.com</a>
-            </div>
-        </div>
-    </footer>
+		<!-- One -->
+		<section id="one" class="wrapper style1 special">
+			<div class="inner">
+				<header class="major">
+					<h2>Industrial Grade Reliability</h2>
+					<p>A vendor-agnostic implementation of the IO-Link V1.1.5 protocol.<br />
+						Built with test-driven development to ensure 100% core coverage.</p>
+				</header>
+				<ul class="icons major">
+					<li><span class="icon solid fa-microchip major style1"><span class="label">Portable</span></span>
+					</li>
+					<li><span class="icon solid fa-tachometer-alt major style2"><span class="label">Fast</span></span>
+					</li>
+					<li><span class="icon solid fa-check-circle major style3"><span
+								class="label">Compliant</span></span></li>
+				</ul>
+			</div>
+		</section>
 
-    <script src="script.js"></script>
+		<!-- Two -->
+		<section id="two" class="wrapper alt style2">
+			<div class="inner">
+				<div class="row">
+					<div class="col-4 col-12-medium">
+						<h3>Hardware Independent</h3>
+						<p>Modular PHY abstraction layer allows deployment on any microcontroller. Native support for
+							Zephyr
+							RTOS with a clean, decoupled architecture for bare-metal systems.</p>
+					</div>
+					<div class="col-4 col-12-medium">
+						<h3>Verified Reliability</h3>
+						<p>Automated conformance tests validate every transition and timing requirement. 100% core
+							coverage ensures stability in production.</p>
+					</div>
+					<div class="col-4 col-12-medium">
+						<h3>Flexible Licensing</h3>
+						<p>Available under GPLv3 for open-source evaluation. Commercial licenses provide exceptional
+							support and relief from copy-left obligations.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Three -->
+		<section id="three" class="wrapper style3 special">
+			<div class="inner">
+				<header class="major">
+					<h2>Technical Capabilities</h2>
+					<p>Everything you need for a production-ready IO-Link device.</p>
+				</header>
+				<ul class="features">
+					<li class="icon solid fa-code">
+						<h3>ISDU Protocol</h3>
+						<p>Full support for Indexed Service Data Units with robust fragmentation handling.</p>
+					</li>
+					<li class="icon solid fa-database">
+						<h3>Data Storage</h3>
+						<p>Consistent parameter backup for seamless, tool-less device replacement (V1.1).</p>
+					</li>
+					<li class="icon solid fa-exclamation-triangle">
+						<h3>Event Management</h3>
+						<p>Integrated diagnostic and notification event dispatching to the IO-Link Master.</p>
+					</li>
+					<li class="icon solid fa-file-invoice">
+						<h3>IODD Generator</h3>
+						<p>Includes automated tools to generate compliant IO Device Description files.</p>
+					</li>
+				</ul>
+			</div>
+		</section>
+
+		<!-- CTA -->
+		<section id="cta" class="wrapper style4">
+			<div class="inner">
+				<header>
+					<h2>Production Ready</h2>
+					<p>Flexible licensing models for any project size. Royalty-free commercial licenses starting at
+						&euro;1,399.</p>
+				</header>
+				<ul class="actions stacked">
+					<li><a href="mailto:andrii@shylenko.com" class="button fit primary">Contact Sales</a></li>
+					<li><a href="https://github.com/w1ne/iolinki" class="button fit">Explore on GitHub</a></li>
+				</ul>
+			</div>
+		</section>
+
+		<!-- Footer -->
+		<footer id="footer">
+			<ul class="icons">
+				<li><a href="https://github.com/w1ne/iolinki" class="icon brands fa-github"><span
+							class="label">GitHub</span></a></li>
+				<li><a href="mailto:andrii@shylenko.com" class="icon solid fa-envelope"><span
+							class="label">Email</span></a></li>
+			</ul>
+			<ul class="copyright">
+				<li>&copy; iolinki.com</li>
+				<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+			</ul>
+		</footer>
+
+	</div>
+
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.scrollex.min.js"></script>
+	<script src="assets/js/jquery.scrolly.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+
 </body>
+
 </html>
