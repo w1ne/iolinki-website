@@ -1892,7 +1892,7 @@ header h6+p {
 }
 
 header.major {
-	margin: 0 0 3.5em 0;
+	margin: 0 0 2em 0;
 }
 
 header.major h2,
@@ -2683,7 +2683,7 @@ button:disabled,
 }
 
 .features li {
-	padding: 2em 2em 2em 4em;
+	padding: 2em 2em 2em 5em;
 	display: block;
 	position: relative;
 	text-align: left;
@@ -2734,8 +2734,8 @@ button:disabled,
 	display: block;
 	color: #00ffcc;
 	position: absolute;
-	left: 1.75em;
-	top: 2.75em;
+	left: 2em;
+	top: 2.25em;
 	font-size: 1.5em;
 }
 
@@ -3953,7 +3953,7 @@ body.is-preload #banner:after {
 	#cta .inner .actions {
 		margin-left: auto;
 		margin-right: auto;
-		max-width: 20em;
+		max-width: 30em;
 		width: 100%;
 	}
 
