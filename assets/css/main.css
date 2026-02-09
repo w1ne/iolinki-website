@@ -2683,8 +2683,9 @@ button:disabled,
 }
 
 .features li {
-	padding: 2em 2em 2em 5em;
-	display: block;
+	display: flex;
+	align-items: flex-start;
+	padding: 2em;
 	position: relative;
 	text-align: left;
 	width: 50%;
@@ -2733,10 +2734,14 @@ button:disabled,
 .features li:before {
 	display: block;
 	color: #00ffcc;
-	position: absolute;
-	left: 2em;
-	top: 2.25em;
+	position: relative;
+	left: 0;
+	top: 0;
+	margin-right: 1em;
 	font-size: 1.5em;
+	line-height: 1.5em;
+	/* Match h3 line-height roughly */
+	flex-shrink: 0;
 }
 
 .features li:nth-child(1) {
