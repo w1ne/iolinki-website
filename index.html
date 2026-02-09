@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iolinki | Professional IO-Link Device Stack</title>
+    <meta name="description" content="Hardware-agnostic, professional-grade IO-Link Device Stack (V1.1.5) for Zephyr RTOS and Bare-Metal systems. MISRA-oriented, test-driven, and royalty-free.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="logo">io<span>linki</span></a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#tech">Tech Specs</a></li>
+                <li><a href="#compliance">Compliance</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="mailto:andrii@shylenko.com" class="btn btn-outline">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container hero-grid">
+            <div class="hero-content">
+                <span class="badge">V1.1.5 Protcol Stack</span>
+                <h1>The Enterprise-Grade <br><span>Open-Source</span> IO-Link Stack</h1>
+                <p>Maximize performance with a professional, hardware-agnostic stack designed for Zephyr RTOS and bare-metal embedded systems. MISRA-oriented and test-driven from ground zero.</p>
+                <div class="hero-btns">
+                    <a href="#pricing" class="btn btn-primary">Get Started</a>
+                    <a href="https://github.com/w1ne/iolinki" class="btn btn-secondary">View on GitHub</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="glass-card">
+                    <img src="assets/hero-graphic.png" alt="iolinki architecture" class="hero-img">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Choose iolinki?</h2>
+                <p>Built for production, verified for compliance.</p>
+            </div>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="icon">🚀</div>
+                    <h3>Fast & Deterministic</h3>
+                    <p>Optimized for COM3 (230.4 kbit/s) with precise timing control and low-jitter response.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">🔌</div>
+                    <h3>Hardware Agnostic</h3>
+                    <p>Runs on STM32, Nordic, or any MCU via a clean physical layer abstraction (PHY).</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">🛡️</div>
+                    <h3>Safety Oriented</h3>
+                    <p>MISRA-aligned C99 codebase with zero dynamic allocation (malloc-free).</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">🧪</div>
+                    <h3>100% Test Coverage</h3>
+                    <p>Mock-based unit testing and automated conformance verification against virtual masters.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tech" class="tech-specs">
+        <div class="container tech-grid">
+            <div class="tech-info">
+                <h2>Technical Prowess</h2>
+                <ul class="spec-list">
+                    <li><strong>IO-Link Version:</strong> Fully compliant with V1.1.5</li>
+                    <li><strong>Deployment:</strong> Zephyr Native (Subsystem) or Bare-Metal</li>
+                    <li><strong>Features:</strong> ISDU Fragmentation, Data Storage, Events</li>
+                    <li><strong>Footprint:</strong> Optimized for ultra-constrained 8KB+ targets</li>
+                    <li><strong>Ecosystem:</strong> Automated IODD Generation included</li>
+                </ul>
+            </div>
+            <div class="tech-visual">
+                <div class="terminal-card">
+                    <div class="terminal-header">
+                        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                        <span class="title">conformance_test.log</span>
+                    </div>
+                    <div class="terminal-body">
+                        <p><span class="green">PASS</span> [DLL] State Machine Transitions</p>
+                        <p><span class="green">PASS</span> [ISDU] Multi-hop Fragmentation</p>
+                        <p><span class="green">PASS</span> [TIME] Max Response Delay (t_A) < 43.4us</p>
+                        <p><span class="green">PASS</span> [DS] Parameter Consistency Check</p>
+                        <p><span class="cyan">TOTAL: 33 tests PASSED, 0 failed</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Simple, Royalty-Free Licensing</h2>
+                <p>Choose the plan that fits your production needs.</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Evaluation</h3>
+                    <div class="price">Free</div>
+                    <p class="limit">90-Day evaluation period</p>
+                    <ul class="features-list">
+                        <li>Full Source Code Access</li>
+                        <li>GPLv3 License</li>
+                        <li>Community Support</li>
+                        <li>Non-Production Only</li>
+                    </ul>
+                    <a href="https://github.com/w1ne/iolinki" class="btn btn-outline">Clone Repo</a>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="popular">Most Popular</div>
+                    <h3>Team</h3>
+                    <div class="price">€4,699</div>
+                    <p class="limit">Up to 5 developers</p>
+                    <ul class="features-list">
+                        <li>Royalty-Free Deployment</li>
+                        <li>Commercial Use License</li>
+                        <li>12 Months of Updates</li>
+                        <li>8h Integration Assistance</li>
+                    </ul>
+                    <a href="mailto:andrii@shylenko.com" class="btn btn-primary">Purchase License</a>
+                </div>
+                <div class="pricing-card">
+                    <h3>Single Dev</h3>
+                    <div class="price">€1,399</div>
+                    <p class="limit">Individual license</p>
+                    <ul class="features-list">
+                        <li>Royalty-Free Deployment</li>
+                        <li>Commercial Use License</li>
+                        <li>12 Months of Updates</li>
+                        <li>Email Support</li>
+                    </ul>
+                    <a href="mailto:andrii@shylenko.com" class="btn btn-outline">Buy Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 iolinki.com. All rights reserved. Developed by Andrii Shylenko.</p>
+            <div class="socials">
+                <a href="mailto:andrii@shylenko.com">Email</a>
+                <a href="https://github.com/w1ne/iolinki">GitHub</a>
+                <a href="https://iolinki.com">iolinki.com</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
