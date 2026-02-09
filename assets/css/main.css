@@ -2683,7 +2683,7 @@ button:disabled,
 }
 
 .features li {
-	padding: 4em 4em 2em 6em;
+	padding: 2em 2em 2em 4em;
 	display: block;
 	position: relative;
 	text-align: left;
@@ -3732,8 +3732,8 @@ body.is-menu-visible #menu {
 	-ms-justify-content: center;
 	justify-content: center;
 	cursor: default;
-	height: 100vh;
-	min-height: 35em;
+	height: 75vh;
+	min-height: 25em;
 	overflow: hidden;
 	position: relative;
 	text-align: center;
