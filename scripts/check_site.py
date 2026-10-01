@@ -40,6 +40,8 @@ def check():
         errors.extend(page.errors)
         references.extend((path, link) for link in page.links)
     for path in ROOT.rglob('*.css'):
+        if {'node_modules', 'artifacts', '.git'}.intersection(path.relative_to(ROOT).parts):
+            continue
         references.extend((path, link.strip(' \t\"\'')) for link in re.findall(r'url\(([^)]+)\)', path.read_text()))
     for source, link in references:
         parsed = urlsplit(link)
