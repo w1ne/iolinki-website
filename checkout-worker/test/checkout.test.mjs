@@ -1,6 +1,7 @@
 import {test, before, after} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile, writeFile} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
 import {createHash, randomUUID} from 'node:crypto';
 import {build} from 'esbuild';
 import {Miniflare,convertV4MiniflareOptions} from 'miniflare';
@@ -29,7 +30,8 @@ async function fixture(bindings={},sessionOverride={}) {
  const db=await mf.getD1Database('DB');await db.exec((await readFile('migrations/0001_checkout.sql','utf8')).replaceAll('\n',' '));
  const api=await mf.getWorker();
  const post=(path,body,headers={})=>api.fetch(endpoint+path,{method:'POST',headers:{Origin:origin,'content-type':'application/json',...headers},body:JSON.stringify(body)});
- const checkout=async(tier='single',id=randomUUID())=>{const response=await post('/checkout',{tier,attemptId:id,termsVersion:terms.version,termsHash:terms.sha256,acceptTerms:true});return {id,response,data:await response.json()};};
+ const acceptedTerms=JSON.parse(bindings.TERMS_JSON??base.TERMS_JSON);
+ const checkout=async(tier='single',id=randomUUID(),holder=tier==='single'?{kind:'individual',name:'Named Engineer'}:{kind:'company',name:'Example Devices Ltd',contact:'Contact Engineer'})=>{const response=await post('/checkout',{tier,holder,attemptId:id,termsVersion:acceptedTerms.version,termsHash:acceptedTerms.sha256,acceptTerms:true});return {id,response,data:await response.json()};};
  const webhook=async(order,eventId='evt_'+randomUUID(),type='checkout.session.completed')=>{const payload=JSON.stringify({id:eventId,object:'event',type,livemode:false,data:{object:{id:'cs_test_'+order}}});const signature=Stripe.webhooks.generateTestHeaderString({payload,secret});return api.fetch(endpoint+'/stripe/webhook',{method:'POST',headers:{'Stripe-Signature':signature},body:payload});};
  return {mf,db,api,post,checkout,webhook,requests,sent,setFailEmails:n=>{failEmails=n;}};
 }
@@ -53,7 +55,17 @@ test('outbox retries failures and produces a Unicode PDF plus receipt',()=>withF
  const{id}=await f.checkout();assert.equal((await f.webhook(id)).status,200);f.setFailEmails(1);await f.api.fetch(endpoint+'/__test_delivery');assert.equal((await f.db.prepare("SELECT COUNT(*) AS n FROM delivery_jobs WHERE state='sent'").first()).n,1);await f.db.prepare("UPDATE delivery_jobs SET next_attempt=0 WHERE state='pending'").run();await f.api.fetch(endpoint+'/__test_delivery');assert.equal((await f.db.prepare("SELECT COUNT(*) AS n FROM delivery_jobs WHERE state='sent'").first()).n,2);const buyer=f.sent.find(x=>x.message.to[0]==='buyer@example.com');assert.match(buyer.message.text,/https:\/\/pay.stripe.com\/receipts\/fixture/);const attempts=f.sent.filter(x=>x.message.to[0]==='buyer@example.com');assert.equal(attempts.length,2);assert.equal(attempts[0].key,attempts[1].key);assert.equal(attempts[0].message.attachments[0].content,attempts[1].message.attachments[0].content,'retry must use identical PDF bytes');const bytes=Buffer.from(buyer.message.attachments[0].content,'base64');assert.equal(bytes.subarray(0,4).toString(),'%PDF');await writeFile('/tmp/iolinki-license-test.pdf',bytes);const count=f.sent.length;await f.api.fetch(endpoint+'/__test_delivery');assert.equal(f.sent.length,count);
 }));
 
-test('buyer certificate failure does not prevent owner notification',()=>withFixture(async f=>{const{id}=await f.checkout();await f.webhook(id);await f.api.fetch(endpoint+'/__test_delivery');const jobs=(await f.db.prepare('SELECT role,state,last_error FROM delivery_jobs').all()).results;assert.equal(jobs.find(j=>j.role==='buyer').state,'failed');assert.equal(jobs.find(j=>j.role==='owner').state,'sent');assert.equal(f.sent.length,1);},{},{customer_details:{name:'Unsupported 漢字',email:'buyer@example.com'}}));
+test('buyer certificate failure on an unrenderable legacy record does not prevent owner notification',()=>withFixture(async f=>{const{id}=await f.checkout();await f.webhook(id);await f.db.prepare("UPDATE licenses SET snapshot=json_set(snapshot,'$.holder.name','Unsupported 漢字')").run();await f.api.fetch(endpoint+'/__test_delivery');const jobs=(await f.db.prepare('SELECT role,state,last_error FROM delivery_jobs').all()).results;assert.equal(jobs.find(j=>j.role==='buyer').state,'failed');assert.equal(jobs.find(j=>j.role==='owner').state,'sent');assert.equal(f.sent.length,1);}));
+test('Stripe billing name outside certificate glyph coverage still delivers the named-holder certificate',()=>withFixture(async f=>{
+ const{id}=await f.checkout();await f.webhook(id);await f.api.fetch(endpoint+'/__test_delivery');
+ assert.equal((await f.db.prepare("SELECT COUNT(*) AS n FROM delivery_jobs WHERE state='sent'").first()).n,2);
+ const license=await f.db.prepare('SELECT payment FROM licenses').first();assert.equal(JSON.parse(license.payment).buyerName,'漢字');
+ const buyer=f.sent.find(x=>x.message.to[0]==='buyer@example.com');const path='/tmp/iolinki-billing-script-test.pdf';await writeFile(path,Buffer.from(buyer.message.attachments[0].content,'base64'));
+ const pdf=execFileSync('pdftotext',[path,'-'],{encoding:'utf8'});assert.match(pdf,/Named Engineer/);assert.match(pdf,/payment receipt/);
+},{},{customer_details:{name:'漢字',email:'buyer@example.com'}}));
+test('merchant certificate fields must render before checkout opens',()=>withFixture(async f=>{
+ const result=await f.checkout();assert.equal(result.response.status,503);assert.equal(f.requests.length,0);
+},{ISSUER_JSON:JSON.stringify({name:'漢字',address:'Fixture address',email:'issuer@example.com'})}));
 test('fulfillment transaction rolls back license and jobs on database failure',()=>withFixture(async f=>{const{id}=await f.checkout();await f.db.exec("CREATE TRIGGER block_delivery BEFORE INSERT ON delivery_jobs BEGIN SELECT RAISE(ABORT, 'fixture failure'); END;");assert.equal((await f.webhook(id)).status,503);assert.equal((await f.db.prepare('SELECT COUNT(*) AS n FROM licenses').first()).n,0);assert.equal((await f.db.prepare('SELECT state FROM orders WHERE id=?').bind(id).first()).state,'pending');await f.db.exec('DROP TRIGGER block_delivery;');assert.equal((await f.webhook(id)).status,200);assert.equal((await f.db.prepare('SELECT COUNT(*) AS n FROM licenses').first()).n,1);}));
 test('concurrent delivery handlers claim each job once',()=>withFixture(async f=>{const{id}=await f.checkout();await f.webhook(id);await Promise.all([f.api.fetch(endpoint+'/__test_delivery'),f.api.fetch(endpoint+'/__test_delivery')]);assert.equal(f.sent.length,2);assert.equal(new Set(f.sent.map(x=>x.key)).size,2);}));
 test('old ambiguous delivery stops before provider idempotency expires',()=>withFixture(async f=>{const{id}=await f.checkout();await f.webhook(id);await f.db.prepare('UPDATE delivery_jobs SET first_attempt=?').bind(Date.now()-24*3600000).run();await f.api.fetch(endpoint+'/__test_delivery');assert.equal(f.sent.length,0);assert.equal((await f.db.prepare("SELECT COUNT(*) AS n FROM delivery_jobs WHERE state='failed'").first()).n,2);}));
@@ -65,3 +77,29 @@ test('unresolved attempts stop before Stripe idempotency expiration',()=>withFix
 test('checkout never exposes a new URL when its database link is not saved',()=>withFixture(async f=>{await f.db.exec("CREATE TRIGGER block_order_link BEFORE UPDATE OF checkout_url ON orders BEGIN SELECT RAISE(IGNORE); END;");const{id,response}=await f.checkout();assert.equal(response.status,503);assert.equal((await f.db.prepare('SELECT session_id FROM orders WHERE id=?').bind(id).first()).session_id,null);}));
 test('recorded open checkout is recovered without another creation',()=>withFixture(async f=>{const{id}=await f.checkout();await f.db.prepare('UPDATE orders SET checkout_url=NULL WHERE id=?').bind(id).run();assert.equal((await f.checkout('single',id)).response.status,200);assert.equal(f.requests.filter(r=>r.method==='POST').length,1);},{},{payment_status:'unpaid'}));
 test('expired recorded checkout is rejected without another creation',()=>withFixture(async f=>{const{id}=await f.checkout();assert.equal((await f.checkout('single',id)).response.status,503);assert.equal(f.requests.filter(r=>r.method==='POST').length,1);},{},{status:'expired',payment_status:'unpaid'}));
+
+const purchaseBody=(tier,holder,attemptId=randomUUID())=>({tier,holder,attemptId,termsVersion:terms.version,termsHash:terms.sha256,acceptTerms:true});
+test('requires the correct named holder before creating an order or contacting Stripe',()=>withFixture(async f=>{
+ for(const [tier,holder] of [['single',undefined],['single',{kind:'company',name:'Company',contact:'Person'}],['single',{kind:'individual',name:' '}],['single',{kind:'individual',name:'Name\nInjected'}],['single',{kind:'individual',name:'x'.repeat(201)}],['single',{kind:'individual',name:'Name',contact:'Other'}],['single',{kind:'individual',name:'张伟'}],['team',{kind:'company',name:'张伟',contact:'Contact'}],['team',{kind:'company',name:'Company',contact:'张伟'}],['team',{kind:'company',name:'Company'}],['team',{kind:'individual',name:'Person'}],['team',{kind:'company',name:'Company',contact:' '}]]) assert.equal((await f.post('/checkout',purchaseBody(tier,holder))).status,400);
+ assert.equal(f.requests.length,0);assert.equal((await f.db.prepare('SELECT COUNT(*) AS n FROM orders').first()).n,0);
+}));
+test('holder changes require a new attempt and cannot change accepted order snapshots',()=>withFixture(async f=>{
+ const{id}=await f.checkout('single',randomUUID(),{kind:'individual',name:'  Zoë Engineer  '});
+ const original=JSON.parse((await f.db.prepare('SELECT snapshot FROM orders WHERE id=?').bind(id).first()).snapshot);
+ assert.deepEqual(original.holder,{kind:'individual',name:'Zoë Engineer'});assert.equal(original.assistance.hours,2);assert.equal(original.assistance.kind,'onboarding');assert.match(original.assistance.scope,/checklist/);assert.equal(original.terms.text,text);assert.equal(original.terms.version,terms.version);assert.equal(original.terms.sha256,terms.sha256);
+ assert.equal((await f.checkout('single',id,{kind:'individual',name:'Other Person'})).response.status,409);
+ await f.webhook(id);const issued=JSON.parse((await f.db.prepare('SELECT snapshot FROM licenses WHERE order_id=?').bind(id).first()).snapshot);assert.deepEqual(issued,original);
+}));
+for(const tier of ['single','team']) test('certificate records accepted '+tier+' holder and total assistance, distinct from payer',()=>withFixture(async f=>{
+ const holder=tier==='single'?{kind:'individual',name:'Zoë Engineer Тест'}:{kind:'company',name:'Example Devices Ltd Тест',contact:'Zoë Contact Тест'};
+ const{id}=await f.checkout(tier,randomUUID(),holder);await f.webhook(id);await f.api.fetch(endpoint+'/__test_delivery');
+ const row=await f.db.prepare('SELECT snapshot FROM licenses WHERE order_id=?').bind(id).first();const snap=JSON.parse(row.snapshot);assert.deepEqual(snap.holder,holder);assert.equal(snap.assistance.hours,tier==='single'?2:8);
+ const bytes=Buffer.from(f.sent.find(x=>x.message.to[0]==='buyer@example.com').message.attachments[0].content,'base64');const path='/tmp/iolinki-'+tier+'-holder-test.pdf';await writeFile(path,bytes);const content=execFileSync('pdftotext',[path,'-'],{encoding:'utf8'});
+ assert.ok(content.includes('License holder ('+(tier==='single'?'named individual':'legal company')+'): '+holder.name));if(tier==='team')assert.ok(content.includes('Company contact: '+holder.contact));assert.match(content,/Purchaser: Zoë Example/);assert.match(content,new RegExp('Included assistance: '+(tier==='single'?2:8)+' hours'));assert.ok(content.includes('Terms version: '+terms.version));
+}));
+
+test('prepared offering stays disabled and can be rendered in a test certificate after explicit fixture approval',async()=>{
+ const prepared=JSON.parse(await readFile('terms.template.json','utf8'));assert.equal(prepared.approved,false);assert.equal(prepared.sha256,createHash('sha256').update(prepared.text).digest('hex'));
+ const wrangler=await readFile('wrangler.jsonc','utf8');for(const flag of ['PURCHASES_ENABLED','LIVE_PURCHASES_ENABLED','DELIVERY_ENABLED'])assert.match(wrangler,new RegExp('"'+flag+'"\\s*:\\s*"false"'));
+ await withFixture(async f=>{const{id}=await f.checkout();assert.equal(id.length,36);await f.webhook(id);await f.api.fetch(endpoint+'/__test_delivery');const buyer=f.sent.find(x=>x.message.to[0]==='buyer@example.com');assert.ok(buyer,'actual prepared terms must render and deliver through the fixture');const path='/tmp/iolinki-prepared-terms-test.pdf';await writeFile(path,Buffer.from(buyer.message.attachments[0].content,'base64'));const content=execFileSync('pdftotext',[path,'-'],{encoding:'utf8'});assert.match(content,/Two onboarding hours/);assert.match(content,/Contractors working on the licensee/);assert.ok(content.replace(/\s/g,'').includes(prepared.sha256));},{TERMS_JSON:JSON.stringify({...prepared,approved:true,url:origin+'/terms/'+prepared.version+'.html'})});
+});

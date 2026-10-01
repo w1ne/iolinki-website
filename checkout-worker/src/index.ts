@@ -2,7 +2,22 @@ import { WorkerEntrypoint } from 'cloudflare:workers';
 import Stripe from 'stripe';
 import { config, email, sha256 } from './config';
 import { certificate } from './certificate';
-import { TIERS, type Config, type Env, type Job, type License, type Order, type Payment, type Snapshot, type Tier } from './types';
+import { supportsCertificateText } from './certificate-font';
+import { TIERS, type Config, type Env, type Holder, type Job, type License, type Order, type Payment, type Snapshot, type Tier } from './types';
+
+function holderFor(tier: Tier, value: unknown): Holder | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  const fields = value as Record<string, unknown>;
+  const name = (v: unknown): string | null => typeof v === 'string' && v.trim().length > 0 && v.length <= 200 && !/[\u0000-\u001f\u007f-\u009f\u2028\u2029]/u.test(v) ? v.trim() : null;
+  const holderName = name(fields.name);
+  if (!holderName || !supportsCertificateText(holderName)) return null;
+  if (tier === 'single' && fields.kind === 'individual' && Object.keys(fields).every(k => ['kind','name'].includes(k)))
+    return {kind:'individual',name:holderName};
+  const contact = name(fields.contact);
+  if (tier === 'team' && fields.kind === 'company' && contact && supportsCertificateText(contact) && Object.keys(fields).every(k => ['kind','name','contact'].includes(k)))
+    return {kind:'company',name:holderName,contact};
+  return null;
+}
 
 function stripe(env: Env) {
   return new Stripe(env.STRIPE_SECRET_KEY!, {httpClient:Stripe.createFetchHttpClient(),maxNetworkRetries:1,timeout:15000});
@@ -47,24 +62,26 @@ async function createCheckout(request: Request, env: Env, cfg: Config) {
   const raw=await boundedBody(request,2000);if(raw===null)return json({error:'Request too large'},413,cfg.origin);
   let body: Record<string,unknown>;
   try { body=JSON.parse(raw); } catch { return json({error:'Invalid request'},400,cfg.origin); }
-  const keys=['tier','attemptId','termsVersion','termsHash','acceptTerms'];
+  const keys=['tier','attemptId','termsVersion','termsHash','acceptTerms','holder'];
   if (!body || Array.isArray(body) || Object.keys(body).some(x=>!keys.includes(x)) ||
       !['single','team'].includes(body.tier as string) || typeof body.attemptId!=='string' ||
       !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(body.attemptId) ||
       body.acceptTerms!==true || body.termsVersion!==cfg.terms.version || body.termsHash!==cfg.terms.sha256)
     return json({error:'Select a license and accept the current purchase terms'},400,cfg.origin);
   const tier=body.tier as Tier,id=body.attemptId.toLowerCase();
+  const holder=holderFor(tier,body.holder);
+  if (!holder) return json({error:'Single requires a named individual; Team requires a legal company and contact person. Names must be renderable in the certificate font; contact the licensor for unsupported names.'},400,cfg.origin);
   const bucket=Math.floor(Date.now()/60000),key=await sha256((request.headers.get('CF-Connecting-IP')??'unknown')+':'+bucket);
   const limit=await env.DB.prepare('INSERT INTO purchase_limits(key,bucket,count) VALUES(?,?,1) ON CONFLICT(key) DO UPDATE SET count=count+1 RETURNING count').bind(key,bucket).first<{count:number}>();
   if(!limit || limit.count>10)return json({error:'Too many purchase attempts. Please wait a minute.'},429,cfg.origin);
   await env.DB.prepare('DELETE FROM purchase_limits WHERE bucket<?').bind(bucket-2).run();
-  const snapshot: Snapshot={tier,...TIERS[tier],currency:'eur',priceId:cfg.prices[tier],livemode:cfg.livemode,terms:cfg.terms,
+  const snapshot: Snapshot={tier,...TIERS[tier],holder,currency:'eur',priceId:cfg.prices[tier],livemode:cfg.livemode,terms:cfg.terms,
     issuer:cfg.issuer,taxPolicy:cfg.taxPolicy,licensedVersion:cfg.licensedVersion,ownerEmail:cfg.ownerEmail,emailFrom:cfg.emailFrom,acceptedAt:Date.now()};
   await env.DB.prepare('INSERT INTO orders(id,tier,snapshot,created_at) VALUES(?,?,?,?) ON CONFLICT(id) DO NOTHING').bind(id,tier,JSON.stringify(snapshot),snapshot.acceptedAt).run();
   const order=await env.DB.prepare('SELECT * FROM orders WHERE id=?').bind(id).first<Order>();
   if (!order) throw Error('order unavailable');
   const stored=JSON.parse(order.snapshot) as Snapshot;
-  if (stored.tier!==tier || stored.terms.sha256!==cfg.terms.sha256 || stored.livemode!==cfg.livemode) return json({error:'Start a new purchase attempt'},409,cfg.origin);
+  if (stored.tier!==tier || stored.terms.sha256!==cfg.terms.sha256 || stored.livemode!==cfg.livemode || JSON.stringify(stored.holder)!==JSON.stringify(holder)) return json({error:'Start a new purchase attempt'},409,cfg.origin);
   if(order.state!=='pending')return json({error:'This order is already being processed. Check your email before starting another payment.'},409,cfg.origin);
   const api=stripe(env);
   if(order.session_id){
@@ -132,7 +149,7 @@ async function deliver(env:Env) {
       const snap=JSON.parse(license.snapshot) as Snapshot,payment=JSON.parse(license.payment) as Payment;
       const message={from:snap.emailFrom,to:[job.recipient],subject:`${snap.livemode?'':'[TEST MODE] '}iolinki ${job.role==='buyer'?'software license':'purchase notification'} — ${snap.label}`,
         text:job.role==='buyer'?`Your ${snap.label} software license certificate is attached.\nLicense: ${license.id}\nStripe receipt: ${payment.receiptUrl}\nTerms: ${snap.terms.url}\nThis is a software license record, not IO-Link certification.`:
-          `Paid ${snap.label} order ${license.order_id}\nBuyer: ${payment.buyerName} <${payment.buyerEmail}>\nLicense: ${license.id}\nAmount: EUR ${(payment.total/100).toFixed(2)}\nPayment: ${payment.intentId}`,
+          `Paid ${snap.label} order ${license.order_id}\nLicense holder: ${snap.holder.name} (${snap.holder.kind})\nBuyer: ${payment.buyerName} <${payment.buyerEmail}>\nLicense: ${license.id}\nAmount: EUR ${(payment.total/100).toFixed(2)}\nPayment: ${payment.intentId}`,
         ...(job.role==='buyer'?{attachments:[{filename:`iolinki-${license.id}.pdf`,content:base64(await certificate(license))}]}:{})};
       const response=await fetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:`Bearer ${env.EMAIL_API_KEY}`,'Content-Type':'application/json','Idempotency-Key':job.id},body:JSON.stringify(message),signal:AbortSignal.timeout(15000)});
       if(!response.ok)throw Error(`email provider status ${response.status}`);

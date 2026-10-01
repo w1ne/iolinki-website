@@ -1,6 +1,6 @@
 import { PDFDocument, rgb } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
-import fontBytes from '../fonts/DejaVuSans.ttf';
+import { certificateFontBytes, supportsCertificateText } from './certificate-font';
 import type { License, Payment, Snapshot } from './types';
 
 export async function certificate(license: License): Promise<Uint8Array> {
@@ -12,7 +12,14 @@ export async function certificate(license: License): Promise<Uint8Array> {
     `License ID: ${license.id}`,
     `Issuer: ${snapshot.issuer.name}`, snapshot.issuer.address,
     `Issuer contact: ${snapshot.issuer.email}`,
-    `Purchaser: ${payment.buyerName}`, `Purchaser email: ${payment.buyerEmail}`,
+    `License holder (${snapshot.holder.kind === 'individual' ? 'named individual' : 'legal company'}): ${snapshot.holder.name}`,
+    ...(snapshot.holder.kind === 'company' ? [`Company contact: ${snapshot.holder.contact}`] : []),
+    `Included assistance: ${snapshot.assistance.hours} hours (${snapshot.assistance.kind})`, snapshot.assistance.scope,
+    'Reproducible product bug corrections do not consume custom porting assistance hours.',
+    supportsCertificateText(payment.buyerName)
+      ? `Purchaser: ${payment.buyerName}`
+      : 'Purchaser name: see the original payment receipt.',
+    `Purchaser email: ${payment.buyerEmail}`,
     `Tier: ${snapshot.label}; developer seats: ${snapshot.seats}`,
     `Licensed version: ${snapshot.licensedVersion}`,
     'License rights and services are governed by the accepted terms below.',
@@ -24,12 +31,8 @@ export async function certificate(license: License): Promise<Uint8Array> {
     'This document records a software license purchase. It is not IO-Link certification or hardware validation.',
     'Accepted purchase terms', snapshot.terms.text,
   ];
-  const bytes = new Uint8Array(fontBytes);
-  const face = fontkit.create(bytes);
-  if (!('hasGlyphForCodePoint' in face)) throw Error('unsupported font');
-  for (const section of sections) for (const ch of section) {
-    if (ch !== '\n' && ch !== '\r' && !face.hasGlyphForCodePoint(ch.codePointAt(0)!)) throw Error('unsupported certificate character');
-  }
+  const bytes = certificateFontBytes;
+  if (sections.some(section => !supportsCertificateText(section))) throw Error('unsupported certificate character');
   const pdf = await PDFDocument.create();
   pdf.registerFontkit(fontkit);
   const font = await pdf.embedFont(bytes, {subset:true});

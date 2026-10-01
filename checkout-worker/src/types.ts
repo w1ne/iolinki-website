@@ -13,7 +13,10 @@ export interface Config {
   taxPolicy: 'none' | 'automatic-exclusive'; licensedVersion: string; ownerEmail: string; emailFrom: string;
   prices: Record<Tier, string>;
 }
+export type Holder = { kind: 'individual'; name: string } | { kind: 'company'; name: string; contact: string };
+export interface Assistance { hours: number; kind: 'onboarding' | 'integration'; scope: string }
 export interface Snapshot {
+  holder: Holder; assistance: Assistance;
   tier: Tier; label: string; seats: number; amount: number; currency: 'eur'; priceId: string;
   livemode: boolean; terms: Terms; issuer: Issuer; taxPolicy: Config['taxPolicy'];
   licensedVersion: string; ownerEmail: string; emailFrom: string; acceptedAt: number;
@@ -23,6 +26,6 @@ export interface Payment { sessionId: string; intentId: string; subtotal: number
 export interface License { id: string; order_id: string; snapshot: string; payment: string; issued_at: number }
 export interface Job { id: string; license_id: string; role: 'buyer' | 'owner'; recipient: string; attempts: number; first_attempt: number; lease_token: string }
 export const TIERS = {
-  single: { label: 'Single Developer', seats: 1, amount: 139900 },
-  team: { label: 'Team', seats: 5, amount: 469900 },
+  single: { label: 'Single Developer', seats: 1, amount: 139900, assistance: { hours: 2, kind: 'onboarding', scope: 'Build/setup assistance, MCU/PHY wiring and callback review, and a written bring-up checklist. Larger ports quoted separately.' } },
+  team: { label: 'Team', seats: 5, amount: 469900, assistance: { hours: 8, kind: 'integration', scope: 'Up to eight total scoped integration hours. Agree board, compiler, PHY and validation tasks before scheduling. Larger ports quoted separately.' } },
 } as const;

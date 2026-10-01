@@ -34,7 +34,7 @@ Paid-session retrieval checks the exact line item, quantity, mode, subtotal, tax
 
 Cron claims jobs using fresh two-minute leases. Failed buyer delivery does not block the owner's independent job. Resend idempotency keys are stable job IDs; retries use byte-identical PDFs and snapshotted recipients/terms. Transient failure uses exponential retry; eight attempts, unsupported font characters or an ambiguous send older than 23 hours stop for manual review. No claim of exactly-once external email delivery is made after the provider's deduplication window.
 
-The bundled licensed DejaVu font covers Latin, Greek and Cyrillic. Unsupported glyphs fail the buyer job rather than silently corrupting names; extend the font strategy and test the intended purchaser scripts before launch. A software license certificate is not IO-Link certification. PDF creation/modification dates are fixed to the stored issuance time.
+The bundled licensed DejaVu font covers Latin, Greek and Cyrillic. Holder/contact names and merchant certificate configuration are checked before checkout opens. If Stripe's separate billing name uses an unsupported script, the certificate refers to the original payment receipt for that payer name; the unchanged name remains in the payment record. Legacy unrenderable holder records require manual review. A software license certificate is not IO-Link certification. PDF creation/modification dates are fixed to the stored issuance time.
 
 Monitor `delivery_jobs` for `failed`/expired leases and `orders` for `quarantined` or unresolved sessions. Restrict Cloudflare database access, enable appropriate backups, and agree a personal-data retention policy. For ambiguous sends, inspect the provider record using `provider_id`/job idempotency key and Stripe session/payment IDs before manually requeueing. Do not blindly reset old jobs: that can send duplicate email. Never create a second chargeable session merely to fix delivery.
 
@@ -46,3 +46,24 @@ Rollback: set `PURCHASES_ENABLED=false` and blank the site's API meta value. Kee
 - [Stripe receipts](https://docs.stripe.com/receipts) and [official SDK](https://github.com/stripe/stripe-node)
 - [Cloudflare D1 transactional batch](https://developers.cloudflare.com/d1/worker-api/d1-database/)
 - [Resend email API and attachments](https://resend.com/docs/api-reference/emails/send-email) and [24-hour idempotency window](https://resend.com/docs/dashboard/emails/idempotency-keys)
+
+## Holder and accepted package record
+
+Single checkout requires holder kind "individual" and full name. Team requires
+holder kind "company", legal company name and contact person. The payer's Stripe
+billing identity does not replace the license holder. Each order snapshots the
+normalized holder, accepted terms text/version/hash, licensed release and total
+assistance allowance (Single two onboarding hours; Team eight integration hours).
+A different holder requires a new attempt. Certificates use this snapshot.
+
+terms.template.json contains prepared offering text and its version/hash;
+approved remains false. Purchases, live purchases and delivery remain disabled.
+Do not enable them before configured account and actual test-mode payment, buyer
+certificate/receipt and owner notification checks pass. Fixture tests do not prove
+that real account flow. Physical-master and complete analog Twins validation
+remain separate evidence.
+
+Holder and company contact names are checked against the same Unicode font glyph
+coverage used by the PDF before an order or Stripe session is created. Supported
+Latin and Cyrillic names are retained; names outside that font coverage require
+a separately handled quote rather than a payable order that cannot be rendered.
