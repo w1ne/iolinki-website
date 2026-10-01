@@ -36,3 +36,5 @@ Follow its README for configuration and verification. Public checkout is
 disabled until approved purchase terms and payment/delivery configuration are
 ready. Passing tests with simulated Stripe/email responses does not establish
 a real payment or external email delivery.
+
+Personal address disclosure: do not publish the owner’s street address in marketing pages, shared footers, metadata, or examples. Keep any legally required business address confined to the directly accessible seller information page. Apply this preference to future website changes; do not copy personal details from other projects unnecessarily.
