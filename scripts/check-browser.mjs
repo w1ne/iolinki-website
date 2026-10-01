@@ -68,6 +68,15 @@ try {
         assert.equal(await page.locator('meta[name="checkout-api"]').getAttribute('content'), '', `${label}: no live checkout configured`);
         await page.locator('label[for="tier-team"]').click();
         assert.equal(await page.locator('#tier-team').isChecked(), true, `${label}: license selector works`);
+        assert.deepEqual(await page.locator('#holder-kind option').evaluateAll(options => options.map(option => option.value)), ['company','sole-trader']);
+        for (const kind of ['company','sole-trader']) {
+          await page.locator('#holder-kind').selectOption(kind);
+          assert.equal(await page.locator('#company-contact').isVisible(), true, label + ': technical contact is visible');
+          assert.equal(await page.locator('#company-contact').getAttribute('required'), '', label + ': technical contact is required');
+        }
+        assert.equal(await page.locator('#product-family').getAttribute('required'), '', label + ': agreed family is required');
+        assert.equal(await page.locator('#quote-reference').getAttribute('required'), '', label + ': approved quote is required');
+
       }
       if (!route || route === 'purchase.html' || route === 'hardware.html') await page.screenshot({ path: resolve(artifactDir, `${width}-${route || 'home'}.png`), fullPage: true });
       assert.deepEqual(failures, [], `${label}: browser/asset errors`);

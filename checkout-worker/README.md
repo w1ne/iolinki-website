@@ -18,7 +18,7 @@ npm run deploy
 
 The merchant account, issuer, tax policy, notification address, sender domain and executable purchase terms need owner approval before activation. `LICENSE.COMMERCIAL` remains the public commercial overview; the placeholder terms page is not an accepted contract.
 
-1. Select the Stripe account and test mode. Create account-owned, active, nonrecurring EUR Prices for Single Developer (139900 cents) and Team (469900 cents), quantity one. The server verifies price currency, amount and account mode. Stripe SDK 23.0.0 pins its default API version to `2026-09-30.endive`; validate this version with the selected account before launch.
+1. Select the Stripe account and test mode. Create account-owned, active, nonrecurring EUR Prices for Product Family (139900 cents) and Integration (469900 cents), quantity one. The server verifies price currency, amount and account mode. Stripe SDK 23.0.0 pins its default API version to `2026-09-30.endive`; validate this version with the selected account before launch.
 2. Approve a complete immutable terms snapshot. Copy `terms.template.json`, set its version, exact plain-text terms, SHA-256 of that UTF-8 text, and `approved: true`. Publish that same text at `SITE_ORIGIN/terms/VERSION.html`; never edit a published accepted version. Provision its JSON as `TERMS_JSON`. Publishing/approving matching content is an operator launch gate, not inferred from a hash alone.
 3. Set `ISSUER_JSON` to an approved `{name,address,email}` object, `LICENSED_VERSION` to the licensed release scope, `OWNER_EMAIL`, and `EMAIL_FROM` to an authorized sender. Configure Resend with a verified sender domain. Set `TAX_POLICY` explicitly to `none` or `automatic-exclusive`; the latter requires exclusive Stripe Prices and complete automatic-tax calculation. Inclusive prices and invoices are not implemented. Confirm applicable tax treatment before using either option.
 4. Create the D1 database in the intended Cloudflare account, replace the placeholder database ID, and apply `migrations/0001_checkout.sql`. Configure a Worker hostname/routing; workers.dev and previews are disabled. Provision secrets using `wrangler secret put`: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `TERMS_JSON`, `ISSUER_JSON`, `EMAIL_API_KEY`. Set remaining nonsecret variables in a reviewed environment configuration.
@@ -47,46 +47,39 @@ Rollback: set `PURCHASES_ENABLED=false` and blank the site's API meta value. Kee
 - [Cloudflare D1 transactional batch](https://developers.cloudflare.com/d1/worker-api/d1-database/)
 - [Resend email API and attachments](https://resend.com/docs/api-reference/emails/send-email) and [24-hour idempotency window](https://resend.com/docs/dashboard/emails/idempotency-keys)
 
-## Holder and accepted package record
+## Business holders and package records (v3)
 
-Single checkout requires holder kind "individual" and full name. Team requires
-holder kind "company", legal company name and contact person. The payer's Stripe
-billing identity does not replace the license holder. Each order snapshots the
-normalized holder, accepted terms text/version/hash, licensed release and total
-assistance allowance (Single two onboarding hours; Team eight integration hours).
-A different holder requires a new attempt. Certificates use this snapshot.
+Both packages require a legal company or a sole trader acting for their business,
+with a named technical contact. Requests use holder kind "company" or "sole-trader".
+Product Family is EUR1,399 with two onboarding hours; Integration is EUR4,699
+with eight total scoped hours. Both grant the same one-family rights, usable source,
+documentation and reference release, with unlimited authorized employees and
+contractors working on that family. New snapshots do not record developer seats.
+Legacy individual and five-seat snapshots retain their original accepted terms.
 
-terms.template.json contains prepared offering text and its version/hash;
-approved remains false. Purchases, live purchases and delivery remain disabled.
-Do not enable them before configured account and actual test-mode payment, buyer
-certificate/receipt and owner notification checks pass. Fixture tests do not prove
-that real account flow. Physical-master and complete analog Twins validation
-remain separate evidence.
+Integration includes setup/build configuration review, MCU/PHY callback and wiring
+review, a written integration checklist and findings/report from the agreed build/
+test review. Quarterly reviews during the included first year count within the eight
+total hours. Agree target, compiler, PHY and tasks before booking.
 
-Holder and company contact names are checked against the same Unicode font glyph
-coverage used by the PDF before an order or Stripe session is created. Supported
-Latin and Cyrillic names are retained; names outside that font coverage require
-a separately handled quote rather than a payable order that cannot be rendered.
+## Approved quote provenance
 
-## Product-family quotes (v2)
+Apply migration 0003 after migrations 0001/0002. Existing approved quotes retain
+product-family-v2 provenance; only explicitly approved business-family-v3 quotes
+bound to holder, contact, tier and family can create new orders. New checkout requires
+terms scopeModel=business-family-v3. The internal SKU keys single/team and configured
+Stripe Price IDs are retained; their public labels are Product Family/Integration.
 
-Apply migration 0002 before configuring a future checkout. Approved quotes are
-entered through private merchant operations; there is no public approval endpoint.
-Each approved record binds the holder, tier, named commercial range and description
-to a unique quote reference, approval time and expiry; revoked records block new
-checkout. Buyer requests must contain both the quote reference and matching family
-name. The certificate range comes only from the approved record.
+One quote creates one order; accepted scope is frozen in the order/certificate/owner
+record and Stripe metadata. Expiry/revocation blocks new checkout creation/recovery
+but does not cancel existing Stripe sessions, change accepted payments or revoke
+historical licenses. There is no public approval endpoint.
 
-One quote can create one order. Same-attempt retries reuse its frozen snapshot; a
-changed quote or scope requires merchant review and a new quote. Expiry/revocation
-blocks checkout creation/recovery but does not cancel already-created Stripe
-sessions or retroactively change accepted payments or issued rights. Family scope
-is frozen in the order/certificate/owner notification, with quote reference recorded
-in Stripe metadata. Legacy accepted snapshots deliver with their original scope.
+Holder, contact and family names use the certificate font's Unicode coverage before
+order creation. Supported Latin/Cyrillic are retained. Unsupported names require a
+privately handled quote.
 
-The current template uses 2026-10-01-product-family-v2, approved=false.
-New checkout requires terms scopeModel=product-family-v2; old terms cannot open
-a new restricted-family purchase. Historical delivery uses accepted snapshots. Previous
-version text is archived unchanged under terms/2026-10-01-offering-v1.json and
-the previous public terms HTML remains unchanged. Checkout activation and actual
-account/payment/delivery verification remain separate required work.
+The current terms template uses 2026-10-01-business-family-v3 with approved=false.
+The v1 and v2 JSON/HTML archives are unchanged. Purchases, live purchases and delivery
+remain disabled until actual merchant account/payment/certificate/receipt/owner
+notification verification is complete. Fixture tests mock payment and email.

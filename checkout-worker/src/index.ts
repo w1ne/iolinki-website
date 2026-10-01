@@ -16,18 +16,13 @@ function quotedFamily(quote: ApprovedQuote): Snapshot['productFamily'] | null {
   if (!name || typeof scope !== 'string' || !scope.trim() || scope.length > 1500 || /[\u0000-\u0009\u000b\u000c\u000e-\u001f\u007f-\u009f]/u.test(scope) || !supportsCertificateText(scope)) return null;
   return {name,scope:scope.trim()};
 }
-function holderFor(tier: Tier, value: unknown): Holder | null {
+function holderFor(value: unknown): Holder | null {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
   const fields = value as Record<string, unknown>;
-  const name = (v: unknown): string | null => typeof v === 'string' && v.trim().length > 0 && v.length <= 200 && !/[\u0000-\u001f\u007f-\u009f\u2028\u2029]/u.test(v) ? v.trim() : null;
-  const holderName = name(fields.name);
-  if (!holderName || !supportsCertificateText(holderName)) return null;
-  if (tier === 'single' && fields.kind === 'individual' && Object.keys(fields).every(k => ['kind','name'].includes(k)))
-    return {kind:'individual',name:holderName};
-  const contact = name(fields.contact);
-  if (tier === 'team' && fields.kind === 'company' && contact && supportsCertificateText(contact) && Object.keys(fields).every(k => ['kind','name','contact'].includes(k)))
-    return {kind:'company',name:holderName,contact};
-  return null;
+  const name = certificateName(fields.name), contact = certificateName(fields.contact);
+  if (!name || !contact || !['company','sole-trader'].includes(fields.kind as string) ||
+      Object.keys(fields).some(k => !['kind','name','contact'].includes(k))) return null;
+  return {kind:fields.kind as 'company' | 'sole-trader',name,contact};
 }
 
 function stripe(env: Env) {
@@ -80,16 +75,16 @@ async function createCheckout(request: Request, env: Env, cfg: Config) {
       body.acceptTerms!==true || body.termsVersion!==cfg.terms.version || body.termsHash!==cfg.terms.sha256)
     return json({error:'Select a license and accept the current purchase terms'},400,cfg.origin);
   const tier=body.tier as Tier,id=body.attemptId.toLowerCase();
-  const holder=holderFor(tier,body.holder);
-  if (!holder) return json({error:'Single requires a named individual; Team requires a legal company and contact person. Names must be renderable in the certificate font; contact the licensor for unsupported names.'},400,cfg.origin);
+  const holder=holderFor(body.holder);
+  if (!holder) return json({error:'Both packages require a named legal company or a sole trader acting for their business, with a technical contact. Names must be renderable in the certificate font; contact the licensor for unsupported names.'},400,cfg.origin);
   const familyName=certificateName(body.productFamily);
   if (!familyName || typeof body.quoteReference!=='string' || !/^[a-zA-Z0-9_-]{8,80}$/.test(body.quoteReference))
     return json({error:'Enter the product-family name and quote reference from your agreed quote'},400,cfg.origin);
   const quote=await env.DB.prepare('SELECT * FROM approved_quotes WHERE id=?').bind(body.quoteReference).first<ApprovedQuote>();
   let quoteHolder: Holder | null = null;
-  try { if(quote) quoteHolder=holderFor(quote.tier,JSON.parse(quote.holder)); } catch {}
+  try { if(quote) quoteHolder=holderFor(JSON.parse(quote.holder)); } catch {}
   const productFamily=quote ? quotedFamily(quote) : null;
-  if (!quote || quote.revoked_at!==null || quote.expires_at<=Date.now() || quote.approved_at>Date.now() ||
+  if (!quote || quote.scope_model!=='business-family-v3' || quote.revoked_at!==null || quote.expires_at<=Date.now() || quote.approved_at>Date.now() ||
       quote.tier!==tier || JSON.stringify(quoteHolder)!==JSON.stringify(holder) || !productFamily || productFamily.name!==familyName)
     return json({error:'This quote is unavailable or does not match the holder, tier and product family. Contact the licensor.'},409,cfg.origin);
   const previous=await env.DB.prepare('SELECT id FROM orders WHERE quote_id=?').bind(quote.id).first<{id:string}>();
@@ -98,7 +93,7 @@ async function createCheckout(request: Request, env: Env, cfg: Config) {
   const limit=await env.DB.prepare('INSERT INTO purchase_limits(key,bucket,count) VALUES(?,?,1) ON CONFLICT(key) DO UPDATE SET count=count+1 RETURNING count').bind(key,bucket).first<{count:number}>();
   if(!limit || limit.count>10)return json({error:'Too many purchase attempts. Please wait a minute.'},429,cfg.origin);
   await env.DB.prepare('DELETE FROM purchase_limits WHERE bucket<?').bind(bucket-2).run();
-  const snapshot: Snapshot={tier,...TIERS[tier],holder,productFamily,quoteReference:quote.id,scopeModel:'product-family-v2',currency:'eur',priceId:cfg.prices[tier],livemode:cfg.livemode,terms:cfg.terms,
+  const snapshot: Snapshot={tier,...TIERS[tier],holder,productFamily,quoteReference:quote.id,scopeModel:'business-family-v3',currency:'eur',priceId:cfg.prices[tier],livemode:cfg.livemode,terms:cfg.terms,
     issuer:cfg.issuer,taxPolicy:cfg.taxPolicy,licensedVersion:cfg.licensedVersion,ownerEmail:cfg.ownerEmail,emailFrom:cfg.emailFrom,acceptedAt:Date.now()};
   await env.DB.prepare('INSERT INTO orders(id,tier,snapshot,created_at,quote_id) VALUES(?,?,?,?,?) ON CONFLICT DO NOTHING').bind(id,tier,JSON.stringify(snapshot),snapshot.acceptedAt,quote.id).run();
   const order=await env.DB.prepare('SELECT * FROM orders WHERE id=?').bind(id).first<Order>();
@@ -141,8 +136,8 @@ async function webhook(request:Request,env:Env) {
   const order=await env.DB.prepare('SELECT * FROM orders WHERE id=?').bind(orderId??'').first<Order>();
   if (!order) return json({received:true});
   const snap=JSON.parse(order.snapshot) as Snapshot;
-  // Legacy snapshots keep their accepted rights; v2 issuance requires its frozen agreed scope.
-  if(snap.scopeModel==='product-family-v2' && (!snap.productFamily || !snap.quoteReference)) {
+  // Legacy snapshots keep their accepted rights; versioned family issuance requires its frozen agreed scope.
+  if(['product-family-v2','business-family-v3'].includes(snap.scopeModel??'') && (!snap.productFamily || !snap.quoteReference) || snap.scopeModel==='business-family-v3' && (!holderFor(snap.holder) || snap.seats!==undefined)) {
     await env.DB.prepare("UPDATE orders SET state='quarantined' WHERE id=? AND state!='paid'").bind(order.id).run();
     return json({received:true});
   }
