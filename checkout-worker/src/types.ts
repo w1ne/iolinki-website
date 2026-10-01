@@ -6,7 +6,7 @@ export interface Env {
   TAX_POLICY?: string; LICENSED_VERSION?: string; OWNER_EMAIL?: string; EMAIL_FROM?: string; EMAIL_API_KEY?: string;
 }
 export type Tier = 'single' | 'team';
-export interface Terms { approved: true; version: string; sha256: string; text: string; url: string }
+export interface Terms { scopeModel?: 'product-family-v2'; approved: true; version: string; sha256: string; text: string; url: string }
 export interface Issuer { name: string; address: string; email: string }
 export interface Config {
   origin: string; livemode: boolean; terms: Terms; issuer: Issuer;
@@ -15,7 +15,10 @@ export interface Config {
 }
 export type Holder = { kind: 'individual'; name: string } | { kind: 'company'; name: string; contact: string };
 export interface Assistance { hours: number; kind: 'onboarding' | 'integration'; scope: string }
+export interface ApprovedQuote { id: string; tier: Tier; holder: string; family_name: string; family_scope: string; approved_at: number; expires_at: number; revoked_at: number | null }
+export interface ProductFamily { name: string; scope: string }
 export interface Snapshot {
+  scopeModel?: 'product-family-v2'; productFamily?: ProductFamily; quoteReference?: string;
   holder: Holder; assistance: Assistance;
   tier: Tier; label: string; seats: number; amount: number; currency: 'eur'; priceId: string;
   livemode: boolean; terms: Terms; issuer: Issuer; taxPolicy: Config['taxPolicy'];

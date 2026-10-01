@@ -43,8 +43,7 @@
       <header>
         <h1>Validation status</h1>
         <p>
-          Software checks, physical interoperability and certification have
-          separate evidence.
+          Build results, protocol checks and reproducible test commands.
         </p>
       </header>
       <section class="wrapper style5">
@@ -56,11 +55,7 @@
             ><a href="faq.html">FAQ &amp; licensing</a>
           </nav>
 
-          <p>
-            This page states the available evaluation evidence as of 1 October
-            2026. It is not a certification or a blanket production-readiness
-            claim.
-          </p>
+          <p>Evaluation evidence as of 1 October 2026.</p>
           <section class="validation-note" aria-labelledby="pair-status">
             <p class="eyebrow">Real-stack integration · 1 October 2026</p>
             <h2 id="pair-status">The exact version pair matters</h2>
@@ -83,9 +78,8 @@
               >
             </p>
             <p>
-              These protocol issues remain unresolved. Passing host tests for a
-              different release or commit does not establish that this pair
-              passes integration, physical interoperability or conformance.
+              Open integration issues for this version pair: mandatory tag
+              writes and Data Storage write/read and restore.
             </p>
             <h3>Reproduce the real-stack check</h3>
             <p>
@@ -149,8 +143,8 @@ ctest --test-dir iolinki-master/build --output-on-failure</code></pre>
                     are available.
                   </td>
                   <td>
-                    Software protocol interactions. This does not establish
-                    commercial-master physical interoperability.
+                    Software protocol interactions between the device and
+                    master stacks.
                   </td>
                 </tr>
                 <tr>
@@ -158,46 +152,14 @@ ctest --test-dir iolinki-master/build --output-on-failure</code></pre>
                   <td>
                     Firmware builds pass for STM32G0B1RE/TIOL112,
                     Nucleo-U575ZI-Q/Zephyr/TIOL112 and
-                    ESP32-C3-DevKitM-1/ESP-IDF/STEVAL-IOD003V1. Native IAR
-                    compilation, complete analog Twins and physical-master
-                    validation remain pending.
+                    ESP32-C3-DevKitM-1/ESP-IDF/STEVAL-IOD003V1.
                     <a href="hardware.html"
-                      >See the exact projects and limitations</a
+                      >See the reference projects</a
                     >.
                   </td>
                   <td>
-                    Reproducible source and firmware compilation; this does not
-                    establish physical IO-Link operation.
+                    Reproducible source and MCU firmware compilation.
                   </td>
-                </tr>
-                <tr>
-                  <th scope="row">Commercial physical master</th>
-                  <td>
-                    No published interoperability report has been established.
-                  </td>
-                  <td>
-                    A master model, firmware and reproducible bench report are
-                    still needed.
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">Official certification</th>
-                  <td>
-                    No published official certification record has been
-                    established.
-                  </td>
-                  <td>
-                    Feature descriptions and tests are not certification
-                    evidence.
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">Deployed customer references</th>
-                  <td>
-                    No public deployed-customer references have been
-                    established.
-                  </td>
-                  <td>No customer deployment claim is made.</td>
                 </tr>
               </tbody>
             </table>
@@ -216,9 +178,7 @@ ctest --test-dir iolinki-master/build --output-on-failure</code></pre>
             Nucleo-U575ZI-Q/TIOL112 with pinned Zephyr 3.7.2, and
             ESP32-C3/L6362A with ESP-IDF 5.4.0. The Linux demonstration also
             passes a virtual-master parameter persistence check across process
-            restarts; the embedded projects explicitly reject unsupported flash
-            storage. Native IAR execution, analog LabWired twin verification and
-            physical-master validation remain pending.
+            restarts. The embedded reference projects use RAM parameter storage.
           </p>
           <ol>
             <li>

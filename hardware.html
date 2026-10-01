@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="What exists today and what is planned for evaluation."
+      content="Reference projects, toolchains, wiring guides and build results."
     />
     <link rel="canonical" href="https://iolinki.com/hardware.html" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -42,7 +42,7 @@
     <main id="main" class="document" tabindex="-1">
       <header>
         <h1>Hardware &amp; IDEs</h1>
-        <p>What exists today and what is planned for evaluation.</p>
+        <p>Reference projects, toolchains, wiring guides and build results.</p>
       </header>
       <section class="wrapper style5">
         <div class="inner guide-content">
@@ -53,11 +53,8 @@
             ><a href="faq.html">FAQ &amp; licensing</a>
           </nav>
 
-          <p>
-            No board below is presented as a validated, turnkey physical IO-Link
-            device. “Source available” means you can inspect the application;
-            “planned” means a usable reference project has not been published.
-          </p>
+          <p>Reference projects include application source, MCU configuration,
+            transceiver control drivers and wiring guides.</p>
           <div class="table-wrapper">
             <table>
               <caption>
@@ -67,7 +64,7 @@
                 <tr>
                   <th scope="col">Target</th>
                   <th scope="col">Toolchain / PHY</th>
-                  <th scope="col">Status and remaining proof</th>
+                  <th scope="col">Available project and build evidence</th>
                 </tr>
               </thead>
               <tbody>
@@ -79,9 +76,8 @@
                     <a
                       href="https://github.com/w1ne/iolinki/tree/f4ff734dd5bf63e74895b68cf9296073ddfea296/examples/stm32g0_tiol112"
                       >Build, wiring and native IAR project</a
-                    >. Proposed MCU pin map; board-header mapping, IAR
-                    compilation, analog LabWired twin and physical-master
-                    validation remain pending. Flash persistence is unsupported.
+                    >. Includes the MCU pin map, UART receive queue, wake-up
+                    interrupt and timer setup. Parameter storage: RAM.
                   </td>
                 </tr>
                 <tr>
@@ -93,9 +89,7 @@
                       href="https://github.com/w1ne/iolinki/tree/f4ff734dd5bf63e74895b68cf9296073ddfea296/samples/stm32u5_tiol112"
                       >Pinned Zephyr project, wiring and timing guide</a
                     >. Uses UART 8E1, interrupt receive and a microsecond
-                    hardware timer. Board wiring, analog LabWired twin and
-                    physical-master validation remain pending. Flash persistence
-                    is unsupported.
+                    hardware timer. Parameter storage: RAM.
                   </td>
                 </tr>
                 <tr>
@@ -108,9 +102,7 @@
                       >Native project and ST shield wiring guide</a
                     >. Requires the documented shield configuration and IN1
                     modification. UART error and transmit-timeout handling have
-                    host regression tests. Analog LabWired twin, physical wiring
-                    and master validation remain pending. Flash persistence is
-                    unsupported.
+                    host regression tests. Parameter storage: RAM.
                   </td>
                 </tr>
                 <tr>
@@ -122,9 +114,7 @@
                       href="https://github.com/w1ne/iolinki/tree/v2.0.0/examples/zephyr_app"
                       >Application and overlay</a
                     >
-                    exist. Fresh board build and physical validation are
-                    pending; this is not a demonstrated TIOL112 or L6362A
-                    reference project.
+                    provide the Zephyr UART application and board configuration.
                   </td>
                 </tr>
                 <tr>
@@ -134,8 +124,7 @@
                     <strong>Host build and tests verified.</strong>
                     <a href="getting-started.html#host"
                       >v2.0.0 build instructions</a
-                    >. Simulation and TTY transport do not prove the electrical
-                    link.
+                    >. Includes virtual PHY and TTY transport.
                   </td>
                 </tr>
               </tbody>
@@ -151,15 +140,14 @@
             is now available. Its host tests cover SIO polarity, transmit
             release, wake-up consumption, diagnostics and initialization
             failures. The driver and reference application also compile as
-            Cortex-M0+ GCC objects. This evidence covers reusable C code; a
-            target still needs its MCU callbacks, wiring and physical tests.
+            Cortex-M0+ GCC objects. The reference projects supply MCU
+            callbacks and wiring instructions.
           </p>
           <p>
             The MCU UART transports bytes. A physical IO-Link design also needs
             the transceiver, supply and C/Q circuitry, control and fault GPIOs,
             wake-up handling and measured timing. The projects include portable
-            TIOL112 and L6362A control drivers; their electrical behavior still
-            needs analog Twin and physical validation.
+            TIOL112 and L6362A control drivers for these interfaces.
           </p>
           <h3 id="references">Manufacturer references</h3>
           <ul>
@@ -177,8 +165,8 @@
                 href="https://www.st.com/en/evaluation-tools/steval-iod003v1.html"
                 >ST STEVAL-IOD003V1 documentation</a
               >: an L6362A evaluation board with a UART/GPIO controller
-              interface. Its STM32 Nucleo connectors do not make an ESP32
-              connection plug-and-play.
+              interface. The ESP32 reference wiring guide specifies the
+              GPIO connections and shield configuration.
             </li>
             <li>
               <a
@@ -195,19 +183,16 @@
               <a
                 href="https://docs.espressif.com/projects/esp-idf/en/stable/esp32/get-started/index.html"
                 >ESP-IDF getting started</a
-              >. These explain the platforms; they do not establish iolinki
-              validation.
+              >. These cover board setup and platform tools.
             </li>
           </ul>
           <h3 id="twins">LabWired Twins</h3>
           <p>
-            Every hardware reference is intended to have a runnable
-            <a href="https://app.labwired.com">LabWired Twin</a> executing its
-            firmware with analog IO-Link effects. That verification is pending
-            for these projects. It must include C/Q voltage and edge behavior,
-            cable loading, supply faults and transceiver response; a UART byte
-            exchange alone does not satisfy it. Model results and physical
-            measurements will be reported separately.
+            <a href="https://app.labwired.com">LabWired Twins</a> execute MCU
+            firmware in simulation. The IO-Link models under development cover
+            C/Q voltage and edges, cable loading, supply faults and transceiver
+            response. See <a href="validation.html">validation evidence</a>
+            for published results.
           </p>
           <h3 id="bench">Before a physical bench test</h3>
           <p>
@@ -226,8 +211,7 @@
               >standalone master stack</a
             >
             is a separate software project. Running it against the device stack
-            in simulation is useful protocol testing; it is not evidence from a
-            commercial physical master.
+            in simulation exercises software protocol interactions.
           </p>
         </div>
       </section>

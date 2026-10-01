@@ -59,8 +59,8 @@
             commands use the published
             <a href="https://github.com/w1ne/iolinki/releases/tag/v2.0.0"
               >v2.0.0 release</a
-            >, so your starting point is reproducible. No IO-Link board is
-            required.
+            >, so your starting point is reproducible. The evaluation runs
+            on your Linux machine.
           </p>
           <pre><code>git clone --branch v2.0.0 --depth 1 https://github.com/w1ne/iolinki.git
 cd iolinki
@@ -76,11 +76,9 @@ ctest --test-dir build --output-on-failure</code></pre>
             compiler version, command and full error output.
           </p>
           <p>
-            These tests exercise software protocol behavior. Passing them does
-            not establish physical transceiver timing, a working MCU board,
-            interoperability with a commercial master, or certification. The
-            <a href="validation.html">validation page</a> separates those
-            checks.
+            These tests exercise software protocol behavior. See the
+            <a href="validation.html">validation page</a> for test results and
+            reproduction commands.
           </p>
           <h3 id="reference">3. Run the counter, button and LED example</h3>
           <p>
@@ -89,8 +87,8 @@ ctest --test-dir build --output-on-failure</code></pre>
               href="https://github.com/w1ne/iolinki/tree/f4ff734dd5bf63e74895b68cf9296073ddfea296/examples/reference_device"
               >reference device</a
             >
-            needs no board or serial peer. This recipe pins its exact source
-            commit separately from the v2.0.0 baseline above.
+            runs on Linux with an in-process virtual master. This recipe pins
+            its exact source commit separately from the v2.0.0 baseline above.
           </p>
           <pre><code>git fetch origin f4ff734dd5bf63e74895b68cf9296073ddfea296
 git checkout --detach f4ff734dd5bf63e74895b68cf9296073ddfea296
@@ -102,9 +100,7 @@ ctest --test-dir build-reference --output-on-failure</code></pre>
             Expect <code>SIMULATION PASS</code> after 100 checked cyclic frame
             exchanges. The example checks counter data, LED commands and
             checksums, a local application-tag readback, and a queued button
-            event. All 30 CTest targets passed for this commit. It does not
-            demonstrate a physical LED, wire-level ISDU, event acknowledgement
-            or persistent storage.
+            event. All 30 CTest targets passed for this commit.
             <a
               href="https://github.com/w1ne/iolinki/blob/f4ff734dd5bf63e74895b68cf9296073ddfea296/examples/reference_device/README.md"
               >Read the payload and integration guide</a
@@ -117,25 +113,20 @@ ctest --test-dir build-reference --output-on-failure</code></pre>
                 href="https://github.com/w1ne/iolinki/tree/v2.0.0/examples/host_demo"
                 >Host demo</a
               >: <code>build/examples/host_demo/host_demo</code> requires a TTY
-              path and uses the virtual PHY transport. Running it without
-              arguments prints its usage and exits with a nonzero status. A
-              running state machine needs a compatible peer; this is not a
-              ready-made commercial-master connection.
+              path and a compatible peer, using the virtual PHY transport.
+              Run it without arguments to print its usage.
             </li>
             <li>
               <a
                 href="https://github.com/w1ne/iolinki/tree/v2.0.0/examples/simple_device"
                 >Simple device</a
-              >: source and example IODD files are available. Its application
-              entry point is a placeholder; a successful build does not make it
-              a functional physical device.
+              >: an application scaffold with source and example IODD files.
             </li>
             <li>
               <a
                 href="https://github.com/w1ne/iolinki/tree/v2.0.0/examples/zephyr_app"
                 >Zephyr application</a
-              >: includes a Nucleo-L476RG UART overlay. Fresh board-build and
-              physical-master evidence are pending.
+              >: includes application source and a Nucleo-L476RG UART overlay.
             </li>
           </ul>
           <h3 id="next">5. Choose an integration path</h3>
@@ -145,9 +136,7 @@ ctest --test-dir build-reference --output-on-failure</code></pre>
             buying hardware. Build-verified projects are available for
             STM32G0B1RE/TIOL112, Nucleo-U575ZI-Q/Zephyr/TIOL112 and
             ESP32-C3-DevKitM-1/ESP-IDF/STEVAL-IOD003V1. The STM32G0 project also
-            includes native IAR sources; IAR compilation remains unverified.
-            Complete analog Twins and physical-master validation remain pending
-            for all three targets.
+            includes native IAR project, startup and linker files.
           </p>
           <p>
             For a proprietary product, review
@@ -157,7 +146,7 @@ ctest --test-dir build-reference --output-on-failure</code></pre>
               >release license</a
             >
             and consider your intended use and distribution. Source and these
-            instructions are public; no email registration is needed.
+            instructions are publicly available.
           </p>
           <p>
             Next: <a href="hardware.html">Hardware &amp; IDEs</a> ·

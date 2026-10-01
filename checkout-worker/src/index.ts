@@ -3,8 +3,19 @@ import Stripe from 'stripe';
 import { config, email, sha256 } from './config';
 import { certificate } from './certificate';
 import { supportsCertificateText } from './certificate-font';
-import { TIERS, type Config, type Env, type Holder, type Job, type License, type Order, type Payment, type Snapshot, type Tier } from './types';
+import { TIERS, type ApprovedQuote, type Config, type Env, type Holder, type Job, type License, type Order, type Payment, type Snapshot, type Tier } from './types';
 
+function certificateName(value: unknown): string | null {
+  if (typeof value !== 'string' || !value.trim() || value.length > 200 || /[\u0000-\u001f\u007f-\u009f\u2028\u2029]/u.test(value)) return null;
+  const text = value.trim();
+  return supportsCertificateText(text) ? text : null;
+}
+function quotedFamily(quote: ApprovedQuote): Snapshot['productFamily'] | null {
+  const name = certificateName(quote.family_name);
+  const scope = quote.family_scope;
+  if (!name || typeof scope !== 'string' || !scope.trim() || scope.length > 1500 || /[\u0000-\u0009\u000b\u000c\u000e-\u001f\u007f-\u009f]/u.test(scope) || !supportsCertificateText(scope)) return null;
+  return {name,scope:scope.trim()};
+}
 function holderFor(tier: Tier, value: unknown): Holder | null {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
   const fields = value as Record<string, unknown>;
@@ -59,10 +70,10 @@ function checkoutUrl(session:Stripe.Checkout.Session):string {
 async function createCheckout(request: Request, env: Env, cfg: Config) {
   if (request.headers.get('Origin')!==cfg.origin) return json({error:'Origin not allowed'},403);
   if (!request.headers.get('Content-Type')?.startsWith('application/json')) return json({error:'JSON required'},400,cfg.origin);
-  const raw=await boundedBody(request,2000);if(raw===null)return json({error:'Request too large'},413,cfg.origin);
+  const raw=await boundedBody(request,4000);if(raw===null)return json({error:'Request too large'},413,cfg.origin);
   let body: Record<string,unknown>;
   try { body=JSON.parse(raw); } catch { return json({error:'Invalid request'},400,cfg.origin); }
-  const keys=['tier','attemptId','termsVersion','termsHash','acceptTerms','holder'];
+  const keys=['tier','attemptId','termsVersion','termsHash','acceptTerms','holder','productFamily','quoteReference'];
   if (!body || Array.isArray(body) || Object.keys(body).some(x=>!keys.includes(x)) ||
       !['single','team'].includes(body.tier as string) || typeof body.attemptId!=='string' ||
       !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(body.attemptId) ||
@@ -71,17 +82,29 @@ async function createCheckout(request: Request, env: Env, cfg: Config) {
   const tier=body.tier as Tier,id=body.attemptId.toLowerCase();
   const holder=holderFor(tier,body.holder);
   if (!holder) return json({error:'Single requires a named individual; Team requires a legal company and contact person. Names must be renderable in the certificate font; contact the licensor for unsupported names.'},400,cfg.origin);
+  const familyName=certificateName(body.productFamily);
+  if (!familyName || typeof body.quoteReference!=='string' || !/^[a-zA-Z0-9_-]{8,80}$/.test(body.quoteReference))
+    return json({error:'Enter the product-family name and quote reference from your agreed quote'},400,cfg.origin);
+  const quote=await env.DB.prepare('SELECT * FROM approved_quotes WHERE id=?').bind(body.quoteReference).first<ApprovedQuote>();
+  let quoteHolder: Holder | null = null;
+  try { if(quote) quoteHolder=holderFor(quote.tier,JSON.parse(quote.holder)); } catch {}
+  const productFamily=quote ? quotedFamily(quote) : null;
+  if (!quote || quote.revoked_at!==null || quote.expires_at<=Date.now() || quote.approved_at>Date.now() ||
+      quote.tier!==tier || JSON.stringify(quoteHolder)!==JSON.stringify(holder) || !productFamily || productFamily.name!==familyName)
+    return json({error:'This quote is unavailable or does not match the holder, tier and product family. Contact the licensor.'},409,cfg.origin);
+  const previous=await env.DB.prepare('SELECT id FROM orders WHERE quote_id=?').bind(quote.id).first<{id:string}>();
+  if(previous && previous.id!==id) return json({error:'This quote already has a purchase attempt. Contact the licensor before paying again.'},409,cfg.origin);
   const bucket=Math.floor(Date.now()/60000),key=await sha256((request.headers.get('CF-Connecting-IP')??'unknown')+':'+bucket);
   const limit=await env.DB.prepare('INSERT INTO purchase_limits(key,bucket,count) VALUES(?,?,1) ON CONFLICT(key) DO UPDATE SET count=count+1 RETURNING count').bind(key,bucket).first<{count:number}>();
   if(!limit || limit.count>10)return json({error:'Too many purchase attempts. Please wait a minute.'},429,cfg.origin);
   await env.DB.prepare('DELETE FROM purchase_limits WHERE bucket<?').bind(bucket-2).run();
-  const snapshot: Snapshot={tier,...TIERS[tier],holder,currency:'eur',priceId:cfg.prices[tier],livemode:cfg.livemode,terms:cfg.terms,
+  const snapshot: Snapshot={tier,...TIERS[tier],holder,productFamily,quoteReference:quote.id,scopeModel:'product-family-v2',currency:'eur',priceId:cfg.prices[tier],livemode:cfg.livemode,terms:cfg.terms,
     issuer:cfg.issuer,taxPolicy:cfg.taxPolicy,licensedVersion:cfg.licensedVersion,ownerEmail:cfg.ownerEmail,emailFrom:cfg.emailFrom,acceptedAt:Date.now()};
-  await env.DB.prepare('INSERT INTO orders(id,tier,snapshot,created_at) VALUES(?,?,?,?) ON CONFLICT(id) DO NOTHING').bind(id,tier,JSON.stringify(snapshot),snapshot.acceptedAt).run();
+  await env.DB.prepare('INSERT INTO orders(id,tier,snapshot,created_at,quote_id) VALUES(?,?,?,?,?) ON CONFLICT DO NOTHING').bind(id,tier,JSON.stringify(snapshot),snapshot.acceptedAt,quote.id).run();
   const order=await env.DB.prepare('SELECT * FROM orders WHERE id=?').bind(id).first<Order>();
-  if (!order) throw Error('order unavailable');
+  if (!order) return json({error:'This quote already has a purchase attempt'},409,cfg.origin);
   const stored=JSON.parse(order.snapshot) as Snapshot;
-  if (stored.tier!==tier || stored.terms.sha256!==cfg.terms.sha256 || stored.livemode!==cfg.livemode || JSON.stringify(stored.holder)!==JSON.stringify(holder)) return json({error:'Start a new purchase attempt'},409,cfg.origin);
+  if (stored.tier!==tier || stored.terms.sha256!==cfg.terms.sha256 || stored.livemode!==cfg.livemode || JSON.stringify(stored.holder)!==JSON.stringify(holder) || stored.quoteReference!==quote.id || JSON.stringify(stored.productFamily)!==JSON.stringify(productFamily)) return json({error:'Start a new purchase attempt'},409,cfg.origin);
   if(order.state!=='pending')return json({error:'This order is already being processed. Check your email before starting another payment.'},409,cfg.origin);
   const api=stripe(env);
   if(order.session_id){
@@ -96,7 +119,7 @@ async function createCheckout(request: Request, env: Env, cfg: Config) {
       stored.taxPolicy==='automatic-exclusive' && price.tax_behavior!=='exclusive') throw Error('price mismatch');
   const session=await api.checkout.sessions.create({mode:'payment',allowed_payment_method_types:['card'],line_items:[{price:stored.priceId,quantity:1}],
     success_url:cfg.origin+'/purchase-success.html',cancel_url:cfg.origin+'/purchase-cancelled.html',
-    metadata:{order_id:id,terms_version:stored.terms.version},billing_address_collection:'required',customer_creation:'always',
+    metadata:{order_id:id,terms_version:stored.terms.version,quote_reference:stored.quoteReference!,product_family:stored.productFamily!.name},billing_address_collection:'required',customer_creation:'always',
     automatic_tax:{enabled:stored.taxPolicy==='automatic-exclusive'}}, {idempotencyKey:`checkout-${id}`});
   const url=checkoutUrl(session);
   const saved=await env.DB.prepare("UPDATE orders SET session_id=?,checkout_url=? WHERE id=? AND state='pending' AND (session_id IS NULL OR session_id=?)").bind(session.id,url,id,session.id).run();
@@ -118,6 +141,11 @@ async function webhook(request:Request,env:Env) {
   const order=await env.DB.prepare('SELECT * FROM orders WHERE id=?').bind(orderId??'').first<Order>();
   if (!order) return json({received:true});
   const snap=JSON.parse(order.snapshot) as Snapshot;
+  // Legacy snapshots keep their accepted rights; v2 issuance requires its frozen agreed scope.
+  if(snap.scopeModel==='product-family-v2' && (!snap.productFamily || !snap.quoteReference)) {
+    await env.DB.prepare("UPDATE orders SET state='quarantined' WHERE id=? AND state!='paid'").bind(order.id).run();
+    return json({received:true});
+  }
   const payment=validSession(session,order,snap);
   if (!payment) {await env.DB.prepare("UPDATE orders SET state='quarantined' WHERE id=? AND state!='paid'").bind(order.id).run();return json({received:true});}
   const licenseId='lic_'+await sha256(session.id), now=Date.now();
@@ -149,7 +177,7 @@ async function deliver(env:Env) {
       const snap=JSON.parse(license.snapshot) as Snapshot,payment=JSON.parse(license.payment) as Payment;
       const message={from:snap.emailFrom,to:[job.recipient],subject:`${snap.livemode?'':'[TEST MODE] '}iolinki ${job.role==='buyer'?'software license':'purchase notification'} — ${snap.label}`,
         text:job.role==='buyer'?`Your ${snap.label} software license certificate is attached.\nLicense: ${license.id}\nStripe receipt: ${payment.receiptUrl}\nTerms: ${snap.terms.url}\nThis is a software license record, not IO-Link certification.`:
-          `Paid ${snap.label} order ${license.order_id}\nLicense holder: ${snap.holder.name} (${snap.holder.kind})\nBuyer: ${payment.buyerName} <${payment.buyerEmail}>\nLicense: ${license.id}\nAmount: EUR ${(payment.total/100).toFixed(2)}\nPayment: ${payment.intentId}`,
+          `Paid ${snap.label} order ${license.order_id}\nLicense holder: ${snap.holder.name} (${snap.holder.kind})\n${snap.productFamily ? 'Product family: '+snap.productFamily.name+'\nAgreed range: '+snap.productFamily.scope+'\nQuote: '+snap.quoteReference+'\n' : ''}Buyer: ${payment.buyerName} <${payment.buyerEmail}>\nLicense: ${license.id}\nAmount: EUR ${(payment.total/100).toFixed(2)}\nPayment: ${payment.intentId}`,
         ...(job.role==='buyer'?{attachments:[{filename:`iolinki-${license.id}.pdf`,content:base64(await certificate(license))}]}:{})};
       const response=await fetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:`Bearer ${env.EMAIL_API_KEY}`,'Content-Type':'application/json','Idempotency-Key':job.id},body:JSON.stringify(message),signal:AbortSignal.timeout(15000)});
       if(!response.ok)throw Error(`email provider status ${response.status}`);

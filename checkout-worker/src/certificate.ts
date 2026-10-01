@@ -14,6 +14,7 @@ export async function certificate(license: License): Promise<Uint8Array> {
     `Issuer contact: ${snapshot.issuer.email}`,
     `License holder (${snapshot.holder.kind === 'individual' ? 'named individual' : 'legal company'}): ${snapshot.holder.name}`,
     ...(snapshot.holder.kind === 'company' ? [`Company contact: ${snapshot.holder.contact}`] : []),
+    ...(snapshot.productFamily ? [`Product family: ${snapshot.productFamily.name}`, `Agreed range: ${snapshot.productFamily.scope}`, `Quote reference: ${snapshot.quoteReference}`] : []),
     `Included assistance: ${snapshot.assistance.hours} hours (${snapshot.assistance.kind})`, snapshot.assistance.scope,
     'Reproducible product bug corrections do not consume custom porting assistance hours.',
     supportsCertificateText(payment.buyerName)
