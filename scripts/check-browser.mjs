@@ -68,12 +68,14 @@ try {
         assert.equal(await page.locator('meta[name="checkout-api"]').getAttribute('content'), '', `${label}: no live checkout configured`);
         await page.locator('label[for="tier-team"]').click();
         assert.equal(await page.locator('#tier-team').isChecked(), true, `${label}: license selector works`);
-        assert.deepEqual(await page.locator('#holder-kind option').evaluateAll(options => options.map(option => option.value)), ['company','sole-trader']);
-        for (const kind of ['company','sole-trader']) {
-          await page.locator('#holder-kind').selectOption(kind);
-          assert.equal(await page.locator('#company-contact').isVisible(), true, label + ': technical contact is visible');
-          assert.equal(await page.locator('#company-contact').getAttribute('required'), '', label + ': technical contact is required');
-        }
+
+        assert.equal(await page.locator('#holder-kind').count(), 0, label + ': no obsolete business holder selector');
+        assert.equal(await page.locator('#company-contact').isVisible(), true, label + ': Company contact is visible');
+        assert.equal(await page.locator('#company-contact').getAttribute('required'), '', label + ': Company contact is required');
+        await page.locator('label[for="tier-single"]').click();
+        assert.equal(await page.locator('#company-contact').isVisible(), false, label + ': Indie contact is hidden');
+        assert.equal(await page.locator('#company-contact').getAttribute('required'), null, label + ': Indie has no contact requirement');
+        assert.match(await page.locator('#holder-label').textContent(), /individual/);
         assert.equal(await page.locator('#product-family').getAttribute('required'), '', label + ': agreed family is required');
         assert.equal(await page.locator('#quote-reference').getAttribute('required'), '', label + ': approved quote is required');
 

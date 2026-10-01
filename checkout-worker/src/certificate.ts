@@ -13,7 +13,7 @@ export async function certificate(license: License): Promise<Uint8Array> {
     `Issuer: ${snapshot.issuer.name}`, snapshot.issuer.address,
     `Issuer contact: ${snapshot.issuer.email}`,
     `License holder (${snapshot.holder.kind === 'individual' ? 'named individual' : snapshot.holder.kind === 'sole-trader' ? 'business sole trader' : 'legal company'}): ${snapshot.holder.name}`,
-    ...(snapshot.holder.kind !== 'individual' ? [`${snapshot.scopeModel === 'business-family-v3' ? 'Technical contact' : 'Company contact'}: ${snapshot.holder.contact}`] : []),
+    ...(snapshot.holder.kind !== 'individual' ? [`${['business-family-v3','indie-company-v4'].includes(snapshot.scopeModel??'') ? 'Technical contact' : 'Company contact'}: ${snapshot.holder.contact}`] : []),
     ...(snapshot.productFamily ? [`Product family: ${snapshot.productFamily.name}`, `Agreed range: ${snapshot.productFamily.scope}`, `Quote reference: ${snapshot.quoteReference}`] : []),
     `Included assistance: ${snapshot.assistance.hours} hours (${snapshot.assistance.kind})`, snapshot.assistance.scope,
     'Reproducible product bug corrections do not consume custom porting assistance hours.',
@@ -21,7 +21,7 @@ export async function certificate(license: License): Promise<Uint8Array> {
       ? `Purchaser: ${payment.buyerName}`
       : 'Purchaser name: see the original payment receipt.',
     `Purchaser email: ${payment.buyerEmail}`,
-    ...(snapshot.scopeModel === 'business-family-v3' ? [`Package: ${snapshot.label}`, 'Unlimited authorized employees and contractors working on the agreed product family.'] : [`Tier: ${snapshot.label}${snapshot.seats !== undefined ? '; developer seats: '+snapshot.seats : ''}`]),
+    ...(['business-family-v3','indie-company-v4'].includes(snapshot.scopeModel??'') ? [`Package: ${snapshot.label}`, ...(snapshot.scopeModel === 'indie-company-v4' && snapshot.tier === 'single' ? ['Named individual: own independent product family. Employer/company rights are not granted through an employee.'] : ['Unlimited authorized employees and contractors working on the agreed product family.'])] : [`Tier: ${snapshot.label}${snapshot.seats !== undefined ? '; developer seats: '+snapshot.seats : ''}`]),
     `Licensed version: ${snapshot.licensedVersion}`,
     'License rights and services are governed by the accepted terms below.',
     `Payment: EUR ${(payment.total / 100).toFixed(2)}; tax: EUR ${(payment.tax / 100).toFixed(2)}`,

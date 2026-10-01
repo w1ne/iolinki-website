@@ -18,7 +18,7 @@ npm run deploy
 
 The merchant account, issuer, tax policy, notification address, sender domain and executable purchase terms need owner approval before activation. `LICENSE.COMMERCIAL` remains the public commercial overview; the placeholder terms page is not an accepted contract.
 
-1. Select the Stripe account and test mode. Create account-owned, active, nonrecurring EUR Prices for Product Family (139900 cents) and Integration (469900 cents), quantity one. The server verifies price currency, amount and account mode. Stripe SDK 23.0.0 pins its default API version to `2026-09-30.endive`; validate this version with the selected account before launch.
+1. Select the Stripe account and test mode. Create account-owned, active, nonrecurring EUR Prices for Indie (139900 cents) and Company (469900 cents), quantity one. The server verifies price currency, amount and account mode. Stripe SDK 23.0.0 pins its default API version to `2026-09-30.endive`; validate this version with the selected account before launch.
 2. Approve a complete immutable terms snapshot. Copy `terms.template.json`, set its version, exact plain-text terms, SHA-256 of that UTF-8 text, and `approved: true`. Publish that same text at `SITE_ORIGIN/terms/VERSION.html`; never edit a published accepted version. Provision its JSON as `TERMS_JSON`. Publishing/approving matching content is an operator launch gate, not inferred from a hash alone.
 3. Set `ISSUER_JSON` to an approved `{name,address,email}` object, `LICENSED_VERSION` to the licensed release scope, `OWNER_EMAIL`, and `EMAIL_FROM` to an authorized sender. Configure Resend with a verified sender domain. Set `TAX_POLICY` explicitly to `none` or `automatic-exclusive`; the latter requires exclusive Stripe Prices and complete automatic-tax calculation. Inclusive prices and invoices are not implemented. Confirm applicable tax treatment before using either option.
 4. Create the D1 database in the intended Cloudflare account, replace the placeholder database ID, and apply `migrations/0001_checkout.sql`. Configure a Worker hostname/routing; workers.dev and previews are disabled. Provision secrets using `wrangler secret put`: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `TERMS_JSON`, `ISSUER_JSON`, `EMAIL_API_KEY`. Set remaining nonsecret variables in a reviewed environment configuration.
@@ -47,39 +47,34 @@ Rollback: set `PURCHASES_ENABLED=false` and blank the site's API meta value. Kee
 - [Cloudflare D1 transactional batch](https://developers.cloudflare.com/d1/worker-api/d1-database/)
 - [Resend email API and attachments](https://resend.com/docs/api-reference/emails/send-email) and [24-hour idempotency window](https://resend.com/docs/dashboard/emails/idempotency-keys)
 
-## Business holders and package records (v3)
+## Indie and Company holders (v4)
 
-Both packages require a legal company or a sole trader acting for their business,
-with a named technical contact. Requests use holder kind "company" or "sole-trader".
-Product Family is EUR1,399 with two onboarding hours; Integration is EUR4,699
-with eight total scoped hours. Both grant the same one-family rights, usable source,
-documentation and reference release, with unlimited authorized employees and
-contractors working on that family. New snapshots do not record developer seats.
-Legacy individual and five-seat snapshots retain their original accepted terms.
+Indie (EUR1,399, internal SKU single) is issued to one named individual for their own
+independent product family, with two onboarding hours. It does not grant employer/
+company rights through an employee. Company (EUR4,699, internal SKU team) requires
+the legal company and named technical contact, with unlimited authorized employees
+and contractors working on the agreed family and eight total scoped integration
+hours. Both packages have the same source/docs/reference release and perpetual,
+royalty-free one-family rights. New snapshots omit developer-seat counts.
 
-Integration includes setup/build configuration review, MCU/PHY callback and wiring
-review, a written integration checklist and findings/report from the agreed build/
-test review. Quarterly reviews during the included first year count within the eight
-total hours. Agree target, compiler, PHY and tasks before booking.
+Company's configuration/MCU/PHY reviews, written checklist and findings/report,
+including first-year quarterly reviews, fit within eight total hours. Agree target,
+compiler, PHY and tasks before booking.
 
 ## Approved quote provenance
 
-Apply migration 0003 after migrations 0001/0002. Existing approved quotes retain
-product-family-v2 provenance; only explicitly approved business-family-v3 quotes
-bound to holder, contact, tier and family can create new orders. New checkout requires
-terms scopeModel=business-family-v3. The internal SKU keys single/team and configured
-Stripe Price IDs are retained; their public labels are Product Family/Integration.
+Apply migration 0004 after 0001–0003. It expands allowed quote provenance while
+copying all existing records unchanged. Only explicitly approved indie-company-v4
+quotes bound to tier, holder and family can create new orders. New config requires
+the v4 scope marker. Existing v1/v2/v3 snapshots retain accepted holders and rights,
+including individual, company or business sole-trader and historical seat fields.
+Legacy delivery does not apply current holder rules.
 
-One quote creates one order; accepted scope is frozen in the order/certificate/owner
-record and Stripe metadata. Expiry/revocation blocks new checkout creation/recovery
-but does not cancel existing Stripe sessions, change accepted payments or revoke
-historical licenses. There is no public approval endpoint.
+One quote creates one order; its scope is frozen in snapshots/certificate/owner
+record and Stripe metadata. Expiry/revocation blocks checkout creation/recovery,
+not existing payment sessions or accepted/issued rights. No public approval endpoint.
 
-Holder, contact and family names use the certificate font's Unicode coverage before
-order creation. Supported Latin/Cyrillic are retained. Unsupported names require a
-privately handled quote.
-
-The current terms template uses 2026-10-01-business-family-v3 with approved=false.
-The v1 and v2 JSON/HTML archives are unchanged. Purchases, live purchases and delivery
-remain disabled until actual merchant account/payment/certificate/receipt/owner
-notification verification is complete. Fixture tests mock payment and email.
+The current template uses 2026-10-02-indie-company-v4 with approved=false.
+Historical v1/v2/v3 JSON and HTML archives are unchanged. Checkout remains disabled
+until real merchant account/payment/certificate/receipt/owner notification checks
+pass; fixture tests use mocked payment and email.

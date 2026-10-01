@@ -62,38 +62,36 @@
           <form id="purchase-form">
             <div class="row">
               <div class="col-6 col-12-medium">
-                <h3>Product Family — €1,399</h3>
-                <p>Held by your company or business sole trader, covering one agreed product family with unlimited authorized employees and contractors. Includes two onboarding hours for build/setup, MCU/PHY wiring and callback review, and a written bring-up checklist; one year of updates and bug fixes; a 48-hour email response target.</p>
+                <h3>Indie — €1,399</h3>
+                <p>Issued to one named individual for their own independent product family. Includes two onboarding hours for build/setup, MCU/PHY wiring and callback review, a written bring-up checklist, one year of updates and bug fixes and 48-hour email support. Employer or company projects require a Company license held by that legal company.</p>
                 <input
                   type="radio"
                   name="tier"
                   id="tier-single"
                   value="single"
                   checked
-                /><label for="tier-single">Product Family</label>
+                /><label for="tier-single">Indie</label>
               </div>
               <div class="col-6 col-12-medium">
-                <h3>Integration — €4,699</h3>
-                <p>The same business-owned license rights and source for one agreed product family. Includes eight total scoped engineering hours, a 24-hour priority email response target and quarterly technical reviews during the included first year within those hours. Deliverables include build/configuration and MCU/PHY wiring/callback reviews, a written integration checklist and findings from the agreed build/test review.</p>
+                <h3>Company — €4,699</h3>
+                <p>Held by the named legal company for one agreed product family, with unlimited authorized employees and contractors working on that family. Includes eight total scoped integration hours, 24-hour priority email support and quarterly reviews during the included first year within those hours. Deliverables include setup/build configuration and MCU/PHY callback/wiring review, a written checklist and findings/report from the agreed build/test review.</p>
                 <input
                   type="radio"
                   name="tier"
                   id="tier-team"
                   value="team"
-                /><label for="tier-team">Integration</label>
+                /><label for="tier-team">Company</label>
               </div>
             </div>
-            <p>Both packages receive the same source, documentation and reference release, with one year of updates and bug fixes. Manufactured units and customers are unlimited and royalty-free, including variants, successors and hardware revisions within the agreed commercial range. MCU/PHY changes retain the license. Agree board/compiler/PHY/tasks and the booking window before scheduling; larger ports and additional validation are quoted separately. Reproducible stack bug fixes do not consume custom engineering hours. Additional families, subsidiaries and broader SDK redistribution require agreed additional scope.</p>
+            <p>Both packages provide perpetual, royalty-free rights to one agreed product family and the same source, documentation and reference release, with one year of updates and bug fixes. Manufactured units and customers are unlimited and royalty-free, including variants, successors and hardware revisions within the agreed commercial range. MCU/PHY changes retain the license. Agree board/compiler/PHY/tasks and the booking window before scheduling; larger ports and additional validation are quoted separately. Reproducible stack bug fixes do not consume custom engineering hours. Additional families, subsidiaries and broader SDK redistribution require agreed additional scope.</p>
 <label for="quote-reference">Agreed quote reference</label>
 <input type="text" id="quote-reference" maxlength="80" required autocomplete="off" />
 <label for="product-family">Product-family name from your quote</label>
 <input type="text" id="product-family" maxlength="200" required autocomplete="off" />
 <p>The quote records the agreed named commercial range and license holder. Checkout uses that approved scope. Existing agreements retain their accepted rights.</p>
-<label for="holder-kind">License holder</label>
-<select id="holder-kind" required><option value="company">Legal company</option><option value="sole-trader">Sole trader acting for their business</option></select>
-<label id="holder-label" for="holder-name">Legal company name (license holder)</label>
+<label id="holder-label" for="holder-name">Full name of the independent individual license holder</label>
 <input type="text" id="holder-name" maxlength="200" required autocomplete="name" />
-<div id="company-fields"><label for="company-contact">Technical contact person</label><input type="text" id="company-contact" maxlength="200" required autocomplete="name" /></div>
+<div id="company-fields" hidden><label for="company-contact">Technical contact person</label><input type="text" id="company-contact" maxlength="200" autocomplete="name" /></div>
 <p id="purchase-status" role="status" aria-live="polite">
               Request a quote to agree your product family and integration scope.
             </p>
@@ -106,8 +104,8 @@
               >
               ·
               <a
-                href="terms/2026-10-01-business-family-v3.html"
-                >Product-family quote terms</a
+                href="terms/2026-10-02-indie-company-v4.html"
+                >Indie and Company quote terms</a
               >
             </p>
             <input type="checkbox" id="accept-terms" disabled /><label
