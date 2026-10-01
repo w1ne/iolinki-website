@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<!-- Spectral by HTML5 UP, html5up.net | @ajlkn. CCA 3.0: html5up.net/license -->
+<html lang="en">
+<head>
+    <title>Try the host stack | iolinki</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="A repeatable Linux evaluation before a hardware integration." />
+    <link rel="canonical" href="https://iolinki.com/getting-started.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="assets/css/guides.css" />
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+</head>
+<body class="is-preload">
+<div id="page-wrapper">
+<header id="header" >
+			<h1><a href="index.html">io<span>linki</span></a></h1>
+			<nav id="nav">
+				<ul>
+					<li class="special">
+						<a href="#menu" class="menuToggle"><span>Menu</span></a>
+						<div id="menu">
+							<ul>
+								<li><a href="index.html">Home</a></li>
+								<li><a href="getting-started.html">Try an example</a></li>
+                                <li><a href="hardware.html">Hardware &amp; IDEs</a></li>
+                                <li><a href="validation.html">Validation status</a></li>
+                                <li><a href="faq.html">FAQ &amp; licensing</a></li>
+                                <li><a href="index.html#one">Vision</a></li>
+								<li><a href="index.html#two">Architecture</a></li>
+								<li><a href="index.html#three">Capabilities</a></li>
+								<li><a href="index.html#cta">Licensing</a></li>
+								<li><a href="https://github.com/w1ne/iolinki">GitHub</a></li>
+								<li><a href="https://github.com/w1ne/iolinki-master">Master GitHub</a></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+			</nav>
+		</header>
+
+		
+<article id="main">
+    <header><h2>Try the host stack</h2><p>A repeatable Linux evaluation before a hardware integration.</p></header>
+    <section class="wrapper style5"><div class="inner guide-content">
+        <nav class="guide-nav" aria-label="Evaluation guides"><a href="getting-started.html">Getting started</a><a href="hardware.html">Hardware &amp; IDEs</a><a href="validation.html">Validation</a><a href="faq.html">FAQ &amp; licensing</a></nav>
+        
+<h3 id="host">1. Build a pinned release</h3>
+<p>Use Linux with Git, a C99 compiler and CMake 3.20 or newer. These commands use the published <a href="https://github.com/w1ne/iolinki/releases/tag/v2.0.0">v2.0.0 release</a>, so your starting point is reproducible. No IO-Link board is required.</p>
+<pre><code>git clone --branch v2.0.0 --depth 1 https://github.com/w1ne/iolinki.git
+cd iolinki
+cmake -S . -B build -DIOLINK_PLATFORM=LINUX -DBUILD_TESTING=ON
+cmake --build build --parallel
+ctest --test-dir build --output-on-failure</code></pre>
+<h3 id="expected">2. Read the result</h3>
+<p>The host build and all 22 CTest targets passed with GCC 13 on Linux on 1 October 2026. Expect CTest to report <code>100% tests passed</code>. A compiler or test failure on your machine is a useful issue report; include the tag, operating system, compiler version, command and full error output.</p>
+<p>These tests exercise software protocol behavior. Passing them does not establish physical transceiver timing, a working MCU board, interoperability with a commercial master, or certification. The <a href="validation.html">validation page</a> separates those checks.</p>
+<h3 id="examples">3. Inspect the existing examples</h3>
+<ul>
+<li><a href="https://github.com/w1ne/iolinki/tree/v2.0.0/examples/host_demo">Host demo</a>: <code>build/examples/host_demo/host_demo</code> requires a TTY path and uses the virtual PHY transport. Running it without arguments prints its usage and exits with a nonzero status. A running state machine needs a compatible peer; this is not a ready-made commercial-master connection.</li>
+<li><a href="https://github.com/w1ne/iolinki/tree/v2.0.0/examples/simple_device">Simple device</a>: source and example IODD files are available. Its application entry point is a placeholder; a successful build does not make it a functional physical device.</li>
+<li><a href="https://github.com/w1ne/iolinki/tree/v2.0.0/examples/zephyr_app">Zephyr application</a>: includes a Nucleo-L476RG UART overlay. Fresh board-build and physical-master evidence are pending.</li>
+</ul>
+<h3 id="next">4. Choose an integration path</h3>
+<p>Compare <a href="hardware.html">the exact board and IDE status</a> before buying hardware. Native IAR, STM32U5/Zephyr and ESP32/ESP-IDF reference projects are planned. UART source availability alone does not establish a complete TIOL112 or L6362A integration.</p>
+<p>For a proprietary product, review <a href="faq.html#licensing">commercial terms</a>. For GPL evaluation, read the <a href="https://github.com/w1ne/iolinki/blob/v2.0.0/LICENSE">release license</a> and consider your intended use and distribution. Source and these instructions are public; no email registration is needed.</p>
+<p>Next: <a href="hardware.html">Hardware &amp; IDEs</a> · <a href="validation.html">Validation evidence</a></p>
+
+    </div></section>
+</article>
+<footer id="footer">
+			<ul class="icons">
+				<li><a href="https://github.com/w1ne/iolinki" class="icon brands fa-github"><span
+							class="label">GitHub</span></a></li>
+				<li><a href="mailto:andrii@shylenko.com" class="icon solid fa-envelope"><span
+							class="label">Email</span></a></li>
+			</ul>
+			<ul class="copyright">
+				<li>&copy; iolinki.com</li>
+				<li><a href="https://labwired.com">LabWired</a></li>
+				<li><a href="https://kernelcad.com">kernelCAD</a></li>
+				<li><a href="https://koamtachi.com">koamtachi</a></li>
+				<li><a href="https://shylenko.com">shylenko.com</a></li>
+				<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+			</ul>
+		</footer>
+</div>
+<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.scrollex.min.js"></script>
+	<script src="assets/js/jquery.scrolly.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+
+
+</body>
+</html>

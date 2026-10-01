@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<!-- Spectral by HTML5 UP, html5up.net | @ajlkn. CCA 3.0: html5up.net/license -->
+<html lang="en">
+<head>
+    <title>Validation status | iolinki</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Software checks, physical interoperability and certification have separate evidence." />
+    <link rel="canonical" href="https://iolinki.com/validation.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="assets/css/guides.css" />
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+</head>
+<body class="is-preload">
+<div id="page-wrapper">
+<header id="header" >
+			<h1><a href="index.html">io<span>linki</span></a></h1>
+			<nav id="nav">
+				<ul>
+					<li class="special">
+						<a href="#menu" class="menuToggle"><span>Menu</span></a>
+						<div id="menu">
+							<ul>
+								<li><a href="index.html">Home</a></li>
+								<li><a href="getting-started.html">Try an example</a></li>
+                                <li><a href="hardware.html">Hardware &amp; IDEs</a></li>
+                                <li><a href="validation.html">Validation status</a></li>
+                                <li><a href="faq.html">FAQ &amp; licensing</a></li>
+                                <li><a href="index.html#one">Vision</a></li>
+								<li><a href="index.html#two">Architecture</a></li>
+								<li><a href="index.html#three">Capabilities</a></li>
+								<li><a href="index.html#cta">Licensing</a></li>
+								<li><a href="https://github.com/w1ne/iolinki">GitHub</a></li>
+								<li><a href="https://github.com/w1ne/iolinki-master">Master GitHub</a></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+			</nav>
+		</header>
+
+		
+<article id="main">
+    <header><h2>Validation status</h2><p>Software checks, physical interoperability and certification have separate evidence.</p></header>
+    <section class="wrapper style5"><div class="inner guide-content">
+        <nav class="guide-nav" aria-label="Evaluation guides"><a href="getting-started.html">Getting started</a><a href="hardware.html">Hardware &amp; IDEs</a><a href="validation.html">Validation</a><a href="faq.html">FAQ &amp; licensing</a></nav>
+        
+<p>This page states the available evaluation evidence as of 1 October 2026. It is not a certification or a blanket production-readiness claim.</p>
+<div class="table-wrapper"><table>
+<caption>Evidence by validation level</caption>
+<thead><tr><th scope="col">Check</th><th scope="col">Current evidence</th><th scope="col">What it establishes</th></tr></thead>
+<tbody>
+<tr><th scope="row">Linux host build and tests</th><td>v2.0.0 built with GCC 13; 22/22 CTest targets passed on 1 October 2026. <a href="getting-started.html#host">Reproduce the commands</a> and inspect <a href="https://github.com/w1ne/iolinki/tree/v2.0.0/tests">test source</a>.</td><td>Buildability and the behaviors covered by host tests.</td></tr>
+<tr><th scope="row">Device / standalone master simulation</th><td><a href="https://github.com/w1ne/iolinki-master">Separate master stack and software testing</a> are available.</td><td>Software protocol interactions. This does not establish commercial-master physical interoperability.</td></tr>
+<tr><th scope="row">MCU reference boards</th><td>L476RG UART example source exists; fresh build and physical evidence are pending. Three other reference projects are <a href="hardware.html">planned</a>.</td><td>Source availability or project intent, not validated board support.</td></tr>
+<tr><th scope="row">Commercial physical master</th><td>No published interoperability report has been established.</td><td>A master model, firmware and reproducible bench report are still needed.</td></tr>
+<tr><th scope="row">Official certification</th><td>No published official certification record has been established.</td><td>Feature descriptions and tests are not certification evidence.</td></tr>
+<tr><th scope="row">Deployed customer references</th><td>No public deployed-customer references have been established.</td><td>No customer deployment claim is made.</td></tr>
+</tbody></table></div>
+<h3 id="physical">What a useful physical validation report contains</h3>
+<ol>
+<li><strong>Reproducible setup:</strong> release or commit, build tools, MCU board, PHY and revisions, schematic/wiring, power setup and the master model/firmware.</li>
+<li><strong>Link behavior:</strong> wake-up and startup, negotiated COM mode and cycle time, stable cyclic process data, byte counts and measured C/Q timing.</li>
+<li><strong>Services:</strong> identification and mandatory parameters, ISDU reads/writes, errors and events, and data storage where applicable.</li>
+<li><strong>Recovery:</strong> cable disconnect/reconnect, power cycles, invalid frames and relevant fault handling, with pass/fail criteria and logs.</li>
+<li><strong>Scope:</strong> test duration, tested modes, limitations, and links to captures or reports. Certification, if obtained, needs its own official record.</li>
+</ol>
+<p>Consult the <a href="https://io-link.com/">IO-Link Community</a> for official technology and conformance information. Product qualification depends on the actual device, electronics and integration.</p>
+<h3 id="maintenance">Maintenance evidence</h3>
+<p>Review the <a href="https://github.com/w1ne/iolinki/releases">release history</a>, <a href="https://github.com/w1ne/iolinki/blob/v2.0.0/CHANGELOG.md">v2.0.0 changelog</a>, <a href="https://github.com/w1ne/iolinki/actions">CI runs</a> and <a href="https://github.com/w1ne/iolinki/issues">open issues</a>. They show published changes and current work; they do not create a release cadence or a new support SLA. Purchased support remains governed by the <a href="https://github.com/w1ne/iolinki/blob/main/LICENSE.COMMERCIAL">commercial terms</a> and your agreement.</p>
+<p>Start with <a href="getting-started.html">host evaluation</a>, then choose a <a href="hardware.html">hardware path</a>.</p>
+
+    </div></section>
+</article>
+<footer id="footer">
+			<ul class="icons">
+				<li><a href="https://github.com/w1ne/iolinki" class="icon brands fa-github"><span
+							class="label">GitHub</span></a></li>
+				<li><a href="mailto:andrii@shylenko.com" class="icon solid fa-envelope"><span
+							class="label">Email</span></a></li>
+			</ul>
+			<ul class="copyright">
+				<li>&copy; iolinki.com</li>
+				<li><a href="https://labwired.com">LabWired</a></li>
+				<li><a href="https://kernelcad.com">kernelCAD</a></li>
+				<li><a href="https://koamtachi.com">koamtachi</a></li>
+				<li><a href="https://shylenko.com">shylenko.com</a></li>
+				<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+			</ul>
+		</footer>
+</div>
+<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.scrollex.min.js"></script>
+	<script src="assets/js/jquery.scrolly.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+
+
+</body>
+</html>
