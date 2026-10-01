@@ -1,4 +1,5 @@
 import type { Config, Env, Issuer, Terms } from './types';
+import { supportsCertificateText } from './certificate-font';
 export async function sha256(text: string): Promise<string> {
   const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
   return Array.from(new Uint8Array(bytes), x => x.toString(16).padStart(2, '0')).join('');
@@ -23,6 +24,7 @@ export async function config(env: Env): Promise<Config> {
   if (!env.SINGLE_PRICE_ID?.startsWith('price_') || !env.TEAM_PRICE_ID?.startsWith('price_') || env.SINGLE_PRICE_ID === env.TEAM_PRICE_ID) throw Error('prices required');
   if (!['none','automatic-exclusive'].includes(env.TAX_POLICY ?? '')) throw Error('tax policy required');
   if (!env.LICENSED_VERSION?.trim() || env.LICENSED_VERSION.length > 200 || !email(env.OWNER_EMAIL) || !env.EMAIL_FROM || /[\r\n]/.test(env.EMAIL_FROM) || !env.EMAIL_API_KEY) throw Error('delivery configuration');
+  if ([terms.text, issuer.name, issuer.address, issuer.email, env.LICENSED_VERSION].some(text => !supportsCertificateText(text))) throw Error('certificate font configuration');
   return { origin, livemode, terms, issuer, taxPolicy: env.TAX_POLICY as Config['taxPolicy'], licensedVersion: env.LICENSED_VERSION,
     ownerEmail: env.OWNER_EMAIL, emailFrom: env.EMAIL_FROM, prices: {single:env.SINGLE_PRICE_ID,team:env.TEAM_PRICE_ID} };
 }

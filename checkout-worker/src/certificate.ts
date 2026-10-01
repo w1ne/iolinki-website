@@ -16,7 +16,10 @@ export async function certificate(license: License): Promise<Uint8Array> {
     ...(snapshot.holder.kind === 'company' ? [`Company contact: ${snapshot.holder.contact}`] : []),
     `Included assistance: ${snapshot.assistance.hours} hours (${snapshot.assistance.kind})`, snapshot.assistance.scope,
     'Reproducible product bug corrections do not consume custom porting assistance hours.',
-    `Purchaser: ${payment.buyerName}`, `Purchaser email: ${payment.buyerEmail}`,
+    supportsCertificateText(payment.buyerName)
+      ? `Purchaser: ${payment.buyerName}`
+      : 'Purchaser name: see the original payment receipt.',
+    `Purchaser email: ${payment.buyerEmail}`,
     `Tier: ${snapshot.label}; developer seats: ${snapshot.seats}`,
     `Licensed version: ${snapshot.licensedVersion}`,
     'License rights and services are governed by the accepted terms below.',

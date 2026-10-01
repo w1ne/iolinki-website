@@ -13,6 +13,8 @@ jobs:
           node-version: '22'
           cache: npm
           cache-dependency-path: checkout-worker/package-lock.json
+      - name: Install PDF text verification tool
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
       - run: npm ci
       - run: npm run check
       - run: npm run deploy

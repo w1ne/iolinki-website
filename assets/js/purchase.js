@@ -52,6 +52,10 @@
     try {
       const response = await fetch(new URL('/checkout', endpoint), {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tier:tier(),holder:tier()==='single'?{kind:'individual',name:holderName.value.trim()}:{kind:'company',name:holderName.value.trim(),contact:contact.value.trim()},attemptId:attempt,acceptTerms:true,termsVersion:catalog.terms.version,termsHash:catalog.terms.sha256}),signal:AbortSignal.timeout(20000)});
       const data = await response.json();
+      if (!response.ok && [400, 409, 429].includes(response.status) && typeof data.error === 'string') {
+        status.textContent = data.error;
+        return;
+      }
       const url = new URL(data.url ?? '');
       if (!response.ok || url.protocol !== 'https:' || url.hostname !== 'checkout.stripe.com') throw Error('unavailable');
       location.assign(url.href);
