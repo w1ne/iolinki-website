@@ -56,14 +56,14 @@
           </nav>
           <p>
             Royalty-free commercial licenses include source access and unlimited
-            commercial deployments. Your accepted purchase terms define the
+            manufactured units and customers within one agreed product family. Your accepted purchase terms define the
             license and included services.
           </p>
           <form id="purchase-form">
             <div class="row">
               <div class="col-6 col-12-medium">
                 <h3>Single Developer — €1,399</h3>
-                <p>Held by one named individual. Two onboarding hours: build/setup, MCU/PHY wiring and callback review, and a written bring-up checklist. One year of updates and bug fixes, with published email support.</p>
+                <p>Held by one named individual, with one developer and one agreed product family. Two onboarding hours: build/setup, MCU/PHY wiring and callback review, and a written bring-up checklist. One year of updates and bug fixes, with published email support.</p>
                 <input
                   type="radio"
                   name="tier"
@@ -74,7 +74,7 @@
               </div>
               <div class="col-6 col-12-medium">
                 <h3>Team — €4,699</h3>
-                <p>Held by the named legal company, with up to five authorized developers. Eight total scoped integration hours (not 2 + 8), published Team support and one year of updates and bug fixes. Seats may be reassigned; contractors on licensee projects count within five. Subsidiary rights need a separate quote.</p>
+                <p>Held by the named legal company, with up to five authorized developers and one agreed product family. Eight total scoped integration hours, published Team support and one year of updates and bug fixes. Seats may be reassigned; contractors on licensee projects count within five. Subsidiary rights need a separate quote.</p>
                 <input
                   type="radio"
                   name="tier"
@@ -83,16 +83,20 @@
                 /><label for="tier-team">Team</label>
               </div>
             </div>
-            <p>Both tiers receive the same source, documentation and reference release. Larger ports are quoted separately; agree Team board/compiler/PHY/validation scope before scheduling. Reproducible product bug corrections do not consume custom porting hours. Assistance does not guarantee a completed port, supplied hardware or conformity certification. Single employer-project use and other additional rights must be agreed in the quote.</p>
+            <p>Both tiers receive the same source, documentation and reference release. Unlimited manufactured units, customers, variants and hardware revisions within the agreed commercial range are royalty-free. Unrelated lines need a separate license. MCU/PHY changes within the family retain the license; porting and validation are separately quoted. Larger ports are quoted separately; agree Team board/compiler/PHY/validation scope before scheduling. Reproducible product bug corrections do not consume custom porting hours. Single employer-project use and other additional rights must be agreed in the quote.</p>
+<label for="quote-reference">Agreed quote reference</label>
+<input type="text" id="quote-reference" maxlength="80" required autocomplete="off" />
+<label for="product-family">Product-family name from your quote</label>
+<input type="text" id="product-family" maxlength="200" required autocomplete="off" />
+<p>The quote records the agreed named commercial range and license holder. Checkout uses that approved scope. Existing agreements retain their accepted rights.</p>
 <label id="holder-label" for="holder-name">Full name of the individual license holder</label>
 <input type="text" id="holder-name" maxlength="200" required autocomplete="name" />
 <div id="company-fields" hidden><label for="company-contact">Company contact person</label><input type="text" id="company-contact" maxlength="200" autocomplete="name" /></div>
 <p id="purchase-status" role="status" aria-live="polite">
-              Online checkout is not available yet. Contact us for a quote and
-              the applicable purchase terms.
+              Request a quote to agree your product family and integration scope.
             </p>
             <p id="tax-status">
-              Tax details will be shown when checkout is available.
+              Your quote sets out the price and applicable tax.
             </p>
             <p>
               <a id="purchase-terms" href="terms/purchase-terms.html"
@@ -100,8 +104,8 @@
               >
               ·
               <a
-                href="https://github.com/w1ne/iolinki/blob/main/LICENSE.COMMERCIAL"
-                >Published commercial license</a
+                href="terms/2026-10-01-product-family-v2.html"
+                >Product-family quote terms</a
               >
             </p>
             <input type="checkbox" id="accept-terms" disabled /><label
@@ -112,7 +116,7 @@
               <li>
                 <button
                   type="submit"
-                  id="purchase-button"
+                  id="purchase-button" hidden
                   class="button primary"
                   disabled
                 >

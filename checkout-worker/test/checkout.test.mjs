@@ -10,7 +10,7 @@ const endpoint='https://checkout.example';
 const origin='http://localhost';
 const secret='whsec_checkout_fixture_only';
 const text='Fixture purchase terms for automated tests only. Perpetual rights to the licensed version.';
-const terms={approved:true,version:'fixture-v1',sha256:createHash('sha256').update(text).digest('hex'),text,url:origin+'/terms/fixture-v1.html'};
+const terms={approved:true,scopeModel:'product-family-v2',version:'fixture-v1',sha256:createHash('sha256').update(text).digest('hex'),text,url:origin+'/terms/fixture-v1.html'};
 const base={PURCHASES_ENABLED:'true',DELIVERY_ENABLED:'true',MODE:'test',SITE_ORIGIN:origin,STRIPE_SECRET_KEY:'sk_test_fixture_only',STRIPE_WEBHOOK_SECRET:secret,SINGLE_PRICE_ID:'price_single',TEAM_PRICE_ID:'price_team',TERMS_JSON:JSON.stringify(terms),ISSUER_JSON:JSON.stringify({name:'Fixture Merchant',address:'Fixture address',email:'issuer@example.com'}),TAX_POLICY:'none',LICENSED_VERSION:'fixture-version',OWNER_EMAIL:'owner@example.com',EMAIL_FROM:'Fixture Merchant <licenses@example.com>',EMAIL_API_KEY:'re_fixture_only'};
 let bundle;
 before(async()=>{const result=await build({stdin:{contents:"import Worker from './src/index'; export default class extends Worker {async fetch(r){if(new URL(r.url).pathname==='/__test_delivery'){await this.scheduled();return new Response('done');}return super.fetch(r);}}",resolveDir:process.cwd(),loader:'ts'},bundle:true,write:false,format:'esm',platform:'browser',external:['cloudflare:*'],loader:{'.ttf':'binary'}});bundle=result.outputFiles[0].text;});
@@ -27,11 +27,14 @@ async function fixture(bindings={},sessionOverride={}) {
   if(url.hostname==='api.resend.com') {const message=await req.json();sent.push({message,key:req.headers.get('Idempotency-Key')});if(failEmails-->0)return Response.json({error:'temporary'}, {status:503});return Response.json({id:'email_'+sent.length});}
   throw Error('Unexpected outbound request '+url);
  }}));
- const db=await mf.getD1Database('DB');await db.exec((await readFile('migrations/0001_checkout.sql','utf8')).replaceAll('\n',' '));
+ const db=await mf.getD1Database('DB');for(const file of ['0001_checkout.sql','0002_approved_quotes.sql'])await db.exec((await readFile('migrations/'+file,'utf8')).replace(/^--.*$/gm,'').replaceAll('\n',' '));
  const api=await mf.getWorker();
  const post=(path,body,headers={})=>api.fetch(endpoint+path,{method:'POST',headers:{Origin:origin,'content-type':'application/json',...headers},body:JSON.stringify(body)});
  const acceptedTerms=JSON.parse(bindings.TERMS_JSON??base.TERMS_JSON);
- const checkout=async(tier='single',id=randomUUID(),holder=tier==='single'?{kind:'individual',name:'Named Engineer'}:{kind:'company',name:'Example Devices Ltd',contact:'Contact Engineer'})=>{const response=await post('/checkout',{tier,holder,attemptId:id,termsVersion:acceptedTerms.version,termsHash:acceptedTerms.sha256,acceptTerms:true});return {id,response,data:await response.json()};};
+ const checkout=async(tier='single',id=randomUUID(),holder=tier==='single'?{kind:'individual',name:'Named Engineer'}:{kind:'company',name:'Example Devices Ltd',contact:'Contact Engineer'},productFamily='Range Alpha',quoteReference='quote_'+id)=>{
+ const normalized={...holder,name:holder.name.trim(),...(holder.kind==='company'?{contact:holder.contact.trim()}:{})};
+ await db.prepare('INSERT INTO approved_quotes(id,tier,holder,family_name,family_scope,approved_at,expires_at) VALUES(?,?,?,?,?,?,?) ON CONFLICT(id) DO NOTHING').bind(quoteReference,tier,JSON.stringify(normalized),'Range Alpha','Named commercial range Alpha, including its variants, successors and hardware revisions. Unrelated lines excluded.',Date.now(),Date.now()+3600000).run();
+ const response=await post('/checkout',{tier,holder,productFamily,quoteReference,attemptId:id,termsVersion:acceptedTerms.version,termsHash:acceptedTerms.sha256,acceptTerms:true});return {id,response,data:await response.json()};};
  const webhook=async(order,eventId='evt_'+randomUUID(),type='checkout.session.completed')=>{const payload=JSON.stringify({id:eventId,object:'event',type,livemode:false,data:{object:{id:'cs_test_'+order}}});const signature=Stripe.webhooks.generateTestHeaderString({payload,secret});return api.fetch(endpoint+'/stripe/webhook',{method:'POST',headers:{'Stripe-Signature':signature},body:payload});};
  return {mf,db,api,post,checkout,webhook,requests,sent,setFailEmails:n=>{failEmails=n;}};
 }
@@ -103,3 +106,36 @@ test('prepared offering stays disabled and can be rendered in a test certificate
  const wrangler=await readFile('wrangler.jsonc','utf8');for(const flag of ['PURCHASES_ENABLED','LIVE_PURCHASES_ENABLED','DELIVERY_ENABLED'])assert.match(wrangler,new RegExp('"'+flag+'"\\s*:\\s*"false"'));
  await withFixture(async f=>{const{id}=await f.checkout();assert.equal(id.length,36);await f.webhook(id);await f.api.fetch(endpoint+'/__test_delivery');const buyer=f.sent.find(x=>x.message.to[0]==='buyer@example.com');assert.ok(buyer,'actual prepared terms must render and deliver through the fixture');const path='/tmp/iolinki-prepared-terms-test.pdf';await writeFile(path,Buffer.from(buyer.message.attachments[0].content,'base64'));const content=execFileSync('pdftotext',[path,'-'],{encoding:'utf8'});assert.match(content,/Two onboarding hours/);assert.match(content,/Contractors working on the licensee/);assert.ok(content.replace(/\s/g,'').includes(prepared.sha256));},{TERMS_JSON:JSON.stringify({...prepared,approved:true,url:origin+'/terms/'+prepared.version+'.html'})});
 });
+
+const quotedBody=(overrides={})=>({tier:'single',holder:{kind:'individual',name:'Named Engineer'},productFamily:'Range Alpha',quoteReference:'quote_fixture',attemptId:randomUUID(),termsVersion:terms.version,termsHash:terms.sha256,acceptTerms:true,...overrides});
+test('family and quote are mandatory and unsupported names reject before any order or Stripe call',()=>withFixture(async f=>{
+ for(const fields of [{productFamily:undefined},{productFamily:''},{productFamily:'  '},{productFamily:'Range\nAll'},{productFamily:'x'.repeat(201)},{productFamily:'张伟'},{quoteReference:undefined},{quoteReference:''}])assert.equal((await f.post('/checkout',quotedBody(fields))).status,400);
+ assert.equal((await f.db.prepare('SELECT COUNT(*) AS n FROM orders').first()).n,0);assert.equal(f.requests.length,0);
+}));
+test('unknown, expired, revoked or mismatched quotes cannot authorize buyer scope',()=>withFixture(async f=>{
+ const id=randomUUID();const quote='quote_'+id;const accepted=await f.checkout('single',id);assert.equal(accepted.response.status,200);
+ for(const fields of [{quoteReference:'quote_unknown'},{holder:{kind:'individual',name:'Another Person'}},{tier:'team',holder:{kind:'company',name:'Company',contact:'Contact'}},{productFamily:'All company products'}])assert.equal((await f.post('/checkout',quotedBody({quoteReference:quote,...fields}))).status,409);
+ const count=f.requests.length;await f.db.prepare('UPDATE approved_quotes SET approved_at=1,expires_at=2 WHERE id=?').bind(quote).run();assert.equal((await f.checkout('single',id)).response.status,409);
+ await f.db.prepare('UPDATE approved_quotes SET expires_at=?,revoked_at=? WHERE id=?').bind(Date.now()+3600000,Date.now(),quote).run();assert.equal((await f.checkout('single',id)).response.status,409);assert.equal(f.requests.length,count);
+}));
+test('approved quote scope is frozen once and paid rights survive later revocation or quote edits',()=>withFixture(async f=>{
+ const id=randomUUID(),quote='quote_'+id;const accepted=await f.checkout('single',id);assert.equal(accepted.response.status,200);
+ const original=JSON.parse((await f.db.prepare('SELECT snapshot FROM orders WHERE id=?').bind(id).first()).snapshot);assert.equal(original.productFamily.name,'Range Alpha');assert.match(original.productFamily.scope,/Unrelated lines excluded/);assert.equal(original.quoteReference,quote);assert.equal(original.scopeModel,'product-family-v2');
+ assert.equal((await f.checkout('single',randomUUID(),{kind:'individual',name:'Named Engineer'},'Range Alpha',quote)).response.status,409);
+ await f.db.prepare("UPDATE approved_quotes SET family_name='All products',family_scope='All future products',revoked_at=? WHERE id=?").bind(Date.now(),quote).run();
+ await f.webhook(id);const issued=JSON.parse((await f.db.prepare('SELECT snapshot FROM licenses WHERE order_id=?').bind(id).first()).snapshot);assert.deepEqual(issued,original);
+ await f.api.fetch(endpoint+'/__test_delivery');const buyer=f.sent.find(x=>x.message.to[0]==='buyer@example.com'),owner=f.sent.find(x=>x.message.to[0]==='owner@example.com');assert.ok(buyer);assert.ok(owner.message.text.includes('Product family: Range Alpha'));assert.ok(owner.message.text.includes(quote));assert.ok(!owner.message.text.includes('All future products'));
+ const file='/tmp/iolinki-product-family-test.pdf';await writeFile(file,Buffer.from(buyer.message.attachments[0].content,'base64'));const content=execFileSync('pdftotext',[file,'-'],{encoding:'utf8'});assert.match(content,/Product family: Range Alpha/);assert.ok(content.replace(/\s/g,'').includes(quote.replace(/\s/g,'')));assert.ok(!content.includes('All future products'));
+ const request=f.requests.find(x=>x.method==='POST'&&x.url.includes('api.stripe.com'));assert.equal(request.body.get('metadata[quote_reference]'),quote);assert.equal(request.body.get('metadata[product_family]'),'Range Alpha');
+}));
+test('legacy accepted snapshots retain their original scope when certificates are delivered',()=>withFixture(async f=>{
+ const{id}=await f.checkout();const row=await f.db.prepare('SELECT snapshot FROM orders WHERE id=?').bind(id).first();const snap=JSON.parse(row.snapshot);delete snap.productFamily;delete snap.quoteReference;delete snap.scopeModel;
+ await f.db.prepare('UPDATE orders SET snapshot=? WHERE id=?').bind(JSON.stringify(snap),id).run();await f.webhook(id);await f.api.fetch(endpoint+'/__test_delivery');const buyer=f.sent.find(x=>x.message.to[0]==='buyer@example.com');assert.ok(buyer);
+ const path='/tmp/iolinki-legacy-scope-test.pdf';await writeFile(path,Buffer.from(buyer.message.attachments[0].content,'base64'));assert.ok(!execFileSync('pdftotext',[path,'-'],{encoding:'utf8'}).includes('Product family:'));
+}));
+test('v2 family snapshot is required for automatic issuance',()=>withFixture(async f=>{
+ const{id}=await f.checkout();const row=await f.db.prepare('SELECT snapshot FROM orders WHERE id=?').bind(id).first();const snap=JSON.parse(row.snapshot);delete snap.productFamily;
+ await f.db.prepare('UPDATE orders SET snapshot=? WHERE id=?').bind(JSON.stringify(snap),id).run();await f.webhook(id);assert.equal((await f.db.prepare('SELECT COUNT(*) AS n FROM licenses').first()).n,0);assert.equal((await f.db.prepare('SELECT state FROM orders WHERE id=?').bind(id).first()).state,'quarantined');
+}));
+
+test('old terms cannot open new product-family checkout',()=>withFixture(async f=>{const result=await f.checkout();assert.equal(result.response.status,503);assert.equal(f.requests.length,0);},{TERMS_JSON:JSON.stringify({...terms,scopeModel:undefined})}));

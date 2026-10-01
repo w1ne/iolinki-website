@@ -56,82 +56,24 @@
           <h3 id="integration">Integration and product status</h3>
           <details>
             <summary>Can I start without hardware?</summary>
-            <p>
-              Yes.
-              <a href="getting-started.html"
-                >Build the pinned v2.0.0 Linux host stack and run its tests</a
-              >. The host build and 22 CTest targets passed with GCC 13 on 1
-              October 2026. This is software evaluation; it does not establish
-              physical IO-Link interoperability.
-            </p>
+            <p>Yes. <a href="getting-started.html">Build the pinned v2.0.0 Linux host stack and run its tests</a>. The host build and 22 CTest targets passed with GCC 13 on 1 October 2026.</p>
           </details>
           <details>
             <summary>
               Is there a native IAR project that does not require CMake?
             </summary>
-            <p>
-              Yes: the
-              <a
-                href="https://github.com/w1ne/iolinki/tree/1bc8d9c798efcea782f5fe79e963afc27f74eac8/examples/stm32g0_tiol112/iar"
-                >STM32G0B1RE project</a
-              >
-              includes source groups, C99 settings, ST IAR startup references
-              and a linker file. Configure the CMSIS package paths as described
-              in its README. The GCC firmware build is verified; native IAR
-              compilation has not been run and needs an EWARM installation and
-              license. See <a href="hardware.html">hardware and IDE status</a>.
-            </p>
+            <p><a href="https://github.com/w1ne/iolinki/tree/5572a628b8befa6a9c74496311da2359868f96d9/examples/stm32g0_tiol112/iar">STM32G0B1RE IAR project sources</a> include source groups, C99 settings, startup references and a linker file. Set the CMSIS paths from the README. GCC firmware build: passed. IAR build: requires EWARM verification. <a href="hardware.html">Hardware and IDE details</a>.</p>
           </details>
           <details>
             <summary>Which exact boards have build-verified examples?</summary>
-            <p>
-              Three reference projects have verified firmware builds:
-              STM32G0B1RE with Arm GCC and TIOL112; Nucleo-U575ZI-Q with Zephyr
-              3.7.2 and TIOL112; and ESP32-C3-DevKitM-1 with ESP-IDF 5.4.0 and
-              STEVAL-IOD003V1/L6362A. Source, build commands and wiring
-              instructions are published. Native IAR compilation, complete
-              analog LabWired Twins and physical-master validation remain
-              pending. Embedded flash persistence is unsupported. None is
-              presented as a validated turnkey physical device.
-              <a href="hardware.html">Compare the exact projects and evidence</a
-              >.
-            </p>
+            <p>Firmware builds passed for STM32G0B1RE with Arm GCC and TIOL112; Nucleo-U575ZI-Q with Zephyr 3.7.2 and TIOL112; and ESP32-C3-DevKitM-1 with ESP-IDF 5.4.0 and STEVAL-IOD003V1/L6362A. Each includes source, build commands and wiring. Storage: RAM. <a href="hardware.html">Compare projects and build evidence</a>.</p>
           </details>
           <details>
             <summary>Are TIOL112 and L6362A already integrated?</summary>
-            <p>
-              The published projects include TIOL112 and L6362A control drivers
-              plus MCU UART, GPIO, wake-up and microsecond-timer adapters.
-              Driver host tests and all three firmware builds pass. The
-              <a
-                href="https://github.com/w1ne/iolinki/tree/5572a628b8befa6a9c74496311da2359868f96d9/examples/esp32_l6362a"
-                >ESP32-C3/L6362A example</a
-              >
-              documents STEVAL-IOD003V1 headers, power settings and the required
-              IN1 modification; it is an ESP-IDF project. These implementations
-              are not yet proof of electrical interoperability or a
-              physical-master exchange. Consult
-              <a href="hardware.html#references">manufacturer documentation</a>
-              and <a href="validation.html">validation status</a>.
-            </p>
+            <p>The reference projects include TIOL112 and L6362A drivers with MCU UART, GPIO, wake-up and microsecond-timer adapters. Driver host tests and all three firmware builds passed. The <a href="https://github.com/w1ne/iolinki/tree/5572a628b8befa6a9c74496311da2359868f96d9/examples/esp32_l6362a">ESP32-C3/L6362A example</a> documents STEVAL-IOD003V1 headers, power settings and the IN1 modification. <a href="hardware.html#references">Manufacturer documentation</a>.</p>
           </details>
           <details>
-            <summary>
-              Which ESP32 example should I use instead of the experimental
-              thermal sensor project?
-            </summary>
-            <p>
-              Use the
-              <a
-                href="https://github.com/w1ne/iolinki/tree/5572a628b8befa6a9c74496311da2359868f96d9/examples/esp32_l6362a"
-                >ESP32-C3 counter/button-and-LED reference</a
-              >. It provides an ESP-IDF application, L6362A adapter, build
-              recipe and STEVAL-IOD003V1 wiring guide, with a verified firmware
-              build. The older thermal-sensor repository is not the validated
-              hardware reference for this path. The new example still needs
-              physical wiring and commercial-master testing before it can be
-              described as a demonstrated physical IO-Link device.
-            </p>
+            <summary>Which ESP32 applications are available?</summary><p>The <a href="https://github.com/w1ne/iolinki/tree/5572a628b8befa6a9c74496311da2359868f96d9/examples/esp32_l6362a">ESP32-C3 counter/button-and-LED reference</a> includes an ESP-IDF application, L6362A adapter and STEVAL-IOD003V1 wiring. The <a href="https://github.com/w1ne/thermal-io-link-condition-sensor">thermal condition sensor</a> provides native ESP-IDF MLX90640 classifier source; its <a href="https://github.com/w1ne/thermal-io-link-condition-sensor/actions/runs/36903421579">source/build CI passed</a> for commit f24680e.</p>
           </details>
           <details>
             <summary>
@@ -151,8 +93,7 @@
                 href="https://github.com/w1ne/iolinki/blob/5572a628b8befa6a9c74496311da2359868f96d9/tools/IODD_GEN.md"
                 >IODD generator produces draft XML</a
               >; no published IODD Checker validation report has been
-              established for the new reference. Local parameter API tests do
-              not prove wire-level ISDU transfers.
+              established for the new reference.
             </p>
           </details>
           <details>
@@ -169,51 +110,31 @@
                 >porting guide</a
               >
               and board-specific instructions, and include firmware, master
-              model, logs and timing captures in a report. These are diagnostic
-              starting points; physical fault/recovery validation remains
-              pending.
+              model, logs and timing captures in a report.
             </p>
           </details>
           <details>
             <summary>
               Has this been validated with a real commercial IO-Link master?
             </summary>
-            <p>
-              No published commercial-master physical interoperability report
-              has been established. The separate
-              <a href="https://github.com/w1ne/iolinki-master"
-                >iolinki-master stack</a
-              >
-              and simulations are useful software checks. They do not substitute
-              for bench results identifying a commercial master's model and
-              firmware. See
-              <a href="validation.html#physical">the report checklist</a>.
-            </p>
+            <p>Commercial-master bench validation is pending. Current measured evidence covers firmware builds, host tests and software master/device exchanges. <a href="validation.html">See results and reproduction commands</a>.</p>
           </details>
           <details>
             <summary>Is there official IO-Link certification?</summary>
-            <p>
-              No published official certification record has been established.
-              Protocol capabilities, passing software tests and certification
-              are separate facts.
-              <a href="validation.html">Review current validation evidence</a>.
-            </p>
+            <p>Certification status: not certified.</p>
           </details>
           <details>
             <summary>Are there public deployed-customer references?</summary>
-            <p>
-              No public deployed-customer references have been established. We
-              make no customer deployment claim. Use the published source, tests
-              and <a href="validation.html">validation status</a> to scope your
-              evaluation.
-            </p>
+            <p>Public customer references are not currently listed. <a href="validation.html">Published build and test evidence</a> is available for evaluation.</p>
           </details>
-          <h3 id="licensing">Commercial licensing</h3>
+          <details><summary>What counts as one product family?</summary><p>One named commercial product range agreed in the quote, including its variants, successors and hardware revisions. Manufactured units, customers and variants within that range are unlimited and royalty-free. An unrelated product line needs a separate license. Enterprise scope for multiple families, subsidiaries or broader SDK redistribution is quoted separately. Existing or separately agreed rights keep their accepted scope.</p></details>
+<details><summary>Does changing MCU or PHY require a new license?</summary><p>The license remains valid when the MCU or PHY changes within the agreed product family. Porting and hardware validation are separately scoped and quoted.</p></details>
+<h3 id="licensing">Commercial licensing</h3>
           <p>
             The answers below follow
             <a
-              href="https://github.com/w1ne/iolinki/blob/main/LICENSE.COMMERCIAL"
-              >LICENSE.COMMERCIAL</a
+              href="terms/2026-10-01-product-family-v2.html"
+              >current product-family quote terms</a
             >. Confirm the final scope and current terms in your quote and
             signed agreement.
           </p>
@@ -221,18 +142,18 @@
             <summary>
               What does the €1,399 Single Developer license cover?
             </summary>
-            <p>The €1,399 one-time, royalty-free license is held by one named individual, with one developer seat and unlimited commercial deployments. It includes two onboarding hours for build/setup, MCU/PHY wiring and callback review, and a written bring-up checklist. Larger ports are quoted separately. One year of updates and bug fixes and published email support remain included. Employer-project use and additional rights must be agreed in the quote; the personal holder is not a company license.</p>
+            <p>The €1,399 one-time, royalty-free license is held by one named individual, with one developer and one agreed product family. Manufactured units and customers within that named commercial range are unlimited and royalty-free. It includes two onboarding hours for build/setup, MCU/PHY wiring and callback review, and a written bring-up checklist. Larger ports are quoted separately. One year of updates and bug fixes and published email support remain included. Employer-project use and additional rights must be agreed in the quote; the personal holder is not a company license.</p>
           </details>
           <details>
             <summary>What does the €4,699 Team license include?</summary>
-            <p>The €4,699 one-time, royalty-free license is held by the named legal company with up to five authorized developers. It includes the same source, documentation and reference release, unlimited deployments, one year of updates and bug fixes, priority email support, quarterly technical reviews and up to eight total scoped integration hours, replacing the Single onboarding allowance (not 2 + 8 hours). Seats may be reassigned when engineers change. Contractors working on licensee projects count within the five developers; subsidiary rights require a separate quote.</p>
+            <p>The €4,699 one-time, royalty-free license is held by the named legal company with up to five authorized developers and one agreed product family. It includes the same source, documentation and reference release, unlimited manufactured units and customers within the agreed family, one year of updates and bug fixes, priority email support, quarterly technical reviews and up to eight total scoped integration hours, replacing the Single onboarding allowance. Seats may be reassigned when engineers change. Contractors working on licensee projects count within the five developers; subsidiary rights require a separate quote.</p>
           </details>
           <details>
             <summary>
               Do the eight integration hours cover PHY porting and hardware
               integration?
             </summary>
-            <p>Single includes two onboarding hours for build/setup, MCU/PHY wiring and callback review, and a written bring-up checklist. Team includes up to eight total scoped integration hours: agree the board, compiler, PHY and validation tasks before scheduling. Larger ports need a separate quote. Included hours are an assistance allowance, not a guaranteed completed port, supplied hardware or conformity certification. Reproducible product bug corrections do not consume custom porting hours. Both tiers receive the same usable source, documentation and reference release; current hardware validation limits remain published separately.</p>
+            <p>Single includes two onboarding hours for build/setup, MCU/PHY wiring and callback review, and a written bring-up checklist. Team includes up to eight total scoped integration hours: agree the board, compiler, PHY and validation tasks before scheduling. Larger ports need a separate quote. Reproducible product bug corrections do not consume custom porting hours. Both tiers receive the same usable source, documentation and reference release; current hardware validation limits remain published separately.</p>
           </details>
           <details>
             <summary>Do use rights expire after the first year?</summary>
@@ -262,16 +183,7 @@
               Is licensing tied to each DeviceID, downstream customer or
               processor target?
             </summary>
-            <p>
-              The published tiers are priced by developer seats and include
-              unlimited commercial deployments. They do not list per-DeviceID,
-              per-customer or per-processor fees. Confirm the exact distribution
-              scope in your agreement, including compiled binaries supplied
-              through a proprietary SOM SDK. The end-product manufacturer still
-              defines its own VendorID, DeviceID, process data and IODD and
-              validates the finished device; example identifiers are not a
-              production identity allocation.
-            </p>
+            <p>New Single and Team quotes cover one agreed named product family, with unlimited manufactured units, customers, variants and hardware revisions within that commercial range, royalty-free. MCU/PHY changes within that family retain the license; porting and validation are separately quoted. Unrelated lines require a separate license. Enterprise multi-family, subsidiary and broader SDK redistribution scope is quoted. Already granted or separately agreed rights retain their accepted scope.</p>
           </details>
           <details>
             <summary>
@@ -296,78 +208,30 @@
               Can I start evaluating my TIOL112 board before a commercial
               commitment?
             </summary>
-            <p>
-              Start with the public GPL source and the
-              <a
-                href="https://github.com/w1ne/iolinki/tree/5572a628b8befa6a9c74496311da2359868f96d9/examples/stm32g0_tiol112"
-                >STM32G0B1RE/TIOL112 reference project</a
-              >; adapt the documented MCU callbacks and wiring to your board.
-              This evaluation remains under the published GPL terms. No separate
-              time-limited evaluation agreement is currently published. Contact
-              the licensor if your process requires a defined evaluation period
-              or different terms. Build verification does not replace testing
-              your electronics with a physical master.
-            </p>
+            <p>Start with the public GPL source and the <a href="https://github.com/w1ne/iolinki/tree/5572a628b8befa6a9c74496311da2359868f96d9/examples/stm32g0_tiol112">STM32G0B1RE/TIOL112 reference project</a>; adapt its documented MCU callbacks and wiring to your board. Evaluation follows the published GPL terms. Contact the licensor for a defined evaluation period or different terms.</p>
           </details>
           <details>
             <summary>Is there an Enterprise option?</summary>
-            <p>
-              The published Enterprise tier is quoted individually and includes
-              site-wide developer seats and negotiated services.
-              <a href="mailto:andrii@shylenko.com">Contact the licensor</a> with
-              your board, toolchain, product and integration needs. Custom scope
-              and any SLA belong in that agreement.
-            </p>
+            <p>Enterprise is quoted for multiple product families, subsidiaries, broader SDK redistribution and negotiated developer seats/services. <a href="mailto:andrii@shylenko.com">Send your product ranges, board, toolchain and integration requirements</a>.</p>
           </details>
           <h3 id="maintenance">Maintenance and evaluation help</h3>
           <details>
             <summary>
               What is the release cadence, and how are bugs prioritized?
             </summary>
-            <p>
-              No fixed release cadence or severity-based bug-priority policy is
-              currently published. Review the actual
-              <a href="https://github.com/w1ne/iolinki/releases"
-                >release history</a
-              >,
-              <a href="https://github.com/w1ne/iolinki/issues">issue tracker</a>
-              and
-              <a href="https://github.com/w1ne/iolinki/actions">CI results</a>.
-              Include the affected commit, target, toolchain, impact and a
-              reproducible case in a bug report. Commercial support response
-              times follow the applicable license terms; a response time is not
-              a guaranteed fix date. Any required release schedule, fix deadline
-              or maintenance commitment needs explicit agreement.
-            </p>
+            <p>Release scheduling and support priorities are agreed in the quote. <a href="https://github.com/w1ne/iolinki/releases">Release history</a>, <a href="https://github.com/w1ne/iolinki/issues">reported issues</a> and <a href="https://github.com/w1ne/iolinki/actions">CI results</a> are public. Send the affected commit, target, toolchain, impact and reproduction when reporting a bug.</p>
           </details>
           <details>
             <summary>
               Which versions receive maintenance and security fixes?
             </summary>
-            <p>
-              No separate public supported-version, end-of-life or
-              security-maintenance schedule is currently documented. The
-              included year of updates and optional extended support do not by
-              themselves define a security-fix cadence or a particular version's
-              support lifetime. Confirm any required security reporting process,
-              supported versions and maintenance period in your commercial
-              agreement.
-            </p>
+            <p>Supported versions, maintenance periods and security reporting requirements are agreed in the quote. The commercial tiers include one year of updates and bug fixes, with optional extended support.</p>
           </details>
           <details>
             <summary>
               How can I assess maintenance and report a problem?
             </summary>
-            <p>
-              Inspect
-              <a href="https://github.com/w1ne/iolinki/releases">releases</a>,
-              <a href="https://github.com/w1ne/iolinki/actions">CI</a> and
-              <a href="https://github.com/w1ne/iolinki/issues">issues</a>.
-              Include your release/commit, toolchain, target, reproduction
-              commands and logs in a report. No additional response or release
-              SLA is implied by these public resources; commercial support
-              follows the published terms and your agreement.
-            </p>
+            <p>Inspect <a href="https://github.com/w1ne/iolinki/releases">releases</a>, <a href="https://github.com/w1ne/iolinki/actions">CI</a> and <a href="https://github.com/w1ne/iolinki/issues">issues</a>. Include your release/commit, toolchain, target, reproduction commands and logs. Commercial support follows the accepted agreement.</p>
           </details>
           <details>
             <summary>

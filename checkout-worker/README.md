@@ -67,3 +67,26 @@ Holder and company contact names are checked against the same Unicode font glyph
 coverage used by the PDF before an order or Stripe session is created. Supported
 Latin and Cyrillic names are retained; names outside that font coverage require
 a separately handled quote rather than a payable order that cannot be rendered.
+
+## Product-family quotes (v2)
+
+Apply migration 0002 before configuring a future checkout. Approved quotes are
+entered through private merchant operations; there is no public approval endpoint.
+Each approved record binds the holder, tier, named commercial range and description
+to a unique quote reference, approval time and expiry; revoked records block new
+checkout. Buyer requests must contain both the quote reference and matching family
+name. The certificate range comes only from the approved record.
+
+One quote can create one order. Same-attempt retries reuse its frozen snapshot; a
+changed quote or scope requires merchant review and a new quote. Expiry/revocation
+blocks checkout creation/recovery but does not cancel already-created Stripe
+sessions or retroactively change accepted payments or issued rights. Family scope
+is frozen in the order/certificate/owner notification, with quote reference recorded
+in Stripe metadata. Legacy accepted snapshots deliver with their original scope.
+
+The current template uses 2026-10-01-product-family-v2, approved=false.
+New checkout requires terms scopeModel=product-family-v2; old terms cannot open
+a new restricted-family purchase. Historical delivery uses accepted snapshots. Previous
+version text is archived unchanged under terms/2026-10-01-offering-v1.json and
+the previous public terms HTML remains unchanged. Checkout activation and actual
+account/payment/delivery verification remain separate required work.
