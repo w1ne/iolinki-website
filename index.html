@@ -23,6 +23,7 @@
 	<meta name="twitter:description" content="Professional IO-Link Device and Master Stacks. A vendor-agnostic implementation of the IO-Link V1.1.5 protocol, optimized for Zephyr RTOS, bare-metal, and simulation." />
 	<meta name="twitter:image" content="https://iolinki.com/images/banner.jpg" />
 	<link rel="stylesheet" href="assets/css/main.css" />
+	<link rel="stylesheet" href="assets/css/guides.css" />
 	<noscript>
 		<link rel="stylesheet" href="assets/css/noscript.css" />
 	</noscript>
@@ -57,7 +58,11 @@
 						<div id="menu">
 							<ul>
 								<li><a href="index.html">Home</a></li>
-								<li><a href="#one">Vision</a></li>
+								<li><a href="getting-started.html">Try an example</a></li>
+                                <li><a href="hardware.html">Hardware &amp; IDEs</a></li>
+                                <li><a href="validation.html">Validation status</a></li>
+                                <li><a href="faq.html">FAQ &amp; licensing</a></li>
+                                <li><a href="#one">Vision</a></li>
 								<li><a href="#two">Architecture</a></li>
 								<li><a href="#three">Capabilities</a></li>
 								<li><a href="#cta">Licensing</a></li>
@@ -78,13 +83,26 @@
 					Optimized for Zephyr RTOS, Bare-Metal, and Simulation<br />
 					Deterministic. Malloc-Free. Hardware-Agnostic.</p>
 				<ul class="actions special">
-					<li><a href="#cta" class="button primary">Get Started</a></li>
+					<li><a href="getting-started.html" class="button primary">Try an example</a></li>
 				</ul>
 			</div>
 			<a href="#one" class="more scrolly">Learn More</a>
 		</section>
 
-		<!-- One -->
+		<section id="evaluate" class="wrapper style2 special">
+            <div class="inner">
+                <h2>A practical starting point</h2>
+                <p>Build the Linux host stack, compare planned board projects, and review what has been verified before choosing a target.</p>
+                <ul class="actions special">
+                    <li><a href="getting-started.html" class="button">Getting started</a></li>
+                    <li><a href="hardware.html" class="button">Hardware</a></li>
+                    <li><a href="validation.html" class="button">Validation</a></li>
+                    <li><a href="faq.html" class="button">FAQ</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- One -->
 		<section id="one" class="wrapper style1 special">
 			<div class="inner">
 				<header class="major">
@@ -98,7 +116,7 @@
 					<li><span class="icon solid fa-tachometer-alt major style2"><span class="label">Fast</span></span>
 					</li>
 					<li><span class="icon solid fa-check-circle major style3"><span
-								class="label">Compliant</span></span></li>
+								class="label">Verification</span></span></li>
 				</ul>
 			</div>
 		</section>
@@ -133,7 +151,7 @@
 			<div class="inner">
 				<header class="major">
 					<h2>Technical Capabilities</h2>
-					<p>Everything you need to build and test production IO-Link conversations.</p>
+					<p>Explore protocol behavior in software, then validate your hardware integration.</p>
 				</header>
 				<ul class="features">
 					<li class="icon solid fa-code">
@@ -171,12 +189,12 @@
 		<section id="cta" class="wrapper style4">
 			<div class="inner">
 				<header>
-					<h2>Production Ready</h2>
-					<p>GPLv3-or-later for GPL-compatible use, with commercial licensing available for proprietary
-						products.</p>
+					<h2>Evaluate, then integrate</h2>
+					<p>Start with the host tests and inspect the hardware roadmap. Physical master interoperability and certification need separate evidence. <a href="validation.html">See validation status</a> and <a href="faq.html#licensing">licensing options</a>.</p>
 				</header>
 				<ul class="actions stacked">
-					<li><a href="mailto:andrii@shylenko.com" class="button fit primary">Contact Sales</a></li>
+					<li><a href="getting-started.html" class="button fit primary">Try an example</a></li>
+                    <li><a href="mailto:andrii@shylenko.com" class="button fit">Discuss integration</a></li>
 					<li><a href="https://github.com/w1ne/iolinki" class="button fit">GitHub</a></li>
 					<li><a href="https://github.com/w1ne/iolinki-master" class="button fit">Master GitHub</a></li>
 				</ul>
@@ -195,7 +213,7 @@
 				<li>&copy; iolinki.com</li>
 				<li><a href="https://labwired.com">LabWired</a></li>
 				<li><a href="https://kernelcad.com">kernelCAD</a></li>
-				<li><a href="https://koamtachi.com">koamtachi</a></li>
+				<li><a href="https://komatachi.com">komatachi</a></li>
 				<li><a href="https://shylenko.com">shylenko.com</a></li>
 				<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
 			</ul>

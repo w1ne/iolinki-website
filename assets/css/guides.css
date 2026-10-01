@@ -1,0 +1,23 @@
+/* Small additions to the existing Spectral theme for evaluation guides. */
+.guide-nav { display: flex; flex-wrap: wrap; gap: 0.75em 1.5em; margin-bottom: 2.5em; }
+.guide-content { max-width: 72em; }
+.guide-content details { border-top: 1px solid #ddd; padding: 1em 0; }
+.guide-content summary { cursor: pointer; font-weight: 600; line-height: 1.6; }
+.guide-content details p { margin: 0.8em 0 0; }
+.guide-content h3 { margin-top: 2em; }
+.guide-content caption { text-align: left; font-weight: 600; margin-bottom: 1em; }
+.guide-content th, .guide-content td { vertical-align: top; }
+.guide-content tbody th { font-size: inherit; letter-spacing: normal; text-transform: none; padding: 0.75em; }
+.guide-content code { overflow-wrap: anywhere; }
+.guide-content pre code { overflow-wrap: normal; }
+.guide-content a:focus-visible, .guide-content summary:focus-visible { outline: 2px solid #ed4933; outline-offset: 4px; }
+@media screen and (max-width: 736px) {
+    #main > header h2 { font-size: 1.5em; letter-spacing: 0.12em; }
+    .guide-content .table-wrapper { overflow-x: auto; }
+    .guide-content table { min-width: 42em; }
+}
+
+#evaluate .actions { flex-wrap: wrap; gap: 0.75em; }
+#evaluate .actions li { padding-left: 0; }
+.guide-content pre { max-width: 100%; overflow-x: auto; padding: 1em; background: #f0f0f0; border-radius: 3px; }
+.guide-content pre code { display: block; font-family: monospace; letter-spacing: 0; line-height: 1.7; }

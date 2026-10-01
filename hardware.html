@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<!-- Spectral by HTML5 UP, html5up.net | @ajlkn. CCA 3.0: html5up.net/license -->
+<html lang="en">
+<head>
+    <title>Hardware &amp; IDEs | iolinki</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="What exists today and what is planned for evaluation." />
+    <link rel="canonical" href="https://iolinki.com/hardware.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="assets/css/guides.css" />
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+</head>
+<body class="is-preload">
+<div id="page-wrapper">
+<header id="header" >
+			<h1><a href="index.html">io<span>linki</span></a></h1>
+			<nav id="nav">
+				<ul>
+					<li class="special">
+						<a href="#menu" class="menuToggle"><span>Menu</span></a>
+						<div id="menu">
+							<ul>
+								<li><a href="index.html">Home</a></li>
+								<li><a href="getting-started.html">Try an example</a></li>
+                                <li><a href="hardware.html">Hardware &amp; IDEs</a></li>
+                                <li><a href="validation.html">Validation status</a></li>
+                                <li><a href="faq.html">FAQ &amp; licensing</a></li>
+                                <li><a href="index.html#one">Vision</a></li>
+								<li><a href="index.html#two">Architecture</a></li>
+								<li><a href="index.html#three">Capabilities</a></li>
+								<li><a href="index.html#cta">Licensing</a></li>
+								<li><a href="https://github.com/w1ne/iolinki">GitHub</a></li>
+								<li><a href="https://github.com/w1ne/iolinki-master">Master GitHub</a></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+			</nav>
+		</header>
+
+		
+<article id="main">
+    <header><h2>Hardware &amp; IDEs</h2><p>What exists today and what is planned for evaluation.</p></header>
+    <section class="wrapper style5"><div class="inner guide-content">
+        <nav class="guide-nav" aria-label="Evaluation guides"><a href="getting-started.html">Getting started</a><a href="hardware.html">Hardware &amp; IDEs</a><a href="validation.html">Validation</a><a href="faq.html">FAQ &amp; licensing</a></nav>
+        
+<p>No board below is presented as a validated, turnkey physical IO-Link device. “Source available” means you can inspect the application; “planned” means a usable reference project has not been published.</p>
+<div class="table-wrapper"><table>
+<caption>Device evaluation matrix — 1 October 2026</caption>
+<thead><tr><th scope="col">Target</th><th scope="col">Toolchain / PHY</th><th scope="col">Status and remaining proof</th></tr></thead>
+<tbody>
+<tr><th scope="row">STM32G0B1RE</th><td>Arm GCC and native IAR source project / TIOL112</td><td><strong>GCC firmware build verified.</strong> <a href="https://github.com/w1ne/iolinki/tree/f4ff734dd5bf63e74895b68cf9296073ddfea296/examples/stm32g0_tiol112">Build, wiring and native IAR project</a>. Proposed MCU pin map; board-header mapping, IAR compilation, analog LabWired twin and physical-master validation remain pending. Flash persistence is unsupported.</td></tr>
+<tr><th scope="row">Nucleo-U575ZI-Q</th><td>Zephyr 3.7.2 / TIOL112</td><td><strong>Firmware build verified.</strong> <a href="https://github.com/w1ne/iolinki/tree/f4ff734dd5bf63e74895b68cf9296073ddfea296/samples/stm32u5_tiol112">Pinned Zephyr project, wiring and timing guide</a>. Uses UART 8E1, interrupt receive and a microsecond hardware timer. Board wiring, analog LabWired twin and physical-master validation remain pending. Flash persistence is unsupported.</td></tr>
+<tr><th scope="row">ESP32-C3-DevKitM-1</th><td>ESP-IDF 5.4.0 / STEVAL-IOD003V1 (L6362A)</td><td><strong>Firmware build verified.</strong> <a href="https://github.com/w1ne/iolinki/tree/f4ff734dd5bf63e74895b68cf9296073ddfea296/examples/esp32_l6362a">Native project and ST shield wiring guide</a>. Requires the documented shield configuration and IN1 modification. UART error and transmit-timeout handling have host regression tests. Analog LabWired twin, physical wiring and master validation remain pending. Flash persistence is unsupported.</td></tr>
+<tr><th scope="row">Nucleo-L476RG</th><td>Zephyr / UART transport</td><td><strong>Source available.</strong> <a href="https://github.com/w1ne/iolinki/tree/v2.0.0/examples/zephyr_app">Application and overlay</a> exist. Fresh board build and physical validation are pending; this is not a demonstrated TIOL112 or L6362A reference project.</td></tr>
+<tr><th scope="row">Linux host</th><td>CMake / virtual PHY</td><td><strong>Host build and tests verified.</strong> <a href="getting-started.html#host">v2.0.0 build instructions</a>. Simulation and TTY transport do not prove the electrical link.</td></tr>
+</tbody></table></div>
+<h3 id="phy">UART is one part of the physical interface</h3>
+<p>A <a href="https://github.com/w1ne/iolinki/blob/f4ff734dd5bf63e74895b68cf9296073ddfea296/docs/hardware/TIOL112.md">portable TIOL112 control driver</a> is now available. Its host tests cover SIO polarity, transmit release, wake-up consumption, diagnostics and initialization failures. The driver and reference application also compile as Cortex-M0+ GCC objects. This evidence covers reusable C code; a target still needs its MCU callbacks, wiring and physical tests.</p>
+<p>The MCU UART transports bytes. A physical IO-Link design also needs the transceiver, supply and C/Q circuitry, control and fault GPIOs, wake-up handling and measured timing. The projects include portable TIOL112 and L6362A control drivers; their electrical behavior still needs analog Twin and physical validation.</p>
+<h3 id="references">Manufacturer references</h3>
+<ul>
+<li><a href="https://www.ti.com/product/TIOL112">TIOL112 product documentation</a> and <a href="https://www.ti.com/lit/ds/symlink/tiol112.pdf">datasheet</a>.</li>
+<li><a href="https://www.st.com/en/evaluation-tools/steval-iod003v1.html">ST STEVAL-IOD003V1 documentation</a>: an L6362A evaluation board with a UART/GPIO controller interface. Its STM32 Nucleo connectors do not make an ESP32 connection plug-and-play.</li>
+<li><a href="https://www.st.com/en/evaluation-tools/nucleo-g0b1re.html">ST Nucleo-G0B1RE board reference</a>.</li>
+<li><a href="https://docs.zephyrproject.org/latest/boards/st/nucleo_l476rg/doc/index.html">Zephyr Nucleo-L476RG board documentation</a> and <a href="https://docs.espressif.com/projects/esp-idf/en/stable/esp32/get-started/index.html">ESP-IDF getting started</a>. These explain the platforms; they do not establish iolinki validation.</li>
+</ul>
+<h3 id="twins">LabWired Twins</h3>
+<p>Every hardware reference is intended to have a runnable <a href="https://app.labwired.com">LabWired Twin</a> executing its firmware with analog IO-Link effects. That verification is pending for these projects. It must include C/Q voltage and edge behavior, cable loading, supply faults and transceiver response; a UART byte exchange alone does not satisfy it. Model results and physical measurements will be reported separately.</p>
+<h3 id="bench">Before a physical bench test</h3>
+<p>Record your exact MCU board, transceiver board/revision, pin connections, firmware commit and toolchain. Use the vendor wiring and power documentation, then capture a commercial master's model and firmware, IODD, COM mode, process-data sizes and test results. Publish logs for startup, cyclic data, ISDU, events and reconnect behavior. See the <a href="validation.html#physical">physical validation checklist</a>.</p>
+<p>The <a href="https://github.com/w1ne/iolinki-master">standalone master stack</a> is a separate software project. Running it against the device stack in simulation is useful protocol testing; it is not evidence from a commercial physical master.</p>
+
+    </div></section>
+</article>
+<footer id="footer">
+			<ul class="icons">
+				<li><a href="https://github.com/w1ne/iolinki" class="icon brands fa-github"><span
+							class="label">GitHub</span></a></li>
+				<li><a href="mailto:andrii@shylenko.com" class="icon solid fa-envelope"><span
+							class="label">Email</span></a></li>
+			</ul>
+			<ul class="copyright">
+				<li>&copy; iolinki.com</li>
+				<li><a href="https://labwired.com">LabWired</a></li>
+				<li><a href="https://kernelcad.com">kernelCAD</a></li>
+				<li><a href="https://komatachi.com">komatachi</a></li>
+				<li><a href="https://shylenko.com">shylenko.com</a></li>
+				<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+			</ul>
+		</footer>
+</div>
+<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.scrollex.min.js"></script>
+	<script src="assets/js/jquery.scrolly.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+
+
+</body>
+</html>
