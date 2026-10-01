@@ -8,7 +8,6 @@
   const termsLink = document.querySelector('#purchase-terms');
   const endpoint = document.querySelector('meta[name="checkout-api"]')?.content;
   let catalog, busy = false, attempt;
-  const holderKind = document.querySelector('#holder-kind');
   const holderName = document.querySelector('#holder-name');
   const family = document.querySelector('#product-family');
   const quote = document.querySelector('#quote-reference');
@@ -17,16 +16,15 @@
   const companyFields = document.querySelector('#company-fields');
   const tier = () => form.querySelector('input[name="tier"]:checked').value;
   const updateHolder = () => {
-    const company = holderKind.value === 'company';
-    holderLabel.textContent = company ? 'Legal company name (license holder)' : 'Registered name of the sole trader acting for their business';
-    companyFields.hidden = false; contact.required = true;
+    const company = tier() === 'team';
+    holderLabel.textContent = company ? 'Legal company name (license holder)' : 'Full name of the independent individual license holder';
+    companyFields.hidden = !company; contact.required = company;
     attempt = undefined;
   };
   [holderName, contact, family, quote].forEach(input => input.addEventListener('input', () => { attempt = undefined; }));
   const update = () => { button.disabled = busy || !catalog || !accepted.checked; };
   accepted.addEventListener('change', update);
   form.querySelectorAll('input[name="tier"]').forEach(input => input.addEventListener('change', updateHolder));
-  holderKind.addEventListener('change', updateHolder);
   updateHolder();
   const unavailable = 'Online checkout is not available yet. Contact us for a quote and the applicable purchase terms.';
   async function initialize() {
@@ -55,7 +53,7 @@
     busy = true; update(); status.textContent = 'Opening secure Stripe Checkout…';
     attempt ??= crypto.randomUUID();
     try {
-      const response = await fetch(new URL('/checkout', endpoint), {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tier:tier(),productFamily:family.value.trim(),quoteReference:quote.value.trim(),holder:{kind:holderKind.value,name:holderName.value.trim(),contact:contact.value.trim()},attemptId:attempt,acceptTerms:true,termsVersion:catalog.terms.version,termsHash:catalog.terms.sha256}),signal:AbortSignal.timeout(20000)});
+      const response = await fetch(new URL('/checkout', endpoint), {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tier:tier(),productFamily:family.value.trim(),quoteReference:quote.value.trim(),holder:tier()==='single'?{kind:'individual',name:holderName.value.trim()}:{kind:'company',name:holderName.value.trim(),contact:contact.value.trim()},attemptId:attempt,acceptTerms:true,termsVersion:catalog.terms.version,termsHash:catalog.terms.sha256}),signal:AbortSignal.timeout(20000)});
       const data = await response.json();
       if (!response.ok && [400, 409, 429].includes(response.status) && typeof data.error === 'string') {
         status.textContent = data.error;

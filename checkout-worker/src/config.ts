@@ -15,7 +15,7 @@ export async function config(env: Env): Promise<Config> {
   const origin = new URL(env.SITE_ORIGIN ?? '').origin;
   if (livemode && !origin.startsWith('https://')) throw Error('HTTPS required');
   const terms = JSON.parse(env.TERMS_JSON ?? '{}') as Terms;
-  if (terms.scopeModel !== 'business-family-v3' || terms.approved !== true || !/^[a-zA-Z0-9._-]{1,80}$/.test(terms.version ?? '') ||
+  if (terms.scopeModel !== 'indie-company-v4' || terms.approved !== true || !/^[a-zA-Z0-9._-]{1,80}$/.test(terms.version ?? '') ||
       typeof terms.text !== 'string' || !terms.text.trim() || terms.text.length > 30000 ||
       terms.sha256 !== await sha256(terms.text) ||
       terms.url !== `${origin}/terms/${terms.version}.html`) throw Error('unapproved terms');
