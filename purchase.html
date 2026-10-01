@@ -47,10 +47,14 @@
 <p>Royalty-free commercial licenses include source access and unlimited commercial deployments. Your accepted purchase terms define the license and included services.</p>
 <form id="purchase-form">
 <div class="row">
-<div class="col-6 col-12-medium"><h3>Single Developer — €1,399</h3><p>One developer seat. One year of updates and bug fixes, with email support under the published commercial terms.</p><input type="radio" name="tier" id="tier-single" value="single" checked /><label for="tier-single">Single Developer</label></div>
-<div class="col-6 col-12-medium"><h3>Team — €4,699</h3><p>Up to five developer seats. Includes the published Team support scope and up to eight hours of integration assistance.</p><input type="radio" name="tier" id="tier-team" value="team" /><label for="tier-team">Team</label></div>
+<div class="col-6 col-12-medium"><h3>Single Developer — €1,399</h3><p>Held by one named individual. Two onboarding hours: build/setup, MCU/PHY wiring and callback review, and a written bring-up checklist. One year of updates and bug fixes, with published email support.</p><input type="radio" name="tier" id="tier-single" value="single" checked /><label for="tier-single">Single Developer</label></div>
+<div class="col-6 col-12-medium"><h3>Team — €4,699</h3><p>Held by the named legal company, with up to five authorized developers. Eight total scoped integration hours (not 2 + 8), published Team support and one year of updates and bug fixes. Seats may be reassigned; contractors on licensee projects count within five. Subsidiary rights need a separate quote.</p><input type="radio" name="tier" id="tier-team" value="team" /><label for="tier-team">Team</label></div>
 </div>
-<p id="purchase-status" role="status" aria-live="polite">Online checkout is not available yet. Contact us for a quote and the applicable purchase terms.</p>
+<p>Both tiers receive the same source, documentation and reference release. Larger ports are quoted separately; agree Team board/compiler/PHY/validation scope before scheduling. Reproducible product bug corrections do not consume custom porting hours. Assistance does not guarantee a completed port, supplied hardware or conformity certification. Single employer-project use and other additional rights must be agreed in the quote.</p>
+<label id="holder-label" for="holder-name">Full name of the individual license holder</label>
+<input type="text" id="holder-name" maxlength="200" required autocomplete="name" />
+<div id="company-fields" hidden><label for="company-contact">Company contact person</label><input type="text" id="company-contact" maxlength="200" autocomplete="name" /></div>
+<p id="purchase-status"  role="status" aria-live="polite">Online checkout is not available yet. Contact us for a quote and the applicable purchase terms.</p>
 <p id="tax-status">Tax details will be shown when checkout is available.</p>
 <p><a id="purchase-terms" href="terms/purchase-terms.html">Purchase terms status</a> · <a href="https://github.com/w1ne/iolinki/blob/main/LICENSE.COMMERCIAL">Published commercial license</a></p>
 <input type="checkbox" id="accept-terms" disabled /><label for="accept-terms">I accept the purchase terms linked above.</label>

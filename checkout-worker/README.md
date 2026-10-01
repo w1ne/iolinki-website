@@ -46,3 +46,19 @@ Rollback: set `PURCHASES_ENABLED=false` and blank the site's API meta value. Kee
 - [Stripe receipts](https://docs.stripe.com/receipts) and [official SDK](https://github.com/stripe/stripe-node)
 - [Cloudflare D1 transactional batch](https://developers.cloudflare.com/d1/worker-api/d1-database/)
 - [Resend email API and attachments](https://resend.com/docs/api-reference/emails/send-email) and [24-hour idempotency window](https://resend.com/docs/dashboard/emails/idempotency-keys)
+
+## Holder and accepted package record
+
+Single checkout requires holder kind "individual" and full name. Team requires
+holder kind "company", legal company name and contact person. The payer's Stripe
+billing identity does not replace the license holder. Each order snapshots the
+normalized holder, accepted terms text/version/hash, licensed release and total
+assistance allowance (Single two onboarding hours; Team eight integration hours).
+A different holder requires a new attempt. Certificates use this snapshot.
+
+terms.template.json contains prepared offering text and its version/hash;
+approved remains false. Purchases, live purchases and delivery remain disabled.
+Do not enable them before configured account and actual test-mode payment, buyer
+certificate/receipt and owner notification checks pass. Fixture tests do not prove
+that real account flow. Physical-master and complete analog Twins validation
+remain separate evidence.
