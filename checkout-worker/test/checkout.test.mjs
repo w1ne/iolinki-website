@@ -15,7 +15,7 @@ const base={PURCHASES_ENABLED:'true',DELIVERY_ENABLED:'true',MODE:'test',SITE_OR
 let bundle;
 before(async()=>{const result=await build({stdin:{contents:"import Worker from './src/index'; export default class extends Worker {async fetch(r){if(new URL(r.url).pathname==='/__test_delivery'){await this.scheduled();return new Response('done');}return super.fetch(r);}}",resolveDir:process.cwd(),loader:'ts'},bundle:true,write:false,format:'esm',platform:'browser',external:['cloudflare:*'],loader:{'.ttf':'binary'}});bundle=result.outputFiles[0].text;});
 const payment=(order,tier='single',overrides={})=>({id:'cs_test_'+order,object:'checkout.session',livemode:false,mode:'payment',payment_status:'paid',metadata:{order_id:order},status:'open',url:'https://checkout.stripe.com/c/pay/'+order,currency:'eur',amount_subtotal:tier==='single'?139900:469900,amount_total:tier==='single'?139900:469900,total_details:{amount_discount:0,amount_tax:0},line_items:{data:[{quantity:1,price:{id:'price_'+tier,currency:'eur',unit_amount:tier==='single'?139900:469900,livemode:false}}],has_more:false},customer_details:{email:'buyer@example.com',name:'Zoë Example — Тест'},payment_intent:{id:'pi_test_'+order,status:'succeeded',currency:'eur',amount_received:tier==='single'?139900:469900,latest_charge:{id:'ch_test_'+order,receipt_url:'https://pay.stripe.com/receipts/fixture'}},...overrides});
-async function fixture(bindings={},sessionOverride={}) {
+async function fixture(bindings={},sessionOverride={},migrationFiles=['0001_checkout.sql','0002_approved_quotes.sql','0003_business_quote_scope.sql','0004_indie_company_quote_scope.sql']) {
  const sent=[],requests=[]; let failEmails=0;
  const mf=new Miniflare(convertV4MiniflareOptions({modules:true,script:bundle,compatibilityDate:'2026-09-01',compatibilityFlags:['nodejs_compat'],d1Databases:['DB'],bindings:{...base,...bindings},outboundService:async req=>{
   const url=new URL(req.url);requests.push({url:url.href,method:req.method});
@@ -27,7 +27,7 @@ async function fixture(bindings={},sessionOverride={}) {
   if(url.hostname==='api.resend.com') {const message=await req.json();sent.push({message,key:req.headers.get('Idempotency-Key')});if(failEmails-->0)return Response.json({error:'temporary'}, {status:503});return Response.json({id:'email_'+sent.length});}
   throw Error('Unexpected outbound request '+url);
  }}));
- const db=await mf.getD1Database('DB');for(const file of ['0001_checkout.sql','0002_approved_quotes.sql','0003_business_quote_scope.sql','0004_indie_company_quote_scope.sql'])await db.exec((await readFile('migrations/'+file,'utf8')).replace(/^--.*$/gm,'').replaceAll('\n',' '));
+ const db=await mf.getD1Database('DB');for(const file of migrationFiles)await db.exec((await readFile('migrations/'+file,'utf8')).replace(/^--.*$/gm,'').replaceAll('\n',' '));
  const api=await mf.getWorker();
  const post=(path,body,headers={})=>api.fetch(endpoint+path,{method:'POST',headers:{Origin:origin,'content-type':'application/json',...headers},body:JSON.stringify(body)});
  const acceptedTerms=JSON.parse(bindings.TERMS_JSON??base.TERMS_JSON);
@@ -172,4 +172,20 @@ for(const kind of ['company','sole-trader'])test('legacy v3 '+kind+' rights and 
 test('v3 public terms and JSON remain immutable',async()=>{
  assert.equal(createHash('sha256').update(await readFile('terms/2026-10-01-business-family-v3.json')).digest('hex'),'9ab2123ec873da02adf8a03c9910fbcd07743c5c177c5bcf9308ba4222b8e2e8');
  assert.equal(createHash('sha256').update(await readFile('../terms/2026-10-01-business-family-v3.html')).digest('hex'),'04c159fe545ab24c4de103d54362e0dc59c29ca3bfd3f2e02922a09796030ef1');
+});
+
+test('v4 migration preserves populated historical quotes and order bindings',async()=>{
+ const f=await fixture({}, {}, ['0001_checkout.sql','0002_approved_quotes.sql','0003_business_quote_scope.sql']);
+ try {
+  const records=[['quote_v2','single',JSON.stringify({kind:'individual',name:'Historic Zoë Тест'}),'Historic Alpha','Alpha variants and successors',1000,2000,null,'product-family-v2'],['quote_v3','team',JSON.stringify({kind:'sole-trader',name:'Historic Business Тест',contact:'Historic Contact Zoë'}),'Historic Beta','Beta hardware revisions',1100,2200,1800,'business-family-v3']];
+  for(const record of records)await f.db.prepare('INSERT INTO approved_quotes(id,tier,holder,family_name,family_scope,approved_at,expires_at,revoked_at,scope_model) VALUES(?,?,?,?,?,?,?,?,?)').bind(...record).run();
+  for(const record of records)await f.db.prepare('INSERT INTO orders(id,tier,snapshot,created_at,quote_id) VALUES(?,?,?,?,?)').bind('order_'+record[0],record[1],JSON.stringify({accepted:'historical agreement',holder:JSON.parse(record[2])}),record[5],record[0]).run();
+  const beforeQuotes=(await f.db.prepare('SELECT * FROM approved_quotes ORDER BY id').all()).results;
+  const beforeOrders=(await f.db.prepare('SELECT * FROM orders ORDER BY id').all()).results;
+  await f.db.exec((await readFile('migrations/0004_indie_company_quote_scope.sql','utf8')).replace(/^--.*$/gm,'').replaceAll('\n',' '));
+  assert.deepEqual((await f.db.prepare('SELECT * FROM approved_quotes ORDER BY id').all()).results,beforeQuotes);
+  assert.deepEqual((await f.db.prepare('SELECT * FROM orders ORDER BY id').all()).results,beforeOrders);
+  assert.equal((await f.db.prepare("SELECT orders.quote_id,approved_quotes.scope_model FROM orders JOIN approved_quotes ON orders.quote_id=approved_quotes.id WHERE orders.id='order_quote_v3'").first()).scope_model,'business-family-v3');
+  assert.equal((await f.db.prepare("SELECT COUNT(*) AS n FROM sqlite_master WHERE type='index' AND name='one_order_per_quote'").first()).n,1);
+ } finally {await f.mf.dispose();}
 });
