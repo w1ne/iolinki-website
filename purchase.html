@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Choose the developer seats your product needs."
+      content="License your product family and choose the integration assistance you need."
     />
     <link rel="canonical" href="https://iolinki.com/purchase.html" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -44,7 +44,7 @@
     <main id="main" class="document" tabindex="-1">
       <header>
         <h1>Choose your commercial license</h1>
-        <p>Choose the developer seats your product needs.</p>
+        <p>License your product family and choose the integration assistance you need.</p>
       </header>
       <section class="wrapper style5">
         <div class="inner guide-content">
@@ -62,36 +62,38 @@
           <form id="purchase-form">
             <div class="row">
               <div class="col-6 col-12-medium">
-                <h3>Single Developer — €1,399</h3>
-                <p>Held by one named individual, with one developer and one agreed product family. Two onboarding hours: build/setup, MCU/PHY wiring and callback review, and a written bring-up checklist. One year of updates and bug fixes, with published email support.</p>
+                <h3>Product Family — €1,399</h3>
+                <p>Held by your company or business sole trader, covering one agreed product family with unlimited authorized employees and contractors. Includes two onboarding hours for build/setup, MCU/PHY wiring and callback review, and a written bring-up checklist; one year of updates and bug fixes; a 48-hour email response target.</p>
                 <input
                   type="radio"
                   name="tier"
                   id="tier-single"
                   value="single"
                   checked
-                /><label for="tier-single">Single Developer</label>
+                /><label for="tier-single">Product Family</label>
               </div>
               <div class="col-6 col-12-medium">
-                <h3>Team — €4,699</h3>
-                <p>Held by the named legal company, with up to five authorized developers and one agreed product family. Eight total scoped integration hours, published Team support and one year of updates and bug fixes. Seats may be reassigned; contractors on licensee projects count within five. Subsidiary rights need a separate quote.</p>
+                <h3>Integration — €4,699</h3>
+                <p>The same business-owned license rights and source for one agreed product family. Includes eight total scoped engineering hours, a 24-hour priority email response target and quarterly technical reviews during the included first year within those hours. Deliverables include build/configuration and MCU/PHY wiring/callback reviews, a written integration checklist and findings from the agreed build/test review.</p>
                 <input
                   type="radio"
                   name="tier"
                   id="tier-team"
                   value="team"
-                /><label for="tier-team">Team</label>
+                /><label for="tier-team">Integration</label>
               </div>
             </div>
-            <p>Both tiers receive the same source, documentation and reference release. Unlimited manufactured units, customers, variants and hardware revisions within the agreed commercial range are royalty-free. Unrelated lines need a separate license. MCU/PHY changes within the family retain the license; porting and validation are separately quoted. Larger ports are quoted separately; agree Team board/compiler/PHY/validation scope before scheduling. Reproducible product bug corrections do not consume custom porting hours. Single employer-project use and other additional rights must be agreed in the quote.</p>
+            <p>Both packages receive the same source, documentation and reference release, with one year of updates and bug fixes. Manufactured units and customers are unlimited and royalty-free, including variants, successors and hardware revisions within the agreed commercial range. MCU/PHY changes retain the license. Agree board/compiler/PHY/tasks and the booking window before scheduling; larger ports and additional validation are quoted separately. Reproducible stack bug fixes do not consume custom engineering hours. Additional families, subsidiaries and broader SDK redistribution require agreed additional scope.</p>
 <label for="quote-reference">Agreed quote reference</label>
 <input type="text" id="quote-reference" maxlength="80" required autocomplete="off" />
 <label for="product-family">Product-family name from your quote</label>
 <input type="text" id="product-family" maxlength="200" required autocomplete="off" />
 <p>The quote records the agreed named commercial range and license holder. Checkout uses that approved scope. Existing agreements retain their accepted rights.</p>
-<label id="holder-label" for="holder-name">Full name of the individual license holder</label>
+<label for="holder-kind">License holder</label>
+<select id="holder-kind" required><option value="company">Legal company</option><option value="sole-trader">Sole trader acting for their business</option></select>
+<label id="holder-label" for="holder-name">Legal company name (license holder)</label>
 <input type="text" id="holder-name" maxlength="200" required autocomplete="name" />
-<div id="company-fields" hidden><label for="company-contact">Company contact person</label><input type="text" id="company-contact" maxlength="200" autocomplete="name" /></div>
+<div id="company-fields"><label for="company-contact">Technical contact person</label><input type="text" id="company-contact" maxlength="200" required autocomplete="name" /></div>
 <p id="purchase-status" role="status" aria-live="polite">
               Request a quote to agree your product family and integration scope.
             </p>
@@ -104,7 +106,7 @@
               >
               ·
               <a
-                href="terms/2026-10-01-product-family-v2.html"
+                href="terms/2026-10-01-business-family-v3.html"
                 >Product-family quote terms</a
               >
             </p>
@@ -133,7 +135,7 @@
           <aside class="enterprise-card">
             <h3>Enterprise</h3>
             <p>
-              Need more seats or a specific integration scope? Discuss your
+              Need multiple product families, subsidiary rights or a broader integration scope? Discuss your
               product, platforms and support requirements.
             </p>
             <a href="mailto:andrii@shylenko.com" class="button"
