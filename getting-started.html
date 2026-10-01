@@ -1,109 +1,212 @@
-<!DOCTYPE HTML>
-<!-- Spectral by HTML5 UP, html5up.net | @ajlkn. CCA 3.0: html5up.net/license -->
+<!doctype html>
 <html lang="en">
-<head>
+  <head>
     <title>Try the host stack | iolinki</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="A repeatable Linux evaluation before a hardware integration." />
+    <meta
+      name="description"
+      content="A repeatable Linux evaluation before a hardware integration."
+    />
     <link rel="canonical" href="https://iolinki.com/getting-started.html" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="stylesheet" href="assets/css/main.css" />
-    <link rel="stylesheet" href="assets/css/guides.css" />
-    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-</head>
-<body class="is-preload">
-<div id="page-wrapper">
-<header id="header" >
-			<h1><a href="index.html">io<span>linki</span></a></h1>
-			<nav id="nav">
-				<ul>
-					<li class="special">
-						<a href="#menu" class="menuToggle"><span>Menu</span></a>
-						<div id="menu">
-							<ul>
-								<li><a href="index.html">Home</a></li>
-								<li><a href="getting-started.html">Try an example</a></li>
-                                <li><a href="hardware.html">Hardware &amp; IDEs</a></li>
-                                <li><a href="validation.html">Validation status</a></li>
-                                <li><a href="faq.html">FAQ &amp; licensing</a></li>
-                                <li><a href="index.html#one">Vision</a></li>
-								<li><a href="index.html#two">Architecture</a></li>
-								<li><a href="index.html#three">Capabilities</a></li>
-								<li><a href="index.html#cta">Licensing</a></li>
-								<li><a href="https://github.com/w1ne/iolinki">GitHub</a></li>
-								<li><a href="https://github.com/w1ne/iolinki-master">Master GitHub</a></li>
-							</ul>
-						</div>
-					</li>
-				</ul>
-			</nav>
-		</header>
 
-		
-<article id="main">
-    <header><h2>Try the host stack</h2><p>A repeatable Linux evaluation before a hardware integration.</p></header>
-    <section class="wrapper style5"><div class="inner guide-content">
-        <nav class="guide-nav" aria-label="Evaluation guides"><a href="getting-started.html">Getting started</a><a href="hardware.html">Hardware &amp; IDEs</a><a href="validation.html">Validation</a><a href="faq.html">FAQ &amp; licensing</a></nav>
-        
-<h3 id="host">1. Build a pinned release</h3>
-<p>Use Linux with Git, a C99 compiler and CMake 3.20 or newer. These commands use the published <a href="https://github.com/w1ne/iolinki/releases/tag/v2.0.0">v2.0.0 release</a>, so your starting point is reproducible. No IO-Link board is required.</p>
-<pre><code>git clone --branch v2.0.0 --depth 1 https://github.com/w1ne/iolinki.git
+    <link rel="stylesheet" href="/assets/css/site.css" />
+    <script src="/assets/js/site.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header" id="header">
+      <div class="header-inner">
+        <a class="brand" href="/index.html" aria-label="iolinki home"
+          >io<span>linki</span><span class="brand-dot" aria-hidden="true"></span
+        ></a>
+        <button
+          class="menu-button"
+          type="button"
+          aria-expanded="false"
+          aria-controls="primary-navigation"
+          hidden
+        >
+          Menu
+        </button>
+        <nav id="primary-navigation" aria-label="Primary navigation">
+          <a href="/index.html#two">Stacks</a
+          ><a href="/getting-started.html">Guides</a
+          ><a href="/hardware.html">Hardware</a
+          ><a href="/validation.html">Validation</a><a href="/faq.html">FAQ</a
+          ><a href="/purchase.html">Licensing</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="document" tabindex="-1">
+      <header>
+        <h1>Try the host stack</h1>
+        <p>A repeatable Linux evaluation before a hardware integration.</p>
+      </header>
+      <section class="wrapper style5">
+        <div class="inner guide-content">
+          <nav class="guide-nav" aria-label="Evaluation guides">
+            <a href="getting-started.html">Getting started</a
+            ><a href="hardware.html">Hardware &amp; IDEs</a
+            ><a href="validation.html">Validation</a
+            ><a href="faq.html">FAQ &amp; licensing</a>
+          </nav>
+
+          <h3 id="host">1. Build a pinned release</h3>
+          <p>
+            Use Linux with Git, a C99 compiler and CMake 3.20 or newer. These
+            commands use the published
+            <a href="https://github.com/w1ne/iolinki/releases/tag/v2.0.0"
+              >v2.0.0 release</a
+            >, so your starting point is reproducible. No IO-Link board is
+            required.
+          </p>
+          <pre><code>git clone --branch v2.0.0 --depth 1 https://github.com/w1ne/iolinki.git
 cd iolinki
 cmake -S . -B build -DIOLINK_PLATFORM=LINUX -DBUILD_TESTING=ON
 cmake --build build --parallel
 ctest --test-dir build --output-on-failure</code></pre>
-<h3 id="expected">2. Read the result</h3>
-<p>The host build and all 22 CTest targets passed with GCC 13 on Linux on 1 October 2026. Expect CTest to report <code>100% tests passed</code>. A compiler or test failure on your machine is a useful issue report; include the tag, operating system, compiler version, command and full error output.</p>
-<p>These tests exercise software protocol behavior. Passing them does not establish physical transceiver timing, a working MCU board, interoperability with a commercial master, or certification. The <a href="validation.html">validation page</a> separates those checks.</p>
-<h3 id="reference">3. Run the counter, button and LED example</h3>
-<p>The new <a href="https://github.com/w1ne/iolinki/tree/f4ff734dd5bf63e74895b68cf9296073ddfea296/examples/reference_device">reference device</a> needs no board or serial peer. This recipe pins its exact source commit separately from the v2.0.0 baseline above.</p>
-<pre><code>git fetch origin f4ff734dd5bf63e74895b68cf9296073ddfea296
+          <h3 id="expected">2. Read the result</h3>
+          <p>
+            The host build and all 22 CTest targets passed with GCC 13 on Linux
+            on 1 October 2026. Expect CTest to report
+            <code>100% tests passed</code>. A compiler or test failure on your
+            machine is a useful issue report; include the tag, operating system,
+            compiler version, command and full error output.
+          </p>
+          <p>
+            These tests exercise software protocol behavior. Passing them does
+            not establish physical transceiver timing, a working MCU board,
+            interoperability with a commercial master, or certification. The
+            <a href="validation.html">validation page</a> separates those
+            checks.
+          </p>
+          <h3 id="reference">3. Run the counter, button and LED example</h3>
+          <p>
+            The new
+            <a
+              href="https://github.com/w1ne/iolinki/tree/f4ff734dd5bf63e74895b68cf9296073ddfea296/examples/reference_device"
+              >reference device</a
+            >
+            needs no board or serial peer. This recipe pins its exact source
+            commit separately from the v2.0.0 baseline above.
+          </p>
+          <pre><code>git fetch origin f4ff734dd5bf63e74895b68cf9296073ddfea296
 git checkout --detach f4ff734dd5bf63e74895b68cf9296073ddfea296
 cmake -S . -B build-reference -DIOLINK_PLATFORM=LINUX -DBUILD_TESTING=ON
 cmake --build build-reference --parallel 4
 ./build-reference/examples/reference_device/reference_device_demo
 ctest --test-dir build-reference --output-on-failure</code></pre>
-<p>Expect <code>SIMULATION PASS</code> after 100 checked cyclic frame exchanges. The example checks counter data, LED commands and checksums, a local application-tag readback, and a queued button event. All 30 CTest targets passed for this commit. It does not demonstrate a physical LED, wire-level ISDU, event acknowledgement or persistent storage. <a href="https://github.com/w1ne/iolinki/blob/f4ff734dd5bf63e74895b68cf9296073ddfea296/examples/reference_device/README.md">Read the payload and integration guide</a>.</p>
-<h3 id="examples">4. Inspect the existing examples</h3>
-<ul>
-<li><a href="https://github.com/w1ne/iolinki/tree/v2.0.0/examples/host_demo">Host demo</a>: <code>build/examples/host_demo/host_demo</code> requires a TTY path and uses the virtual PHY transport. Running it without arguments prints its usage and exits with a nonzero status. A running state machine needs a compatible peer; this is not a ready-made commercial-master connection.</li>
-<li><a href="https://github.com/w1ne/iolinki/tree/v2.0.0/examples/simple_device">Simple device</a>: source and example IODD files are available. Its application entry point is a placeholder; a successful build does not make it a functional physical device.</li>
-<li><a href="https://github.com/w1ne/iolinki/tree/v2.0.0/examples/zephyr_app">Zephyr application</a>: includes a Nucleo-L476RG UART overlay. Fresh board-build and physical-master evidence are pending.</li>
-</ul>
-<h3 id="next">5. Choose an integration path</h3>
-<p>Compare <a href="hardware.html">the exact board and IDE status</a> before buying hardware. Build-verified projects are available for STM32G0B1RE/TIOL112, Nucleo-U575ZI-Q/Zephyr/TIOL112 and ESP32-C3-DevKitM-1/ESP-IDF/STEVAL-IOD003V1. The STM32G0 project also includes native IAR sources; IAR compilation remains unverified. Complete analog Twins and physical-master validation remain pending for all three targets.</p>
-<p>For a proprietary product, review <a href="faq.html#licensing">commercial terms</a>. For GPL evaluation, read the <a href="https://github.com/w1ne/iolinki/blob/v2.0.0/LICENSE">release license</a> and consider your intended use and distribution. Source and these instructions are public; no email registration is needed.</p>
-<p>Next: <a href="hardware.html">Hardware &amp; IDEs</a> · <a href="validation.html">Validation evidence</a></p>
-
-    </div></section>
-</article>
-<footer id="footer">
-			<ul class="icons">
-				<li><a href="https://github.com/w1ne/iolinki" class="icon brands fa-github"><span
-							class="label">GitHub</span></a></li>
-				<li><a href="mailto:andrii@shylenko.com" class="icon solid fa-envelope"><span
-							class="label">Email</span></a></li>
-			</ul>
-			<ul class="copyright">
-				<li>&copy; iolinki.com</li>
-				<li><a href="https://labwired.com">LabWired</a></li>
-				<li><a href="https://kernelcad.com">kernelCAD</a></li>
-				<li><a href="https://komatachi.com">komatachi</a></li>
-				<li><a href="https://shylenko.com">shylenko.com</a></li>
-				<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-			</ul>
-		</footer>
-</div>
-<!-- Scripts -->
-	<script src="assets/js/jquery.min.js"></script>
-	<script src="assets/js/jquery.scrollex.min.js"></script>
-	<script src="assets/js/jquery.scrolly.min.js"></script>
-	<script src="assets/js/browser.min.js"></script>
-	<script src="assets/js/breakpoints.min.js"></script>
-	<script src="assets/js/util.js"></script>
-	<script src="assets/js/main.js"></script>
-
-
-</body>
+          <p>
+            Expect <code>SIMULATION PASS</code> after 100 checked cyclic frame
+            exchanges. The example checks counter data, LED commands and
+            checksums, a local application-tag readback, and a queued button
+            event. All 30 CTest targets passed for this commit. It does not
+            demonstrate a physical LED, wire-level ISDU, event acknowledgement
+            or persistent storage.
+            <a
+              href="https://github.com/w1ne/iolinki/blob/f4ff734dd5bf63e74895b68cf9296073ddfea296/examples/reference_device/README.md"
+              >Read the payload and integration guide</a
+            >.
+          </p>
+          <h3 id="examples">4. Inspect the existing examples</h3>
+          <ul>
+            <li>
+              <a
+                href="https://github.com/w1ne/iolinki/tree/v2.0.0/examples/host_demo"
+                >Host demo</a
+              >: <code>build/examples/host_demo/host_demo</code> requires a TTY
+              path and uses the virtual PHY transport. Running it without
+              arguments prints its usage and exits with a nonzero status. A
+              running state machine needs a compatible peer; this is not a
+              ready-made commercial-master connection.
+            </li>
+            <li>
+              <a
+                href="https://github.com/w1ne/iolinki/tree/v2.0.0/examples/simple_device"
+                >Simple device</a
+              >: source and example IODD files are available. Its application
+              entry point is a placeholder; a successful build does not make it
+              a functional physical device.
+            </li>
+            <li>
+              <a
+                href="https://github.com/w1ne/iolinki/tree/v2.0.0/examples/zephyr_app"
+                >Zephyr application</a
+              >: includes a Nucleo-L476RG UART overlay. Fresh board-build and
+              physical-master evidence are pending.
+            </li>
+          </ul>
+          <h3 id="next">5. Choose an integration path</h3>
+          <p>
+            Compare
+            <a href="hardware.html">the exact board and IDE status</a> before
+            buying hardware. Build-verified projects are available for
+            STM32G0B1RE/TIOL112, Nucleo-U575ZI-Q/Zephyr/TIOL112 and
+            ESP32-C3-DevKitM-1/ESP-IDF/STEVAL-IOD003V1. The STM32G0 project also
+            includes native IAR sources; IAR compilation remains unverified.
+            Complete analog Twins and physical-master validation remain pending
+            for all three targets.
+          </p>
+          <p>
+            For a proprietary product, review
+            <a href="faq.html#licensing">commercial terms</a>. For GPL
+            evaluation, read the
+            <a href="https://github.com/w1ne/iolinki/blob/v2.0.0/LICENSE"
+              >release license</a
+            >
+            and consider your intended use and distribution. Source and these
+            instructions are public; no email registration is needed.
+          </p>
+          <p>
+            Next: <a href="hardware.html">Hardware &amp; IDEs</a> ·
+            <a href="validation.html">Validation evidence</a>
+          </p>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer" id="footer">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="/index.html" aria-label="iolinki home"
+            >io<span>linki</span></a
+          >
+          <p>IO-Link software for the firmware you build.</p>
+          <p class="seller">
+            Andrii Shylenko e.v. · Hungarian sole trader<br /><a href="mailto:andrii@shylenko.com"
+              >andrii@shylenko.com</a
+            >
+          </p>
+        </div>
+        <div>
+          <h2>Developer resources</h2>
+          <a href="https://github.com/w1ne/iolinki">Device source</a
+          ><a href="https://github.com/w1ne/iolinki-master">Master source</a
+          ><a href="/getting-started.html">Evaluation guide</a
+          ><a href="/validation.html">Validation evidence</a>
+        </div>
+        <div>
+          <h2>Licensing &amp; company</h2>
+          <a href="/purchase.html">Commercial licensing</a
+          ><a href="/terms/purchase-terms.html">Purchase terms status</a
+          ><a href="/legal.html">Seller &amp; privacy information</a
+          ><a href="https://shylenko.com">shylenko.com</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© iolinki · Engineering software</span
+        ><span
+          >Related projects: <a href="https://labwired.com">LabWired</a> ·
+          <a href="https://kernelcad.com">kernelCAD</a> ·
+          <a href="https://komatachi.com">komatachi</a></span
+        >
+      </div>
+      <p class="attribution">
+        Retained guide content adapted from
+        <a href="https://html5up.net">HTML5 UP</a> ·
+        <a href="https://html5up.net/license">CCA 3.0</a>
+      </p>
+    </footer>
+  </body>
 </html>

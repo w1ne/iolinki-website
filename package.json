@@ -1,0 +1,11 @@
+{
+  "name": "iolinki-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check:browser": "node scripts/check-browser.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.60.0"
+  }
+}

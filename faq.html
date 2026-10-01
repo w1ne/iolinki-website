@@ -1,107 +1,455 @@
-<!DOCTYPE HTML>
-<!-- Spectral by HTML5 UP, html5up.net | @ajlkn. CCA 3.0: html5up.net/license -->
+<!doctype html>
 <html lang="en">
-<head>
+  <head>
     <title>Evaluation &amp; licensing FAQ | iolinki</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Direct answers for planning an IO-Link device integration." />
+    <meta
+      name="description"
+      content="Direct answers for planning an IO-Link device integration."
+    />
     <link rel="canonical" href="https://iolinki.com/faq.html" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="stylesheet" href="assets/css/main.css" />
-    <link rel="stylesheet" href="assets/css/guides.css" />
-    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-</head>
-<body class="is-preload">
-<div id="page-wrapper">
-<header id="header" >
-			<h1><a href="index.html">io<span>linki</span></a></h1>
-			<nav id="nav">
-				<ul>
-					<li class="special">
-						<a href="#menu" class="menuToggle"><span>Menu</span></a>
-						<div id="menu">
-							<ul>
-								<li><a href="index.html">Home</a></li>
-								<li><a href="getting-started.html">Try an example</a></li>
-                                <li><a href="hardware.html">Hardware &amp; IDEs</a></li>
-                                <li><a href="validation.html">Validation status</a></li>
-                                <li><a href="faq.html">FAQ &amp; licensing</a></li>
-                                <li><a href="index.html#one">Vision</a></li>
-								<li><a href="index.html#two">Architecture</a></li>
-								<li><a href="index.html#three">Capabilities</a></li>
-								<li><a href="index.html#cta">Licensing</a></li>
-								<li><a href="https://github.com/w1ne/iolinki">GitHub</a></li>
-								<li><a href="https://github.com/w1ne/iolinki-master">Master GitHub</a></li>
-							</ul>
-						</div>
-					</li>
-				</ul>
-			</nav>
-		</header>
 
-		
-<article id="main">
-    <header><h2>Evaluation &amp; licensing FAQ</h2><p>Direct answers for planning an IO-Link device integration.</p></header>
-    <section class="wrapper style5"><div class="inner guide-content">
-        <nav class="guide-nav" aria-label="Evaluation guides"><a href="getting-started.html">Getting started</a><a href="hardware.html">Hardware &amp; IDEs</a><a href="validation.html">Validation</a><a href="faq.html">FAQ &amp; licensing</a></nav>
-        
-<h3 id="integration">Integration and product status</h3>
-<details><summary>Can I start without hardware?</summary><p>Yes. <a href="getting-started.html">Build the pinned v2.0.0 Linux host stack and run its tests</a>. The host build and 22 CTest targets passed with GCC 13 on 1 October 2026. This is software evaluation; it does not establish physical IO-Link interoperability.</p></details>
-<details><summary>Is there a native IAR project that does not require CMake?</summary><p>Yes: the <a href="https://github.com/w1ne/iolinki/tree/1bc8d9c798efcea782f5fe79e963afc27f74eac8/examples/stm32g0_tiol112/iar">STM32G0B1RE project</a> includes source groups, C99 settings, ST IAR startup references and a linker file. Configure the CMSIS package paths as described in its README. The GCC firmware build is verified; native IAR compilation has not been run and needs an EWARM installation and license. See <a href="hardware.html">hardware and IDE status</a>.</p></details>
-<details><summary>Which exact boards have build-verified examples?</summary><p>Three reference projects have verified firmware builds: STM32G0B1RE with Arm GCC and TIOL112; Nucleo-U575ZI-Q with Zephyr 3.7.2 and TIOL112; and ESP32-C3-DevKitM-1 with ESP-IDF 5.4.0 and STEVAL-IOD003V1/L6362A. Source, build commands and wiring instructions are published. Native IAR compilation, complete analog LabWired Twins and physical-master validation remain pending. Embedded flash persistence is unsupported. None is presented as a validated turnkey physical device. <a href="hardware.html">Compare the exact projects and evidence</a>.</p></details>
-<details><summary>Are TIOL112 and L6362A already integrated?</summary><p>The published projects include TIOL112 and L6362A control drivers plus MCU UART, GPIO, wake-up and microsecond-timer adapters. Driver host tests and all three firmware builds pass. The <a href="https://github.com/w1ne/iolinki/tree/5572a628b8befa6a9c74496311da2359868f96d9/examples/esp32_l6362a">ESP32-C3/L6362A example</a> documents STEVAL-IOD003V1 headers, power settings and the required IN1 modification; it is an ESP-IDF project. These implementations are not yet proof of electrical interoperability or a physical-master exchange. Consult <a href="hardware.html#references">manufacturer documentation</a> and <a href="validation.html">validation status</a>.</p></details>
-<details><summary>Which ESP32 example should I use instead of the experimental thermal sensor project?</summary><p>Use the <a href="https://github.com/w1ne/iolinki/tree/5572a628b8befa6a9c74496311da2359868f96d9/examples/esp32_l6362a">ESP32-C3 counter/button-and-LED reference</a>. It provides an ESP-IDF application, L6362A adapter, build recipe and STEVAL-IOD003V1 wiring guide, with a verified firmware build. The older thermal-sensor repository is not the validated hardware reference for this path. The new example still needs physical wiring and commercial-master testing before it can be described as a demonstrated physical IO-Link device.</p></details>
-<details><summary>How do I define process data, ISDU parameters and the IODD?</summary><p>Start with the <a href="https://github.com/w1ne/iolinki/tree/5572a628b8befa6a9c74496311da2359868f96d9/examples/reference_device">shared reference application</a>: its three input bytes carry a counter and button, and one output byte controls the LED. Change the payload sizes and application mapping together, then add parameters through the stack's ISDU/parameter APIs and replace the example product identity. Keep the IODD consistent with those definitions. The <a href="https://github.com/w1ne/iolinki/blob/5572a628b8befa6a9c74496311da2359868f96d9/tools/IODD_GEN.md">IODD generator produces draft XML</a>; no published IODD Checker validation report has been established for the new reference. Local parameter API tests do not prove wire-level ISDU transfers.</p></details>
-<details><summary>Why might startup fail or process data disappear?</summary><p>Check the supply, common ground and C/Q wiring against the transceiver guide; UART 8E1 and the selected COM baud; WAKE, EN and diagnostic GPIO polarity; the microsecond hardware timer; driver release after transmit completion; echo suppression and RX overflow/error handling. Keep logging off the protocol UART. Use the <a href="https://github.com/w1ne/iolinki/blob/5572a628b8befa6a9c74496311da2359868f96d9/docs/PORTING.md">porting guide</a> and board-specific instructions, and include firmware, master model, logs and timing captures in a report. These are diagnostic starting points; physical fault/recovery validation remains pending.</p></details>
-<details><summary>Has this been validated with a real commercial IO-Link master?</summary><p>No published commercial-master physical interoperability report has been established. The separate <a href="https://github.com/w1ne/iolinki-master">iolinki-master stack</a> and simulations are useful software checks. They do not substitute for bench results identifying a commercial master's model and firmware. See <a href="validation.html#physical">the report checklist</a>.</p></details>
-<details><summary>Is there official IO-Link certification?</summary><p>No published official certification record has been established. Protocol capabilities, passing software tests and certification are separate facts. <a href="validation.html">Review current validation evidence</a>.</p></details>
-<details><summary>Are there public deployed-customer references?</summary><p>No public deployed-customer references have been established. We make no customer deployment claim. Use the published source, tests and <a href="validation.html">validation status</a> to scope your evaluation.</p></details>
-<h3 id="licensing">Commercial licensing</h3>
-<p>The answers below follow <a href="https://github.com/w1ne/iolinki/blob/main/LICENSE.COMMERCIAL">LICENSE.COMMERCIAL</a>. Confirm the final scope and current terms in your quote and signed agreement.</p>
-<details><summary>What does the €1,399 Single Developer license cover?</summary><p>The €1,399 one-time, royalty-free license is held by one named individual, with one developer seat and unlimited commercial deployments. It includes two onboarding hours for build/setup, MCU/PHY wiring and callback review, and a written bring-up checklist. Larger ports are quoted separately. One year of updates and bug fixes and published email support remain included. Employer-project use and additional rights must be agreed in the quote; the personal holder is not a company license.</p></details>
-<details><summary>What does the €4,699 Team license include?</summary><p>The €4,699 one-time, royalty-free license is held by the named legal company with up to five authorized developers. It includes the same source, documentation and reference release, unlimited deployments, one year of updates and bug fixes, priority email support, quarterly technical reviews and up to eight total scoped integration hours, replacing the Single onboarding allowance (not 2 + 8 hours). Seats may be reassigned when engineers change. Contractors working on licensee projects count within the five developers; subsidiary rights require a separate quote.</p></details>
-<details><summary>Do the eight integration hours cover PHY porting and hardware integration?</summary><p>Single includes two onboarding hours for build/setup, MCU/PHY wiring and callback review, and a written bring-up checklist. Team includes up to eight total scoped integration hours: agree the board, compiler, PHY and validation tasks before scheduling. Larger ports need a separate quote. Included hours are an assistance allowance, not a guaranteed completed port, supplied hardware or conformity certification. Reproducible product bug corrections do not consume custom porting hours. Both tiers receive the same usable source, documentation and reference release; current hardware validation limits remain published separately.</p></details>
-<details><summary>Do use rights expire after the first year?</summary><p>The current terms retain perpetual rights to use the version you licensed. The included update period is one year. Extended support is optional and currently listed at 20% of the original license fee per year; confirm the renewal coverage in your agreement.</p></details>
-<details><summary>Can I ship compiled firmware or a system-on-module to my customers?</summary><p>Binary redistribution as part of your product, including a system-on-module, is compatible with the prior clarification from the licensor by email. Confirm this use and its scope in the signed agreement. Redistributing iolinki source to third parties is a separate matter and needs explicitly agreed terms; buying a developer seat does not by itself define a source-resale license.</p></details>
-<details><summary>Is licensing tied to each DeviceID, downstream customer or processor target?</summary><p>The published tiers are priced by developer seats and include unlimited commercial deployments. They do not list per-DeviceID, per-customer or per-processor fees. Confirm the exact distribution scope in your agreement, including compiled binaries supplied through a proprietary SOM SDK. The end-product manufacturer still defines its own VendorID, DeviceID, process data and IODD and validates the finished device; example identifiers are not a production identity allocation.</p></details>
-<details><summary>Can I evaluate under GPL without buying a commercial license?</summary><p>The public code is available under <a href="https://github.com/w1ne/iolinki/blob/v2.0.0/LICENSE">GPLv3-or-later</a>. Evaluation, internal use, modifying code and conveying software have different implications under the license. When you distribute a covered work, obligations can include corresponding source, license notices and the applicable GPL terms. “Evaluation” is not a blanket exemption, and making source visible alone does not resolve every obligation. Read the license for your use and distribution model. Commercial terms provide the proprietary licensing path.</p></details>
-<details><summary>Can I start evaluating my TIOL112 board before a commercial commitment?</summary><p>Start with the public GPL source and the <a href="https://github.com/w1ne/iolinki/tree/5572a628b8befa6a9c74496311da2359868f96d9/examples/stm32g0_tiol112">STM32G0B1RE/TIOL112 reference project</a>; adapt the documented MCU callbacks and wiring to your board. This evaluation remains under the published GPL terms. No separate time-limited evaluation agreement is currently published. Contact the licensor if your process requires a defined evaluation period or different terms. Build verification does not replace testing your electronics with a physical master.</p></details>
-<details><summary>Is there an Enterprise option?</summary><p>The published Enterprise tier is quoted individually and includes site-wide developer seats and negotiated services. <a href="mailto:andrii@shylenko.com">Contact the licensor</a> with your board, toolchain, product and integration needs. Custom scope and any SLA belong in that agreement.</p></details>
-<h3 id="maintenance">Maintenance and evaluation help</h3>
-<details><summary>What is the release cadence, and how are bugs prioritized?</summary><p>No fixed release cadence or severity-based bug-priority policy is currently published. Review the actual <a href="https://github.com/w1ne/iolinki/releases">release history</a>, <a href="https://github.com/w1ne/iolinki/issues">issue tracker</a> and <a href="https://github.com/w1ne/iolinki/actions">CI results</a>. Include the affected commit, target, toolchain, impact and a reproducible case in a bug report. Commercial support response times follow the applicable license terms; a response time is not a guaranteed fix date. Any required release schedule, fix deadline or maintenance commitment needs explicit agreement.</p></details>
-<details><summary>Which versions receive maintenance and security fixes?</summary><p>No separate public supported-version, end-of-life or security-maintenance schedule is currently documented. The included year of updates and optional extended support do not by themselves define a security-fix cadence or a particular version's support lifetime. Confirm any required security reporting process, supported versions and maintenance period in your commercial agreement.</p></details>
-<details><summary>How can I assess maintenance and report a problem?</summary><p>Inspect <a href="https://github.com/w1ne/iolinki/releases">releases</a>, <a href="https://github.com/w1ne/iolinki/actions">CI</a> and <a href="https://github.com/w1ne/iolinki/issues">issues</a>. Include your release/commit, toolchain, target, reproduction commands and logs in a report. No additional response or release SLA is implied by these public resources; commercial support follows the published terms and your agreement.</p></details>
-<details><summary>What should I send when discussing an integration?</summary><p>Include the MCU/board and PHY, IDE or RTOS, COM mode and process-data sizes, ISDU/data-storage needs, master model, schedule, developer-seat count and whether customers receive binaries or source. Start with the <a href="getting-started.html">host evaluation</a> and <a href="hardware.html">hardware matrix</a> to identify the remaining work.</p></details>
+    <link rel="stylesheet" href="/assets/css/site.css" />
+    <script src="/assets/js/site.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header" id="header">
+      <div class="header-inner">
+        <a class="brand" href="/index.html" aria-label="iolinki home"
+          >io<span>linki</span><span class="brand-dot" aria-hidden="true"></span
+        ></a>
+        <button
+          class="menu-button"
+          type="button"
+          aria-expanded="false"
+          aria-controls="primary-navigation"
+          hidden
+        >
+          Menu
+        </button>
+        <nav id="primary-navigation" aria-label="Primary navigation">
+          <a href="/index.html#two">Stacks</a
+          ><a href="/getting-started.html">Guides</a
+          ><a href="/hardware.html">Hardware</a
+          ><a href="/validation.html">Validation</a><a href="/faq.html">FAQ</a
+          ><a href="/purchase.html">Licensing</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="document" tabindex="-1">
+      <header>
+        <h1>Evaluation &amp; licensing FAQ</h1>
+        <p>Direct answers for planning an IO-Link device integration.</p>
+      </header>
+      <section class="wrapper style5">
+        <div class="inner guide-content">
+          <nav class="guide-nav" aria-label="Evaluation guides">
+            <a href="getting-started.html">Getting started</a
+            ><a href="hardware.html">Hardware &amp; IDEs</a
+            ><a href="validation.html">Validation</a
+            ><a href="faq.html">FAQ &amp; licensing</a>
+          </nav>
 
-    </div></section>
-</article>
-<footer id="footer">
-			<ul class="icons">
-				<li><a href="https://github.com/w1ne/iolinki" class="icon brands fa-github"><span
-							class="label">GitHub</span></a></li>
-				<li><a href="mailto:andrii@shylenko.com" class="icon solid fa-envelope"><span
-							class="label">Email</span></a></li>
-			</ul>
-			<ul class="copyright">
-				<li>&copy; iolinki.com</li>
-				<li><a href="https://labwired.com">LabWired</a></li>
-				<li><a href="https://kernelcad.com">kernelCAD</a></li>
-				<li><a href="https://komatachi.com">komatachi</a></li>
-				<li><a href="https://shylenko.com">shylenko.com</a></li>
-				<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-			</ul>
-		</footer>
-</div>
-<!-- Scripts -->
-	<script src="assets/js/jquery.min.js"></script>
-	<script src="assets/js/jquery.scrollex.min.js"></script>
-	<script src="assets/js/jquery.scrolly.min.js"></script>
-	<script src="assets/js/browser.min.js"></script>
-	<script src="assets/js/breakpoints.min.js"></script>
-	<script src="assets/js/util.js"></script>
-	<script src="assets/js/main.js"></script>
-
-
-</body>
+          <h3 id="integration">Integration and product status</h3>
+          <details>
+            <summary>Can I start without hardware?</summary>
+            <p>
+              Yes.
+              <a href="getting-started.html"
+                >Build the pinned v2.0.0 Linux host stack and run its tests</a
+              >. The host build and 22 CTest targets passed with GCC 13 on 1
+              October 2026. This is software evaluation; it does not establish
+              physical IO-Link interoperability.
+            </p>
+          </details>
+          <details>
+            <summary>
+              Is there a native IAR project that does not require CMake?
+            </summary>
+            <p>
+              Yes: the
+              <a
+                href="https://github.com/w1ne/iolinki/tree/1bc8d9c798efcea782f5fe79e963afc27f74eac8/examples/stm32g0_tiol112/iar"
+                >STM32G0B1RE project</a
+              >
+              includes source groups, C99 settings, ST IAR startup references
+              and a linker file. Configure the CMSIS package paths as described
+              in its README. The GCC firmware build is verified; native IAR
+              compilation has not been run and needs an EWARM installation and
+              license. See <a href="hardware.html">hardware and IDE status</a>.
+            </p>
+          </details>
+          <details>
+            <summary>Which exact boards have build-verified examples?</summary>
+            <p>
+              Three reference projects have verified firmware builds:
+              STM32G0B1RE with Arm GCC and TIOL112; Nucleo-U575ZI-Q with Zephyr
+              3.7.2 and TIOL112; and ESP32-C3-DevKitM-1 with ESP-IDF 5.4.0 and
+              STEVAL-IOD003V1/L6362A. Source, build commands and wiring
+              instructions are published. Native IAR compilation, complete
+              analog LabWired Twins and physical-master validation remain
+              pending. Embedded flash persistence is unsupported. None is
+              presented as a validated turnkey physical device.
+              <a href="hardware.html">Compare the exact projects and evidence</a
+              >.
+            </p>
+          </details>
+          <details>
+            <summary>Are TIOL112 and L6362A already integrated?</summary>
+            <p>
+              The published projects include TIOL112 and L6362A control drivers
+              plus MCU UART, GPIO, wake-up and microsecond-timer adapters.
+              Driver host tests and all three firmware builds pass. The
+              <a
+                href="https://github.com/w1ne/iolinki/tree/5572a628b8befa6a9c74496311da2359868f96d9/examples/esp32_l6362a"
+                >ESP32-C3/L6362A example</a
+              >
+              documents STEVAL-IOD003V1 headers, power settings and the required
+              IN1 modification; it is an ESP-IDF project. These implementations
+              are not yet proof of electrical interoperability or a
+              physical-master exchange. Consult
+              <a href="hardware.html#references">manufacturer documentation</a>
+              and <a href="validation.html">validation status</a>.
+            </p>
+          </details>
+          <details>
+            <summary>
+              Which ESP32 example should I use instead of the experimental
+              thermal sensor project?
+            </summary>
+            <p>
+              Use the
+              <a
+                href="https://github.com/w1ne/iolinki/tree/5572a628b8befa6a9c74496311da2359868f96d9/examples/esp32_l6362a"
+                >ESP32-C3 counter/button-and-LED reference</a
+              >. It provides an ESP-IDF application, L6362A adapter, build
+              recipe and STEVAL-IOD003V1 wiring guide, with a verified firmware
+              build. The older thermal-sensor repository is not the validated
+              hardware reference for this path. The new example still needs
+              physical wiring and commercial-master testing before it can be
+              described as a demonstrated physical IO-Link device.
+            </p>
+          </details>
+          <details>
+            <summary>
+              How do I define process data, ISDU parameters and the IODD?
+            </summary>
+            <p>
+              Start with the
+              <a
+                href="https://github.com/w1ne/iolinki/tree/5572a628b8befa6a9c74496311da2359868f96d9/examples/reference_device"
+                >shared reference application</a
+              >: its three input bytes carry a counter and button, and one
+              output byte controls the LED. Change the payload sizes and
+              application mapping together, then add parameters through the
+              stack's ISDU/parameter APIs and replace the example product
+              identity. Keep the IODD consistent with those definitions. The
+              <a
+                href="https://github.com/w1ne/iolinki/blob/5572a628b8befa6a9c74496311da2359868f96d9/tools/IODD_GEN.md"
+                >IODD generator produces draft XML</a
+              >; no published IODD Checker validation report has been
+              established for the new reference. Local parameter API tests do
+              not prove wire-level ISDU transfers.
+            </p>
+          </details>
+          <details>
+            <summary>Why might startup fail or process data disappear?</summary>
+            <p>
+              Check the supply, common ground and C/Q wiring against the
+              transceiver guide; UART 8E1 and the selected COM baud; WAKE, EN
+              and diagnostic GPIO polarity; the microsecond hardware timer;
+              driver release after transmit completion; echo suppression and RX
+              overflow/error handling. Keep logging off the protocol UART. Use
+              the
+              <a
+                href="https://github.com/w1ne/iolinki/blob/5572a628b8befa6a9c74496311da2359868f96d9/docs/PORTING.md"
+                >porting guide</a
+              >
+              and board-specific instructions, and include firmware, master
+              model, logs and timing captures in a report. These are diagnostic
+              starting points; physical fault/recovery validation remains
+              pending.
+            </p>
+          </details>
+          <details>
+            <summary>
+              Has this been validated with a real commercial IO-Link master?
+            </summary>
+            <p>
+              No published commercial-master physical interoperability report
+              has been established. The separate
+              <a href="https://github.com/w1ne/iolinki-master"
+                >iolinki-master stack</a
+              >
+              and simulations are useful software checks. They do not substitute
+              for bench results identifying a commercial master's model and
+              firmware. See
+              <a href="validation.html#physical">the report checklist</a>.
+            </p>
+          </details>
+          <details>
+            <summary>Is there official IO-Link certification?</summary>
+            <p>
+              No published official certification record has been established.
+              Protocol capabilities, passing software tests and certification
+              are separate facts.
+              <a href="validation.html">Review current validation evidence</a>.
+            </p>
+          </details>
+          <details>
+            <summary>Are there public deployed-customer references?</summary>
+            <p>
+              No public deployed-customer references have been established. We
+              make no customer deployment claim. Use the published source, tests
+              and <a href="validation.html">validation status</a> to scope your
+              evaluation.
+            </p>
+          </details>
+          <h3 id="licensing">Commercial licensing</h3>
+          <p>
+            The answers below follow
+            <a
+              href="https://github.com/w1ne/iolinki/blob/main/LICENSE.COMMERCIAL"
+              >LICENSE.COMMERCIAL</a
+            >. Confirm the final scope and current terms in your quote and
+            signed agreement.
+          </p>
+          <details>
+            <summary>
+              What does the €1,399 Single Developer license cover?
+            </summary>
+            <p>
+              The published one-time, royalty-free price covers one developer
+              seat, full source access and unlimited commercial deployments. It
+              includes one year of updates and bug fixes and email support with
+              the response time stated in LICENSE.COMMERCIAL. Deployment count
+              is not a developer-seat count.
+            </p>
+          </details>
+          <details>
+            <summary>What does the €4,699 Team license include?</summary>
+            <p>
+              The published one-time, royalty-free Team tier includes the Single
+              Developer benefits, up to five developer seats, priority email
+              support, quarterly technical reviews and up to eight hours of
+              custom integration assistance. README wording has differed from
+              the license document; these answers use LICENSE.COMMERCIAL.
+              Confirm the assistance scope and applicable support terms in the
+              quote.
+            </p>
+          </details>
+          <details>
+            <summary>
+              Do the eight integration hours cover PHY porting and hardware
+              integration?
+            </summary>
+            <p>
+              The eight-hour allowance belongs to the Team tier; the Single
+              Developer tier does not list it. The published terms describe
+              custom integration assistance but do not define which hardware
+              tasks are included. Agree the scope in the quote, including PHY
+              callbacks, board wiring, toolchain, required equipment and
+              validation work. The allowance alone does not promise a completed
+              port, supplied hardware or certification. Until that scope is
+              agreed, hardware-porting coverage is unresolved.
+            </p>
+          </details>
+          <details>
+            <summary>Do use rights expire after the first year?</summary>
+            <p>
+              The current terms retain perpetual rights to use the version you
+              licensed. The included update period is one year. Extended support
+              is optional and currently listed at 20% of the original license
+              fee per year; confirm the renewal coverage in your agreement.
+            </p>
+          </details>
+          <details>
+            <summary>
+              Can I ship compiled firmware or a system-on-module to my
+              customers?
+            </summary>
+            <p>
+              Binary redistribution as part of your product, including a
+              system-on-module, is compatible with the prior clarification from
+              the licensor by email. Confirm this use and its scope in the
+              signed agreement. Redistributing iolinki source to third parties
+              is a separate matter and needs explicitly agreed terms; buying a
+              developer seat does not by itself define a source-resale license.
+            </p>
+          </details>
+          <details>
+            <summary>
+              Is licensing tied to each DeviceID, downstream customer or
+              processor target?
+            </summary>
+            <p>
+              The published tiers are priced by developer seats and include
+              unlimited commercial deployments. They do not list per-DeviceID,
+              per-customer or per-processor fees. Confirm the exact distribution
+              scope in your agreement, including compiled binaries supplied
+              through a proprietary SOM SDK. The end-product manufacturer still
+              defines its own VendorID, DeviceID, process data and IODD and
+              validates the finished device; example identifiers are not a
+              production identity allocation.
+            </p>
+          </details>
+          <details>
+            <summary>
+              Can I evaluate under GPL without buying a commercial license?
+            </summary>
+            <p>
+              The public code is available under
+              <a href="https://github.com/w1ne/iolinki/blob/v2.0.0/LICENSE"
+                >GPLv3-or-later</a
+              >. Evaluation, internal use, modifying code and conveying software
+              have different implications under the license. When you distribute
+              a covered work, obligations can include corresponding source,
+              license notices and the applicable GPL terms. “Evaluation” is not
+              a blanket exemption, and making source visible alone does not
+              resolve every obligation. Read the license for your use and
+              distribution model. Commercial terms provide the proprietary
+              licensing path.
+            </p>
+          </details>
+          <details>
+            <summary>
+              Can I start evaluating my TIOL112 board before a commercial
+              commitment?
+            </summary>
+            <p>
+              Start with the public GPL source and the
+              <a
+                href="https://github.com/w1ne/iolinki/tree/5572a628b8befa6a9c74496311da2359868f96d9/examples/stm32g0_tiol112"
+                >STM32G0B1RE/TIOL112 reference project</a
+              >; adapt the documented MCU callbacks and wiring to your board.
+              This evaluation remains under the published GPL terms. No separate
+              time-limited evaluation agreement is currently published. Contact
+              the licensor if your process requires a defined evaluation period
+              or different terms. Build verification does not replace testing
+              your electronics with a physical master.
+            </p>
+          </details>
+          <details>
+            <summary>Is there an Enterprise option?</summary>
+            <p>
+              The published Enterprise tier is quoted individually and includes
+              site-wide developer seats and negotiated services.
+              <a href="mailto:andrii@shylenko.com">Contact the licensor</a> with
+              your board, toolchain, product and integration needs. Custom scope
+              and any SLA belong in that agreement.
+            </p>
+          </details>
+          <h3 id="maintenance">Maintenance and evaluation help</h3>
+          <details>
+            <summary>
+              What is the release cadence, and how are bugs prioritized?
+            </summary>
+            <p>
+              No fixed release cadence or severity-based bug-priority policy is
+              currently published. Review the actual
+              <a href="https://github.com/w1ne/iolinki/releases"
+                >release history</a
+              >,
+              <a href="https://github.com/w1ne/iolinki/issues">issue tracker</a>
+              and
+              <a href="https://github.com/w1ne/iolinki/actions">CI results</a>.
+              Include the affected commit, target, toolchain, impact and a
+              reproducible case in a bug report. Commercial support response
+              times follow the applicable license terms; a response time is not
+              a guaranteed fix date. Any required release schedule, fix deadline
+              or maintenance commitment needs explicit agreement.
+            </p>
+          </details>
+          <details>
+            <summary>
+              Which versions receive maintenance and security fixes?
+            </summary>
+            <p>
+              No separate public supported-version, end-of-life or
+              security-maintenance schedule is currently documented. The
+              included year of updates and optional extended support do not by
+              themselves define a security-fix cadence or a particular version's
+              support lifetime. Confirm any required security reporting process,
+              supported versions and maintenance period in your commercial
+              agreement.
+            </p>
+          </details>
+          <details>
+            <summary>
+              How can I assess maintenance and report a problem?
+            </summary>
+            <p>
+              Inspect
+              <a href="https://github.com/w1ne/iolinki/releases">releases</a>,
+              <a href="https://github.com/w1ne/iolinki/actions">CI</a> and
+              <a href="https://github.com/w1ne/iolinki/issues">issues</a>.
+              Include your release/commit, toolchain, target, reproduction
+              commands and logs in a report. No additional response or release
+              SLA is implied by these public resources; commercial support
+              follows the published terms and your agreement.
+            </p>
+          </details>
+          <details>
+            <summary>
+              What should I send when discussing an integration?
+            </summary>
+            <p>
+              Include the MCU/board and PHY, IDE or RTOS, COM mode and
+              process-data sizes, ISDU/data-storage needs, master model,
+              schedule, developer-seat count and whether customers receive
+              binaries or source. Start with the
+              <a href="getting-started.html">host evaluation</a> and
+              <a href="hardware.html">hardware matrix</a> to identify the
+              remaining work.
+            </p>
+          </details>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer" id="footer">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="/index.html" aria-label="iolinki home"
+            >io<span>linki</span></a
+          >
+          <p>IO-Link software for the firmware you build.</p>
+          <p class="seller">
+            Andrii Shylenko e.v. · Hungarian sole trader<br /><a href="mailto:andrii@shylenko.com"
+              >andrii@shylenko.com</a
+            >
+          </p>
+        </div>
+        <div>
+          <h2>Developer resources</h2>
+          <a href="https://github.com/w1ne/iolinki">Device source</a
+          ><a href="https://github.com/w1ne/iolinki-master">Master source</a
+          ><a href="/getting-started.html">Evaluation guide</a
+          ><a href="/validation.html">Validation evidence</a>
+        </div>
+        <div>
+          <h2>Licensing &amp; company</h2>
+          <a href="/purchase.html">Commercial licensing</a
+          ><a href="/terms/purchase-terms.html">Purchase terms status</a
+          ><a href="/legal.html">Seller &amp; privacy information</a
+          ><a href="https://shylenko.com">shylenko.com</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© iolinki · Engineering software</span
+        ><span
+          >Related projects: <a href="https://labwired.com">LabWired</a> ·
+          <a href="https://kernelcad.com">kernelCAD</a> ·
+          <a href="https://komatachi.com">komatachi</a></span
+        >
+      </div>
+      <p class="attribution">
+        Retained guide content adapted from
+        <a href="https://html5up.net">HTML5 UP</a> ·
+        <a href="https://html5up.net/license">CCA 3.0</a>
+      </p>
+    </footer>
+  </body>
 </html>

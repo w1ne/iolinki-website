@@ -1,105 +1,325 @@
-<!DOCTYPE HTML>
-<!-- Spectral by HTML5 UP, html5up.net | @ajlkn. CCA 3.0: html5up.net/license -->
+<!doctype html>
 <html lang="en">
-<head>
+  <head>
     <title>Validation status | iolinki</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Software checks, physical interoperability and certification have separate evidence." />
+    <meta
+      name="description"
+      content="Software checks, physical interoperability and certification have separate evidence."
+    />
     <link rel="canonical" href="https://iolinki.com/validation.html" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="stylesheet" href="assets/css/main.css" />
-    <link rel="stylesheet" href="assets/css/guides.css" />
-    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-</head>
-<body class="is-preload">
-<div id="page-wrapper">
-<header id="header" >
-			<h1><a href="index.html">io<span>linki</span></a></h1>
-			<nav id="nav">
-				<ul>
-					<li class="special">
-						<a href="#menu" class="menuToggle"><span>Menu</span></a>
-						<div id="menu">
-							<ul>
-								<li><a href="index.html">Home</a></li>
-								<li><a href="getting-started.html">Try an example</a></li>
-                                <li><a href="hardware.html">Hardware &amp; IDEs</a></li>
-                                <li><a href="validation.html">Validation status</a></li>
-                                <li><a href="faq.html">FAQ &amp; licensing</a></li>
-                                <li><a href="index.html#one">Vision</a></li>
-								<li><a href="index.html#two">Architecture</a></li>
-								<li><a href="index.html#three">Capabilities</a></li>
-								<li><a href="index.html#cta">Licensing</a></li>
-								<li><a href="https://github.com/w1ne/iolinki">GitHub</a></li>
-								<li><a href="https://github.com/w1ne/iolinki-master">Master GitHub</a></li>
-							</ul>
-						</div>
-					</li>
-				</ul>
-			</nav>
-		</header>
 
-		
-<article id="main">
-    <header><h2>Validation status</h2><p>Software checks, physical interoperability and certification have separate evidence.</p></header>
-    <section class="wrapper style5"><div class="inner guide-content">
-        <nav class="guide-nav" aria-label="Evaluation guides"><a href="getting-started.html">Getting started</a><a href="hardware.html">Hardware &amp; IDEs</a><a href="validation.html">Validation</a><a href="faq.html">FAQ &amp; licensing</a></nav>
-        
-<p>This page states the available evaluation evidence as of 1 October 2026. It is not a certification or a blanket production-readiness claim.</p>
-<div class="table-wrapper"><table>
-<caption>Evidence by validation level</caption>
-<thead><tr><th scope="col">Check</th><th scope="col">Current evidence</th><th scope="col">What it establishes</th></tr></thead>
-<tbody>
-<tr><th scope="row">Linux host build and tests</th><td>v2.0.0 built with GCC 13; 22/22 CTest targets passed on 1 October 2026. <a href="getting-started.html#host">Reproduce the commands</a> and inspect <a href="https://github.com/w1ne/iolinki/tree/v2.0.0/tests">test source</a>.</td><td>Buildability and the behaviors covered by host tests.</td></tr>
-<tr><th scope="row">Device / standalone master simulation</th><td><a href="https://github.com/w1ne/iolinki-master">Separate master stack and software testing</a> are available.</td><td>Software protocol interactions. This does not establish commercial-master physical interoperability.</td></tr>
-<tr><th scope="row">MCU reference firmware</th><td>Firmware builds pass for STM32G0B1RE/TIOL112, Nucleo-U575ZI-Q/Zephyr/TIOL112 and ESP32-C3-DevKitM-1/ESP-IDF/STEVAL-IOD003V1. Native IAR compilation, complete analog Twins and physical-master validation remain pending. <a href="hardware.html">See the exact projects and limitations</a>.</td><td>Reproducible source and firmware compilation; this does not establish physical IO-Link operation.</td></tr>
-<tr><th scope="row">Commercial physical master</th><td>No published interoperability report has been established.</td><td>A master model, firmware and reproducible bench report are still needed.</td></tr>
-<tr><th scope="row">Official certification</th><td>No published official certification record has been established.</td><td>Feature descriptions and tests are not certification evidence.</td></tr>
-<tr><th scope="row">Deployed customer references</th><td>No public deployed-customer references have been established.</td><td>No customer deployment claim is made.</td></tr>
-</tbody></table></div>
-<h3 id="physical">What a useful physical validation report contains</h3>
-<p>The <a href="getting-started.html#reference">new reference-device commit</a> passes 30/30 host CTest targets, including cyclic frame exchanges, both transceiver control drivers and UART error handling. Complete firmware images build for STM32G0B1RE/TIOL112 with Arm GCC, Nucleo-U575ZI-Q/TIOL112 with pinned Zephyr 3.7.2, and ESP32-C3/L6362A with ESP-IDF 5.4.0. The Linux demonstration also passes a virtual-master parameter persistence check across process restarts; the embedded projects explicitly reject unsupported flash storage. Native IAR execution, analog LabWired twin verification and physical-master validation remain pending.</p>
-<ol>
-<li><strong>Reproducible setup:</strong> release or commit, build tools, MCU board, PHY and revisions, schematic/wiring, power setup and the master model/firmware.</li>
-<li><strong>Link behavior:</strong> wake-up and startup, negotiated COM mode and cycle time, stable cyclic process data, byte counts and measured C/Q timing.</li>
-<li><strong>Services:</strong> identification and mandatory parameters, ISDU reads/writes, errors and events, and data storage where applicable.</li>
-<li><strong>Recovery:</strong> cable disconnect/reconnect, power cycles, invalid frames and relevant fault handling, with pass/fail criteria and logs.</li>
-<li><strong>Scope:</strong> test duration, tested modes, limitations, and links to captures or reports. Certification, if obtained, needs its own official record.</li>
-</ol>
-<p>Consult the <a href="https://io-link.com/">IO-Link Community</a> for official technology and conformance information. Product qualification depends on the actual device, electronics and integration.</p>
-<h3 id="maintenance">Maintenance evidence</h3>
-<p>Review the <a href="https://github.com/w1ne/iolinki/releases">release history</a>, <a href="https://github.com/w1ne/iolinki/blob/v2.0.0/CHANGELOG.md">v2.0.0 changelog</a>, <a href="https://github.com/w1ne/iolinki/actions">CI runs</a> and <a href="https://github.com/w1ne/iolinki/issues">open issues</a>. They show published changes and current work; they do not create a release cadence or a new support SLA. Purchased support remains governed by the <a href="https://github.com/w1ne/iolinki/blob/main/LICENSE.COMMERCIAL">commercial terms</a> and your agreement.</p>
-<p>Start with <a href="getting-started.html">host evaluation</a>, then choose a <a href="hardware.html">hardware path</a>.</p>
+    <link rel="stylesheet" href="/assets/css/site.css" />
+    <script src="/assets/js/site.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header" id="header">
+      <div class="header-inner">
+        <a class="brand" href="/index.html" aria-label="iolinki home"
+          >io<span>linki</span><span class="brand-dot" aria-hidden="true"></span
+        ></a>
+        <button
+          class="menu-button"
+          type="button"
+          aria-expanded="false"
+          aria-controls="primary-navigation"
+          hidden
+        >
+          Menu
+        </button>
+        <nav id="primary-navigation" aria-label="Primary navigation">
+          <a href="/index.html#two">Stacks</a
+          ><a href="/getting-started.html">Guides</a
+          ><a href="/hardware.html">Hardware</a
+          ><a href="/validation.html">Validation</a><a href="/faq.html">FAQ</a
+          ><a href="/purchase.html">Licensing</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="document" tabindex="-1">
+      <header>
+        <h1>Validation status</h1>
+        <p>
+          Software checks, physical interoperability and certification have
+          separate evidence.
+        </p>
+      </header>
+      <section class="wrapper style5">
+        <div class="inner guide-content">
+          <nav class="guide-nav" aria-label="Evaluation guides">
+            <a href="getting-started.html">Getting started</a
+            ><a href="hardware.html">Hardware &amp; IDEs</a
+            ><a href="validation.html">Validation</a
+            ><a href="faq.html">FAQ &amp; licensing</a>
+          </nav>
 
-    </div></section>
-</article>
-<footer id="footer">
-			<ul class="icons">
-				<li><a href="https://github.com/w1ne/iolinki" class="icon brands fa-github"><span
-							class="label">GitHub</span></a></li>
-				<li><a href="mailto:andrii@shylenko.com" class="icon solid fa-envelope"><span
-							class="label">Email</span></a></li>
-			</ul>
-			<ul class="copyright">
-				<li>&copy; iolinki.com</li>
-				<li><a href="https://labwired.com">LabWired</a></li>
-				<li><a href="https://kernelcad.com">kernelCAD</a></li>
-				<li><a href="https://komatachi.com">komatachi</a></li>
-				<li><a href="https://shylenko.com">shylenko.com</a></li>
-				<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-			</ul>
-		</footer>
-</div>
-<!-- Scripts -->
-	<script src="assets/js/jquery.min.js"></script>
-	<script src="assets/js/jquery.scrollex.min.js"></script>
-	<script src="assets/js/jquery.scrolly.min.js"></script>
-	<script src="assets/js/browser.min.js"></script>
-	<script src="assets/js/breakpoints.min.js"></script>
-	<script src="assets/js/util.js"></script>
-	<script src="assets/js/main.js"></script>
-
-
-</body>
+          <p>
+            This page states the available evaluation evidence as of 1 October
+            2026. It is not a certification or a blanket production-readiness
+            claim.
+          </p>
+          <section class="validation-note" aria-labelledby="pair-status">
+            <p class="eyebrow">Real-stack integration · 1 October 2026</p>
+            <h2 id="pair-status">The exact version pair matters</h2>
+            <p>
+              A fresh real-stack run passed
+              <strong>6 of 9 integration cases</strong> and
+              <strong>14 of 15 CTest targets</strong>. Three cases failed:
+              mandatory tag writes (<code>-4</code>), Data Storage write/read
+              mismatch, and Data Storage restore (<code>-6</code>).
+            </p>
+            <p>
+              Tested master:
+              <a
+                href="https://github.com/w1ne/iolinki-master/commit/d23fd3034c0203ef829bd9734806389f8708fa94"
+                ><code>d23fd3034c0203ef829bd9734806389f8708fa94</code></a
+              ><br />Tested device (develop):
+              <a
+                href="https://github.com/w1ne/iolinki/commit/0cb3ed9f06f8f4ab820f06369a42e724ae50ea93"
+                ><code>0cb3ed9f06f8f4ab820f06369a42e724ae50ea93</code></a
+              >
+            </p>
+            <p>
+              These protocol issues remain unresolved. Passing host tests for a
+              different release or commit does not establish that this pair
+              passes integration, physical interoperability or conformance.
+            </p>
+            <h3>Reproduce the real-stack check</h3>
+            <p>
+              Start in an empty directory on Linux with Git, CMake, a C compiler
+              and the CMocka development library installed. These commands pin
+              both repositories to the tested pair.
+            </p>
+            <pre><code>git clone https://github.com/w1ne/iolinki.git iolinki-device
+git clone https://github.com/w1ne/iolinki-master.git iolinki-master
+git -C iolinki-device checkout --detach 0cb3ed9f06f8f4ab820f06369a42e724ae50ea93
+git -C iolinki-master checkout --detach d23fd3034c0203ef829bd9734806389f8708fa94
+cmake -S iolinki-master -B iolinki-master/build -DIOLINKI_DEVICE_DIR="$PWD/iolinki-device"
+cmake --build iolinki-master/build
+ctest --test-dir iolinki-master/build --output-on-failure</code></pre>
+            <p>
+              For this known pair, expect the three integration cases described
+              above to fail and CTest to exit with a nonzero status. They belong
+              to the real-stack test target, so the suite reports 14 of 15 CTest
+              targets passing. Inspect the
+              <a
+                href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_real_iolinki_device.c"
+                >pinned real-stack test source</a
+              >
+              for the assertions and individual cases.
+            </p>
+          </section>
+          <div class="table-wrapper">
+            <table>
+              <caption>
+                Evidence by validation level
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Check</th>
+                  <th scope="col">Current evidence</th>
+                  <th scope="col">What it establishes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Linux host build and tests</th>
+                  <td>
+                    v2.0.0 built with GCC 13; 22/22 CTest targets passed on 1
+                    October 2026.
+                    <a href="getting-started.html#host"
+                      >Reproduce the commands</a
+                    >
+                    and inspect
+                    <a href="https://github.com/w1ne/iolinki/tree/v2.0.0/tests"
+                      >test source</a
+                    >.
+                  </td>
+                  <td>Buildability and the behaviors covered by host tests.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Device / standalone master simulation</th>
+                  <td>
+                    <a href="https://github.com/w1ne/iolinki-master"
+                      >Separate master stack and software testing</a
+                    >
+                    are available.
+                  </td>
+                  <td>
+                    Software protocol interactions. This does not establish
+                    commercial-master physical interoperability.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">MCU reference firmware</th>
+                  <td>
+                    Firmware builds pass for STM32G0B1RE/TIOL112,
+                    Nucleo-U575ZI-Q/Zephyr/TIOL112 and
+                    ESP32-C3-DevKitM-1/ESP-IDF/STEVAL-IOD003V1. Native IAR
+                    compilation, complete analog Twins and physical-master
+                    validation remain pending.
+                    <a href="hardware.html"
+                      >See the exact projects and limitations</a
+                    >.
+                  </td>
+                  <td>
+                    Reproducible source and firmware compilation; this does not
+                    establish physical IO-Link operation.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Commercial physical master</th>
+                  <td>
+                    No published interoperability report has been established.
+                  </td>
+                  <td>
+                    A master model, firmware and reproducible bench report are
+                    still needed.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Official certification</th>
+                  <td>
+                    No published official certification record has been
+                    established.
+                  </td>
+                  <td>
+                    Feature descriptions and tests are not certification
+                    evidence.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Deployed customer references</th>
+                  <td>
+                    No public deployed-customer references have been
+                    established.
+                  </td>
+                  <td>No customer deployment claim is made.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <h3 id="physical">
+            What a useful physical validation report contains
+          </h3>
+          <p>
+            The
+            <a href="getting-started.html#reference"
+              >new reference-device commit</a
+            >
+            passes 30/30 host CTest targets, including cyclic frame exchanges,
+            both transceiver control drivers and UART error handling. Complete
+            firmware images build for STM32G0B1RE/TIOL112 with Arm GCC,
+            Nucleo-U575ZI-Q/TIOL112 with pinned Zephyr 3.7.2, and
+            ESP32-C3/L6362A with ESP-IDF 5.4.0. The Linux demonstration also
+            passes a virtual-master parameter persistence check across process
+            restarts; the embedded projects explicitly reject unsupported flash
+            storage. Native IAR execution, analog LabWired twin verification and
+            physical-master validation remain pending.
+          </p>
+          <ol>
+            <li>
+              <strong>Reproducible setup:</strong> release or commit, build
+              tools, MCU board, PHY and revisions, schematic/wiring, power setup
+              and the master model/firmware.
+            </li>
+            <li>
+              <strong>Link behavior:</strong> wake-up and startup, negotiated
+              COM mode and cycle time, stable cyclic process data, byte counts
+              and measured C/Q timing.
+            </li>
+            <li>
+              <strong>Services:</strong> identification and mandatory
+              parameters, ISDU reads/writes, errors and events, and data storage
+              where applicable.
+            </li>
+            <li>
+              <strong>Recovery:</strong> cable disconnect/reconnect, power
+              cycles, invalid frames and relevant fault handling, with pass/fail
+              criteria and logs.
+            </li>
+            <li>
+              <strong>Scope:</strong> test duration, tested modes, limitations,
+              and links to captures or reports. Certification, if obtained,
+              needs its own official record.
+            </li>
+          </ol>
+          <p>
+            Consult the <a href="https://io-link.com/">IO-Link Community</a> for
+            official technology and conformance information. Product
+            qualification depends on the actual device, electronics and
+            integration.
+          </p>
+          <h3 id="maintenance">Maintenance evidence</h3>
+          <p>
+            Review the
+            <a href="https://github.com/w1ne/iolinki/releases"
+              >release history</a
+            >,
+            <a href="https://github.com/w1ne/iolinki/blob/v2.0.0/CHANGELOG.md"
+              >v2.0.0 changelog</a
+            >, <a href="https://github.com/w1ne/iolinki/actions">CI runs</a> and
+            <a href="https://github.com/w1ne/iolinki/issues">open issues</a>.
+            They show published changes and current work; they do not create a
+            release cadence or a new support SLA. Purchased support remains
+            governed by the
+            <a
+              href="https://github.com/w1ne/iolinki/blob/main/LICENSE.COMMERCIAL"
+              >commercial terms</a
+            >
+            and your agreement.
+          </p>
+          <p>
+            Start with <a href="getting-started.html">host evaluation</a>, then
+            choose a <a href="hardware.html">hardware path</a>.
+          </p>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer" id="footer">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="/index.html" aria-label="iolinki home"
+            >io<span>linki</span></a
+          >
+          <p>IO-Link software for the firmware you build.</p>
+          <p class="seller">
+            Andrii Shylenko e.v. · Hungarian sole trader<br /><a href="mailto:andrii@shylenko.com"
+              >andrii@shylenko.com</a
+            >
+          </p>
+        </div>
+        <div>
+          <h2>Developer resources</h2>
+          <a href="https://github.com/w1ne/iolinki">Device source</a
+          ><a href="https://github.com/w1ne/iolinki-master">Master source</a
+          ><a href="/getting-started.html">Evaluation guide</a
+          ><a href="/validation.html">Validation evidence</a>
+        </div>
+        <div>
+          <h2>Licensing &amp; company</h2>
+          <a href="/purchase.html">Commercial licensing</a
+          ><a href="/terms/purchase-terms.html">Purchase terms status</a
+          ><a href="/legal.html">Seller &amp; privacy information</a
+          ><a href="https://shylenko.com">shylenko.com</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© iolinki · Engineering software</span
+        ><span
+          >Related projects: <a href="https://labwired.com">LabWired</a> ·
+          <a href="https://kernelcad.com">kernelCAD</a> ·
+          <a href="https://komatachi.com">komatachi</a></span
+        >
+      </div>
+      <p class="attribution">
+        Retained guide content adapted from
+        <a href="https://html5up.net">HTML5 UP</a> ·
+        <a href="https://html5up.net/license">CCA 3.0</a>
+      </p>
+    </footer>
+  </body>
 </html>
