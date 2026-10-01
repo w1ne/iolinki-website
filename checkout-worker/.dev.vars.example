@@ -1,0 +1,7 @@
+# Nonfunctional template. Never add real secrets to this file.
+PURCHASES_ENABLED=false
+LIVE_PURCHASES_ENABLED=false
+DELIVERY_ENABLED=false
+MODE=test
+SITE_ORIGIN=https://iolinki.com
+# Configure all values described in README before test-mode activation.
