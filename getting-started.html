@@ -57,14 +57,14 @@ ctest --test-dir build --output-on-failure</code></pre>
 <p>The host build and all 22 CTest targets passed with GCC 13 on Linux on 1 October 2026. Expect CTest to report <code>100% tests passed</code>. A compiler or test failure on your machine is a useful issue report; include the tag, operating system, compiler version, command and full error output.</p>
 <p>These tests exercise software protocol behavior. Passing them does not establish physical transceiver timing, a working MCU board, interoperability with a commercial master, or certification. The <a href="validation.html">validation page</a> separates those checks.</p>
 <h3 id="reference">3. Run the counter, button and LED example</h3>
-<p>The new <a href="https://github.com/w1ne/iolinki/tree/1bc8d9c798efcea782f5fe79e963afc27f74eac8/examples/reference_device">reference device</a> needs no board or serial peer. This recipe pins its exact source commit separately from the v2.0.0 baseline above.</p>
-<pre><code>git fetch origin 1bc8d9c798efcea782f5fe79e963afc27f74eac8
-git checkout --detach 1bc8d9c798efcea782f5fe79e963afc27f74eac8
+<p>The new <a href="https://github.com/w1ne/iolinki/tree/f4ff734dd5bf63e74895b68cf9296073ddfea296/examples/reference_device">reference device</a> needs no board or serial peer. This recipe pins its exact source commit separately from the v2.0.0 baseline above.</p>
+<pre><code>git fetch origin f4ff734dd5bf63e74895b68cf9296073ddfea296
+git checkout --detach f4ff734dd5bf63e74895b68cf9296073ddfea296
 cmake -S . -B build-reference -DIOLINK_PLATFORM=LINUX -DBUILD_TESTING=ON
 cmake --build build-reference --parallel 4
 ./build-reference/examples/reference_device/reference_device_demo
 ctest --test-dir build-reference --output-on-failure</code></pre>
-<p>Expect <code>SIMULATION PASS</code> after 100 checked cyclic frame exchanges. The example checks counter data, LED commands and checksums, a local application-tag readback, and a queued button event. All 27 CTest targets passed for this commit. It does not demonstrate a physical LED, wire-level ISDU, event acknowledgement or persistent storage. <a href="https://github.com/w1ne/iolinki/blob/1bc8d9c798efcea782f5fe79e963afc27f74eac8/examples/reference_device/README.md">Read the payload and integration guide</a>.</p>
+<p>Expect <code>SIMULATION PASS</code> after 100 checked cyclic frame exchanges. The example checks counter data, LED commands and checksums, a local application-tag readback, and a queued button event. All 30 CTest targets passed for this commit. It does not demonstrate a physical LED, wire-level ISDU, event acknowledgement or persistent storage. <a href="https://github.com/w1ne/iolinki/blob/f4ff734dd5bf63e74895b68cf9296073ddfea296/examples/reference_device/README.md">Read the payload and integration guide</a>.</p>
 <h3 id="examples">4. Inspect the existing examples</h3>
 <ul>
 <li><a href="https://github.com/w1ne/iolinki/tree/v2.0.0/examples/host_demo">Host demo</a>: <code>build/examples/host_demo/host_demo</code> requires a TTY path and uses the virtual PHY transport. Running it without arguments prints its usage and exits with a nonzero status. A running state machine needs a compatible peer; this is not a ready-made commercial-master connection.</li>

@@ -59,7 +59,7 @@
 <tr><th scope="row">Deployed customer references</th><td>No public deployed-customer references have been established.</td><td>No customer deployment claim is made.</td></tr>
 </tbody></table></div>
 <h3 id="physical">What a useful physical validation report contains</h3>
-<p>The <a href="getting-started.html#reference">new reference-device commit</a> passes 27/27 host CTest targets, including its cyclic frame demonstration and TIOL112 control-driver tests. The STM32G0B1RE/TIOL112 firmware also links as a complete Cortex-M0+ image using pinned CMSIS packages and Arm GCC 13.2.1 with warnings treated as errors. Native IAR execution, analog LabWired twin verification and physical-master validation remain pending.</p>
+<p>The <a href="getting-started.html#reference">new reference-device commit</a> passes 30/30 host CTest targets, including cyclic frame exchanges, both transceiver control drivers and UART error handling. Complete firmware images build for STM32G0B1RE/TIOL112 with Arm GCC, Nucleo-U575ZI-Q/TIOL112 with pinned Zephyr 3.7.2, and ESP32-C3/L6362A with ESP-IDF 5.4.0. The Linux demonstration also passes a virtual-master parameter persistence check across process restarts; the embedded projects explicitly reject unsupported flash storage. Native IAR execution, analog LabWired twin verification and physical-master validation remain pending.</p>
 <ol>
 <li><strong>Reproducible setup:</strong> release or commit, build tools, MCU board, PHY and revisions, schematic/wiring, power setup and the master model/firmware.</li>
 <li><strong>Link behavior:</strong> wake-up and startup, negotiated COM mode and cycle time, stable cyclic process data, byte counts and measured C/Q timing.</li>
