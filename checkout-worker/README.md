@@ -62,3 +62,8 @@ Do not enable them before configured account and actual test-mode payment, buyer
 certificate/receipt and owner notification checks pass. Fixture tests do not prove
 that real account flow. Physical-master and complete analog Twins validation
 remain separate evidence.
+
+Holder and company contact names are checked against the same Unicode font glyph
+coverage used by the PDF before an order or Stripe session is created. Supported
+Latin and Cyrillic names are retained; names outside that font coverage require
+a separately handled quote rather than a payable order that cannot be rendered.

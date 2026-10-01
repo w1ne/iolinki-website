@@ -70,7 +70,7 @@ test('expired recorded checkout is rejected without another creation',()=>withFi
 
 const purchaseBody=(tier,holder,attemptId=randomUUID())=>({tier,holder,attemptId,termsVersion:terms.version,termsHash:terms.sha256,acceptTerms:true});
 test('requires the correct named holder before creating an order or contacting Stripe',()=>withFixture(async f=>{
- for(const [tier,holder] of [['single',undefined],['single',{kind:'company',name:'Company',contact:'Person'}],['single',{kind:'individual',name:' '}],['single',{kind:'individual',name:'Name\nInjected'}],['single',{kind:'individual',name:'x'.repeat(201)}],['single',{kind:'individual',name:'Name',contact:'Other'}],['team',{kind:'company',name:'Company'}],['team',{kind:'individual',name:'Person'}],['team',{kind:'company',name:'Company',contact:' '}]]) assert.equal((await f.post('/checkout',purchaseBody(tier,holder))).status,400);
+ for(const [tier,holder] of [['single',undefined],['single',{kind:'company',name:'Company',contact:'Person'}],['single',{kind:'individual',name:' '}],['single',{kind:'individual',name:'Name\nInjected'}],['single',{kind:'individual',name:'x'.repeat(201)}],['single',{kind:'individual',name:'Name',contact:'Other'}],['single',{kind:'individual',name:'张伟'}],['team',{kind:'company',name:'张伟',contact:'Contact'}],['team',{kind:'company',name:'Company',contact:'张伟'}],['team',{kind:'company',name:'Company'}],['team',{kind:'individual',name:'Person'}],['team',{kind:'company',name:'Company',contact:' '}]]) assert.equal((await f.post('/checkout',purchaseBody(tier,holder))).status,400);
  assert.equal(f.requests.length,0);assert.equal((await f.db.prepare('SELECT COUNT(*) AS n FROM orders').first()).n,0);
 }));
 test('holder changes require a new attempt and cannot change accepted order snapshots',()=>withFixture(async f=>{
@@ -81,7 +81,7 @@ test('holder changes require a new attempt and cannot change accepted order snap
  await f.webhook(id);const issued=JSON.parse((await f.db.prepare('SELECT snapshot FROM licenses WHERE order_id=?').bind(id).first()).snapshot);assert.deepEqual(issued,original);
 }));
 for(const tier of ['single','team']) test('certificate records accepted '+tier+' holder and total assistance, distinct from payer',()=>withFixture(async f=>{
- const holder=tier==='single'?{kind:'individual',name:'Zoë Engineer'}:{kind:'company',name:'Example Devices Ltd',contact:'Zoë Contact'};
+ const holder=tier==='single'?{kind:'individual',name:'Zoë Engineer Тест'}:{kind:'company',name:'Example Devices Ltd Тест',contact:'Zoë Contact Тест'};
  const{id}=await f.checkout(tier,randomUUID(),holder);await f.webhook(id);await f.api.fetch(endpoint+'/__test_delivery');
  const row=await f.db.prepare('SELECT snapshot FROM licenses WHERE order_id=?').bind(id).first();const snap=JSON.parse(row.snapshot);assert.deepEqual(snap.holder,holder);assert.equal(snap.assistance.hours,tier==='single'?2:8);
  const bytes=Buffer.from(f.sent.find(x=>x.message.to[0]==='buyer@example.com').message.attachments[0].content,'base64');const path='/tmp/iolinki-'+tier+'-holder-test.pdf';await writeFile(path,bytes);const content=execFileSync('pdftotext',[path,'-'],{encoding:'utf8'});

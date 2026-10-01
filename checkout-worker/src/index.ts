@@ -2,6 +2,7 @@ import { WorkerEntrypoint } from 'cloudflare:workers';
 import Stripe from 'stripe';
 import { config, email, sha256 } from './config';
 import { certificate } from './certificate';
+import { supportsCertificateText } from './certificate-font';
 import { TIERS, type Config, type Env, type Holder, type Job, type License, type Order, type Payment, type Snapshot, type Tier } from './types';
 
 function holderFor(tier: Tier, value: unknown): Holder | null {
@@ -9,11 +10,11 @@ function holderFor(tier: Tier, value: unknown): Holder | null {
   const fields = value as Record<string, unknown>;
   const name = (v: unknown): string | null => typeof v === 'string' && v.trim().length > 0 && v.length <= 200 && !/[\u0000-\u001f\u007f-\u009f\u2028\u2029]/u.test(v) ? v.trim() : null;
   const holderName = name(fields.name);
-  if (!holderName) return null;
+  if (!holderName || !supportsCertificateText(holderName)) return null;
   if (tier === 'single' && fields.kind === 'individual' && Object.keys(fields).every(k => ['kind','name'].includes(k)))
     return {kind:'individual',name:holderName};
   const contact = name(fields.contact);
-  if (tier === 'team' && fields.kind === 'company' && contact && Object.keys(fields).every(k => ['kind','name','contact'].includes(k)))
+  if (tier === 'team' && fields.kind === 'company' && contact && supportsCertificateText(contact) && Object.keys(fields).every(k => ['kind','name','contact'].includes(k)))
     return {kind:'company',name:holderName,contact};
   return null;
 }
@@ -69,7 +70,7 @@ async function createCheckout(request: Request, env: Env, cfg: Config) {
     return json({error:'Select a license and accept the current purchase terms'},400,cfg.origin);
   const tier=body.tier as Tier,id=body.attemptId.toLowerCase();
   const holder=holderFor(tier,body.holder);
-  if (!holder) return json({error:'Single requires a named individual; Team requires a legal company and contact person'},400,cfg.origin);
+  if (!holder) return json({error:'Single requires a named individual; Team requires a legal company and contact person. Names must be renderable in the certificate font; contact the licensor for unsupported names.'},400,cfg.origin);
   const bucket=Math.floor(Date.now()/60000),key=await sha256((request.headers.get('CF-Connecting-IP')??'unknown')+':'+bucket);
   const limit=await env.DB.prepare('INSERT INTO purchase_limits(key,bucket,count) VALUES(?,?,1) ON CONFLICT(key) DO UPDATE SET count=count+1 RETURNING count').bind(key,bucket).first<{count:number}>();
   if(!limit || limit.count>10)return json({error:'Too many purchase attempts. Please wait a minute.'},429,cfg.origin);
