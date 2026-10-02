@@ -53,18 +53,18 @@
             ><a href="faq.html">FAQ &amp; licensing</a>
           </nav>
 
-          <h3 id="downloads">v2.1.0 downloads</h3>
+          <h3 id="downloads">v2.1.1 downloads</h3>
           <p>
-            <a href="https://github.com/w1ne/iolinki/releases/tag/v2.1.0">Release notes and test evidence</a>
+            <a href="https://github.com/w1ne/iolinki/releases/tag/v2.1.1">Release notes and test evidence</a>
             include the source commit, compiler details, test logs and
-            <a href="https://github.com/w1ne/iolinki/releases/download/v2.1.0/SHA256SUMS">SHA256 checksums</a>.
+            <a href="https://github.com/w1ne/iolinki/releases/download/v2.1.1/SHA256SUMS">SHA256 checksums</a>.
           </p>
           <ul>
-            <li><a href="https://github.com/w1ne/iolinki/releases/download/v2.1.0/iolinki-2.1.0-stm32g0-tiol112-IAR-project.zip">Download native STM32G0 / TIOL112 IAR project ZIP</a>: project, startup, linker, stack and pinned CMSIS sources. <a href="https://github.com/w1ne/iolinki/blob/v2.1.0/examples/stm32g0_tiol112/README.md">IAR setup and wiring guide</a>.</li>
-            <li><a href="https://github.com/w1ne/iolinki/releases/download/v2.1.0/iolinki-2.1.0-examples.zip">Examples and tooling ZIP</a>: counter/button/LED and switching-sensor source, build files and IODD CLI. <a href="https://github.com/w1ne/iolinki/blob/v2.1.0/examples/switching_sensor/README.md">Switching-sensor payload, threshold, hysteresis and teach guide</a>.</li>
-            <li><a href="https://github.com/w1ne/iolinki/releases/download/v2.1.0/iolinki-2.1.0-counter-IODD.zip">Counter IODD ZIP</a> and <a href="https://github.com/w1ne/iolinki/releases/download/v2.1.0/iolinki-2.1.0-switching-sensor-IODD.zip">switching-sensor IODD ZIP</a>. <a href="https://github.com/w1ne/iolinki/blob/v2.1.0/tools/IODD_GEN.md">IODD CLI generation, inspection, validation and packaging instructions</a>.</li>
-            <li><a href="https://github.com/w1ne/iolinki/releases/download/v2.1.0/iolinki-2.1.0-firmware.tar.gz">MCU firmware and simulator evidence archive</a> for STM32G0, ESP32-C3 and STM32U5.</li>
-            <li><a href="https://github.com/w1ne/iolinki/releases/download/v2.1.0/iolinki-2.1.0-labwired-recipes.zip">LabWired recipes ZIP</a> and <a href="https://github.com/w1ne/iolinki/blob/v2.1.0/validation/labwired/README.md">exact engine pins and execution commands</a>.</li>
+            <li><a href="https://github.com/w1ne/iolinki/releases/download/v2.1.1/iolinki-2.1.1-stm32g0-tiol112-IAR-project.zip">Download native STM32G0 / TIOL112 IAR project ZIP</a>: project, startup, linker, stack and pinned CMSIS sources. <a href="https://github.com/w1ne/iolinki/blob/v2.1.1/examples/stm32g0_tiol112/README.md">IAR setup and wiring guide</a>.</li>
+            <li><a href="https://github.com/w1ne/iolinki/releases/download/v2.1.1/iolinki-2.1.1-examples.zip">Examples and tooling ZIP</a>: counter/button/LED and switching-sensor source, build files and IODD CLI. <a href="https://github.com/w1ne/iolinki/blob/v2.1.1/examples/switching_sensor/README.md">Switching-sensor payload, threshold, hysteresis and teach guide</a>.</li>
+            <li><a href="https://github.com/w1ne/iolinki/releases/download/v2.1.1/iolinki-2.1.1-counter-IODD.zip">Counter IODD ZIP</a> and <a href="https://github.com/w1ne/iolinki/releases/download/v2.1.1/iolinki-2.1.1-switching-sensor-IODD.zip">switching-sensor IODD ZIP</a>. <a href="https://github.com/w1ne/iolinki/blob/v2.1.1/tools/IODD_GEN.md">IODD CLI generation, inspection, validation and packaging instructions</a>.</li>
+            <li><a href="https://github.com/w1ne/iolinki/releases/download/v2.1.1/iolinki-2.1.1-firmware.tar.gz">MCU firmware and simulator evidence archive</a> for STM32G0, ESP32-C3 and STM32U5.</li>
+            <li><a href="https://github.com/w1ne/iolinki/releases/download/v2.1.1/iolinki-2.1.1-labwired-recipes.zip">LabWired recipes ZIP</a> and <a href="https://github.com/w1ne/iolinki/blob/v2.1.1/validation/labwired/README.md">exact engine pins and execution commands</a>.</li>
           </ul>
           <p>
             The switching-sensor host example exercises measurement and validity
@@ -76,12 +76,12 @@
           <p>
             Use Linux with Git, a C99 compiler, CMake 3.20 or newer, Python 3, Node.js, pkg-config and CMocka. These
             commands use the published
-            <a href="https://github.com/w1ne/iolinki/releases/tag/v2.1.0"
-              >v2.1.0 release</a
+            <a href="https://github.com/w1ne/iolinki/releases/tag/v2.1.1"
+              >v2.1.1 release</a
             >, so your starting point is reproducible. The evaluation runs
             on your Linux machine.
           </p>
-          <pre><code>git clone --branch v2.1.0 --depth 1 https://github.com/w1ne/iolinki.git
+          <pre><code>git clone --branch v2.1.1 --depth 1 https://github.com/w1ne/iolinki.git
 cd iolinki
 cmake -S . -B build -DIOLINK_PLATFORM=LINUX -DBUILD_TESTING=ON
 cmake --build build --parallel
@@ -103,7 +103,7 @@ ctest --test-dir build --output-on-failure</code></pre>
           <p>
             The
             <a
-              href="https://github.com/w1ne/iolinki/tree/v2.1.0/examples/reference_device"
+              href="https://github.com/w1ne/iolinki/tree/v2.1.1/examples/reference_device"
               >reference device</a
             >
             runs on Linux with an in-process virtual master and is included
@@ -116,7 +116,7 @@ ctest --test-dir build --output-on-failure</code></pre>
             checksums, a local application-tag readback, and a queued button
             event.
             <a
-              href="https://github.com/w1ne/iolinki/blob/v2.1.0/examples/reference_device/README.md"
+              href="https://github.com/w1ne/iolinki/blob/v2.1.1/examples/reference_device/README.md"
               >Read the payload and integration guide</a
             >.
           </p>
@@ -127,13 +127,13 @@ ctest --test-dir build --output-on-failure</code></pre>
           <pre><code>./build/examples/switching_sensor/switching_sensor_demo
 python3 tools/iodd_cli.py inspect examples/switching_sensor/device.xml
 python3 tools/iodd_cli.py validate examples/switching_sensor/device.xml</code></pre>
-          <p><a href="https://github.com/w1ne/iolinki/blob/v2.1.0/examples/switching_sensor/README.md">Payload and parameter guide</a> ·
-            <a href="https://github.com/w1ne/iolinki/blob/v2.1.0/tools/IODD_GEN.md">IODD generation and external schema validation</a>.</p>
+          <p><a href="https://github.com/w1ne/iolinki/blob/v2.1.1/examples/switching_sensor/README.md">Payload and parameter guide</a> ·
+            <a href="https://github.com/w1ne/iolinki/blob/v2.1.1/tools/IODD_GEN.md">IODD generation and external schema validation</a>.</p>
           <h3 id="examples">5. Inspect the existing examples</h3>
           <ul>
             <li>
               <a
-                href="https://github.com/w1ne/iolinki/tree/v2.1.0/examples/host_demo"
+                href="https://github.com/w1ne/iolinki/tree/v2.1.1/examples/host_demo"
                 >Host demo</a
               >: <code>build/examples/host_demo/host_demo</code> requires a TTY
               path and a compatible peer, using the virtual PHY transport.
@@ -141,13 +141,13 @@ python3 tools/iodd_cli.py validate examples/switching_sensor/device.xml</code></
             </li>
             <li>
               <a
-                href="https://github.com/w1ne/iolinki/tree/v2.1.0/examples/simple_device"
+                href="https://github.com/w1ne/iolinki/tree/v2.1.1/examples/simple_device"
                 >Simple device</a
               >: an application scaffold with source and example IODD files.
             </li>
             <li>
               <a
-                href="https://github.com/w1ne/iolinki/tree/v2.1.0/examples/zephyr_app"
+                href="https://github.com/w1ne/iolinki/tree/v2.1.1/examples/zephyr_app"
                 >Zephyr application</a
               >: includes application source and a Nucleo-L476RG UART overlay.
             </li>
@@ -165,7 +165,7 @@ python3 tools/iodd_cli.py validate examples/switching_sensor/device.xml</code></
             For a proprietary product, review
             <a href="faq.html#licensing">commercial terms</a>. For GPL
             evaluation, read the
-            <a href="https://github.com/w1ne/iolinki/blob/v2.1.0/LICENSE"
+            <a href="https://github.com/w1ne/iolinki/blob/v2.1.1/LICENSE"
               >release license</a
             >
             and consider your intended use and distribution. Source and these
