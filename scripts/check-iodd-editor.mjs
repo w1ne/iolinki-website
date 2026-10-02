@@ -12,7 +12,7 @@ const types = {
   ".mjs": "text/javascript",
   ".xml": "application/xml",
 };
-const server = createServer(async (req, res) => {
+const server = process.env.SITE_URL ? null : createServer(async (req, res) => {
   try {
     const path = resolve(
       root,
@@ -29,8 +29,8 @@ const server = createServer(async (req, res) => {
     res.end();
   }
 });
-await new Promise((r) => server.listen(0, "127.0.0.1", r));
-const origin = `http://127.0.0.1:${server.address().port}`;
+if (server) await new Promise((r) => server.listen(0, "127.0.0.1", r));
+const origin = process.env.SITE_URL || `http://127.0.0.1:${server.address().port}`;
 const browser = await chromium.launch({
   executablePath: process.env.CHROME_BIN || undefined,
   args: ["--no-sandbox"],
@@ -265,5 +265,5 @@ try {
   }
 } finally {
   await browser.close();
-  await new Promise((r) => server.close(r));
+  if (server) await new Promise((r) => server.close(r));
 }
