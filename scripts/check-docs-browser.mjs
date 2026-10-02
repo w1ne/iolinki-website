@@ -29,6 +29,7 @@ let checked = 0;
 try {
   for (const width of [1440, 390, 320]) {
     const page = await browser.newPage({ viewport: { width, height: 1000 } });
+    page.setDefaultTimeout(10000);
     const failures = [];
     page.on('pageerror', error => failures.push(error.message));
     page.on('response', response => {
@@ -48,6 +49,7 @@ try {
     await page.goto(`${origin}/docs/`, { waitUntil: 'networkidle' });
     if (width < 1220) {
       await page.locator('.md-header label[for="__drawer"]').click();
+      await page.locator('#__nav_2_label').click();
       await page.locator('.md-sidebar--primary a[href="device/v2.1.0/"]').click();
       await page.waitForURL('**/docs/device/v2.1.0/');
     }
