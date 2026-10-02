@@ -51,6 +51,130 @@ try {
       if (r.method() !== "GET") writes.push(r.url());
     });
     await page.goto(origin + "/iodd-editor.html");
+    if (width === 1440) {
+      let receive;
+      const counterURL = "**/assets/iodd/counter.xml";
+      await page.route(counterURL, (route) => receive(route));
+      async function delayedCounter() {
+        const request = new Promise((resolve) => {
+          receive = resolve;
+        });
+        await page
+          .getByRole("button", { name: "Counter / button / LED", exact: true })
+          .click();
+        return request;
+      }
+      async function completeTemplate(route, status = 200) {
+        const response = page.waitForResponse((r) =>
+          r.url().endsWith("/assets/iodd/counter.xml"),
+        );
+        await route.fulfill({
+          status,
+          contentType: "application/xml",
+          body:
+            status === 200
+              ? await readFile(resolve(root, "assets/iodd/counter.xml"), "utf8")
+              : "Unavailable",
+        });
+        await (await response).finished();
+        await page.evaluate(
+          () =>
+            new Promise((resolve) =>
+              requestAnimationFrame(() => requestAnimationFrame(resolve)),
+            ),
+        );
+      }
+      await page
+        .getByRole("button", { name: "New device", exact: true })
+        .click();
+      const delayed = await delayedCounter();
+      assert.equal(
+        await page
+          .getByRole("button", { name: "Download IODD", exact: true })
+          .isDisabled(),
+        true,
+        "Downloads are disabled while a template is loading",
+      );
+      assert.equal(
+        await page.locator("#workspace").evaluate((node) => node.inert),
+        true,
+        "Workspace edits are blocked during template loading",
+      );
+      await page
+        .locator("#import-file")
+        .setInputFiles(resolve(root, "assets/iodd/switching-sensor.xml"));
+      await page
+        .locator("#status")
+        .getByText(/XML opened locally/)
+        .waitFor();
+      await completeTemplate(delayed);
+      assert.equal(
+        await page.locator("#project-title").textContent(),
+        "Switching sensor",
+        "Late template must not replace an imported project",
+      );
+      assert.match(
+        await page.locator("#status").textContent(),
+        /XML opened locally/,
+      );
+      assert.equal(
+        await page.locator("#workspace").evaluate((node) => node.inert),
+        false,
+      );
+      const staleFailure = await delayedCounter();
+      await page
+        .getByRole("button", { name: "New device", exact: true })
+        .click();
+      await completeTemplate(staleFailure, 500);
+      assert.equal(
+        await page.locator("#project-title").textContent(),
+        "New device",
+        "New device supersedes a pending template",
+      );
+      assert.match(
+        await page.locator("#status").textContent(),
+        /New device created/,
+      );
+      const currentFailure = await delayedCounter();
+      await completeTemplate(currentFailure, 500);
+      assert.equal(
+        await page.locator("#workspace").evaluate((node) => node.inert),
+        false,
+        "Current failures unlock editing",
+      );
+      assert.equal(
+        await page
+          .getByRole("button", { name: "Download IODD", exact: true })
+          .isDisabled(),
+        false,
+      );
+      assert.match(
+        await page.locator("#status").textContent(),
+        /could not be loaded/,
+      );
+      const olderRequest = await delayedCounter();
+      const newerRequest = await delayedCounter();
+      await completeTemplate(olderRequest, 500);
+      assert.equal(
+        await page.locator("#workspace").evaluate((node) => node.inert),
+        true,
+        "Stale failure must not unlock the newer pending request",
+      );
+      assert.match(
+        await page.locator("#status").textContent(),
+        /Loading example/,
+      );
+      await completeTemplate(newerRequest);
+      assert.equal(
+        await page.locator("#project-title").textContent(),
+        "Counter button LED",
+      );
+      assert.equal(
+        await page.locator("#workspace").evaluate((node) => node.inert),
+        false,
+      );
+      await page.unroute(counterURL);
+    }
     await page.getByRole("button", { name: "New device", exact: true }).click();
     await page
       .locator("#status")
@@ -166,6 +290,13 @@ try {
     await page
       .getByRole("button", { name: "Counter / button / LED", exact: true })
       .click();
+    await page
+      .locator("#status")
+      .getByText(/Example loaded/)
+      .waitFor();
+    await page.waitForFunction(() =>
+      document.getElementById("xml-source").value.includes('deviceId="5678"'),
+    );
     const counterDownloadPromise = page.waitForEvent("download");
     await page
       .getByRole("button", { name: "Download IODD", exact: true })

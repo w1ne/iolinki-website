@@ -18,6 +18,8 @@ let project = null,
   selectedProcess = null,
   selectedText = null,
   xmlPending = false,
+  templateGeneration = 0,
+  templatePending = false,
   saved = false,
   comparison = null,
   selectedNode = [],
@@ -113,6 +115,12 @@ function activate(name, focus = false) {
   }
 }
 function updateState() {
+  $("workspace").inert = templatePending;
+  $("save-project").disabled = xmlPending || templatePending || !project;
+  if (!project) {
+    $("download").disabled = true;
+    return;
+  }
   const view = inspectProject(project);
   $("project-title").textContent =
     view.identity.productName || project.filename || "Device project";
@@ -121,9 +129,8 @@ function updateState() {
     : saved
       ? "Project saved to file"
       : "Unsaved changes";
-  $("save-project").disabled = xmlPending;
   const validation = validateProject(project, { checks: validationChecks });
-  $("download").disabled = xmlPending || !validation.valid;
+  $("download").disabled = xmlPending || templatePending || !validation.valid;
 }
 function renderIdentity(view) {
   $("identity-fields").replaceChildren();
@@ -845,6 +852,8 @@ function render() {
   updateState();
 }
 function reset(next, success) {
+  templateGeneration += 1;
+  templatePending = false;
   project = next;
   selectedVariable = null;
   selectedProcess = null;
@@ -859,18 +868,30 @@ function reset(next, success) {
   message(success);
 }
 async function template(name) {
+  if (!guard()) return;
+  const generation = ++templateGeneration;
+  templatePending = true;
+  updateState();
+  message("Loading example…");
   try {
     const response = await fetch("/assets/iodd/" + name + ".xml");
     if (!response.ok) throw Error("Example could not be loaded.");
+    const xml = await response.text();
+    if (generation !== templateGeneration) return;
     reset(
       createProject(
-        await response.text(),
+        xml,
         `iolinki-${name.replace(/[^A-Za-z0-9]/g, "")}-20261002-IODD1.1.xml`,
       ),
       "Example loaded. Edit, save or export your device project.",
     );
   } catch (error) {
-    message(error.message);
+    if (generation === templateGeneration) message(error.message);
+  } finally {
+    if (generation === templateGeneration) {
+      templatePending = false;
+      updateState();
+    }
   }
 }
 function download(bytes, name, type) {
