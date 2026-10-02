@@ -47,7 +47,7 @@ try {
     }
     await page.goto(`${origin}/docs/`, { waitUntil: 'networkidle' });
     if (width < 1220) {
-      await page.locator('label[for="__drawer"]').first().click();
+      await page.locator('.md-header label[for="__drawer"]').click();
       await page.locator('.md-sidebar--primary a[href="device/v2.1.0/"]').click();
       await page.waitForURL('**/docs/device/v2.1.0/');
     }
