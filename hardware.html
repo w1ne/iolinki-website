@@ -58,7 +58,7 @@
           <div class="table-wrapper">
             <table>
               <caption>
-                Device evaluation matrix — 1 October 2026
+                Device evaluation matrix — v2.1.0
               </caption>
               <thead>
                 <tr>
@@ -74,9 +74,9 @@
                   <td>
                     <strong>GCC firmware build verified.</strong>
                     <a
-                      href="https://github.com/w1ne/iolinki/tree/f4ff734dd5bf63e74895b68cf9296073ddfea296/examples/stm32g0_tiol112"
-                      >Build, wiring and native IAR project</a
-                    >. Includes the MCU pin map, UART receive queue, wake-up
+                      href="https://github.com/w1ne/iolinki/tree/v2.1.0/examples/stm32g0_tiol112"
+                      >Build and wiring guide</a
+                    > · <a href="https://github.com/w1ne/iolinki/releases/download/v2.1.0/iolinki-2.1.0-stm32g0-tiol112-IAR-project.zip">Native IAR project ZIP</a>. Includes the MCU pin map, UART receive queue, wake-up
                     interrupt and timer setup. Parameter storage: RAM.
                   </td>
                 </tr>
@@ -86,7 +86,7 @@
                   <td>
                     <strong>Firmware build verified.</strong>
                     <a
-                      href="https://github.com/w1ne/iolinki/tree/f4ff734dd5bf63e74895b68cf9296073ddfea296/samples/stm32u5_tiol112"
+                      href="https://github.com/w1ne/iolinki/tree/v2.1.0/samples/stm32u5_tiol112"
                       >Pinned Zephyr project, wiring and timing guide</a
                     >. Uses UART 8E1, interrupt receive and a microsecond
                     hardware timer. Parameter storage: RAM.
@@ -98,7 +98,7 @@
                   <td>
                     <strong>Firmware build verified.</strong>
                     <a
-                      href="https://github.com/w1ne/iolinki/tree/f4ff734dd5bf63e74895b68cf9296073ddfea296/examples/esp32_l6362a"
+                      href="https://github.com/w1ne/iolinki/tree/v2.1.0/examples/esp32_l6362a"
                       >Native project and ST shield wiring guide</a
                     >. Requires the documented shield configuration and IN1
                     modification. UART error and transmit-timeout handling have
@@ -111,7 +111,7 @@
                   <td>
                     <strong>Source available.</strong>
                     <a
-                      href="https://github.com/w1ne/iolinki/tree/v2.0.0/examples/zephyr_app"
+                      href="https://github.com/w1ne/iolinki/tree/v2.1.0/examples/zephyr_app"
                       >Application and overlay</a
                     >
                     provide the Zephyr UART application and board configuration.
@@ -123,7 +123,7 @@
                   <td>
                     <strong>Host build and tests verified.</strong>
                     <a href="getting-started.html#host"
-                      >v2.0.0 build instructions</a
+                      >v2.1.0 build instructions</a
                     >. Includes virtual PHY and TTY transport.
                   </td>
                 </tr>
@@ -134,7 +134,7 @@
           <p>
             A
             <a
-              href="https://github.com/w1ne/iolinki/blob/f4ff734dd5bf63e74895b68cf9296073ddfea296/docs/hardware/TIOL112.md"
+              href="https://github.com/w1ne/iolinki/blob/v2.1.0/docs/hardware/TIOL112.md"
               >portable TIOL112 control driver</a
             >
             is now available. Its host tests cover SIO polarity, transmit
@@ -186,13 +186,17 @@
               >. These cover board setup and platform tools.
             </li>
           </ul>
-          <h3 id="twins">LabWired Twins</h3>
+          <h3 id="twins">LabWired firmware recipes</h3>
           <p>
-            <a href="https://app.labwired.com">LabWired Twins</a> execute MCU
-            firmware in simulation. The IO-Link models under development cover
-            C/Q voltage and edges, cable loading, supply faults and transceiver
-            response. See <a href="validation.html">validation evidence</a>
-            for published results.
+            <a href="https://github.com/w1ne/iolinki/releases/download/v2.1.0/iolinki-2.1.0-labwired-recipes.zip">Download the recipes</a>
+            to execute the reference MCU firmware with the
+            <a href="https://github.com/w1ne/iolinki/blob/v2.1.0/validation/labwired/README.md">documented engine pins and inputs</a>.
+            STM32G0 assertions cover startup, the 1 MHz timer, UART/GPIO setup,
+            the firmware wake interrupt and COM2 configuration. ESP32-C3
+            assertions cover ROM and second-stage boot, application execution,
+            GPIO ISR, UART GPIO-matrix routing and COM2 8E1. The C3 recipe uses
+            an experimental published engine revision. STM32U5 evidence is a
+            firmware build and host adapter tests.
           </p>
           <h3 id="bench">Before a physical bench test</h3>
           <p>

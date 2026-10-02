@@ -122,13 +122,13 @@ ctest --test-dir iolinki-master/build --output-on-failure</code></pre>
                 <tr>
                   <th scope="row">Linux host build and tests</th>
                   <td>
-                    v2.0.0 built with GCC 13; 22/22 CTest targets passed on 1
+                    v2.1.0 built with GCC 13; 36/36 CTest targets passed on 2
                     October 2026.
                     <a href="getting-started.html#host"
                       >Reproduce the commands</a
                     >
                     and inspect
-                    <a href="https://github.com/w1ne/iolinki/tree/v2.0.0/tests"
+                    <a href="https://github.com/w1ne/iolinki/tree/v2.1.0/tests"
                       >test source</a
                     >.
                   </td>
@@ -164,6 +164,26 @@ ctest --test-dir iolinki-master/build --output-on-failure</code></pre>
               </tbody>
             </table>
           </div>
+          <h3 id="firmware-recipes">Release firmware execution evidence</h3>
+          <p>
+            The <a href="https://github.com/w1ne/iolinki/releases/tag/v2.1.0">v2.1.0 release</a>
+            packages firmware and simulator logs together. Its
+            <a href="https://github.com/w1ne/iolinki/blob/v2.1.0/validation/labwired/README.md">LabWired recipes</a>
+            execute actual MCU instructions and firmware interrupt handlers in
+            both engine execution modes.
+          </p>
+          <ul>
+            <li>STM32G0 / TIOL112: startup, 1 MHz timer, GPIO/UART configuration, wake interrupt and COM2 setup; engine <code>4ff8cba</code>.</li>
+            <li>ESP32-C3 / L6362A: ROM and second-stage boot, application execution, GPIO ISR, UART GPIO-matrix routing and COM2 8E1; experimental published engine <code>d528c78</code>.</li>
+            <li>STM32U5 / TIOL112: firmware compilation and host adapter tests.</li>
+          </ul>
+          <p>
+            WAKE and overload edges are explicit simulator inputs. These checks
+            establish the listed firmware behaviors; analog transceiver and
+            supply-fault coverage, physical master interoperability and
+            conformance require their respective measurements.
+            <a href="getting-started.html#downloads">Download firmware, recipes and IODD tooling</a>.
+          </p>
           <h3 id="physical">
             What a useful physical validation report contains
           </h3>
@@ -219,8 +239,8 @@ ctest --test-dir iolinki-master/build --output-on-failure</code></pre>
             <a href="https://github.com/w1ne/iolinki/releases"
               >release history</a
             >,
-            <a href="https://github.com/w1ne/iolinki/blob/v2.0.0/CHANGELOG.md"
-              >v2.0.0 changelog</a
+            <a href="https://github.com/w1ne/iolinki/blob/v2.1.0/CHANGELOG.md"
+              >v2.1.0 changelog</a
             >, <a href="https://github.com/w1ne/iolinki/actions">CI runs</a> and
             <a href="https://github.com/w1ne/iolinki/issues">open issues</a>.
             They show published changes and current work; they do not create a

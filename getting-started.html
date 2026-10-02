@@ -53,24 +53,43 @@
             ><a href="faq.html">FAQ &amp; licensing</a>
           </nav>
 
+          <h3 id="downloads">v2.1.0 downloads</h3>
+          <p>
+            <a href="https://github.com/w1ne/iolinki/releases/tag/v2.1.0">Release notes and test evidence</a>
+            include the source commit, compiler details, test logs and
+            <a href="https://github.com/w1ne/iolinki/releases/download/v2.1.0/SHA256SUMS">SHA256 checksums</a>.
+          </p>
+          <ul>
+            <li><a href="https://github.com/w1ne/iolinki/releases/download/v2.1.0/iolinki-2.1.0-stm32g0-tiol112-IAR-project.zip">Download native STM32G0 / TIOL112 IAR project ZIP</a>: project, startup, linker, stack and pinned CMSIS sources. <a href="https://github.com/w1ne/iolinki/blob/v2.1.0/examples/stm32g0_tiol112/README.md">IAR setup and wiring guide</a>.</li>
+            <li><a href="https://github.com/w1ne/iolinki/releases/download/v2.1.0/iolinki-2.1.0-examples.zip">Examples and tooling ZIP</a>: counter/button/LED and switching-sensor source, build files and IODD CLI. <a href="https://github.com/w1ne/iolinki/blob/v2.1.0/examples/switching_sensor/README.md">Switching-sensor payload, threshold, hysteresis and teach guide</a>.</li>
+            <li><a href="https://github.com/w1ne/iolinki/releases/download/v2.1.0/iolinki-2.1.0-counter-IODD.zip">Counter IODD ZIP</a> and <a href="https://github.com/w1ne/iolinki/releases/download/v2.1.0/iolinki-2.1.0-switching-sensor-IODD.zip">switching-sensor IODD ZIP</a>. <a href="https://github.com/w1ne/iolinki/blob/v2.1.0/tools/IODD_GEN.md">IODD CLI generation, inspection, validation and packaging instructions</a>.</li>
+            <li><a href="https://github.com/w1ne/iolinki/releases/download/v2.1.0/iolinki-2.1.0-firmware.tar.gz">MCU firmware and simulator evidence archive</a> for STM32G0, ESP32-C3 and STM32U5.</li>
+            <li><a href="https://github.com/w1ne/iolinki/releases/download/v2.1.0/iolinki-2.1.0-labwired-recipes.zip">LabWired recipes ZIP</a> and <a href="https://github.com/w1ne/iolinki/blob/v2.1.0/validation/labwired/README.md">exact engine pins and execution commands</a>.</li>
+          </ul>
+          <p>
+            The switching-sensor host example exercises measurement and validity
+            data, threshold, hysteresis, inversion, teach through ISDU and a
+            vendor event. The supplied IODDs use illustrative device identities;
+            assign your product IDs before product validation.
+          </p>
           <h3 id="host">1. Build a pinned release</h3>
           <p>
-            Use Linux with Git, a C99 compiler and CMake 3.20 or newer. These
+            Use Linux with Git, a C99 compiler, CMake 3.20 or newer, Python 3, Node.js, pkg-config and CMocka. These
             commands use the published
-            <a href="https://github.com/w1ne/iolinki/releases/tag/v2.0.0"
-              >v2.0.0 release</a
+            <a href="https://github.com/w1ne/iolinki/releases/tag/v2.1.0"
+              >v2.1.0 release</a
             >, so your starting point is reproducible. The evaluation runs
             on your Linux machine.
           </p>
-          <pre><code>git clone --branch v2.0.0 --depth 1 https://github.com/w1ne/iolinki.git
+          <pre><code>git clone --branch v2.1.0 --depth 1 https://github.com/w1ne/iolinki.git
 cd iolinki
 cmake -S . -B build -DIOLINK_PLATFORM=LINUX -DBUILD_TESTING=ON
 cmake --build build --parallel
 ctest --test-dir build --output-on-failure</code></pre>
           <h3 id="expected">2. Read the result</h3>
           <p>
-            The host build and all 22 CTest targets passed with GCC 13 on Linux
-            on 1 October 2026. Expect CTest to report
+            The host build and all 36 CTest targets passed with GCC 13 on Linux
+            on 2 October 2026. Expect CTest to report
             <code>100% tests passed</code>. A compiler or test failure on your
             machine is a useful issue report; include the tag, operating system,
             compiler version, command and full error output.
@@ -82,35 +101,39 @@ ctest --test-dir build --output-on-failure</code></pre>
           </p>
           <h3 id="reference">3. Run the counter, button and LED example</h3>
           <p>
-            The new
+            The
             <a
-              href="https://github.com/w1ne/iolinki/tree/f4ff734dd5bf63e74895b68cf9296073ddfea296/examples/reference_device"
+              href="https://github.com/w1ne/iolinki/tree/v2.1.0/examples/reference_device"
               >reference device</a
             >
-            runs on Linux with an in-process virtual master. This recipe pins
-            its exact source commit separately from the v2.0.0 baseline above.
+            runs on Linux with an in-process virtual master and is included
+            in the release built above.
           </p>
-          <pre><code>git fetch origin f4ff734dd5bf63e74895b68cf9296073ddfea296
-git checkout --detach f4ff734dd5bf63e74895b68cf9296073ddfea296
-cmake -S . -B build-reference -DIOLINK_PLATFORM=LINUX -DBUILD_TESTING=ON
-cmake --build build-reference --parallel 4
-./build-reference/examples/reference_device/reference_device_demo
-ctest --test-dir build-reference --output-on-failure</code></pre>
+          <pre><code>./build/examples/reference_device/reference_device_demo</code></pre>
           <p>
             Expect <code>SIMULATION PASS</code> after 100 checked cyclic frame
             exchanges. The example checks counter data, LED commands and
             checksums, a local application-tag readback, and a queued button
-            event. All 30 CTest targets passed for this commit.
+            event.
             <a
-              href="https://github.com/w1ne/iolinki/blob/f4ff734dd5bf63e74895b68cf9296073ddfea296/examples/reference_device/README.md"
+              href="https://github.com/w1ne/iolinki/blob/v2.1.0/examples/reference_device/README.md"
               >Read the payload and integration guide</a
             >.
           </p>
-          <h3 id="examples">4. Inspect the existing examples</h3>
+          <h3 id="switching-sensor">4. Run the switching-sensor example</h3>
+          <p>The host example publishes measurement, validity and switching state,
+            then uses ISDU transport to teach and read back a threshold. Its
+            parameters include hysteresis and inversion.</p>
+          <pre><code>./build/examples/switching_sensor/switching_sensor_demo
+python3 tools/iodd_cli.py inspect examples/switching_sensor/device.xml
+python3 tools/iodd_cli.py validate examples/switching_sensor/device.xml</code></pre>
+          <p><a href="https://github.com/w1ne/iolinki/blob/v2.1.0/examples/switching_sensor/README.md">Payload and parameter guide</a> ·
+            <a href="https://github.com/w1ne/iolinki/blob/v2.1.0/tools/IODD_GEN.md">IODD generation and external schema validation</a>.</p>
+          <h3 id="examples">5. Inspect the existing examples</h3>
           <ul>
             <li>
               <a
-                href="https://github.com/w1ne/iolinki/tree/v2.0.0/examples/host_demo"
+                href="https://github.com/w1ne/iolinki/tree/v2.1.0/examples/host_demo"
                 >Host demo</a
               >: <code>build/examples/host_demo/host_demo</code> requires a TTY
               path and a compatible peer, using the virtual PHY transport.
@@ -118,18 +141,18 @@ ctest --test-dir build-reference --output-on-failure</code></pre>
             </li>
             <li>
               <a
-                href="https://github.com/w1ne/iolinki/tree/v2.0.0/examples/simple_device"
+                href="https://github.com/w1ne/iolinki/tree/v2.1.0/examples/simple_device"
                 >Simple device</a
               >: an application scaffold with source and example IODD files.
             </li>
             <li>
               <a
-                href="https://github.com/w1ne/iolinki/tree/v2.0.0/examples/zephyr_app"
+                href="https://github.com/w1ne/iolinki/tree/v2.1.0/examples/zephyr_app"
                 >Zephyr application</a
               >: includes application source and a Nucleo-L476RG UART overlay.
             </li>
           </ul>
-          <h3 id="next">5. Choose an integration path</h3>
+          <h3 id="next">6. Choose an integration path</h3>
           <p>
             Compare
             <a href="hardware.html">the exact board and IDE status</a> before
@@ -142,7 +165,7 @@ ctest --test-dir build-reference --output-on-failure</code></pre>
             For a proprietary product, review
             <a href="faq.html#licensing">commercial terms</a>. For GPL
             evaluation, read the
-            <a href="https://github.com/w1ne/iolinki/blob/v2.0.0/LICENSE"
+            <a href="https://github.com/w1ne/iolinki/blob/v2.1.0/LICENSE"
               >release license</a
             >
             and consider your intended use and distribution. Source and these
