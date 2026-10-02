@@ -25,7 +25,7 @@ const origin = process.env.SITE_URL || `http://127.0.0.1:${server.address().port
 const artifactDir = resolve(root, 'artifacts/browser');
 await mkdir(artifactDir, { recursive: true });
 const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN || undefined, args: ['--no-sandbox'] });
-const routes = ['', 'getting-started.html', 'hardware.html', 'validation.html', 'faq.html', 'purchase.html', 'purchase-success.html', 'purchase-cancelled.html', 'terms/purchase-terms.html', 'legal.html'];
+const routes = ['', 'getting-started.html', 'hardware.html', 'validation.html', 'faq.html', 'purchase.html', 'purchase-success.html', 'purchase-cancelled.html', 'terms/purchase-terms.html', 'legal.html', 'iodd-mcp.html'];
 let checked = 0;
 try {
   for (const width of [1440, 390, 320]) {
