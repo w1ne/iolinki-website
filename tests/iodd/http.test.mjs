@@ -279,3 +279,20 @@ test("default-created hosted XML passes genuine Checker using returned filename"
     await rm(directory, { recursive: true, force: true });
   }
 });
+
+test("canonical leading hash, underscore and hyphen exports retain metadata and headers", async () => {
+  const host = new IoddHttpHost({ loadTemplate });
+  const connection = await connect(host);
+  try {
+    for (const vendorName of ["#Vendor", "_Vendor", "-Vendor"]) {
+      const project = await connection.call("create", { identity: { vendorName, releaseDate: "2026-10-02" } });
+      const artifact = await connection.call("export", { projectId: project.projectId, format: "xml" });
+      assert.equal(artifact.filename, `${vendorName}-new-device-20261002-IODD1.1.xml`);
+      const response = await host.fetch(new Request(artifact.downloadUrl));
+      assert.equal(response.headers.get("Content-Disposition"), `attachment; filename="${artifact.filename}"`);
+    }
+  } finally {
+    await connection.client.close();
+    for (const id of host.sessions.keys()) await host.removeSession(id);
+  }
+});

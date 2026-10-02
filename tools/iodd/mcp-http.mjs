@@ -147,7 +147,7 @@ export class IoddHttpHost {
             throw Error(
               "Download memory limit reached. Wait for older downloads to expire.",
             );
-          if (!/^[A-Za-z0-9][A-Za-z0-9._-]{0,239}$/.test(filename))
+          if (!/^[A-Za-z0-9_#-][A-Za-z0-9._#-]{0,239}$/.test(filename))
             filename = "device-export.bin";
           const token = sessionId[0] + crypto.randomUUID().slice(1),
             expires = this.now() + this.artifactTTL;

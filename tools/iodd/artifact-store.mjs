@@ -1,7 +1,7 @@
 const CATALOG='iodd-artifacts:v1:catalog';
 const CHUNK=64*1024, MAX_BYTES=16*1024*1024, MAX_ENTRIES=128, MAX_TTL=10*60*1000;
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
-const filenameOK=value=>typeof value==='string'&&/^[A-Za-z0-9][A-Za-z0-9._-]{0,239}$/.test(value);
+const filenameOK=value=>typeof value==='string'&&/^[A-Za-z0-9_#-][A-Za-z0-9._#-]{0,239}$/.test(value);
 const mimeOK=value=>typeof value==='string'&&value.length<=128&&/^[A-Za-z0-9!#$&^_.+-]+\/[A-Za-z0-9!#$&^_.+-]+(?:;[\x20-\x7e]*)?$/.test(value);
 const key=(token,index)=>`iodd-artifacts:v1:${token}:${index}`;
 const sha=async bytes=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(b=>b.toString(16).padStart(2,'0')).join('');
