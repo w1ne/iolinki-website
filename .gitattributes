@@ -1,0 +1,2 @@
+# MkDocs Material emits indentation on otherwise empty generated HTML lines.
+docs/**/*.html whitespace=-blank-at-eol

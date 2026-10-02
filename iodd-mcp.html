@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Free IODD MCP server and CLI | iolinki</title>
+    <meta
+      name="description"
+      content="Create IO-Link device descriptions with your coding assistant. Free local MCP server, CLI, project files and firmware mappings using the online editor's shared engine."
+    />
+    <link rel="canonical" href="https://iolinki.com/iodd-mcp.html" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/css/site.css" />
+    <script src="/assets/js/site.js" defer></script>
+    <style>
+      .tool-guide {
+        max-width: 960px;
+        margin: auto;
+        padding: 3rem 1.25rem;
+      }
+      .tool-guide h1 {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        line-height: 1.15;
+      }
+      .tool-guide h2 {
+        margin-top: 2rem;
+      }
+      .tool-guide p,
+      .tool-guide li {
+        line-height: 1.7;
+      }
+      .tool-guide pre {
+        padding: 1.25rem;
+        background: #101f28;
+        color: #e6f4f3;
+        border-radius: 12px;
+        overflow: auto;
+        max-width: 100%;
+        font-size: 0.9rem;
+      }
+      .tool-guide .actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .tool-guide .actions a {
+        padding: 0.7rem 1rem;
+        border: 1px solid currentColor;
+        border-radius: 8px;
+      }
+      .tool-guide table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .tool-guide td,
+      .tool-guide th {
+        padding: 0.7rem;
+        border-bottom: 1px solid #dbe5e6;
+        text-align: left;
+      }
+      .tool-guide code {
+        overflow-wrap: anywhere;
+      }
+      .tool-guide footer {
+        margin-top: 3rem;
+        border-top: 1px solid #dbe5e6;
+        padding-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header" id="header">
+      <div class="header-inner">
+        <a class="brand" href="/index.html" aria-label="iolinki home"
+          >io<span>linki</span><span class="brand-dot" aria-hidden="true"></span
+        ></a>
+        <button
+          class="menu-button"
+          type="button"
+          aria-expanded="false"
+          aria-controls="primary-navigation"
+          hidden
+        >
+          Menu
+        </button>
+        <nav id="primary-navigation" aria-label="Primary navigation">
+          <a href="/index.html#two">Stacks</a
+          ><a href="/getting-started.html">Guides</a
+          ><a href="/hardware.html">Hardware</a
+          ><a href="/validation.html">Validation</a><a href="/faq.html">FAQ</a
+          ><a href="/docs/">Docs</a><a href="/iodd-editor.html">IODD editor</a
+          ><a href="/purchase.html">Licensing</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="tool-guide" tabindex="-1">
+      <p class="eyebrow">FREE DEVELOPER TOOLS</p>
+      <h1>Create IODDs with your coding assistant.</h1>
+      <p>
+        A local MCP server and command-line tool for IO-Link device
+        descriptions. Create a project, edit parameters and process data, check
+        it, and export XML, a ZIP package and a C firmware mapping. The
+        <a href="/iodd-editor.html">browser editor</a> opens the same project
+        files.
+      </p>
+      <div class="actions">
+        <a href="/downloads/iodd-tools.zip" download
+          >Download CLI + MCP source</a
+        ><a href="/iodd-editor.html">Open the editor</a
+        ><a href="/docs/tools/iodd-mcp/">Read the guide</a>
+      </div>
+      <h2>Import a working stack example</h2>
+      <p>
+        Download the
+        <a href="/downloads/iodd-switching-sensor.zip" download
+          >switching-sensor IODD package</a
+        >
+        or
+        <a href="/downloads/iodd-counter.zip" download
+          >counter/button/LED IODD package</a
+        >. Open the ZIP in the editor, CLI or MCP. Each describes its
+        corresponding released iolinki firmware example, with matching identity,
+        parameter indexes and process-data bits.
+      </p>
+      <h2>Start locally</h2>
+      <p>
+        Install Node.js 22 or newer, download and extract the source bundle,
+        then run these commands from its <code>iodd-tools</code> directory:
+      </p>
+      <pre><code>npm ci
+node tools/iodd/cli.mjs --help
+node tools/iodd/mcp.mjs</code></pre>
+      <p>
+        Add the server to your MCP client configuration using the absolute path
+        where you extracted it:
+      </p>
+      <pre><code>{
+  "mcpServers": {
+    "iolinki-iodd": {
+      "command": "node",
+      "args": ["/absolute/path/iodd-tools/tools/iodd/mcp.mjs"]
+    }
+  }
+}</code></pre>
+      <h2>Try an authoring task</h2>
+      <p>Copy this into your connected coding assistant:</p>
+      <blockquote>
+        Create a switching-sensor IODD. Inspect its parameters and process
+        fields. Rename the product to “Distance Switch”. Ask me for my assigned
+        vendor and device IDs. Keep its threshold and hysteresis parameters, add
+        an English diagnostic event, run validation, and export the project,
+        XML, ZIP and firmware mapping header.
+      </blockquote>
+      <h2>One project, three ways to work</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Interface</th>
+            <th>Use it for</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Browser</td>
+            <td>
+              Device creation, parameter tables, process-bit layout,
+              multilingual texts, events, menus, document-tree forms, reusable
+              elements and Finder imports.
+            </td>
+          </tr>
+          <tr>
+            <td>MCP</td>
+            <td>
+              Structured authoring, inspection, edits, validation, revision
+              comparison and exports from your assistant.
+            </td>
+          </tr>
+          <tr>
+            <td>CLI</td>
+            <td>
+              Repeatable generation, project edits, package exports and checks
+              in development scripts.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>Advanced authoring</h2>
+      <p>
+        Create a new device or start from a working example. Edit complex
+        datatypes and conditional layouts in the document tree. Save a
+        manufacturer project as a reusable template, and import selected
+        elements with their text and datatype dependencies.
+      </p>
+      <p>
+        Load published IO-Link profile snippet packs, choose a profile variant
+        and fill its template bindings. Configure wired or wireless
+        communication and declarative validation rules. Create and inspect IOLFW
+        firmware packages containing a binary and optional resources, with CRC
+        and SHA-256 verification.
+      </p>
+      <p>
+        The browser can search the public IODD Finder and import approved
+        packages. Project contents stay local; only an explicit Finder search or
+        download uses the read-only catalog service.
+      </p>
+      <h2>Validate and keep firmware aligned</h2>
+      <p>
+        Basic checks cover model references, parameter ranges, process-field
+        overlaps and CRC. Configure a locally installed official XSD or official
+        checker to record its result separately. Generated C mappings use the
+        IODD's parameter indexes and process-bit offsets. The
+        <a href="/docs/device/v2.1.0/examples/switching-sensor/"
+          >matching firmware example</a
+        >
+        and
+        <a href="/docs/device/v2.1.0/simulation/">LabWired recipes</a> provide
+        the next development steps.
+      </p>
+      <p>
+        Projects stay in your browser or local MCP process. Export project JSON
+        to save your work and reopen it in either interface. The MCP server uses
+        local stdio; this download is ready to run with your client.
+      </p>
+      <p>
+        The authoring engine and adapters are MIT licensed. Included upstream
+        libraries retain their licenses. The included XML templates are also
+        available under MIT for your device descriptions.
+        <a href="https://github.com/w1ne/iolinki-website">Browse the source</a>.
+      </p>
+      <footer>
+        <a href="/index.html">iolinki</a> ·
+        <a href="/faq.html#licensing">Stack licensing</a> ·
+        <a href="/legal.html">Legal</a>
+      </footer>
+    </main>
+  </body>
+</html>

@@ -78,4 +78,7 @@ nav:
     - Testing: master/v1.0.0/testing.md
     - Implementation status: master/v1.0.0/implementation-status.md
     - Hardware validation: master/v1.0.0/hardware-validation.md
+  - Developer tools:
+    - IODD authoring, CLI and MCP: tools/iodd-mcp.md
+    - Importable IODD examples: tools/iodd-examples.md
   - Licensing and sources: licensing.md

@@ -4,7 +4,24 @@ import { applyStampCrc, verifyStampCrc } from "./vendor/checker/crc.mjs";
 export const NS = "http://www.io-link.com/IODD/2010/10";
 const encoder = new TextEncoder();
 const kinds = ["UIntegerT", "IntegerT", "BooleanT", "StringT", "OctetStringT"];
-export function importXML(source) {
+function xmlCharacter(code) {
+  return (
+    code === 9 ||
+    code === 10 ||
+    code === 13 ||
+    (code >= 32 && code <= 0xd7ff) ||
+    (code >= 0xe000 && code <= 0xfffd) ||
+    (code >= 0x10000 && code <= 0x10ffff)
+  );
+}
+function importDocument(source, expectedRoot, expectedNS = NS) {
+  if (typeof source !== "string") throw Error("XML source must be a string.");
+  for (const char of source)
+    if (!xmlCharacter(char.codePointAt(0)))
+      throw Error("XML contains an illegal character.");
+  for (const match of source.matchAll(/&#(?:x([0-9a-fA-F]+)|([0-9]+));/g))
+    if (!xmlCharacter(parseInt(match[1] ?? match[2], match[1] ? 16 : 10)))
+      throw Error("XML contains an illegal numeric character reference.");
   if (encoder.encode(source).length > 4 * 1024 * 1024)
     throw Error("File exceeds the 4 MiB limit.");
   if (/<!\s*(DOCTYPE|ENTITY)\b/i.test(source))
@@ -22,10 +39,12 @@ export function importXML(source) {
       "XML syntax is invalid. Check the XML editor or import a valid file.",
     );
   if (
-    native.documentElement.localName !== "IODevice" ||
-    native.documentElement.namespaceURI !== NS
+    native.documentElement.localName !== expectedRoot ||
+    native.documentElement.namespaceURI !== expectedNS
   )
-    throw Error("Import an IODD 1.1 IODevice document (namespace 2010/10).");
+    throw Error(
+      `Import an IODD 1.1 ${expectedRoot} document (namespace 2010/10).`,
+    );
   for (const node of native.getElementsByTagName("*")) {
     if (
       node.getAttributeNS("http://www.w3.org/XML/1998/namespace", "space") ===
@@ -43,11 +62,60 @@ export function importXML(source) {
       );
   }
   const doc = parseXml(source);
-  if (root(doc).name !== "IODevice")
+  if (root(doc).name !== expectedRoot)
     throw Error(
       "Prefixed root elements are preserved outside this editor; use an IODD with the default namespace.",
     );
   return doc;
+}
+export function importXML(source) {
+  return importDocument(source, "IODevice");
+}
+export function importSupplementXML(source) {
+  if (
+    typeof source !== "string" ||
+    encoder.encode(source).length > 4 * 1024 * 1024
+  )
+    throw Error("XML supplement exceeds the 4 MiB limit.");
+  if (/<!\s*(DOCTYPE|ENTITY)\b/i.test(source))
+    throw Error("DTD and entity declarations are not supported.");
+  const native = new DOMParser().parseFromString(source, "application/xml");
+  const name = native.documentElement.localName,
+    namespace = native.documentElement.namespaceURI;
+  if (
+    !(["IODevice", "IODDElements"].includes(name) && namespace === NS) &&
+    !(
+      name === "IODDProfileDefinitions" &&
+      namespace === "http://www.io-link.com/IODD-Snippets/2025/10"
+    )
+  )
+    throw Error(
+      "Import an IODevice, IODDElements library or official IODDProfileDefinitions XML document.",
+    );
+  return importDocument(source, name, namespace);
+}
+export function importTextXML(source) {
+  return importDocument(source, "ExternalTextDocument");
+}
+export function getExternalTexts(doc) {
+  const node = path(root(doc), "Language");
+  if (!node) throw Error("External text document requires a Language.");
+  return {
+    language: node.attrs["xml:lang"],
+    primary: false,
+    texts: elements(node, "Text").map((t) => ({ ...t.attrs })),
+  };
+}
+export function editExternalText(doc, id, value) {
+  validId(id);
+  if (typeof value !== "string") throw Error("Text value must be a string.");
+  const node = path(root(doc), "Language");
+  if (!node) throw Error("Missing external Language.");
+  let text = elements(node, "Text").find((t) => t.attrs.id === id);
+  if (!text) {
+    text = element("Text", { id, value });
+    node.children.push(text);
+  } else text.attrs.value = value;
 }
 function identity(doc) {
   return path(root(doc), "ProfileBody", "DeviceIdentity");
@@ -347,6 +415,7 @@ export function getProcessData(doc) {
         const type = typeOf(simple);
         return {
           index: i,
+          subindex: field.attrs.subindex,
           name: textValue(doc, path(field, "Name")),
           offset: field.attrs.bitOffset,
           bits: type === "BooleanT" ? "1" : simple?.attrs.bitLength || "",
@@ -427,22 +496,63 @@ export function validateDocument(doc) {
     if (n.name === "ProductRef" && !products.has(n.attrs.productId))
       error("Unresolved productId: " + n.attrs.productId + ".");
   const ids = new Set();
+  // Text IDs are unique within each language, not globally.
+  for (const language of elements(path(device, "ExternalTextCollection"))) {
+    const texts = new Set();
+    for (const text of elements(language, "Text")) {
+      if (texts.has(text.attrs.id))
+        error("Duplicate text ID " + text.attrs.id + ".");
+      texts.add(text.attrs.id);
+    }
+  }
   for (const n of walk(device)) {
+    if (n.name === "Text" && !elements(primary(doc), "Text").includes(n))
+      continue;
     if (n.attrs.id) {
       if (ids.has(n.attrs.id)) error("Duplicate ID " + n.attrs.id + ".");
       ids.add(n.attrs.id);
     }
   }
+  const referenceKinds = {
+    textId: new Set(elements(primary(doc), "Text").map((n) => n.attrs.id)),
+    variableId: new Set(
+      elements(path(functionNode(doc), "VariableCollection"))
+        .filter((n) => ["Variable", "StdVariableRef"].includes(n.name))
+        .map((n) => n.attrs.id),
+    ),
+    datatypeId: new Set(
+      elements(path(functionNode(doc), "DatatypeCollection"), "Datatype").map(
+        (n) => n.attrs.id,
+      ),
+    ),
+    menuId: new Set(
+      elements(
+        path(functionNode(doc), "UserInterface", "MenuCollection"),
+        "Menu",
+      ).map((n) => n.attrs.id),
+    ),
+    processDataId: new Set(
+      [...walk(device)]
+        .filter((n) =>
+          ["ProcessData", "ProcessDataIn", "ProcessDataOut"].includes(n.name),
+        )
+        .map((n) => n.attrs.id),
+    ),
+  };
   for (const n of walk(device))
-    for (const key of [
-      "textId",
-      "variableId",
-      "datatypeId",
-      "menuId",
-      "processDataId",
-    ])
-      if (n.attrs[key] && !ids.has(n.attrs[key]))
+    for (const [key, valid] of Object.entries(referenceKinds))
+      if (n.attrs[key] && !valid.has(n.attrs[key]))
         error(`Unresolved ${key}: ${n.attrs[key]}.`);
+  const languages = new Set();
+  for (const language of getTexts(doc)) {
+    if (languages.has(language.language))
+      error("Duplicate language " + language.language + ".");
+    languages.add(language.language);
+    if (!language.primary)
+      for (const text of language.texts)
+        if (!referenceKinds.textId.has(text.id))
+          error("Translation has no primary text: " + text.id + ".");
+  }
   try {
     const id = getIdentity(doc);
     number(id.vendorId, "Vendor ID", 1, 65535);
@@ -520,6 +630,15 @@ export function validateDocument(doc) {
       }
     }
   }
+  const referencedMenus = new Set(
+    [...walk(device)].map((n) => n.attrs.menuId).filter(Boolean),
+  );
+  for (const menu of getMenus(doc))
+    if (!referencedMenus.has(menu.id))
+      issues.push({
+        severity: "warning",
+        message: `Menu ${menu.id} is not referenced by a role or another menu. Add a menu reference to make it reachable in device navigation.`,
+      });
   try {
     if (!verifyStampCrc(encoder.encode(serialiseXml(doc))).valid)
       issues.push({
@@ -537,7 +656,7 @@ export function validateDocument(doc) {
 export function previewXML(doc) {
   return serialiseXml(doc, { eol: "\n", indent: "  " });
 }
-export function exportXML(doc) {
+export function exportXML(doc, crcOptions = {}) {
   const copy = structuredClone(doc);
   copy.declaration = { version: "1.0", encoding: "UTF-8" };
   let stamp = path(root(copy), "Stamp");
@@ -554,6 +673,275 @@ export function exportXML(doc) {
   checker.attrs.name = "iolinki-browser-editor";
   checker.attrs.version = "V1.0";
   return new TextDecoder().decode(
-    applyStampCrc(encoder.encode(serialiseXml(copy))).bytes,
+    applyStampCrc(encoder.encode(serialiseXml(copy)), crcOptions).bytes,
   );
+}
+
+export function getTexts(doc) {
+  return elements(path(root(doc), "ExternalTextCollection"))
+    .filter((n) => ["PrimaryLanguage", "Language"].includes(n.name))
+    .map((n) => ({
+      language: n.attrs["xml:lang"],
+      primary: n.name === "PrimaryLanguage",
+      texts: elements(n, "Text").map((t) => ({ ...t.attrs })),
+    }));
+}
+function validId(id) {
+  if (
+    typeof id !== "string" ||
+    !/^[A-Za-z][A-Za-z0-9 _-]*[A-Za-z0-9]$/.test(id)
+  )
+    throw Error("Use a valid XML identifier.");
+  return id;
+}
+export function editText(doc, language, id, value) {
+  validId(id);
+  if (
+    typeof language !== "string" ||
+    !/^[a-zA-Z]{2,8}(-[a-zA-Z0-9]{1,8})*$/.test(language)
+  )
+    throw Error("Use a valid language code.");
+  if (typeof value !== "string") throw Error("Text value must be a string.");
+  const collection = path(root(doc), "ExternalTextCollection");
+  if (!collection || !primary(doc))
+    throw Error("Missing primary text collection.");
+  let target = elements(collection).find(
+    (n) => n.attrs["xml:lang"] === language,
+  );
+  if (!target) {
+    target = element("Language", { "xml:lang": language });
+    collection.children.push(target);
+  }
+  if (
+    target !== primary(doc) &&
+    !elements(primary(doc), "Text").some((n) => n.attrs.id === id)
+  )
+    throw Error("Translations need an existing primary text ID.");
+  let text = elements(target, "Text").find((n) => n.attrs.id === id);
+  if (!text) {
+    text = element("Text", { id, value });
+    target.children.push(text);
+  } else text.attrs.value = value;
+}
+function newText(doc, prefix, value) {
+  let id = prefix,
+    i = 1;
+  const used = new Set([...walk(root(doc))].map((n) => n.attrs.id));
+  while (used.has(id)) id = prefix + "_" + i++;
+  editText(doc, primary(doc).attrs["xml:lang"], id, value);
+  return id;
+}
+export function getEvents(doc) {
+  return elements(path(functionNode(doc), "EventCollection"), "Event").map(
+    (n) => ({
+      code: n.attrs.code,
+      type: n.attrs.type,
+      name: textValue(doc, path(n, "Name")),
+      description: textValue(doc, path(n, "Description")),
+    }),
+  );
+}
+export function editEvent(doc, values) {
+  const code = String(number(values.code, "Event code", 0, 65535));
+  if (
+    !["Notification", "Warning", "Error"].includes(values.type) ||
+    typeof values.name !== "string" ||
+    !values.name.trim()
+  )
+    throw Error("Event needs a name and Notification, Warning or Error type.");
+  let collection = path(functionNode(doc), "EventCollection");
+  if (!collection) {
+    collection = element("EventCollection");
+    const fn = functionNode(doc);
+    fn.children.splice(
+      fn.children.indexOf(path(fn, "UserInterface")),
+      0,
+      collection,
+    );
+  }
+  if (elements(collection, "StdEventRef").some((n) => n.attrs.code === code))
+    throw Error("Code already belongs to a standard event.");
+  let node = elements(collection, "Event").find((n) => n.attrs.code === code);
+  if (!node) {
+    node = element("Event", { code, type: values.type }, [
+      element("Name", { textId: newText(doc, "T_Event_" + code, values.name) }),
+    ]);
+    collection.children.push(node);
+  } else {
+    node.attrs.type = values.type;
+    setTextValue(doc, node, "Name", values.name);
+  }
+  if (values.description !== undefined) {
+    if (typeof values.description !== "string")
+      throw Error("Description must be text.");
+    if (!path(node, "Description"))
+      node.children.push(
+        element("Description", {
+          textId: newText(
+            doc,
+            "T_Event_" + code + "_Description",
+            values.description,
+          ),
+        }),
+      );
+    else setTextValue(doc, node, "Description", values.description);
+  }
+}
+export function removeEvent(doc, code) {
+  const c = path(functionNode(doc), "EventCollection");
+  const n = elements(c, "Event").find(
+    (n) => Number(n.attrs.code) === Number(code),
+  );
+  if (!n) throw Error("Unknown event.");
+  c.children = c.children.filter((v) => v !== n);
+  if (!elements(c).length)
+    functionNode(doc).children = functionNode(doc).children.filter(
+      (v) => v !== c,
+    );
+}
+export function getMenus(doc) {
+  return elements(
+    path(functionNode(doc), "UserInterface", "MenuCollection"),
+    "Menu",
+  ).map((n) => ({
+    id: n.attrs.id,
+    name: textValue(doc, path(n, "Name")),
+    variableIds: elements(n, "VariableRef").map((v) => v.attrs.variableId),
+    menuIds: elements(n, "MenuRef").map((v) => v.attrs.menuId),
+  }));
+}
+export function editMenu(doc, values) {
+  validId(values.id);
+  if (typeof values.name !== "string" || !values.name.trim())
+    throw Error("Menu name is required.");
+  const vars = values.variableIds ?? [],
+    menus = values.menuIds ?? [];
+  if (!Array.isArray(vars) || !Array.isArray(menus))
+    throw Error("Menu references must be arrays.");
+  if (!vars.length && !menus.length)
+    throw Error("Menu needs at least one reference entry.");
+  const available = new Set(
+    elements(path(functionNode(doc), "VariableCollection")).map(
+      (n) => n.attrs.id,
+    ),
+  );
+  const collection = path(functionNode(doc), "UserInterface", "MenuCollection");
+  if (!collection) throw Error("Missing MenuCollection.");
+  for (const id of vars)
+    if (!available.has(id))
+      throw Error("Unknown variable reference " + id + ".");
+  for (const id of menus)
+    if (
+      id === values.id ||
+      !elements(collection, "Menu").some((n) => n.attrs.id === id)
+    )
+      throw Error("Unknown or self-referencing menu " + id + ".");
+  let node = elements(collection, "Menu").find((n) => n.attrs.id === values.id);
+  if (
+    node &&
+    elements(node).some(
+      (n) =>
+        !["Name", "VariableRef", "MenuRef"].includes(n.name) ||
+        (n.name === "VariableRef" &&
+          Object.keys(n.attrs).some((key) => key !== "variableId")) ||
+        (n.name === "MenuRef" &&
+          Object.keys(n.attrs).some((key) => key !== "menuId")),
+    )
+  )
+    throw Error("Complex menu must be edited in XML.");
+  if (!node) {
+    if ([...walk(root(doc))].some((n) => n.attrs.id === values.id))
+      throw Error("Duplicate ID.");
+    node = element("Menu", { id: values.id }, [
+      element("Name", { textId: newText(doc, "T_" + values.id, values.name) }),
+    ]);
+    collection.children.push(node);
+  } else setTextValue(doc, node, "Name", values.name);
+  node.children = node.children.filter(
+    (n) => !["VariableRef", "MenuRef"].includes(n.name),
+  );
+  node.children.push(
+    ...vars.map((variableId) => element("VariableRef", { variableId })),
+    ...menus.map((menuId) => element("MenuRef", { menuId })),
+  );
+  const graph = getMenus(doc);
+  const active = new Set(),
+    done = new Set();
+  function visit(id) {
+    if (active.has(id)) throw Error("Menus must not form a cycle.");
+    if (done.has(id)) return;
+    active.add(id);
+    for (const next of graph.find((m) => m.id === id)?.menuIds ?? [])
+      visit(next);
+    active.delete(id);
+    done.add(id);
+  }
+  for (const menu of graph) visit(menu.id);
+}
+export function removeMenu(doc, id) {
+  const c = path(functionNode(doc), "UserInterface", "MenuCollection");
+  const n = elements(c, "Menu").find((n) => n.attrs.id === id);
+  if (!n) throw Error("Unknown menu.");
+  if ([...walk(root(doc))].some((v) => v.attrs.menuId === id))
+    throw Error("Menu is referenced; remove its references first.");
+  c.children = c.children.filter((v) => v !== n);
+}
+export function addProcessField(doc, id, values) {
+  const view = getProcessData(doc).find((v) => v.id === id);
+  if (!view?.editable) throw Error("Edit this process-data type in XML.");
+  const node = [...walk(root(doc))].find((n) => n.attrs.id === id),
+    dt = path(node, "Datatype");
+  const used = new Set(
+    elements(dt, "RecordItem").map((n) => Number(n.attrs.subindex)),
+  );
+  let sub = 1;
+  while (used.has(sub)) sub++;
+  if (sub > 255) throw Error("Record is full.");
+  const textId = newText(
+    doc,
+    "T_" + id + "_" + sub,
+    values.name ?? "New field",
+  );
+  dt.children.push(
+    element("RecordItem", { subindex: String(sub), bitOffset: "0" }, [
+      element("SimpleDatatype", { "xsi:type": "BooleanT" }),
+      element("Name", { textId }),
+    ]),
+  );
+  editProcessField(doc, id, view.fields.length, {
+    name: "New field",
+    offset: 0,
+    bits: 1,
+    type: "BooleanT",
+    ...values,
+  });
+}
+export function removeProcessField(doc, id, index) {
+  const view = getProcessData(doc).find((v) => v.id === id);
+  if (!view?.editable || !Number.isInteger(index) || !view.fields[index])
+    throw Error("Unknown editable process field.");
+  if (view.fields.length === 1)
+    throw Error("Record requires at least one field.");
+  const node = [...walk(root(doc))].find((n) => n.attrs.id === id);
+  const dt = path(node, "Datatype"),
+    field = elements(dt, "RecordItem")[index];
+  if (
+    [...walk(root(doc))].some(
+      (n) =>
+        n.attrs.processDataId === id &&
+        [...walk(n)].some(
+          (child) => child.attrs.subindex === field.attrs.subindex,
+        ),
+    )
+  )
+    throw Error("Process field is referenced in another section.");
+  if (
+    [...walk(root(doc))].some(
+      (n) =>
+        n.attrs.processDataId === id &&
+        n.attrs.subindex === field.attrs.subindex,
+    )
+  )
+    throw Error("Process field is referenced in another section.");
+  dt.children = dt.children.filter((n) => n !== field);
 }

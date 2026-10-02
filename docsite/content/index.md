@@ -17,6 +17,7 @@ MkDocs Material approach as LabWired.
   [STM32U5/Zephyr](device/v2.1.0/examples/stm32u5.md).
 - **Describe a sensor:** start with the [switching sensor](device/v2.1.0/examples/switching-sensor.md)
   and [IODD command-line tools](device/v2.1.0/iodd.md).
+- **Author an IODD with your assistant:** use the free [shared editor, CLI and MCP server](tools/iodd-mcp.md).
 - **Connect the master to a board:** implement the [master PHY contract](master/v1.0.0/phy-contract.md)
   and complete the [physical validation matrix](master/v1.0.0/hardware-validation.md).
 

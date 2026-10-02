@@ -5,7 +5,7 @@ permissions:
 jobs:
   editor:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -13,15 +13,7 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
-      - name: Browser edits, downloads, preservation and negative checks
-        run: npm run check:iodd
-      - uses: actions/checkout@v4
-        with:
-          repository: w1ne/iolinki
-          ref: ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca
-          path: .validation/iolinki
-      - name: Validate browser downloads with released CLI and official XSD
+      - name: Install pinned official schemas and profile fixtures
         shell: bash
         run: |
           set -euo pipefail
@@ -30,8 +22,45 @@ jobs:
           curl --fail --location --max-time 90 https://io-link.com/fileadmin/user_upload/Downloads/Package_2025/IO-Device-Description_Specification_10.012_V1.1.5_Oct2025.zip -o "$RUNNER_TEMP/iodd-spec.zip"
           printf '%s  %s\n' d4b3f53bfc777e45938cf7b7d14fe9b65aa4dccea6875745b3912e1cc59d4dd2 "$RUNNER_TEMP/iodd-spec.zip" | sha256sum --check
           unzip -q "$RUNNER_TEMP/iodd-spec.zip" -d "$RUNNER_TEMP/iodd-spec"
-          schema="$RUNNER_TEMP/iodd-spec/IO-Device-Description_Specification_10.012_V1.1.5_Oct2025/Schemas/IODD1.1.xsd"
-          for file in artifacts/iodd-editor/*.xml; do
+          curl --fail --location --max-time 90 https://io-link.com/fileadmin/user_upload/Downloads/Package_2025/IO-Link_Profile_Firmware-Update_10.082_V1.2.1_Oct2025.zip -o "$RUNNER_TEMP/fw-spec.zip"
+          printf '%s  %s\n' 51915446443f028f31ddd9dd91e4b2b07500bdb36370cba0bd8b79b4b8ba527d "$RUNNER_TEMP/fw-spec.zip" | sha256sum --check
+          unzip -q "$RUNNER_TEMP/fw-spec.zip" -d "$RUNNER_TEMP/fw-spec"
+          curl --fail --location --max-time 90 https://io-link.com/fileadmin/user_upload/Downloads/Package_2025/IO-Link_Common_Profile_Specification_10.072_V1.2.1_Oct2025.zip -o "$RUNNER_TEMP/common-spec.zip"
+          printf '%s  %s\n' 1517458005f92b680379aa8aa834f157b4335c6f3fefa225a5daba332f3679f1 "$RUNNER_TEMP/common-spec.zip" | sha256sum --check
+          unzip -q "$RUNNER_TEMP/common-spec.zip" -d "$RUNNER_TEMP/common-spec"
+          echo "IODD_SCHEMA=$RUNNER_TEMP/iodd-spec/IO-Device-Description_Specification_10.012_V1.1.5_Oct2025/Schemas/IODD1.1.xsd" >> "$GITHUB_ENV"
+          echo "IOLFW_SCHEMA=$RUNNER_TEMP/fw-spec/IO-Link_Profile_Firmware-Update_10.082_V1.2.1_Oct2025/Schemas/IOLFW1.0.xsd" >> "$GITHUB_ENV"
+          echo "IOLFW_EXAMPLE=$RUNNER_TEMP/fw-spec/IO-Link_Profile_Firmware-Update_10.082_V1.2.1_Oct2025/IOLFW-Examples/IO-Link Community-Sample1-20190927-IOLFW1.0.iolfw" >> "$GITHUB_ENV"
+          echo "IODD_PROFILE_XML=$RUNNER_TEMP/fw-spec/IO-Link_Profile_Firmware-Update_10.082_V1.2.1_Oct2025/IODD-Snippets/IODD-Snippets-BT-FU.xml" >> "$GITHUB_ENV"
+          echo "IODD_BLOB_PROFILE=$RUNNER_TEMP/fw-spec/IO-Link_Profile_Firmware-Update_10.082_V1.2.1_Oct2025/IODD-Snippets/IODD-Snippets-BT-FU.xml" >> "$GITHUB_ENV"
+          echo "IODD_COMMON_PROFILE=$RUNNER_TEMP/common-spec/IO-Link_Common_Profile_Specification_10.072_V1.2.1_Oct2025/IODD-Snippets/IODD-Snippets-CP.xml" >> "$GITHUB_ENV"
+      - name: Shared engine, package, CLI and real MCP client tests
+        run: npm run test:iodd
+      - name: Verify importable stack example packages
+        run: node scripts/package-iodd-examples.mjs --check
+      - name: Verify reproducible public MCP source download
+        run: python3 scripts/package-iodd-tools.py --check
+      - run: npx playwright install --with-deps chromium
+      - name: Browser edits, downloads, preservation and negative checks
+        run: npm run check:iodd
+      - uses: actions/checkout@v4
+        with:
+          repository: w1ne/iolinki
+          ref: ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca
+          path: .validation/iolinki
+      - name: Compile actual released firmware against generated IODD mappings
+        run: node scripts/check-iodd-firmware.mjs .validation/iolinki
+      - name: Validate browser downloads with released CLI and official XSD
+        shell: bash
+        run: |
+          set -euo pipefail
+          schema="$IODD_SCHEMA"
+          for file in artifacts/iodd-editor/counter-*.xml artifacts/iodd-editor/sensor-*.xml artifacts/iodd-editor/authored-*.xml artifacts/iodd-editor/profile-*.xml artifacts/iodd-editor/new-device-*.xml; do
+            xmllint --nonet --noout --schema "$schema" "$file"
+            node tools/iodd/cli.mjs import --format xml --input "$file" --output "$RUNNER_TEMP/browser.project.json"
+            node tools/iodd/cli.mjs validate --input "$RUNNER_TEMP/browser.project.json"
+          done
+          for file in artifacts/iodd-editor/counter-*.xml artifacts/iodd-editor/sensor-*.xml; do
             python3 .validation/iolinki/tools/iodd_cli.py validate "$file" --schema "$schema"
           done
       - uses: actions/upload-artifact@v4
