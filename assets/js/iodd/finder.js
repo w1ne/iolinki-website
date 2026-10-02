@@ -1,17 +1,71 @@
 const CONFIG = new URL("../../iodd/catalog.json", import.meta.url);
 export const FINDER_URL = "https://ioddfinder.io-link.com/";
-async function endpoint(options) {
-  return options.baseUrl || (await (await fetch(CONFIG)).json()).endpoint;
+async function endpoint(options, signal) {
+  if (options.baseUrl) return options.baseUrl;
+  const response = await fetch(CONFIG, { signal });
+  if (!response.ok)
+    throw Error(
+      "Finder configuration is unavailable. Open the official Finder and import its ZIP.",
+    );
+  return (await response.json()).endpoint;
 }
 export async function searchIODDs(query, options = {}) {
-  const url = new URL("/search", await endpoint(options));
-  url.searchParams.set("q", query);
-  url.searchParams.set("field", options.field || "productName");
-  url.searchParams.set("page", options.page || 0);
-  url.searchParams.set("size", options.size || 12);
-  const response = await fetch(url, { signal: AbortSignal.timeout(25000) });
-  const result = await response.json();
-  if (!response.ok) throw Error(result.error || "Finder search failed.");
+  const signal = AbortSignal.timeout(25000);
+  let baseUrl;
+  try {
+    baseUrl = await endpoint(options, signal);
+  } catch (error) {
+    throw Error(
+      "Finder search could not connect. Open the official Finder and import its ZIP.",
+      { cause: error },
+    );
+  }
+  const automatic = !options.field || options.field === "auto";
+  const fields = automatic
+    ? [
+        "productName",
+        "vendorName",
+        "productId",
+        ...(/^\d+$/.test(query.trim()) ? ["deviceId"] : []),
+      ]
+    : [options.field];
+  let result,
+    matchedField = null;
+  for (const field of fields) {
+    const url = new URL("/search", baseUrl);
+    url.searchParams.set("q", query);
+    url.searchParams.set("field", field);
+    url.searchParams.set("page", options.page ?? 0);
+    url.searchParams.set("size", options.size ?? 12);
+    let response;
+    try {
+      response = await fetch(url, { signal });
+      result = await response.json();
+    } catch (error) {
+      throw Error(
+        "Finder search could not connect or timed out. Open the official Finder and import its ZIP.",
+        { cause: error },
+      );
+    }
+    if (!response.ok)
+      throw Error(
+        result.error ||
+          "Finder search failed. Open the official Finder and import its ZIP.",
+      );
+    if (
+      !Array.isArray(result.content) ||
+      !Number.isSafeInteger(result.totalElements) ||
+      result.totalElements < 0
+    )
+      throw Error(
+        "Finder returned an invalid result. Open the official Finder and import its ZIP.",
+      );
+    // An empty out-of-range page still belongs to a successful search.
+    if (result.totalElements > 0 || !automatic) {
+      matchedField = field;
+      break;
+    }
+  }
   return {
     entries: result.content.map((entry) => ({
       ...entry,
@@ -23,6 +77,7 @@ export async function searchIODDs(query, options = {}) {
     total: result.totalElements,
     page: result.number,
     last: result.last,
+    matchedField,
   };
 }
 export async function downloadIODD(entry, options = {}) {

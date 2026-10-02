@@ -922,9 +922,30 @@ async function runFinder(page = 0) {
       field: $("finder-field").value,
     });
     finderPage = result.page;
+    const category =
+      {
+        productName: "product name",
+        vendorName: "manufacturer",
+        productId: "product ID",
+        deviceId: "device ID",
+      }[result.matchedField || $("finder-field").value] || "public";
     $("finder-results").replaceChildren(
-      element("p", `${result.total} public matches · page ${result.page + 1}`),
+      element(
+        "p",
+        result.total
+          ? `${result.total} ${category} matches · page ${result.page + 1}`
+          : `No matches for “${query}”.`,
+      ),
     );
+    if (!result.total)
+      $("finder-results").append(
+        element(
+          "p",
+          $("finder-field").value === "auto"
+            ? "Try a shorter name, manufacturer or exact product/device ID."
+            : "Try Product, manufacturer or ID search, or check the spelling.",
+        ),
+      );
     for (const entry of result.entries) {
       const card = element("div", undefined, "detail-card");
       card.append(element("h3", entry.name || entry.productName));

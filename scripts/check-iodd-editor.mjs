@@ -51,6 +51,11 @@ try {
       if (r.method() !== "GET") writes.push(r.url());
     });
     await page.goto(origin + "/iodd-editor.html");
+    assert.equal(
+      await page.locator("#finder-field").inputValue(),
+      "auto",
+      "Finder defaults to product/manufacturer/ID search",
+    );
     if (width === 1440) {
       let receive;
       const counterURL = "**/assets/iodd/counter.xml";
@@ -593,27 +598,41 @@ try {
         await profileDownload
       ).saveAs(resolve(artifacts, `profile-${width}.xml`));
     }
-    await page.route("**/search?**", (route) =>
-      route.fulfill({
+    const finderFields = [];
+    await page.route("**/search?**", (route) => {
+      const url = new URL(route.request().url());
+      const query = url.searchParams.get("q"),
+        field = url.searchParams.get("field");
+      if (query === "ifm") finderFields.push(field);
+      const isManufacturer = query === "ifm" && field === "vendorName";
+      const empty =
+        query === "no-such-device" || (query === "ifm" && !isManufacturer);
+      return route.fulfill({
         status: 200,
         contentType: "application/json",
         body: JSON.stringify({
-          content: [
-            {
-              ioddId: 5679,
-              vendorId: 1234,
-              productName: "Mock switching sensor",
-              vendorName: "Fixture manufacturer",
-              driverName: "fixture",
-              productVariantId: 42,
-            },
-          ],
-          totalElements: 1,
+          content: empty
+            ? []
+            : [
+                {
+                  ioddId: 5679,
+                  vendorId: isManufacturer ? 310 : 1234,
+                  productName: isManufacturer
+                    ? "PV2304"
+                    : "Mock switching sensor",
+                  vendorName: isManufacturer
+                    ? "ifm electronic gmbh"
+                    : "Fixture manufacturer",
+                  driverName: "fixture",
+                  productVariantId: 42,
+                },
+              ],
+          totalElements: empty ? 0 : isManufacturer ? 2597 : 1,
           number: 0,
-          last: true,
+          last: !isManufacturer,
         }),
-      }),
-    );
+      });
+    });
     await page.route("**/download?**", async (route) =>
       route.fulfill({
         status: 200,
@@ -622,6 +641,35 @@ try {
       }),
     );
     await page.getByRole("tab", { name: "IODD Finder", exact: true }).click();
+    await page
+      .getByLabel("Device, product or manufacturer", { exact: true })
+      .fill("ifm");
+    await page
+      .getByRole("button", { name: "Search IODD Finder", exact: true })
+      .click();
+    await page.getByText("PV2304", { exact: true }).waitFor();
+    assert.deepEqual(
+      finderFields,
+      ["productName", "vendorName"],
+      "Manufacturer lookup follows an empty product-name search",
+    );
+    assert.match(
+      await page.locator("#finder-results").textContent(),
+      /2597 manufacturer matches/,
+    );
+    await page
+      .getByLabel("Device, product or manufacturer", { exact: true })
+      .fill("no-such-device");
+    await page
+      .getByRole("button", { name: "Search IODD Finder", exact: true })
+      .click();
+    await page
+      .getByText("No matches for “no-such-device”.", { exact: true })
+      .waitFor();
+    assert.match(
+      await page.locator("#finder-results").textContent(),
+      /Try a shorter name/,
+    );
     await page
       .getByLabel("Device, product or manufacturer", { exact: true })
       .fill("switching sensor");
