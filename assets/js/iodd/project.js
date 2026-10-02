@@ -103,7 +103,10 @@ function check(project) {
 /** Suggest a conforming filename; preserve identity text and imported names. */
 export function suggestProjectFilename(project) {
   const identity = d.getIdentity(d.importXML(project.xml));
-  const segment = (value, fallback) => String(value).replace(/[^A-Za-z0-9_#-]/g, "_").slice(0, 70) || fallback;
+  const segment = (value, fallback) => {
+    const safe = String(value).replace(/[^A-Za-z0-9_#-]/g, "_").slice(0, 70) || fallback;
+    return safe.startsWith("-") ? `_${safe}` : safe;
+  };
   return `${segment(identity.vendorName, "Vendor")}-${segment(identity.productId, "Device")}-${identity.releaseDate.replaceAll("-", "")}-IODD1.1.xml`;
 }
 export function createNewProject(identity = {}, filename) {

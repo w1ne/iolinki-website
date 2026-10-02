@@ -265,14 +265,17 @@ test("default-created hosted XML passes genuine Checker using returned filename"
   const host = new IoddHttpHost({ loadTemplate });
   const connection = await connect(host);
   try {
-    const project = await connection.call("create", {});
-    const artifact = await connection.call("export", { projectId: project.projectId, format: "xml" });
-    const response = await host.fetch(new Request(artifact.downloadUrl));
-    assert.match(artifact.filename, /-\d{8}-IODD1\.1\.xml$/);
-    const filename = join(directory, artifact.filename);
-    await writeFile(filename, await response.text());
-    const { stdout } = await promisify(execFile)(process.env.IODD_GENUINE_CHECKER, [filename], { timeout: 45000 });
-    assert.match(stdout, /0 errors found/);
+    for (const identity of [{}, { vendorName: "-Vendor" }]) {
+      const project = await connection.call("create", { identity });
+      const artifact = await connection.call("export", { projectId: project.projectId, format: "xml" });
+      const response = await host.fetch(new Request(artifact.downloadUrl));
+      assert.match(artifact.filename, /-\d{8}-IODD1\.1\.xml$/);
+      assert.ok(!artifact.filename.startsWith("-"));
+      const filename = join(directory, artifact.filename);
+      await writeFile(filename, await response.text());
+      const { stdout } = await promisify(execFile)(process.env.IODD_GENUINE_CHECKER, [filename], { timeout: 45000 });
+      assert.match(stdout, /0 errors found/);
+    }
   } finally {
     await connection.client.close();
     for (const id of host.sessions.keys()) await host.removeSession(id);
@@ -287,7 +290,7 @@ test("canonical leading hash, underscore and hyphen exports retain metadata and 
     for (const vendorName of ["#Vendor", "_Vendor", "-Vendor"]) {
       const project = await connection.call("create", { identity: { vendorName, releaseDate: "2026-10-02" } });
       const artifact = await connection.call("export", { projectId: project.projectId, format: "xml" });
-      assert.equal(artifact.filename, `${vendorName}-new-device-20261002-IODD1.1.xml`);
+      assert.equal(artifact.filename, `${vendorName.startsWith("-") ? "_" : ""}${vendorName}-new-device-20261002-IODD1.1.xml`);
       const response = await host.fetch(new Request(artifact.downloadUrl));
       assert.equal(response.headers.get("Content-Disposition"), `attachment; filename="${artifact.filename}"`);
     }
