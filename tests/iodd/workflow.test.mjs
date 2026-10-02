@@ -75,3 +75,17 @@ test('firmware tools expose composed compile arguments and downloadable complete
   assert.equal(new Uint8Array(await response.arrayBuffer())[0],80);
  }finally{await connection.transport.terminateSession();await connection.client.close();}
 });
+
+test('reverse-proxied exports use the operator configured public origin',async()=>{
+ const host=new IoddHttpHost({loadTemplate,artifactOrigin:'https://mcp.iolinki.com'});
+ const connection=await connect(host);
+ try{
+  const project=await connection.call('create');
+  const artifact=await connection.call('export',{projectId:project.projectId,format:'xml'});
+  assert.ok(artifact.downloadUrl.startsWith('https://mcp.iolinki.com/artifacts/'));
+ }finally{await connection.transport.terminateSession();await connection.client.close();}
+});
+
+ test('configured artifact origin rejects an empty value',()=>{
+  assert.throws(()=>new IoddHttpHost({loadTemplate,artifactOrigin:''}), /URL|origin/);
+ });

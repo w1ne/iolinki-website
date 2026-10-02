@@ -11,14 +11,14 @@ Use the [client picker](https://iolinki.com/iodd-mcp.html) for copyable ChatGPT,
 The hosted Streamable HTTP endpoint is:
 
 ```text
-https://iolinki-iodd-mcp.shylenkoa.workers.dev/mcp
+https://mcp.iolinki.com/mcp
 ```
 
 No iolinki account is needed. Hosted projects are processed on the server. Export project JSON or a ZIP for a copy you control, or explicitly save a private-token recovery snapshot for up to 24 hours. Use the local server when files should stay on your machine; submitting its firmware sources to LabWired sends them to that service.
 
 - **ChatGPT:** enable Developer mode in Settings → Security and login, then open [Plugins](https://chatgpt.com/plugins), select +, and enter the endpoint. Availability depends on account and workspace policy. [Official guide](https://developers.openai.com/plugins/deploy/connect-chatgpt).
-- **Claude Code:** `claude mcp add --transport http iolinki-iodd https://iolinki-iodd-mcp.shylenkoa.workers.dev/mcp`. [Official guide](https://code.claude.com/docs/en/mcp).
-- **Codex:** `codex mcp add iolinki-iodd --url https://iolinki-iodd-mcp.shylenkoa.workers.dev/mcp`. [Official guide](https://developers.openai.com/codex/mcp).
+- **Claude Code:** `claude mcp add --transport http iolinki-iodd https://mcp.iolinki.com/mcp`. [Official guide](https://code.claude.com/docs/en/mcp).
+- **Codex:** `codex mcp add iolinki-iodd --url https://mcp.iolinki.com/mcp`. [Official guide](https://developers.openai.com/codex/mcp).
 - **Cursor:** use the install button in the client picker, or add the URL in MCP settings. [Official install-link format](https://prod.cursor.com/docs/mcp/install-links).
 - **VS Code:** run **MCP: Add Server**, choose HTTP, and enter the endpoint. [Official guide](https://code.visualstudio.com/docs/agent-customization/mcp-servers).
 
@@ -108,7 +108,7 @@ Call `iodd_save` with `{ "projectId": "YOUR-PROJECT-ID" }`. Its response include
 
 Keep the token private: anyone possessing it can restore or delete that snapshot. In a new session, call `iodd_restore` with `{ "token": "YOUR-PRIVATE-TOKEN" }` and use the new returned `projectId`. Restoration leaves the snapshot available until expiry or `iodd_delete_saved`. Delete with the same token when recovery is no longer needed. `iodd_close` releases only the current session project, not its saved snapshots or exported files.
 
-Local stdio snapshots are memory-only, even though the same tools are present. A local restart loses projects and tokens. Hosted recovery currently accepts at most 8 MiB of serialized project data per snapshot; an export can remain useful when the recovery limit is exceeded. A saved snapshot is distinct from an expiring export-download URL. Download exports promptly and keep project JSON for longer retention.
+Local stdio snapshots are memory-only, even though the same tools are present. A local restart loses projects and tokens. Hosted recovery currently accepts at most 8 MiB of serialized project data per snapshot; an export can remain useful when the recovery limit is exceeded. A saved snapshot is distinct from an expiring export-download URL. Export links remain available after the client disconnects until their advertised expiry, unless the hosted runtime restarts. Download exports promptly and keep project JSON for longer retention.
 
 ## Compile and verify the authored sensor application
 
@@ -142,7 +142,11 @@ node tools/iodd/cli.mjs header --input edited.project.json --output counter-map.
 
 Hosted `iodd_validate` runs the published October 2025 official IODD schema package through an XSD validator after the full basic check set passes. The package is pinned by archive SHA-256; included schemas resolve locally, with no request-selected schema URLs or external-entity fetching. Inspect the returned `schema` status, validator and provenance/digest: a failed or unavailable validator is not a schema pass.
 
-An XSD pass establishes schema validity. It does not run the official IODD Checker or issue a manufacturer declaration. The hosted official Checker is unavailable until an actual permitted distribution is installed and executed; its separate `officialChecker` result must not be treated as passed. The repository does not redistribute it.
+An XSD pass establishes schema validity. It does not run the official IODD Checker or issue a manufacturer declaration. The hosted official Checker is not configured; its separate `officialChecker` result must not be treated as passed. A genuine **IO-Link IODD Checker 1.1.4** was acquired from the publicly downloadable [Autonics atIOLink installer archive](https://www.lacasadelcontrol.com.mx/descargas/atIOLink_Setup_1.1.1.8_fin.zip) and executed locally through Mono with the original executable and required Microsoft Visual Basic runtime assembly. Its binary/runtime files remain private operator installations and are not redistributed in these packages.
+
+The final minimal starter, counter and switching-sensor templates and exported example packages returned zero errors and zero warnings with Checker 1.1.4. Malformed XML and an unknown attribute returned failing statuses. This is a dated, older Checker result, **not Checker 2025.1 approval**. Validation against the current October 2025 official XSD is recorded separately.
+
+The templates now declare standard direct parameters, product name and Application Specific Tag. Their `Test` configurations use index 24 for a short tag (Config1) and a longer tag (Config3). Sensor Config2 writes threshold index 256 with default 5000; the parameter-free counter uses index 256 as a negative IndexNotAvailable test. These are declared device-test inputs. Checker acceptance does not execute those writes on a physical device or demonstrate master communication.
 
 For local CLI/stdio use, install the official IODD XSD and, separately, an official Checker under its distribution terms. The CLI records actual results independently from basic checks:
 
@@ -151,9 +155,58 @@ node tools/iodd/cli.mjs validate --input edited.project.json --schema /absolute/
 node tools/iodd/cli.mjs validate --input edited.project.json --checker /absolute/path/checker --checker-args '["{file}"]'
 ```
 
+With the locally installed operator wrapper, the concrete CLI command is:
+
+```sh
+node tools/iodd/cli.mjs validate --input edited.project.json \
+  --checker "$HOME/.local/share/iolinki/iodd-checker-1.1.4/iodd-checker" \
+  --checker-args '["{file}"]'
+```
+
+To enable the same genuine Checker in local stdio MCP, launch it with operator configuration:
+
+```sh
+IODD_CHECKER="$HOME/.local/share/iolinki/iodd-checker-1.1.4/iodd-checker" \
+IODD_CHECKER_ARGS='["{file}"]' \
+npx -y https://iolinki.com/downloads/iodd-mcp-1.1.0.tgz
+```
+
+Install and verify the wrapper and its original Checker/runtime dependencies on the operator machine first; the npm package does not install them. Optional `IODD_SCHEMA` selects a locally installed XSD for stdio validation. The local wrapper verifies pinned binary/runtime hashes before invoking the original Checker.
+
 Use the argument list required by your installed checker, including one standalone `{file}` placeholder. The runner substitutes a temporary XML filename, invokes the executable without a shell, limits captured output and times out after 30 seconds. XSD validation requires `xmllint`. A successful XSD result is separate from an official checker result.
 
 For local stdio MCP, the operator may set `IODD_SCHEMA`, `IODD_CHECKER`, and `IODD_CHECKER_ARGS` (a JSON argument array) in the server's startup environment. Tool calls cannot select an executable or argument list. Without configuration, external statuses are `not-run`. Resolve basic errors before external checks run; invalid projects retain their basic diagnostic report. The repository does not redistribute the official checker.
+
+## Operator deployment of the canonical endpoint
+
+Clients connect to `https://mcp.iolinki.com/mcp`. DNS uses an A record for `mcp.iolinki.com` pointing to `89.167.12.41`. Keep existing apex/website records and mail-forwarding settings when managing the zone; DNS credentials remain operator-private.
+
+The Worker is deployed from `tools/iodd/mcp-worker.wrangler.toml` with `PUBLIC_ORIGIN = "https://mcp.iolinki.com"`. That origin is passed to the HTTP host's artifact URL builder, so exported downloads stay on the canonical hostname even though the proxy forwards requests to the Worker. The origin must be an HTTPS origin with no path. Recovery data remains in Worker Durable Object storage; the proxy does not store project snapshots.
+
+The dedicated Caddy proxy uses the repository configuration `tools/iodd/mcp-proxy.Caddyfile`, installed at `/opt/iolinki-mcp-proxy/Caddyfile`:
+
+```caddyfile
+mcp.iolinki.com {
+    reverse_proxy https://iolinki-iodd-mcp.shylenkoa.workers.dev {
+        header_up Host iolinki-iodd-mcp.shylenkoa.workers.dev
+        flush_interval -1
+    }
+}
+```
+
+The deployed container is `iolinki-mcp-proxy`, using Caddy 2.10.2 pinned as `caddy@sha256:4c6e91c6ed0e2fa03efd5b44747b625fec79bc9cd06ac5235a779726618e530d`. It uses host networking, restart policy `unless-stopped`, the Caddyfile mounted read-only, and persistent directories `/opt/iolinki-mcp-proxy/data` and `/opt/iolinki-mcp-proxy/config` mounted at `/data` and `/config`. TCP ports 80 and 443 are open for HTTP/HTTPS and automatic certificate provisioning. Preserve the data directory when replacing the container.
+
+With those directories and configuration in place, the equivalent operator launch is:
+
+```sh
+docker run -d --name iolinki-mcp-proxy --restart unless-stopped --network host \
+  -v /opt/iolinki-mcp-proxy/Caddyfile:/etc/caddy/Caddyfile:ro \
+  -v /opt/iolinki-mcp-proxy/data:/data \
+  -v /opt/iolinki-mcp-proxy/config:/config \
+  caddy@sha256:4c6e91c6ed0e2fa03efd5b44747b625fec79bc9cd06ac5235a779726618e530d
+```
+
+Deploy the Worker and proxy before checking the public hostname. Verify DNS/TLS, initialize the MCP SDK, call a schema validation, fetch an exported canonical-host artifact, and restore/delete a snapshot across fresh sessions. These canonical-host checks passed for this deployment. An HTTPS response alone does not establish tool or artifact functionality.
 
 ## Full XML, profiles and firmware packages
 

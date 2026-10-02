@@ -163,7 +163,7 @@ async function main() {
       ? JSON.parse(decodeUTF8(await readBounded(opts.identity, 1024 * 1024)))
       : {};
     if (template === "new")
-      project = api.createNewProject(identity, "new-device.xml");
+      project = api.createNewProject(identity);
     else {
       project = api.createProject(
         decodeUTF8(
@@ -180,6 +180,7 @@ async function main() {
           values: identity,
         });
     }
+    project.filename = api.suggestProjectFilename(project);
   } else if (command === "import") {
     if (!["xml", "project", "package"].includes(opts.format))
       throw Error("Choose xml, project or package format.");

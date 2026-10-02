@@ -27,7 +27,7 @@ Inspect before edits, validate, and export editable JSON/XML/ZIP. Hosted `iodd_s
 
 For a compatible switching sensor, `iodd_firmware_source` supplies arguments to the LabWired plugin's existing compile/verify tools, and `iodd_firmware_kit` exports complete GPL application source with mapping/defaults and provenance. Report actual compile and oracle results. STM32F401 application MCU execution checks threshold/hysteresis, validity, parameters and process bytes; it does not prove IO-Link PHY/cable, physical hardware or conformity.
 
-Hosted validation uses the pinned October 2025 official IODD XSD package. Read schema status and provenance; official Checker execution is separate and remains unavailable until a permitted executable is installed and run.
+Hosted validation uses the pinned October 2025 official IODD XSD package. Read schema status and provenance; official Checker execution is separate and is not configured in this deployment; its official distribution is being checked separately.
 
 ## Evidence and commercial scope
 

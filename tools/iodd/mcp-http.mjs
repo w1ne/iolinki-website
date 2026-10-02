@@ -18,6 +18,7 @@ export class IoddHttpHost {
     maxSessions = 8,
     maxProjectBytes = 8 * 1024 * 1024,
     maxArtifactBytes = 16 * 1024 * 1024,
+    artifactOrigin,
     externalValidation,
     projectVaultFactory,
     firmwareKit,
@@ -30,10 +31,16 @@ export class IoddHttpHost {
       maxSessions,
       maxProjectBytes,
       maxArtifactBytes,
+      artifactOrigin,
       externalValidation,
       projectVaultFactory,
       firmwareKit,
     });
+    if (artifactOrigin !== undefined) {
+      const origin = new URL(artifactOrigin);
+      if (origin.protocol !== "https:" || origin.origin !== artifactOrigin)
+        throw Error("Artifact origin must be an HTTPS origin without a path.");
+    }
     this.sessions = new Map();
     this.pendingSessions = 0;
     this.artifacts = new Map();
@@ -41,8 +48,7 @@ export class IoddHttpHost {
   async removeSession(id) {
     const session = this.sessions.get(id);
     this.sessions.delete(id);
-    for (const [key, value] of this.artifacts)
-      if (value.sessionId === id) this.artifacts.delete(key);
+    // Export capabilities keep their own bounded expiry after clients disconnect.
     if (session) await session.server.close();
   }
   async prune() {
@@ -149,7 +155,7 @@ export class IoddHttpHost {
           });
           return {
             filename,
-            downloadUrl: `${url.origin}/artifacts/${token}`,
+            downloadUrl: `${this.artifactOrigin ?? url.origin}/artifacts/${token}`,
             byteLength: bytes.length,
             expiresAt: new Date(expires).toISOString(),
           };

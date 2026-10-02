@@ -144,8 +144,9 @@ test("HTTP rejects unknown sessions, origins, oversized requests and caps sessio
     for (const id of host.sessions.keys()) await host.removeSession(id);
   }
 });
-test("session termination removes its downloads without affecting another session", async () => {
-  const host = new IoddHttpHost({ loadTemplate });
+test("assistant disconnect leaves returned downloads usable until their advertised expiry", async () => {
+  let now = 1000;
+  const host = new IoddHttpHost({ loadTemplate, now: () => now, artifactTTL: 1000 });
   const a = await connect(host), b = await connect(host);
   try {
     const first = await a.call("create");
@@ -154,13 +155,18 @@ test("session termination removes its downloads without affecting another sessio
     const downloadB = await b.call("export", { projectId: second.projectId, format: "package" });
     await a.transport.terminateSession();
     assert.equal(host.sessions.size, 1);
-    assert.equal((await host.fetch(new Request(downloadA.downloadUrl))).status, 404);
+    assert.equal((await host.fetch(new Request(downloadA.downloadUrl))).status, 200);
     const zip = await host.fetch(new Request(downloadB.downloadUrl));
     assert.equal(zip.status, 200);
     assert.deepEqual([...new Uint8Array(await zip.arrayBuffer()).slice(0, 2)], [80, 75]);
     assert.deepEqual((await b.call("inspect", { projectId: second.projectId })).identity, second.identity);
     await b.transport.terminateSession();
     assert.equal(host.sessions.size, 0);
+    assert.equal(host.artifacts.size, 2);
+    assert.equal((await host.fetch(new Request(downloadB.downloadUrl))).status, 200);
+    now = 2000;
+    assert.equal((await host.fetch(new Request(downloadA.downloadUrl))).status, 404);
+    assert.equal((await host.fetch(new Request(downloadB.downloadUrl))).status, 404);
     assert.equal(host.artifacts.size, 0);
   } finally {
     await a.client.close();

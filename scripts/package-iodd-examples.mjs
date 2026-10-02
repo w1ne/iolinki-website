@@ -9,6 +9,7 @@ import {
   generateFirmwareHeader,
   encodeBase64,
   validateProject,
+  suggestProjectFilename,
 } from "../assets/js/iodd/project.js";
 import { exportPackage } from "../assets/js/iodd/package.js";
 const root = new URL("../", import.meta.url),
@@ -56,7 +57,7 @@ export async function buildExample(kind) {
   const xml = await readFile(new URL(`assets/iodd/${kind}.xml`, root), "utf8"),
     initial = createProject(xml, `${kind}.xml`),
     view = inspectProject(initial);
-  const xmlFilename = `${view.identity.vendorName}-${view.identity.productId}-${view.identity.releaseDate.replaceAll("-", "")}-IODD1.1.xml`;
+  const xmlFilename = suggestProjectFilename(initial);
   const project = createProject(xml, xmlFilename),
     header = generateFirmwareHeader(project),
     guide = exampleGuide(kind, view, xmlFilename),

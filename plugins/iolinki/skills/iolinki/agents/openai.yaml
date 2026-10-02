@@ -8,4 +8,4 @@ dependencies:
       value: "iolinki-iodd"
       description: "Create, validate and export IO-Link device descriptions"
       transport: "streamable_http"
-      url: "https://iolinki-iodd-mcp.shylenkoa.workers.dev/mcp"
+      url: "https://mcp.iolinki.com/mcp"

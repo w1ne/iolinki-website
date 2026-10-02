@@ -32,11 +32,11 @@ try {
       await page.locator(`[data-client="${client}"]`).click();
       assert.equal(await page.locator(`[data-client="${client}"]`).getAttribute('aria-pressed'), 'true');
       const config = await page.locator('#client-config').textContent();
-      assert.ok(config.includes('https://iolinki-iodd-mcp.shylenkoa.workers.dev/mcp'));
+      assert.ok(config.includes('https://mcp.iolinki.com/mcp'));
       await page.locator('[data-copy="client-config"]').click();
       assert.equal(await page.evaluate(() => window.copied), config);
       if (client === 'cursor') {
-        assert.equal(JSON.parse(config).mcpServers['iolinki-iodd'].url, 'https://iolinki-iodd-mcp.shylenkoa.workers.dev/mcp');
+        assert.equal(JSON.parse(config).mcpServers['iolinki-iodd'].url, 'https://mcp.iolinki.com/mcp');
         const link = new URL(await page.locator('#client-install').getAttribute('href'));
         const install = JSON.parse(Buffer.from(link.searchParams.get('config'), 'base64').toString());
         assert.equal(install['iolinki-iodd'].url, JSON.parse(config).mcpServers['iolinki-iodd'].url);

@@ -44,6 +44,6 @@ A useful workflow is “describe my sensor → author and validate its IODD → 
 
 `iodd_firmware_source` returns LabWired compile/verify arguments; `iodd_firmware_kit` returns the same source as a ZIP. They support the released switching-sensor parameter/process contract and apply authored defaults. STM32F401 MCU execution proves application behavior against a UART oracle, not IO-Link transport, analog PHY/cable or physical-master communication. Report LabWired's actual verdict and model gaps. Source generation alone is not execution.
 
-Hosted XSD validation uses the pinned October 2025 official schema package. Basic checks, XSD status and official Checker status are separate; the official Checker remains unavailable until an actual permitted executable is installed and run. Firmware flashing, physical wiring and official conformity require their own evidence.
+Hosted XSD validation uses the pinned October 2025 official schema package. Basic checks, XSD status and official Checker status are separate; the official Checker is not configured in this deployment; its official distribution is being checked separately. Firmware flashing, physical wiring and official conformity require their own evidence.
 
 Packaging and setup follow [OpenAI's plugin guide](https://developers.openai.com/plugins/build/plugins) and [MCP guide](https://learn.chatgpt.com/docs/extend/mcp?surface=cli).

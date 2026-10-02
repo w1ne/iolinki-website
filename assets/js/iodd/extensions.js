@@ -999,6 +999,7 @@ export function newDeviceXML() {
       element("Menu", { id: "M_Identification" }, [
         element("Name", { textId: "T_Identification" }),
         element("VariableRef", { variableId: "V_DirectParameters_1" }),
+        element("VariableRef", { variableId: "V_ApplicationSpecificTag" }),
       ]),
     ]),
     ...[
@@ -1015,6 +1016,9 @@ export function newDeviceXML() {
     element("Features", { blockParameter: "false", dataStorage: "false" }),
     element("VariableCollection", {}, [
       element("StdVariableRef", { id: "V_DirectParameters_1" }),
+      element("StdVariableRef", { id: "V_DirectParameters_2" }),
+      element("StdVariableRef", { id: "V_ProductName" }),
+      element("StdVariableRef", { id: "V_ApplicationSpecificTag" }),
       element("StdVariableRef", {
         id: "V_ProductID",
         defaultValue: "new-device",
@@ -1045,7 +1049,11 @@ export function newDeviceXML() {
           [connection],
         ),
       ]),
-      element("Test"),
+      element("Test", {}, [
+        element("Config1", { index: "24", testValue: "0x49" }),
+        element("Config2", { index: "256", testValue: "0x00" }),
+        element("Config3", { index: "24", testValue: "0x49,0x49,0x49,0x49,0x49,0x49,0x49,0x49,0x49,0x49,0x49,0x49,0x49" }),
+      ]),
     ],
   );
   const texts = {

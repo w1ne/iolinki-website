@@ -100,12 +100,19 @@ function check(project) {
   d.importXML(project.xml);
   return project;
 }
-export function createNewProject(identity = {}, filename = "new-device.xml") {
-  const project = createProject(advanced.newDeviceXML(), filename);
-  return applyOperation(project, {
+/** Suggest a conforming filename; preserve identity text and imported names. */
+export function suggestProjectFilename(project) {
+  const identity = d.getIdentity(d.importXML(project.xml));
+  const segment = (value, fallback) => String(value).replace(/[^A-Za-z0-9_#-]/g, "_").slice(0, 70) || fallback;
+  return `${segment(identity.vendorName, "Vendor")}-${segment(identity.productId, "Device")}-${identity.releaseDate.replaceAll("-", "")}-IODD1.1.xml`;
+}
+export function createNewProject(identity = {}, filename) {
+  const project = applyOperation(createProject(advanced.newDeviceXML(), filename || "new-device.xml"), {
     type: "identity",
     values: { releaseDate: new Date().toISOString().slice(0, 10), ...identity },
   });
+  if (filename === undefined) project.filename = suggestProjectFilename(project);
+  return project;
 }
 export function createProject(xml, filename = "device.xml") {
   const project = {

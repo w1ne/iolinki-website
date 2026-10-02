@@ -1,0 +1,6 @@
+mcp.iolinki.com {
+    reverse_proxy https://iolinki-iodd-mcp.shylenkoa.workers.dev {
+        header_up Host iolinki-iodd-mcp.shylenkoa.workers.dev
+        flush_interval -1
+    }
+}

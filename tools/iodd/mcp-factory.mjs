@@ -607,7 +607,7 @@ export function createIoddMcpServer({
     async ({ template, filename, identity = {} }) => {
       if (template === "new")
         return put(
-          api.createNewProject(identity, filename || "new-device.xml"),
+          api.createNewProject(identity, filename),
         );
       let project = api.createProject(
         await loadTemplate(template),
@@ -618,6 +618,7 @@ export function createIoddMcpServer({
           type: "identity",
           values: identity,
         });
+      if (filename === undefined) project.filename = api.suggestProjectFilename(project);
       return put(project);
     },
   );

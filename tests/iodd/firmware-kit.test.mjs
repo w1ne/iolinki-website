@@ -61,6 +61,8 @@ test('rejects mismatched index, access, process layout, unknown variables and in
     xml.replace('defaultValue="200"', 'defaultValue="6000"'),
     xml.replace('defaultValue="0"', 'defaultValue="2"'),
     xml.replace('bitLength="16"', 'bitLength="8"'),
+    xml.replace('<SingleValue value="1">', '<SingleValue value="2">'),
+    xml.replace(/<SingleValue value="1">[\s\S]*?<\/SingleValue>/, '<ValueRange lowerValue="1" upperValue="1"/>'),
   ]) await assert.rejects(kit(api.createProject(altered)), /contract|compatible|default/i);
   await assert.rejects(kit(api.applyOperation(project(), {type:'addVariable',values:{name:'Extra',index:300}})), /contract|compatible/i);
 });

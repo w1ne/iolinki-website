@@ -5,6 +5,9 @@ compatibility_date = "2026-09-25"
 compatibility_flags = ["nodejs_compat"]
 workers_dev = true
 
+[vars]
+PUBLIC_ORIGIN = "https://mcp.iolinki.com"
+
 [[durable_objects.bindings]]
 name = "IODD_SESSIONS"
 class_name = "IoddMcpSessions"

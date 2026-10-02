@@ -22,6 +22,7 @@ export class IoddMcpSessions extends DurableObject {
     this.vault = createProjectVault({ storage: state.storage, durable: true });
     this.host = new IoddHttpHost({
       externalValidation,
+      artifactOrigin: env.PUBLIC_ORIGIN,
       firmwareKit: project => createFirmwareKit(project, {loadAsset: async name => firmwareAssets[name]}),
       loadTemplate: async (name) => (name === "counter" ? counter : switching),
       projectVaultFactory: (sessionId) => ({

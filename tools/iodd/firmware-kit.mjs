@@ -19,12 +19,12 @@ export function checkFirmwareContract(project) {
   if (view.profiles.length) reject('profile extensions are not implemented');
   const expected = [
     ['V_SP1',256,'rw','16','0','65535'], ['V_Hysteresis',257,'rw','16','0','65535'],
-    ['V_Inversion',258,'rw','8','0','1'], ['V_Teach',259,'wo','8','1','1'],
+    ['V_Inversion',258,'rw','8','0','1'], ['V_Teach',259,'wo','8','',''],
   ];
   if (view.variables.length !== expected.length) reject('exactly four released application parameters required');
   for (const [id,index,access,bits,lower,upper] of expected) {
     const v = view.variables.find(n=>n.id===id);
-    if (!v || Number(v.index)!==index || v.access!==access || v.type!=='UIntegerT' || v.bits!==bits || v.lower!==lower || v.upper!==upper) reject('parameter '+id+' index/access/type/range');
+    if (!v || Number(v.index)!==index || v.access!==access || v.type!=='UIntegerT' || v.bits!==bits || v.lower!==lower || v.upper!==upper || (id==='V_Teach' ? v.singleValues.length!==1 || v.singleValues[0]!=='1' : v.singleValues.length!==0)) reject('parameter '+id+' index/access/type/range');
   }
   const pd=view.processData[0];
   if (view.processData.length!==1 || pd.id!=='PD_IN' || pd.direction!=='in' || pd.bits!=='24' || pd.fields.length!==3) reject('24-bit input only');
