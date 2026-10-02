@@ -1,0 +1,175 @@
+{
+  "documents": [
+    {
+      "product": "device",
+      "revision": "ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca",
+      "source": "docs/ARCHITECTURE.md",
+      "source_url": "https://github.com/w1ne/iolinki/blob/ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca/docs/ARCHITECTURE.md",
+      "source_sha256": "312b1357f574ab50190b451562d378c4567dc90ddb770abcae631f530167f1e0",
+      "output": "device/v2.1.0/architecture.md",
+      "published_sha256": "ea30465554bc3fa0ef454bff7616d929766d6b1e1f399b4b01f8d358c5729e93"
+    },
+    {
+      "product": "device",
+      "revision": "ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca",
+      "source": "docs/TESTING.md",
+      "source_url": "https://github.com/w1ne/iolinki/blob/ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca/docs/TESTING.md",
+      "source_sha256": "f8bfc07a6d6e4fce1b0854256d3100258b24929cdc2e9aed5f743e8496cd8c93",
+      "output": "device/v2.1.0/testing.md",
+      "published_sha256": "d911d675203f4477adbff925a282d2c8a3f41d0eac80c17aace94b04a1c929aa"
+    },
+    {
+      "product": "device",
+      "revision": "ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca",
+      "source": "docs/CONFORMANCE.md",
+      "source_url": "https://github.com/w1ne/iolinki/blob/ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca/docs/CONFORMANCE.md",
+      "source_sha256": "ae03d8fe6a48787f6e2cc3efa437b68f6a25141a0fa355915bacc26b57ad3fce",
+      "output": "device/v2.1.0/conformance.md",
+      "published_sha256": "11e106025a861ad31e0747f5ceaab8245a18a91dd38a714fb4698376bdc476e3"
+    },
+    {
+      "product": "device",
+      "revision": "ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca",
+      "source": "docs/hardware/TIOL112.md",
+      "source_url": "https://github.com/w1ne/iolinki/blob/ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca/docs/hardware/TIOL112.md",
+      "source_sha256": "704ff8f7dcb80af171e881c9fd1bd2601f0ba1e3878b1cb413871a651cd0c904",
+      "output": "device/v2.1.0/tiol112.md",
+      "published_sha256": "044030a76a060e0c37a83d748bb81ef649d254fde5290c3429a775da938407e1"
+    },
+    {
+      "product": "device",
+      "revision": "ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca",
+      "source": "examples/reference_device/README.md",
+      "source_url": "https://github.com/w1ne/iolinki/blob/ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca/examples/reference_device/README.md",
+      "source_sha256": "7b5e758c99625e315f8754c00f6c907314c416bdb80afaa8484adee21fa6a403",
+      "output": "device/v2.1.0/examples/counter.md",
+      "published_sha256": "9892fedb37bc13702ba242f52e504fdb64ffcc6816b8c01c442ff853c70d5e2b"
+    },
+    {
+      "product": "device",
+      "revision": "ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca",
+      "source": "examples/switching_sensor/README.md",
+      "source_url": "https://github.com/w1ne/iolinki/blob/ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca/examples/switching_sensor/README.md",
+      "source_sha256": "d9d33d2966e89a77e577aadeafa57a60be23ec8d8c7c8c799f26bbbcec9dc0ca",
+      "output": "device/v2.1.0/examples/switching-sensor.md",
+      "published_sha256": "aed23e1bcae64964dcca8907ede6a48d9fda3c2e09906a136486d9336c38bfa0"
+    },
+    {
+      "product": "device",
+      "revision": "ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca",
+      "source": "examples/stm32g0_tiol112/README.md",
+      "source_url": "https://github.com/w1ne/iolinki/blob/ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca/examples/stm32g0_tiol112/README.md",
+      "source_sha256": "70188300ba999be16359c013a98158fe039e347f0ed225c412cfb1b10a683a16",
+      "output": "device/v2.1.0/examples/stm32g0.md",
+      "published_sha256": "2d957ed3a825e235b1607ceb24569e35da9681fc9be9b5a098262702ececedf8"
+    },
+    {
+      "product": "device",
+      "revision": "ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca",
+      "source": "examples/esp32_l6362a/README.md",
+      "source_url": "https://github.com/w1ne/iolinki/blob/ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca/examples/esp32_l6362a/README.md",
+      "source_sha256": "129d86896af1676cc2047b4d2ac60be167cd70131390d66f12f8b54f036dae9c",
+      "output": "device/v2.1.0/examples/esp32-c3.md",
+      "published_sha256": "8e3fd8fddc413bc4e3cdd6ac86f92154c218907f6ee96d9ff863e4ffca09dad0"
+    },
+    {
+      "product": "device",
+      "revision": "ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca",
+      "source": "samples/stm32u5_tiol112/README.md",
+      "source_url": "https://github.com/w1ne/iolinki/blob/ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca/samples/stm32u5_tiol112/README.md",
+      "source_sha256": "e65df5ce3c98e9c5884aba111dac4efe24acd90097dd156591b5d35f83b47780",
+      "output": "device/v2.1.0/examples/stm32u5.md",
+      "published_sha256": "5bf000a4d47ccc3db8dcee714472a30f3f384bce7bd665f9ef6024a7e9d7b40d"
+    },
+    {
+      "product": "device",
+      "revision": "ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca",
+      "source": "tools/IODD_GEN.md",
+      "source_url": "https://github.com/w1ne/iolinki/blob/ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca/tools/IODD_GEN.md",
+      "source_sha256": "8fcef0d1f9c223cf22f444f172830e9f27f13792e0ec51fa5389b708eceafccf",
+      "output": "device/v2.1.0/iodd.md",
+      "published_sha256": "0e17153cd1f4244099f91cf6df3711187d61d6e3c89184dd8a47f94533e49632"
+    },
+    {
+      "product": "device",
+      "revision": "ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca",
+      "source": "validation/labwired/README.md",
+      "source_url": "https://github.com/w1ne/iolinki/blob/ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca/validation/labwired/README.md",
+      "source_sha256": "31ffa937f9ef941df7b45ebf4934ae3a16bb6d98631b6aa6a4850a09c6dcc246",
+      "output": "device/v2.1.0/simulation.md",
+      "published_sha256": "d39ed1bfabfabaf61a0acfc04b4e47df4ee2e567ef0d513750b96d057369bcfa"
+    },
+    {
+      "product": "device",
+      "revision": "ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca",
+      "source": "docs/PHYSICAL_TESTING.md",
+      "source_url": "https://github.com/w1ne/iolinki/blob/ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca/docs/PHYSICAL_TESTING.md",
+      "source_sha256": "b2b5c85658a17a0f7cce372b0747f62d7539a78476eccf2d4d0c4f6816cebbb0",
+      "output": "device/v2.1.0/physical-validation.md",
+      "published_sha256": "53444825254036b962eead649e01233bf595cc000bffe9cd46987631887cd743"
+    },
+    {
+      "product": "master",
+      "revision": "d23fd3034c0203ef829bd9734806389f8708fa94",
+      "source": "docs/API.md",
+      "source_url": "https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/docs/API.md",
+      "source_sha256": "dad7d3e09c2d3ef1126820966eb0412f12dba4088f9a10031e1688c908944918",
+      "output": "master/v1.0.0/api.md",
+      "published_sha256": "17a2e88b72323766de97cb9c3b678b14329746dd92d7aee336480d7b4482fa60"
+    },
+    {
+      "product": "master",
+      "revision": "d23fd3034c0203ef829bd9734806389f8708fa94",
+      "source": "docs/ARCHITECTURE.md",
+      "source_url": "https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/docs/ARCHITECTURE.md",
+      "source_sha256": "29c27fd06e804baf56ef3810c4d60667ea9462d5132e88555dfdadcdfa15e1ac",
+      "output": "master/v1.0.0/architecture.md",
+      "published_sha256": "b619ef4a39de9d343aa380bb7a595412e441d82c950099b0dd84f67abf64f2c4"
+    },
+    {
+      "product": "master",
+      "revision": "d23fd3034c0203ef829bd9734806389f8708fa94",
+      "source": "docs/PORTING.md",
+      "source_url": "https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/docs/PORTING.md",
+      "source_sha256": "62ae6ec8821036a56c056efb2eee5013188fc01302cd824d1bd710c66be1470f",
+      "output": "master/v1.0.0/porting.md",
+      "published_sha256": "56393c205753f60b97d62a3babf9866490d9f64c77b8f9e55bd76a165e4c0c7a"
+    },
+    {
+      "product": "master",
+      "revision": "d23fd3034c0203ef829bd9734806389f8708fa94",
+      "source": "docs/PHY_BOUNDARY.md",
+      "source_url": "https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/docs/PHY_BOUNDARY.md",
+      "source_sha256": "0484926b9e24bb8a8d3e5da2c0c2742c91cd27a406e87e67d730a67872b07112",
+      "output": "master/v1.0.0/phy-contract.md",
+      "published_sha256": "16e21bd06d5dfba7f8e22258e66e9a80063053b5acf594865317260bc1c139e8"
+    },
+    {
+      "product": "master",
+      "revision": "d23fd3034c0203ef829bd9734806389f8708fa94",
+      "source": "docs/TESTING.md",
+      "source_url": "https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/docs/TESTING.md",
+      "source_sha256": "b957607ff1c3ba219059004975f5db1bff284d022d26744739a1e2b6c086e867",
+      "output": "master/v1.0.0/testing.md",
+      "published_sha256": "6aa09178770293bee26a164b447c03cbddd6b36a8c18e96782b479bae2bc4892"
+    },
+    {
+      "product": "master",
+      "revision": "d23fd3034c0203ef829bd9734806389f8708fa94",
+      "source": "docs/HARDWARE_VALIDATION.md",
+      "source_url": "https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/docs/HARDWARE_VALIDATION.md",
+      "source_sha256": "a85abb6ac460ca2e4f47df0c477a321df660a31acc602fcaaa08a5f8e70ad6e7",
+      "output": "master/v1.0.0/hardware-validation.md",
+      "published_sha256": "d33f77dd412be09fecd73df1eb705f1c15530e9b1de8c09eaa9e199199486b96"
+    },
+    {
+      "product": "master",
+      "revision": "d23fd3034c0203ef829bd9734806389f8708fa94",
+      "source": "docs/IMPLEMENTATION_STATUS.md",
+      "source_url": "https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/docs/IMPLEMENTATION_STATUS.md",
+      "source_sha256": "2145fc85a77130b59ac8b8276916860e7800ca018894d89e98ca57986bc6c2b8",
+      "output": "master/v1.0.0/implementation-status.md",
+      "published_sha256": "152ee46b7fe770a26b0d1026d086fc4fd05a36296dbbd1be509808eb754be667"
+    }
+  ]
+}

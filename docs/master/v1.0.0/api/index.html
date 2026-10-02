@@ -1,0 +1,1758 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Versioned guides and reference documentation for iolinki device and master stacks.">
+      
+      
+      
+        <link rel="canonical" href="https://iolinki.com/docs/master/v1.0.0/api/">
+      
+      
+        <link rel="prev" href="../getting-started/">
+      
+      
+        <link rel="next" href="../porting/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>API - iolinki docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/docs.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#iolinki-master-api-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="iolinki docs" class="md-header__button md-logo" aria-label="iolinki docs" data-md-component="logo">
+      
+  <img src="../../../assets/favicon.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            iolinki docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="iolinki docs" class="md-nav__button md-logo" aria-label="iolinki docs" data-md-component="logo">
+      
+  <img src="../../../assets/favicon.svg" alt="logo">
+
+    </a>
+    iolinki docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device · v2.1.0
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Device · v2.1.0
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/porting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Porting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/tiol112/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TIOL112 driver
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_7" id="__nav_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/examples/counter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Counter, button and LED
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/examples/switching-sensor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Switching sensor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/examples/stm32g0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STM32G0 and native IAR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/examples/esp32-c3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ESP32-C3 and L6362A
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/examples/stm32u5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STM32U5 and Zephyr
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/iodd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IODD tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Released simulation evidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/physical-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conformance boundary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Master · v1.0.0
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Master · v1.0.0
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-configuration-and-init" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Configuration and init
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-tick-scheduler-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The tick / scheduler model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-process-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Process data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-device-identity-and-direct-parameter-page-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Device identity and Direct Parameter Page 1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-isdu-and-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. ISDU and services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Events
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-sio-didq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. SIO DI/DQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-master-command-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Master Command helpers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-multi-port-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Multi-port controller
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minimal-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimal example
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../porting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Porting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phy-contract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PHY contract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implementation-status/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation status
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardware-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hardware validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../licensing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Licensing and sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-configuration-and-init" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Configuration and init
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-tick-scheduler-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The tick / scheduler model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-process-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Process data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-device-identity-and-direct-parameter-page-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Device identity and Direct Parameter Page 1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-isdu-and-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. ISDU and services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Events
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-sio-didq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. SIO DI/DQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-master-command-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Master Command helpers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-multi-port-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Multi-port controller
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minimal-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimal example
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="iolinki-master-api-reference">iolinki-master API Reference</h1>
+<blockquote>
+<p>Source snapshot: <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/docs/API.md">docs/API.md</a>, <code>d23fd3034c02</code>.</p>
+</blockquote>
+<p>A guided tour of the public API in
+<a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/include/iolinki_master/master.h"><code>include/iolinki_master/master.h</code></a>. Every
+function returns a named result constant — <code>IOLINK_MASTER_STATUS_OK</code> (0),
+<code>IOLINK_MASTER_STATUS_PENDING</code> (1), or a negative <code>IOLINK_MASTER_ERR_*</code> /
+<code>..._ISDU_ERR_*</code> / <code>..._SIO_ERR_*</code> / <code>..._PARAM_ERR_*</code> code. Check every return.</p>
+<p>All state is caller-owned: you allocate <code>iolink_master_port_t</code> (a fixed-size opaque
+union, 1280 B) or <code>iolink_master_controller_t</code> (32 B). There is no heap.</p>
+<h2 id="1-configuration-and-init">1. Configuration and init</h2>
+<p>Fill an <code>iolink_master_config_t</code>, then init a port against a PHY:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="nf">iolink_master_init</span><span class="p">(</span><span class="n">iolink_master_port_t</span><span class="o">*</span><span class="w"> </span><span class="n">port</span><span class="p">,</span>
+<span class="w">                       </span><span class="k">const</span><span class="w"> </span><span class="n">iolink_phy_api_t</span><span class="o">*</span><span class="w"> </span><span class="n">phy</span><span class="p">,</span>
+<span class="w">                       </span><span class="k">const</span><span class="w"> </span><span class="n">iolink_master_config_t</span><span class="o">*</span><span class="w"> </span><span class="n">config</span><span class="p">);</span>
+</code></pre></div>
+<p>Key config fields (<code>iolink_master_config_t</code>): <code>port_mode</code>
+(<code>IOLINK_MASTER_PORT_MODE_IOLINK</code> / <code>_DI</code> / <code>_DQ</code> / <code>_DEACTIVATED</code>), <code>m_seq_type</code>,
+<code>baudrate</code>, <code>min_cycle_time</code>, <code>pd_in_len</code> / <code>pd_out_len</code>, <code>auto_baudrate</code>,
+<code>response_timeout_100us</code>, <code>wake_retry_limit</code>, the identity fields
+(<code>validate_device_info</code>, <code>inspection_level</code>, <code>expected_vendor_id</code>,
+<code>expected_device_id</code>), the event callbacks (§6), and the PHY adapter hooks
+(<code>set_mode_checked</code>, <code>set_baudrate_checked</code>, <code>flush_rx</code>, <code>prepare_tx</code>,
+<code>prepare_rx</code>, <code>read_cq_line</code> / <code>read_cq_line_checked</code>, <code>wake_up</code> — see
+<a href="../porting/"><code>PORTING.md</code></a>).</p>
+<blockquote>
+<p><strong>Lifetime:</strong> the config is copied into the port, but the PHY is retained <strong>by
+pointer</strong>. The <code>iolink_phy_api_t</code> must outlive the port — never pass a stack
+temporary.</p>
+</blockquote>
+<p>Related: <code>iolink_master_validate_phy_contract(phy, config)</code> checks the PHY/config
+pair is complete for real hardware; <code>iolink_master_restart(port)</code> restarts startup;
+<code>iolink_master_get_state(port)</code> returns the current <code>iolink_master_state_t</code>.</p>
+<h2 id="2-the-tick-scheduler-model">2. The tick / scheduler model</h2>
+<p>The core owns no clock. You drive it and supply time.</p>
+<ul>
+<li><code>iolink_master_process(port)</code> — send one pending startup/preoperate/operate action.</li>
+<li><code>iolink_master_poll_rx(port)</code> — decode available RX bytes; returns the decoded
+  frame count, <code>OK</code> when no byte is available, or <code>INVALID_ARG</code>/<code>ERR_FRAME</code>/<code>ERR_CHECKSUM</code>.</li>
+<li><code>iolink_master_tick(port, response_timeout)</code> — bool-flag tick.</li>
+<li><code>iolink_master_tick_event(port, event)</code> — explicit event tick
+  (<code>IOLINK_MASTER_TICK_NONE</code> / <code>_CYCLE_DUE</code> / <code>_RESPONSE_TIMEOUT</code>).</li>
+<li><code>iolink_master_tick_at(port, event, now_100us)</code> — as above, applying monotonic
+  100µs <code>min_cycle_time</code> pacing.</li>
+<li><code>iolink_master_get_next_tick_time(port, now_100us, &amp;out_next_100us)</code> — when the
+  port is next due, for your hardware timer.</li>
+<li><code>iolink_master_on_timeout(port)</code> — advance the retry policy on a response timeout;
+  returns <code>OK</code>, <code>PENDING</code> while retrying, or <code>ERR_RETRY_LIMIT</code>.</li>
+<li><code>iolink_master_get_timing(port, &amp;timing)</code> — read-only scheduler snapshot.</li>
+</ul>
+<p><code>response_timeout_100us</code> controls the response deadline; <code>min_cycle_time</code> controls
+cycle spacing (a zero response timeout falls back to <code>min_cycle_time</code>).</p>
+<h2 id="3-process-data">3. Process data</h2>
+<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="nf">iolink_master_set_pd_out</span><span class="p">(</span><span class="n">iolink_master_port_t</span><span class="o">*</span><span class="w"> </span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="o">*</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">iolink_master_get_pd_in</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">iolink_master_port_t</span><span class="o">*</span><span class="w"> </span><span class="n">port</span><span class="p">,</span>
+<span class="w">                            </span><span class="kt">uint8_t</span><span class="o">*</span><span class="w"> </span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">buffer_len</span><span class="p">,</span><span class="w"> </span><span class="kt">uint8_t</span><span class="o">*</span><span class="w"> </span><span class="n">out_len</span><span class="p">);</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">iolink_master_get_od_status</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">iolink_master_port_t</span><span class="o">*</span><span class="w"> </span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="kt">uint8_t</span><span class="o">*</span><span class="w"> </span><span class="n">status</span><span class="p">);</span>
+</code></pre></div>
+<p><code>set_pd_out</code> returns <code>ERR_BUFFER_TOO_SMALL</code> if <code>len</code> does not match the configured
+PD-out size. <code>get_pd_in</code> returns <code>PENDING</code> until valid PD has arrived.</p>
+<h2 id="4-device-identity-and-direct-parameter-page-1">4. Device identity and Direct Parameter Page 1</h2>
+<ul>
+<li><code>iolink_master_parse_direct_parameter_page1(page, len, &amp;info)</code> — decode a raw
+  page-1 buffer into <code>iolink_master_device_info_t</code>.</li>
+<li><code>iolink_master_apply_direct_parameter_page1(port, page, len)</code> — parse and store.</li>
+<li><code>iolink_master_get_device_info(port, &amp;info)</code> / <code>iolink_master_read_device_info(port)</code>.</li>
+<li><code>iolink_master_validate_device_info(port)</code> — VendorID/DeviceID vs configured
+  expectations at the selected <code>inspection_level</code> (<code>NO_CHECK</code> / <code>TYPE_COMP</code> /
+  <code>IDENTICAL</code>; the SerialNumber leg of <code>IDENTICAL</code> is not yet wired).</li>
+<li><code>iolink_master_select_config_from_device_info(&amp;info, &amp;config)</code> and
+  <code>iolink_master_validate_config_against_device_info(&amp;info, &amp;config)</code>.</li>
+<li><code>iolink_master_decode_min_cycle_time_100us(octet)</code> — MasterCycleTime octet →100µs.</li>
+</ul>
+<h2 id="5-isdu-and-services">5. ISDU and services</h2>
+<p>All service calls are non-blocking state machines: they return <code>OK</code> when complete,
+<code>PENDING</code> while active, <code>INVALID_ARG</code>, or a domain error.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="nf">iolink_master_read_isdu</span><span class="w"> </span><span class="p">(</span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">,</span><span class="w"> </span><span class="n">subindex</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">len</span><span class="p">);</span><span class="w">   </span><span class="cm">/* len: in=cap, out=actual */</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">iolink_master_write_isdu</span><span class="p">(</span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">,</span><span class="w"> </span><span class="n">subindex</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">iolink_master_verify_isdu</span><span class="p">(</span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">,</span><span class="w"> </span><span class="n">subindex</span><span class="p">,</span><span class="w"> </span><span class="n">expected</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+</code></pre></div>
+<p>Data Storage: <code>iolink_master_read_data_storage</code>, <code>..._write_data_storage</code>,
+<code>..._restore_data_storage</code>, <code>..._verify_data_storage</code>. Block parameterization:
+<code>iolink_master_begin_parameter_download</code> / <code>..._end_parameter_download</code> /
+<code>..._begin_parameter_upload</code> / <code>..._end_parameter_upload</code> /
+<code>..._store_parameter_download</code> / <code>..._write_parameter_block</code>. Status:
+<code>iolink_master_read_detailed_device_status</code>. ISDU errors use
+<code>IOLINK_MASTER_ISDU_ERR_*</code> (<code>BUFFER_TOO_SMALL</code>, <code>BUSY</code>, <code>DEVICE</code>, <code>INVALID_STATE</code>,
+<code>VERIFY_FAILED</code>).</p>
+<h2 id="6-events">6. Events</h2>
+<p>Poll model: read <code>iolink_master_diagnostics_t.event_pending</code>, then:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="nf">iolink_master_read_event_code</span><span class="p">(</span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">event_code</span><span class="p">);</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">iolink_master_ack_event</span><span class="p">(</span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">event_code</span><span class="p">);</span><span class="w">                 </span><span class="cm">/* read == explicit ack */</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">iolink_master_read_event_details</span><span class="p">(</span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="n">events</span><span class="p">,</span><span class="w"> </span><span class="n">max_events</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">out_count</span><span class="p">);</span>
+</code></pre></div>
+<p><code>read_event_details</code> writes at most <code>max_events</code> <code>iolink_master_event_t</code>
+(<code>{qualifier, type, code}</code>) and returns <code>BUFFER_TOO_SMALL</code> rather than overrunning.</p>
+<p>Dispatch model (optional): set <code>event_pending_handler</code> and/or <code>event_handler</code> in the
+config (with <code>event_user</code> passed through). <code>event_pending_handler</code> fires on the
+rising edge of the OD Event flag during a cyclic response; <code>event_handler</code> fires
+once per decoded event. Both NULL keeps poll-only behavior.</p>
+<h2 id="7-diagnostics">7. Diagnostics</h2>
+<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="nf">iolink_master_get_diagnostics</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">iolink_master_port_t</span><span class="o">*</span><span class="w"> </span><span class="n">port</span><span class="p">,</span>
+<span class="w">                                  </span><span class="n">iolink_master_diagnostics_t</span><span class="o">*</span><span class="w"> </span><span class="n">diagnostics</span><span class="p">);</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="nf">iolink_master_get_device_status</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">iolink_master_port_t</span><span class="o">*</span><span class="w"> </span><span class="n">port</span><span class="p">);</span>
+</code></pre></div>
+<p><code>iolink_master_diagnostics_t</code> carries <code>od_status</code>, <code>event_pending</code>,
+<code>rx_retry_count</code>, <code>checksum_errors</code>, <code>send_errors</code>, <code>response_timeouts</code>,
+<code>cycle_slips</code>, last/max cycle jitter (100µs), <code>supply_voltage_mv</code>, <code>short_circuit</code>
+(sampled from PHY hooks when present), <code>link_quality_percent</code>, <code>last_service_result</code>,
+<code>last_event_count</code>/<code>last_event_code</code>, and <code>last_isdu_error</code>.</p>
+<h2 id="8-sio-didq">8. SIO DI/DQ</h2>
+<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="nf">iolink_master_set_dq</span><span class="p">(</span><span class="n">iolink_master_port_t</span><span class="o">*</span><span class="w"> </span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">level</span><span class="p">);</span><span class="w">       </span><span class="cm">/* DQ mode */</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">iolink_master_get_di</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">iolink_master_port_t</span><span class="o">*</span><span class="w"> </span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="o">*</span><span class="w"> </span><span class="n">level</span><span class="p">);</span><span class="w"> </span><span class="cm">/* DI mode */</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">iolink_master_set_port_mode</span><span class="p">(</span><span class="n">iolink_master_port_t</span><span class="o">*</span><span class="w"> </span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="n">iolink_master_port_mode_t</span><span class="w"> </span><span class="n">mode</span><span class="p">);</span>
+</code></pre></div>
+<p>Wrong-mode / unsupported-PHY calls return <code>IOLINK_MASTER_SIO_ERR_WRONG_MODE</code> /
+<code>..._UNSUPPORTED_PHY</code>. Switching to IO-Link mode restarts startup on the port.</p>
+<h2 id="9-master-command-helpers">9. Master Command helpers</h2>
+<p><code>iolink_master_encode_master_command(read, channel, address)</code> composes a Master
+Command octet; <code>iolink_master_mc_is_read</code> / <code>..._mc_channel</code> / <code>..._mc_address</code>
+decode one. Channels: <code>IOLINK_MASTER_MC_CHANNEL_PROCESS</code> / <code>_PAGE</code> / <code>_DIAGNOSIS</code> /
+<code>_ISDU</code>.</p>
+<h2 id="10-multi-port-controller">10. Multi-port controller</h2>
+<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="nf">iolink_master_controller_init</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span><span class="w"> </span><span class="n">ports</span><span class="p">,</span><span class="w"> </span><span class="n">port_count</span><span class="p">,</span><span class="w"> </span><span class="n">phys</span><span class="p">,</span><span class="w"> </span><span class="n">configs</span><span class="p">);</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">iolink_master_controller_tick</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span><span class="w"> </span><span class="n">response_timeouts</span><span class="p">);</span><span class="w">      </span><span class="cm">/* bool[] */</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">iolink_master_controller_tick_events</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span><span class="w"> </span><span class="n">events</span><span class="p">);</span><span class="w">          </span><span class="cm">/* tick_event[] */</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">iolink_master_controller_tick_at</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span><span class="w"> </span><span class="n">now_100us</span><span class="p">);</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">iolink_master_controller_get_port_count</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">out_count</span><span class="p">);</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">iolink_master_controller_get_port</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">out_port</span><span class="p">);</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">iolink_master_controller_get_next_tick_time</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span><span class="w"> </span><span class="n">now_100us</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">out_next_100us</span><span class="p">);</span>
+</code></pre></div>
+<p>Same lifetime contract as <code>iolink_master_init</code>: the <code>phys</code> array (and the PHYs it
+points to) and the <code>ports</code> array must outlive the controller. A failing port
+returns the first negative result without corrupting its siblings.</p>
+<h2 id="minimal-example">Minimal example</h2>
+<p>Drives one port from startup into OPERATE and reads back process data. Compiles
+against the real API (mirrors <code>examples/master_loopback_demo.c</code>; the PHY here is a
+trivial stub — a real PHY talks to a transceiver, see <a href="../porting/"><code>PORTING.md</code></a>).</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"iolinki/phy.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"iolinki_master/master.h"</span>
+
+<span class="cm">/* A real PHY drives a transceiver; these stubs just satisfy the contract. */</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w">   </span><span class="nf">phy_init</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">u</span><span class="p">)</span><span class="w">                           </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">u</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w">  </span><span class="nf">phy_set_mode</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">u</span><span class="p">,</span><span class="w"> </span><span class="n">iolink_phy_mode_t</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">u</span><span class="p">;</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">m</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w">  </span><span class="nf">phy_set_baud</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">u</span><span class="p">,</span><span class="w"> </span><span class="n">iolink_baudrate_t</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">u</span><span class="p">;</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">b</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w">   </span><span class="nf">phy_send</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">u</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">){</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">u</span><span class="p">;</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">d</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w">   </span><span class="nf">phy_recv</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">u</span><span class="p">,</span><span class="w"> </span><span class="kt">uint8_t</span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w">               </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">u</span><span class="p">;</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">b</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">iolink_phy_api_t</span><span class="w"> </span><span class="n">phy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phy_init</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">set_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phy_set_mode</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">set_baudrate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phy_set_baud</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">send</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phy_send</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">recv_byte</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phy_recv</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">iolink_master_port_t</span><span class="w"> </span><span class="n">port</span><span class="p">;</span><span class="w">              </span><span class="cm">/* caller-owned, no heap */</span>
+<span class="w">    </span><span class="n">iolink_master_config_t</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">port_mode</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">IOLINK_MASTER_PORT_MODE_IOLINK</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">m_seq_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">IOLINK_MASTER_M_SEQ_TYPE_2_1</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">baudrate</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">IOLINK_BAUDRATE_COM3</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">min_cycle_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20U</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">pd_in_len</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">1U</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">pd_out_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1U</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">auto_baudrate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">pd_out</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mh">0x11U</span><span class="w"> </span><span class="p">};</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">pd_in</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">0U</span><span class="w"> </span><span class="p">};</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">pd_in_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">pd_in</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">iolink_master_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">phy</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">config</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">IOLINK_MASTER_STATUS_OK</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">iolink_master_set_pd_out</span><span class="p">(</span><span class="o">&amp;</span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="n">pd_out</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">pd_out</span><span class="p">))</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">IOLINK_MASTER_STATUS_OK</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/* Drive the port: process() sends, poll_rx() decodes responses. A real</span>
+<span class="cm">     * integration paces these from a 100us timer via iolink_master_tick_at(). */</span>
+<span class="w">    </span><span class="n">iolink_master_process</span><span class="p">(</span><span class="o">&amp;</span><span class="n">port</span><span class="p">);</span>
+<span class="w">    </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">iolink_master_poll_rx</span><span class="p">(</span><span class="o">&amp;</span><span class="n">port</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">iolink_master_get_pd_in</span><span class="p">(</span><span class="o">&amp;</span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="n">pd_in</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">pd_in</span><span class="p">),</span><span class="w"> </span><span class="o">&amp;</span><span class="n">pd_in_len</span><span class="p">)</span>
+<span class="w">            </span><span class="o">==</span><span class="w"> </span><span class="n">IOLINK_MASTER_STATUS_OK</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">printf</span><span class="p">(</span><span class="s">"PD in: 0x%02X</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">pd_in</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Build it against the master library (which links the sibling <code>iolinki</code> frame/CRC
+helpers) — see <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/docs/CONTRIBUTING.md"><code>CONTRIBUTING.md</code></a> and the runnable
+<code>examples/master_loopback_demo.c</code> / <code>examples/master_4port_controller_demo.c</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://iolinki.com/" target="_blank" rel="noopener" title="iolinki home" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M277.8 8.6c-12.3-11.4-31.3-11.4-43.5 0l-224 208c-9.6 9-12.8 22.9-8 35.1S18.8 272 32 272h16v176c0 35.3 28.7 64 64 64h288c35.3 0 64-28.7 64-64V272h16c13.2 0 25-8.1 29.8-20.3s1.6-26.2-8-35.1zM240 320h32c26.5 0 48 21.5 48 48v96H192v-96c0-26.5 21.5-48 48-48"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

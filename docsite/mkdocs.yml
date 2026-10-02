@@ -1,0 +1,81 @@
+site_name: iolinki docs
+site_url: https://iolinki.com/docs/
+site_description: Versioned guides and reference documentation for iolinki device and master stacks.
+docs_dir: content
+use_directory_urls: true
+theme:
+  name: material
+  language: en
+  font: false
+  logo: assets/favicon.svg
+  favicon: assets/favicon.svg
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+plugins:
+  - search
+markdown_extensions:
+  - admonition
+  - tables
+  - attr_list
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.details
+extra_css:
+  - assets/docs.css
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/solid/house
+      link: https://iolinki.com/
+      name: iolinki home
+nav:
+  - Documentation: index.md
+  - Device · v2.1.0:
+    - Overview: device/v2.1.0/index.md
+    - Getting started: device/v2.1.0/getting-started.md
+    - API: device/v2.1.0/api.md
+    - Porting: device/v2.1.0/porting.md
+    - Architecture: device/v2.1.0/architecture.md
+    - TIOL112 driver: device/v2.1.0/tiol112.md
+    - Examples:
+      - Counter, button and LED: device/v2.1.0/examples/counter.md
+      - Switching sensor: device/v2.1.0/examples/switching-sensor.md
+      - STM32G0 and native IAR: device/v2.1.0/examples/stm32g0.md
+      - ESP32-C3 and L6362A: device/v2.1.0/examples/esp32-c3.md
+      - STM32U5 and Zephyr: device/v2.1.0/examples/stm32u5.md
+    - IODD tools: device/v2.1.0/iodd.md
+    - Testing: device/v2.1.0/testing.md
+    - Released simulation evidence: device/v2.1.0/simulation.md
+    - Physical validation: device/v2.1.0/physical-validation.md
+    - Conformance boundary: device/v2.1.0/conformance.md
+  - Master · v1.0.0:
+    - Overview: master/v1.0.0/index.md
+    - Getting started: master/v1.0.0/getting-started.md
+    - API: master/v1.0.0/api.md
+    - Porting: master/v1.0.0/porting.md
+    - PHY contract: master/v1.0.0/phy-contract.md
+    - Architecture: master/v1.0.0/architecture.md
+    - Testing: master/v1.0.0/testing.md
+    - Implementation status: master/v1.0.0/implementation-status.md
+    - Hardware validation: master/v1.0.0/hardware-validation.md
+  - Licensing and sources: licensing.md

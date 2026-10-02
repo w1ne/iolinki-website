@@ -1,0 +1,1878 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Versioned guides and reference documentation for iolinki device and master stacks.">
+      
+      
+      
+        <link rel="canonical" href="https://iolinki.com/docs/master/v1.0.0/implementation-status/">
+      
+      
+        <link rel="prev" href="../testing/">
+      
+      
+        <link rel="next" href="../hardware-validation/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Implementation status - iolinki docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/docs.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#iolinki-master-implementation-status" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="iolinki docs" class="md-header__button md-logo" aria-label="iolinki docs" data-md-component="logo">
+      
+  <img src="../../../assets/favicon.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            iolinki docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Implementation status
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="iolinki docs" class="md-nav__button md-logo" aria-label="iolinki docs" data-md-component="logo">
+      
+  <img src="../../../assets/favicon.svg" alt="logo">
+
+    </a>
+    iolinki docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device · v2.1.0
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Device · v2.1.0
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/porting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Porting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/tiol112/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TIOL112 driver
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_7" id="__nav_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/examples/counter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Counter, button and LED
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/examples/switching-sensor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Switching sensor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/examples/stm32g0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STM32G0 and native IAR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/examples/esp32-c3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ESP32-C3 and L6362A
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/examples/stm32u5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STM32U5 and Zephyr
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/iodd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IODD tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Released simulation evidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/physical-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conformance boundary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Master · v1.0.0
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Master · v1.0.0
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../porting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Porting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phy-contract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PHY contract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation status
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation status
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checkable-ledger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkable Ledger
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Checkable Ledger">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#done" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Done
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In Progress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#not-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Not Started
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-test-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Test Targets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spec-conformance-audit-interface-system-spec-v115" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spec Conformance Audit (Interface &amp; System Spec V1.1.5)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-priority" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Priority
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardware-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hardware validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../licensing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Licensing and sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checkable-ledger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkable Ledger
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Checkable Ledger">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#done" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Done
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In Progress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#not-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Not Started
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-test-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Test Targets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spec-conformance-audit-interface-system-spec-v115" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spec Conformance Audit (Interface &amp; System Spec V1.1.5)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-priority" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Priority
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="iolinki-master-implementation-status">iolinki-master Implementation Status</h1>
+<blockquote>
+<p>Source snapshot: <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/docs/IMPLEMENTATION_STATUS.md">docs/IMPLEMENTATION_STATUS.md</a>, <code>d23fd3034c02</code>.</p>
+</blockquote>
+<p>This file is the living implementation ledger for the master stack. It should be
+updated when a feature graduates from open to partial, or from partial to
+implemented.</p>
+<p>Status definitions:</p>
+<ul>
+<li>Implemented: code exists and local tests cover the intended behavior.</li>
+<li>Partial: useful code exists, but the standard-facing behavior, API contract,
+  or test coverage is incomplete.</li>
+<li>Open: no meaningful implementation yet.</li>
+</ul>
+<h2 id="status-matrix">Status Matrix</h2>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Status</th>
+<th>Evidence</th>
+<th>Remaining Gap</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Repository boundary</td>
+<td>Implemented</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/CMakeLists.txt"><code>CMakeLists.txt</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/README.md"><code>README.md</code></a></td>
+<td>Keep avoiding full device-stack linkage as new shared helpers are needed.</td>
+</tr>
+<tr>
+<td>Public API shape</td>
+<td>Partial</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/include/iolinki_master/master.h"><code>include/iolinki_master/master.h</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_public_header.c"><code>tests/test_master_public_header.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_isdu_public.c"><code>tests/test_master_isdu_public.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_sio_public.c"><code>tests/test_master_sio_public.c</code></a></td>
+<td>Add more black-box tests for future service APIs.</td>
+</tr>
+<tr>
+<td>Opaque storage/private state</td>
+<td>Implemented</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/include/iolinki_master/master.h"><code>include/iolinki_master/master.h</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_internal.h"><code>src/master_internal.h</code></a></td>
+<td>Tune the public storage sizes once the private state stops moving quickly.</td>
+</tr>
+<tr>
+<td>Port lifecycle</td>
+<td>Implemented</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_port.c"><code>src/master_port.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_startup.c"><code>tests/test_master_startup.c</code></a></td>
+<td>Add a public lifecycle example for downstream users.</td>
+</tr>
+<tr>
+<td>Startup and baudrate scan</td>
+<td>Implemented</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_port.c"><code>src/master_port.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_startup.c"><code>tests/test_master_startup.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_tick.c"><code>tests/test_master_tick.c</code></a></td>
+<td>Per-baud wake-up retry (<code>wake_retry_limit</code>, default n_WU = 2), T_DMT (<code>t_dmt_tbit</code>) and T_DWU (<code>t_dwu_100us</code>) gating implemented and covered by ctest. The physical WURQ pulse and T_REN still live in the PHY adapter and remain unverified on silicon.</td>
+</tr>
+<tr>
+<td>M-sequence handling</td>
+<td>Implemented</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_port.c"><code>src/master_port.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_parameters.c"><code>src/master_parameters.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_pd.c"><code>tests/test_master_pd.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_startup.c"><code>tests/test_master_startup.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_parameters.c"><code>tests/test_master_parameters.c</code></a></td>
+<td>Real-device validation remains open.</td>
+</tr>
+<tr>
+<td>Cyclic process data</td>
+<td>Implemented</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_port.c"><code>src/master_port.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_pd.c"><code>tests/test_master_pd.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_public_flow.c"><code>tests/test_master_public_flow.c</code></a>; on-wire PD output echo against real device firmware in <code>labwired-core</code> test <code>world_station_services.rs :: master_services_isdu_pdout_event_ds_all_pass_on_wire</code> (this repo's <code>labwired-real-firmware-model</code> CI job)</td>
+<td>Add more black-box coverage for configured PD sizes and invalid user buffers.</td>
+</tr>
+<tr>
+<td>RX path and retries</td>
+<td>Implemented</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_port.c"><code>src/master_port.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_startup.c"><code>tests/test_master_startup.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_tick.c"><code>tests/test_master_tick.c</code></a>; real on-wire RX of device responses over a simulated UART wire in <code>labwired-core</code> test <code>world_station_services.rs :: master_services_isdu_pdout_event_ds_all_pass_on_wire</code> (this repo's <code>labwired-real-firmware-model</code> CI job)</td>
+<td>Add line-noise and long-running soak tests with a real PHY.</td>
+</tr>
+<tr>
+<td>ISDU read/write</td>
+<td>Partial</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_isdu.c"><code>src/master_isdu.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_isdu.c"><code>tests/test_master_isdu.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_isdu_public.c"><code>tests/test_master_isdu_public.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_fake_device.c"><code>tests/test_master_fake_device.c</code></a>; on-wire ISDU read (vendor-name index 0x0010 == "LABWIRED"; event-details index 0x001C) and ISDU write against real device firmware in <code>labwired-core</code> test <code>world_station_services.rs :: master_services_isdu_pdout_event_ds_all_pass_on_wire</code> (this repo's <code>labwired-real-firmware-model</code> CI job)</td>
+<td>Verify behavior against real devices.</td>
+</tr>
+<tr>
+<td>Direct Parameter Page 1</td>
+<td>Implemented</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_parameters.c"><code>src/master_parameters.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_parameters.c"><code>tests/test_master_parameters.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_isdu.c"><code>tests/test_master_isdu.c</code></a></td>
+<td>Real-device validation remains open.</td>
+</tr>
+<tr>
+<td>Startup device validation</td>
+<td>Implemented</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_parameters.c"><code>src/master_parameters.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_port.c"><code>src/master_port.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_startup.c"><code>tests/test_master_startup.c</code></a></td>
+<td>Expand validation once automatic negotiation exists.</td>
+</tr>
+<tr>
+<td>Device identity / inspection level</td>
+<td>Partial</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_parameters.c"><code>src/master_parameters.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_port.c"><code>src/master_port.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_parameters.c"><code>tests/test_master_parameters.c</code></a></td>
+<td>VendorID/DeviceID checked under <code>TYPE_COMP</code>/<code>IDENTICAL</code>; the SerialNumber leg that distinguishes <code>IDENTICAL</code> (ISDU index 0x0015) is not yet wired.</td>
+</tr>
+<tr>
+<td>Diagnostics</td>
+<td>Partial</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/include/iolinki_master/master.h"><code>include/iolinki_master/master.h</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_port.c"><code>src/master_port.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_isdu.c"><code>src/master_isdu.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_pd.c"><code>tests/test_master_pd.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_isdu.c"><code>tests/test_master_isdu.c</code></a></td>
+<td>Add event detail and link-quality metrics.</td>
+</tr>
+<tr>
+<td>Multi-port controller</td>
+<td>Partial</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_controller.c"><code>src/master_controller.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_controller.c"><code>tests/test_master_controller.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/examples/master_4port_controller_demo.c"><code>examples/master_4port_controller_demo.c</code></a></td>
+<td>Define scheduler ownership and port-level runtime policy.</td>
+</tr>
+<tr>
+<td>SIO DI/DQ</td>
+<td>Partial</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_sio.c"><code>src/master_sio.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_startup.c"><code>tests/test_master_startup.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_sio_public.c"><code>tests/test_master_sio_public.c</code></a></td>
+<td>Validate SIO and mode transitions against real adapters.</td>
+</tr>
+<tr>
+<td>Scheduler/timing</td>
+<td>Implemented</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_port.c"><code>src/master_port.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_parameters.c"><code>src/master_parameters.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_controller.c"><code>src/master_controller.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_tick.c"><code>tests/test_master_tick.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_controller.c"><code>tests/test_master_controller.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_parameters.c"><code>tests/test_master_parameters.c</code></a></td>
+<td>MasterCycleTime octet decoded to 100us for validation and pacing; response deadline floored at (11 + 10) T_BIT per A.3.5/A.3.6; T_DMT/T_DWU startup timers implemented. Validate timing against hardware captures.</td>
+</tr>
+<tr>
+<td>Master Command channel/addressing</td>
+<td>Implemented</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_parameters.c"><code>src/master_parameters.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_port.c"><code>src/master_port.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_parameters.c"><code>tests/test_master_parameters.c</code></a></td>
+<td>R/W + communication-channel + address encode/decode helpers; the operate transition is composed through them. Page/diagnosis channel services build on this next.</td>
+</tr>
+<tr>
+<td>Events</td>
+<td>Partial</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/include/iolinki_master/master.h"><code>include/iolinki_master/master.h</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_isdu.c"><code>src/master_isdu.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_port.c"><code>src/master_port.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_isdu_public.c"><code>tests/test_master_isdu_public.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_fake_device.c"><code>tests/test_master_fake_device.c</code></a>; on-wire event trigger and <code>iolink_master_read_event_details</code> returning code 0x8CA0 against real device firmware in <code>labwired-core</code> test <code>world_station_services.rs :: master_services_isdu_pdout_event_ds_all_pass_on_wire</code> (this repo's <code>labwired-real-firmware-model</code> CI job)</td>
+<td>Optional dispatch callbacks (rising-edge event-pending notify + per-event handler) added; fully autonomous async event servicing remains.</td>
+</tr>
+<tr>
+<td>Data Storage</td>
+<td>Implemented</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_isdu.c"><code>src/master_isdu.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_isdu_public.c"><code>tests/test_master_isdu_public.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_fake_device.c"><code>tests/test_master_fake_device.c</code></a>; on-wire Data Storage write + readback round-trip against real device firmware in <code>labwired-core</code> test <code>world_station_services.rs :: master_services_isdu_pdout_event_ds_all_pass_on_wire</code> (this repo's <code>labwired-real-firmware-model</code> CI job)</td>
+<td>Validate Data Storage restore flows against real devices.</td>
+</tr>
+<tr>
+<td>Block parameterization</td>
+<td>Implemented</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/src/master_isdu.c"><code>src/master_isdu.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/tests/test_master_isdu_public.c"><code>tests/test_master_isdu_public.c</code></a></td>
+<td>Validate block flows against real devices.</td>
+</tr>
+<tr>
+<td>Hardware PHY adapters</td>
+<td>Open</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/include/iolinki_master/master.h"><code>include/iolinki_master/master.h</code></a> consumes the dependency PHY contract</td>
+<td>Add real master-port hardware adapters outside the protocol core.</td>
+</tr>
+<tr>
+<td>Conformance</td>
+<td>Open</td>
+<td>Local tests only</td>
+<td>Run official IO-Link master conformance testing.</td>
+</tr>
+<tr>
+<td>Documentation/examples</td>
+<td>Partial</td>
+<td><a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/README.md"><code>README.md</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/docs/ROADMAP.md"><code>docs/ROADMAP.md</code></a>, <a href="../testing/"><code>docs/TESTING.md</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/examples/master_loopback_demo.c"><code>examples/master_loopback_demo.c</code></a>, <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/examples/master_4port_controller_demo.c"><code>examples/master_4port_controller_demo.c</code></a></td>
+<td>Add focused examples for ISDU and service workflows as those APIs mature.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="checkable-ledger">Checkable Ledger</h2>
+<p>Use this section for quick progress checks. The table above keeps the evidence
+and gap detail.</p>
+<h3 id="done">Done</h3>
+<ul>
+<li>[x] Separate master repository/build from the device stack.</li>
+<li>[x] Compile only narrow shared helper sources from the local <code>iolinki</code> checkout.</li>
+<li>[x] Public opaque caller-owned port/controller storage.</li>
+<li>[x] Public named result codes and documented function return contracts.</li>
+<li>[x] Public opaque storage-size rationale and budget checks.</li>
+<li>[x] Private master state under <code>src/</code>.</li>
+<li>[x] Port lifecycle states: inactive, startup, preoperate, operate, error.</li>
+<li>[x] Fallible checked mode and baudrate adapter hooks for strict hardware validation.</li>
+<li>[x] Adapter RX flush hook before IO-Link startup and startup baudrate retries.</li>
+<li>[x] Half-duplex TX/RX prepare hooks around core-driven frame sends.</li>
+<li>[x] Startup wake-up, Type 0 idle, transition command, and operate entry.</li>
+<li>[x] Fixed-baudrate startup.</li>
+<li>[x] Auto-baudrate scan across COM3/COM2/COM1.</li>
+<li>[x] Configurable per-baud wake-up retry before scan advance / error.</li>
+<li>[x] MasterCycleTime octet (time-base + multiplier) decode to 100us units.</li>
+<li>[x] Master Command R/W + communication-channel + address encode/decode helpers.</li>
+<li>[x] Rising-edge event-pending dispatch callback.</li>
+<li>[x] Per-event dispatch callback from event details.</li>
+<li>[x] Configured cyclic PD input/output.</li>
+<li>[x] RX accumulation, checksum handling, and retry tracking.</li>
+<li>[x] ISDU read/write transfer in local tests.</li>
+<li>[x] Data Storage ISDU read/write wrappers.</li>
+<li>[x] Data Storage readback verification wrapper.</li>
+<li>[x] Data Storage restore sequencing wrapper.</li>
+<li>[x] Event-code ISDU read wrapper.</li>
+<li>[x] Detailed Device Status event-detail decode wrapper.</li>
+<li>[x] Explicit event ack wrapper.</li>
+<li>[x] Block parameterization download/upload/store system-command helpers.</li>
+<li>[x] Block parameterization write sequencing with readback verification.</li>
+<li>[x] ISDU readback verification helper.</li>
+<li>[x] Detailed Device Status read wrapper.</li>
+<li>[x] Direct Parameter Page 1 parse/apply/get/validate.</li>
+<li>[x] Initial capability-driven config selection from Direct Parameter Page 1.</li>
+<li>[x] Fixed Type 2 capability selection for code-0 Direct Parameter profiles.</li>
+<li>[x] Public requested-config validation against Direct Parameter Page 1.</li>
+<li>[x] Optional startup device-info validation.</li>
+<li>[x] Device identity (VendorID/DeviceID) check with <code>NO_CHECK</code>/<code>TYPE_COMP</code>/<code>IDENTICAL</code> inspection levels.</li>
+<li>[x] Basic diagnostics API.</li>
+<li>[x] Response timeout counter in public diagnostics.</li>
+<li>[x] Cycle-slip counter in public diagnostics.</li>
+<li>[x] Last/max cycle-jitter diagnostics in 100us units.</li>
+<li>[x] Derived link-quality percentage in public diagnostics.</li>
+<li>[x] Last service-level result code in public diagnostics.</li>
+<li>[x] Last event count/code diagnostics from event services.</li>
+<li>[x] Last ISDU service error in public diagnostics.</li>
+<li>[x] Multi-port controller init/tick helper.</li>
+<li>[x] Event-driven tick dispatch for none, cycle-due, and response-timeout events.</li>
+<li>[x] Scheduler-visible pending retry result for response-timeout ticks.</li>
+<li>[x] Separate configured response timeout from min-cycle pacing.</li>
+<li>[x] Port-level <code>min_cycle_time</code> pacing with fake monotonic 100us ticks.</li>
+<li>[x] Public scheduler-visible timing snapshot API.</li>
+<li>[x] Per-port controller tick events.</li>
+<li>[x] Controller time-aware tick fan-out for per-port cycle pacing.</li>
+<li>[x] Controller-owned response-deadline timeout scheduling across ports.</li>
+<li>[x] Public controller port-count and port-access helpers.</li>
+<li>[x] 1-port loopback and 4-port mixed-controller runnable examples.</li>
+<li>[x] SIO DQ output through <code>set_cq_line</code>.</li>
+<li>[x] SIO DI input through configured <code>read_cq_line</code>.</li>
+<li>[x] SIO DI checked C/Q reader for strict hardware validation.</li>
+<li>[x] Dynamic SIO/IO-Link/deactivated mode transitions.</li>
+<li>[x] Public header compile test.</li>
+<li>[x] Public black-box startup/process-data flow test.</li>
+<li>[x] Public black-box ISDU read flow test.</li>
+<li>[x] Fake-device harness for startup, transition, cyclic PD, and port pacing.</li>
+<li>[x] Fake-device ISDU object-dictionary read path.</li>
+<li>[x] Fake-device Type 0 startup device-validation path.</li>
+<li>[x] Capability-profile fake-device Direct Parameter Page 1 helper.</li>
+<li>[x] Multi-object fake-device ISDU dictionary.</li>
+<li>[x] Fake-device event-pending OD status injection.</li>
+<li>[x] Fake-device event-detail ISDU injection.</li>
+<li>[x] Fake-device event ack/code read path.</li>
+<li>[x] Fake-device ISDU write/readback path.</li>
+<li>[x] Fake-device Data Storage write/readback verification path.</li>
+<li>[x] Fake-device bad-checksum injection path.</li>
+<li>[x] Fake-device dropped-response timeout injection path.</li>
+<li>[x] Fake-device truncated-frame timeout recovery path.</li>
+<li>[x] A.1.6 message checksum and A.1.5 reply layout (CKS event/PD flags, no status octet).</li>
+<li>[x] ISDU transport: Table A.13/A.15 requests, Length/ExtLength, CHKPDU, FlowCTRL segmentation.</li>
+<li>[x] Events over the DIAGNOSIS channel: Table 58 event memory, StatusCode ack (Table 59 T8).</li>
+<li>[x] Table A.10 OPERATE M-sequence codes and Table B.6 reserved descriptor rejection.</li>
+<li>[x] Startup T_DMT/T_DWU gating, n_WU default, response deadline from T_BIT, wake restart after retry exhaustion.</li>
+</ul>
+<h3 id="in-progress">In Progress</h3>
+<ul>
+<li>[x] Complete public M-sequence variant selection coverage.</li>
+<li>[x] Add link-quality metrics to diagnostics.</li>
+<li>[x] Clear multi-port runtime policy with controller-computed next due time.</li>
+</ul>
+<h3 id="not-started">Not Started</h3>
+<ul>
+<li>[x] Full scheduler/timing model.</li>
+<li>[x] Broad capability-matrix selection tests.</li>
+<li>[x] Capability-driven M-sequence and PD-size selection for currently mapped codes.</li>
+<li>[x] Requested configuration validation against device capability profile.</li>
+<li>[x] DI input API/PHY support.</li>
+<li>[x] Dynamic SIO/IO-Link mode transitions.</li>
+<li>[x] Data Storage parameter-server restore sequencing.</li>
+<li>[x] Full block parameterization readback sequencing policy.</li>
+<li>[x] Expand fake-device harness into a conformance-style matrix.</li>
+<li>[x] Define PHY adapter boundary and hardware validation matrix.</li>
+<li>[ ] Real hardware PHY adapter.</li>
+<li>[ ] Real-device sensor/actuator test matrix.</li>
+<li>[ ] Official IO-Link master conformance validation.</li>
+</ul>
+<h2 id="current-test-targets">Current Test Targets</h2>
+<p>Local CTest currently exercises these targets when CMocka is available:</p>
+<ul>
+<li><code>test_master_startup</code></li>
+<li><code>test_master_pd</code></li>
+<li><code>test_master_isdu</code></li>
+<li><code>test_master_isdu_wire</code></li>
+<li><code>test_master_isdu_public</code></li>
+<li><code>test_master_tick</code></li>
+<li><code>test_master_controller</code></li>
+<li><code>test_master_parameters</code></li>
+<li><code>test_master_public_flow</code></li>
+<li><code>test_master_sio_public</code></li>
+<li><code>test_master_public_header</code></li>
+<li><code>test_master_fake_device</code></li>
+<li><code>test_master_real_iolinki_device</code></li>
+<li><code>master_loopback_demo</code></li>
+<li><code>master_4port_controller_demo</code></li>
+</ul>
+<p>Use this verification loop before committing master-stack changes:</p>
+<div class="highlight"><pre><span></span><code>cmake<span class="w"> </span>-S<span class="w"> </span>.<span class="w"> </span>-B<span class="w"> </span>build
+cmake<span class="w"> </span>--build<span class="w"> </span>build
+ctest<span class="w"> </span>--test-dir<span class="w"> </span>build<span class="w"> </span>--output-on-failure
+git<span class="w"> </span>diff<span class="w"> </span>--check
+</code></pre></div>
+<h2 id="documentation-rules">Documentation Rules</h2>
+<p>Update this file in the same commit as implementation changes when the status of
+a feature changes. Keep the gap column honest: passing local tests does not mean
+hardware or conformance coverage exists.</p>
+<h2 id="spec-conformance-audit-interface-system-spec-v115">Spec Conformance Audit (Interface &amp; System Spec V1.1.5)</h2>
+<p>Verified against the V1.1.5 spec text on 2026-09-18. The wire is now
+spec-conformant for the master slice (design contract C1..C6 in
+<code>docs/superpowers/specs/2026-09-18-spec-conformant-wire-design.md</code>):</p>
+<ul>
+<li><strong>C1 message checksum (A.1.6).</strong> Requests and replies use the spec XOR
+  checksum, seeded <code>0x52</code> and compressed 8-to-6 bits by equations (A.1). The
+  shared helper is <code>iolink_checksum6</code> from the <code>iolinki</code> device stack; the
+  obsolete <code>iolink_crc6</code> is gone. Reply layout is <code>[PD-in][OD] CKS</code> with the
+  Event flag in CKS bit 7 and the PD-invalid flag in bit 6 (A.1.5); there is no
+  leading status octet and no PD toggle bit.</li>
+<li><strong>C2 M-sequence control octet (A.1.2, Table A.1/A.2).</strong> <code>MC = RW&lt;&lt;7 |
+  channel&lt;&lt;5 | address</code>; the master addresses Process, Page, Diagnosis and ISDU
+  channels, and reads of unimplemented addresses return 0.</li>
+<li><strong>C3 ISDU transport (7.3.6, A.5, Table 52).</strong> The ISDU octet stream carries
+  <code>I-Service&lt;&lt;4 | Length</code>, optional ExtLength, index/subindex/data and CHKPDU;
+  Length counts every ISDU octet (A.5.3). Requests are segmented over the ISDU
+  channel with FlowCTRL START/COUNT/IDLE/ABORT in the MC address; there are no
+  invented control bytes inside the stream.</li>
+<li><strong>C4 diagnosis channel and events (7.3.8, Table 58/59).</strong> Events are read
+  from the device event memory over the DIAGNOSIS channel and acknowledged by
+  writing the StatusCode at address 0; the Event flag is taken from CKS bit 7.</li>
+<li><strong>C5 direct parameters and standard indices (Table B.8, Table A.10).</strong> The
+  OPERATE M-sequence capability code is derived from OD width and PD lengths per
+  Table A.10, reserved ProcessData descriptor combinations (Table B.6) are
+  rejected, and shared index constants (e.g. DetailedDeviceStatus 0x0025) come
+  from <code>iolinki/protocol.h</code>.</li>
+<li><strong>C6 timing constants (Table 9, Table 42, A.3.5/A.3.6).</strong> Startup honors T_DMT
+  (<code>t_dmt_tbit</code>, default 32) before the first test message and T_DWU
+  (<code>t_dwu_100us</code>, default 400 = 40 ms) between wake retries; the default wake
+  budget is n_WU = 2; the response deadline is at least one UART frame (11
+  T_BIT) plus the maximum device response delay (10 T_BIT) and never the cycle
+  period; after RX retry exhaustion the port returns to STARTUP and re-issues a
+  wake-up (7.2.2.1) instead of latching ERROR.</li>
+</ul>
+<p>The on-wire <code>labwired-real-firmware-model</code> CI proves master↔<code>iolinki</code>-device
+interop. Both stacks now speak the same spec wire; third-party interop still
+needs hardware/conformance validation (see the Open rows).</p>
+<h2 id="architecture-priority">Architecture Priority</h2>
+<p>The scheduler/timing model is now explicit (cycle/deadline pacing plus the
+C6 startup/recovery timers). The remaining architecture work is real-PHY
+adapters and hardware validation, not the protocol wire.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://iolinki.com/" target="_blank" rel="noopener" title="iolinki home" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M277.8 8.6c-12.3-11.4-31.3-11.4-43.5 0l-224 208c-9.6 9-12.8 22.9-8 35.1S18.8 272 32 272h16v176c0 35.3 28.7 64 64 64h288c35.3 0 64-28.7 64-64V272h16c13.2 0 25-8.1 29.8-20.3s1.6-26.2-8-35.1zM240 320h32c26.5 0 48 21.5 48 48v96H192v-96c0-26.5 21.5-48 48-48"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
