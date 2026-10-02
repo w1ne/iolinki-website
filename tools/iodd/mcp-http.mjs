@@ -18,6 +18,9 @@ export class IoddHttpHost {
     maxSessions = 8,
     maxProjectBytes = 8 * 1024 * 1024,
     maxArtifactBytes = 16 * 1024 * 1024,
+    externalValidation,
+    projectVaultFactory,
+    firmwareKit,
   } = {}) {
     Object.assign(this, {
       loadTemplate,
@@ -27,6 +30,9 @@ export class IoddHttpHost {
       maxSessions,
       maxProjectBytes,
       maxArtifactBytes,
+      externalValidation,
+      projectVaultFactory,
+      firmwareKit,
     });
     this.sessions = new Map();
     this.pendingSessions = 0;
@@ -113,6 +119,9 @@ export class IoddHttpHost {
       this.pendingSessions++;
       const server = createIoddMcpServer({
         loadTemplate: this.loadTemplate,
+        externalValidation: this.externalValidation,
+        projectVault: this.projectVaultFactory?.(sessionId),
+        firmwareKit: this.firmwareKit,
         maxBytes: this.maxProjectBytes,
         publishArtifact: async ({ bytes, filename, mimeType }) => {
           await this.prune();

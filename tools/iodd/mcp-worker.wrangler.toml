@@ -15,5 +15,5 @@ new_sqlite_classes = ["IoddMcpSessions"]
 
 [[rules]]
 type = "Text"
-globs = ["**/*.xml"]
+globs = ["**/*.xml", "**/firmware-kit/*.c", "**/firmware-kit/*.h", "**/LICENSE.GPL-3.0"]
 fallthrough = true

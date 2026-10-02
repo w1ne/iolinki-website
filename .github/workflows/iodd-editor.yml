@@ -28,6 +28,7 @@ jobs:
           curl --fail --location --max-time 90 https://io-link.com/fileadmin/user_upload/Downloads/Package_2025/IO-Link_Common_Profile_Specification_10.072_V1.2.1_Oct2025.zip -o "$RUNNER_TEMP/common-spec.zip"
           printf '%s  %s\n' 1517458005f92b680379aa8aa834f157b4335c6f3fefa225a5daba332f3679f1 "$RUNNER_TEMP/common-spec.zip" | sha256sum --check
           unzip -q "$RUNNER_TEMP/common-spec.zip" -d "$RUNNER_TEMP/common-spec"
+          echo "IODD_SCHEMA_ARCHIVE=$RUNNER_TEMP/iodd-spec.zip" >> "$GITHUB_ENV"
           echo "IODD_SCHEMA=$RUNNER_TEMP/iodd-spec/IO-Device-Description_Specification_10.012_V1.1.5_Oct2025/Schemas/IODD1.1.xsd" >> "$GITHUB_ENV"
           echo "IOLFW_SCHEMA=$RUNNER_TEMP/fw-spec/IO-Link_Profile_Firmware-Update_10.082_V1.2.1_Oct2025/Schemas/IOLFW1.0.xsd" >> "$GITHUB_ENV"
           echo "IOLFW_EXAMPLE=$RUNNER_TEMP/fw-spec/IO-Link_Profile_Firmware-Update_10.082_V1.2.1_Oct2025/IOLFW-Examples/IO-Link Community-Sample1-20190927-IOLFW1.0.iolfw" >> "$GITHUB_ENV"
@@ -42,6 +43,12 @@ jobs:
         run: python3 scripts/package-iodd-tools.py --check
       - name: Verify one-command local MCP package
         run: node scripts/package-iodd-npm.mjs --check
+      - name: Check pinned Worker WASM runtime and deployment bundle
+        run: |
+          node tools/iodd/schema-build.mjs --check
+          npx -y wrangler@4.144.0 deploy --dry-run --config tools/iodd/mcp-worker.wrangler.toml --outdir "$RUNNER_TEMP/iodd-worker"
+      - name: Prove clean standalone MCP installation
+        run: IODD_NPM_INTEGRATION=1 node --test tests/iodd/npm-package.test.mjs
       - name: Verify portable agent plugin download
         run: python3 scripts/package-agent-plugin.py --check
       - run: npx playwright install --with-deps chromium

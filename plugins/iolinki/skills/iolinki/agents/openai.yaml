@@ -1,7 +1,7 @@
 interface:
   display_name: "iolinki"
   short_description: "Build IODDs and integrate IO-Link firmware"
-  default_prompt: "Use $iolinki to create an IODD for my device and generate its C mapping header."
+  default_prompt: "Use $iolinki to author and validate my sensor IODD, export recoverable artifacts, and compile/verify its supported sensor application with LabWired if connected."
 dependencies:
   tools:
     - type: "mcp"

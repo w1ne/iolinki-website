@@ -1,0 +1,214 @@
+{
+  "recordedAt": "2026-10-02 20:16:33 UTC",
+  "scope": "Actual hosted LabWired STM32F401 application MCU execution; no IO-Link PHY/stack transport or physical-hardware proof.",
+  "plugin": {
+    "name": "LabWired",
+    "url": "https://labwired.com"
+  },
+  "sourceTreeRef": "sha256:eb47cf5e3cfa4771e01bb000c7995d1decfa831b63c80abdabcdfbd4a9392aaa",
+  "positive": {
+    "compile": {
+      "ok": true,
+      "firmware_ref": "sha256:accbaf7ae8cf46fa70bdccafd4c95559bd098bb4caae1408783254adbfb3599c",
+      "firmware_blob_path": "/v1/blobs/sha256/accbaf7ae8cf46fa70bdccafd4c95559bd098bb4caae1408783254adbfb3599c",
+      "runnable": true,
+      "diagnostics": []
+    },
+    "verify": {
+      "ok": true,
+      "status": "model_verified",
+      "proven": true,
+      "gaps": [
+        {
+          "code": "approximation",
+          "scope": "model",
+          "detail": "device time derived from cpu_hz (84000000 Hz); PLL reconfiguration is not tracked",
+          "address": "0x0",
+          "pc": "0x0"
+        },
+        {
+          "code": "approximation",
+          "scope": "model",
+          "detail": "no power net drives the MCU (board.power.vdd_volts is not routed); VDD assumed an ideal 3.3 V rail, so power-on and brown-out reset are not simulated",
+          "address": "0x0",
+          "pc": "0x0"
+        }
+      ],
+      "unmodeled_faults": [
+        {
+          "access": "derived_device_time",
+          "pc": "0x0",
+          "count": 1,
+          "note": "device time derived from cpu_hz (84000000 Hz); PLL reconfiguration is not tracked",
+          "address": "0x0"
+        },
+        {
+          "access": "unpowered_rail_assumed",
+          "pc": "0x0",
+          "count": 1,
+          "note": "no power net drives the MCU (board.power.vdd_volts is not routed); VDD assumed an ideal 3.3 V rail, so power-on and brown-out reset are not simulated",
+          "address": "0x0"
+        }
+      ],
+      "verification": "serial contains \"IODD_SENSOR_PROOF_PASS\". Model-verified deterministically.",
+      "run_status": "pass",
+      "stop_reason": "assertions_passed",
+      "oracle_results": [
+        {
+          "kind": "serial",
+          "passed": true,
+          "detail": "serial contains \"IODD_SENSOR_PROOF_PASS\""
+        }
+      ],
+      "diagnosis": {
+        "summary": "Ran and satisfied the UART acceptance assertions."
+      },
+      "serial": "DEFAULTS_PASS\nTHRESHOLD_HYSTERESIS_PASS\nBYTE_DECODE_PASS\nVALIDITY_PASS\nPARAMETER_READBACK_PASS\nTEACH_INVERSION_PASS\nIODD_SENSOR_PROOF_PASS\n"
+    }
+  },
+  "authoredDefaults": {
+    "threshold": 6400,
+    "hysteresis": 300,
+    "inversion": 1,
+    "compile": {
+      "ok": true,
+      "firmware_ref": "sha256:48b81eaddbb35373bc93a1031b98d10b7c6f5bb10567c7967515f80b150f3269",
+      "firmware_blob_path": "/v1/blobs/sha256/48b81eaddbb35373bc93a1031b98d10b7c6f5bb10567c7967515f80b150f3269",
+      "runnable": true,
+      "diagnostics": []
+    },
+    "verify": {
+      "ok": true,
+      "status": "model_verified",
+      "proven": true,
+      "gaps": [
+        {
+          "code": "approximation",
+          "scope": "model",
+          "detail": "device time derived from cpu_hz (84000000 Hz); PLL reconfiguration is not tracked",
+          "address": "0x0",
+          "pc": "0x0"
+        },
+        {
+          "code": "approximation",
+          "scope": "model",
+          "detail": "no power net drives the MCU (board.power.vdd_volts is not routed); VDD assumed an ideal 3.3 V rail, so power-on and brown-out reset are not simulated",
+          "address": "0x0",
+          "pc": "0x0"
+        }
+      ],
+      "unmodeled_faults": [
+        {
+          "access": "derived_device_time",
+          "pc": "0x0",
+          "count": 1,
+          "note": "device time derived from cpu_hz (84000000 Hz); PLL reconfiguration is not tracked",
+          "address": "0x0"
+        },
+        {
+          "access": "unpowered_rail_assumed",
+          "pc": "0x0",
+          "count": 1,
+          "note": "no power net drives the MCU (board.power.vdd_volts is not routed); VDD assumed an ideal 3.3 V rail, so power-on and brown-out reset are not simulated",
+          "address": "0x0"
+        }
+      ],
+      "verification": "serial contains \"IODD_SENSOR_PROOF_PASS\". Model-verified deterministically.",
+      "run_status": "pass",
+      "stop_reason": "assertions_passed",
+      "oracle_results": [
+        {
+          "kind": "serial",
+          "passed": true,
+          "detail": "serial contains \"IODD_SENSOR_PROOF_PASS\""
+        }
+      ],
+      "diagnosis": {
+        "summary": "Ran and satisfied the UART acceptance assertions."
+      },
+      "serial": "DEFAULTS_PASS\nTHRESHOLD_HYSTERESIS_PASS\nBYTE_DECODE_PASS\nVALIDITY_PASS\nPARAMETER_READBACK_PASS\nTEACH_INVERSION_PASS\nIODD_SENSOR_PROOF_PASS\n"
+    }
+  },
+  "negativeDefault": {
+    "change": "Generated default threshold changed 5000 -> 5100 without changing authored expected value",
+    "compile": {
+      "ok": true,
+      "firmware_ref": "sha256:6ff7f1d1a3f8a713b133e389ac53b468e5319511d277207472752204d5fa5b3f",
+      "firmware_blob_path": "/v1/blobs/sha256/6ff7f1d1a3f8a713b133e389ac53b468e5319511d277207472752204d5fa5b3f",
+      "runnable": true,
+      "diagnostics": []
+    },
+    "verify": {
+      "ok": true,
+      "status": "failed",
+      "proven": false,
+      "gaps": [
+        {
+          "code": "approximation",
+          "scope": "model",
+          "detail": "device time derived from cpu_hz (84000000 Hz); PLL reconfiguration is not tracked",
+          "address": "0x0",
+          "pc": "0x0"
+        },
+        {
+          "code": "approximation",
+          "scope": "model",
+          "detail": "no power net drives the MCU (board.power.vdd_volts is not routed); VDD assumed an ideal 3.3 V rail, so power-on and brown-out reset are not simulated",
+          "address": "0x0",
+          "pc": "0x0"
+        }
+      ],
+      "unmodeled_faults": [
+        {
+          "access": "derived_device_time",
+          "pc": "0x0",
+          "count": 1,
+          "note": "device time derived from cpu_hz (84000000 Hz); PLL reconfiguration is not tracked",
+          "address": "0x0"
+        },
+        {
+          "access": "unpowered_rail_assumed",
+          "pc": "0x0",
+          "count": 1,
+          "note": "no power net drives the MCU (board.power.vdd_volts is not routed); VDD assumed an ideal 3.3 V rail, so power-on and brown-out reset are not simulated",
+          "address": "0x0"
+        }
+      ],
+      "verification": "",
+      "run_status": "fail",
+      "stop_reason": "max_steps",
+      "oracle_results": [
+        {
+          "kind": "serial",
+          "passed": false,
+          "detail": "serial does NOT contain \"IODD_SENSOR_PROOF_PASS\""
+        }
+      ],
+      "diagnosis": {
+        "faulting_pc": "0x08000202",
+        "summary": "Ran the full 100000-step budget without halting, having produced 1 lines of firmware serial output. The firmware was running and reporting, so this is either a long-running program that needs a larger budget or an infinite loop / busy-wait on a status bit that never changes (e.g. polling a peripheral the twin does not model).",
+        "hint": "Re-run with a larger max_steps (try 1000000; the ceiling for this run path is 50000000). Otherwise check for spin-loops that wait on a hardware status bit, and prefer software delay loops over peripheral-flag polls. Consult docs/firmware-scaffolds/README.md for the list of modeled peripherals."
+      },
+      "serial": "IODD_SENSOR_PROOF_FAIL\n",
+      "error_code": "INVALID_ARGUMENT"
+    }
+  },
+  "negativeMapping": {
+    "change": "Generated Valid process bit changed 1 -> 2",
+    "compile": {
+      "ok": false,
+      "runnable": true,
+      "diagnostics": [
+        {
+          "severity": "error",
+          "file": "src/main.c",
+          "line": 12,
+          "column": 1,
+          "message": "static assertion failed: \"IODD process mapping differs from released sensor\""
+        }
+      ],
+      "detail": "Firmware did not compile. Fix the diagnostics below and retry.",
+      "error_code": "INVALID_ARGUMENT"
+    }
+  }
+}

@@ -1,5 +1,5 @@
 const endpoint = "https://iolinki-iodd-mcp.shylenkoa.workers.dev/mcp";
-const archive = "https://iolinki.com/downloads/iodd-mcp-1.0.0.tgz";
+const archive = "https://iolinki.com/downloads/iodd-mcp-1.1.0.tgz";
 const localServer = { command: "npx", args: ["-y", archive] };
 const portableLocal = JSON.stringify(
   { mcpServers: { "iolinki-iodd": localServer } },

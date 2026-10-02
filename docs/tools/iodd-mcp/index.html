@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#local-iodd-authoring-with-mcp-and-cli" class="md-skip">
+        <a href="#iodd-authoring-recovery-and-firmware-proof-with-mcp" class="md-skip">
           Skip to content
         </a>
       
@@ -1304,6 +1304,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#recover-a-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recover a project
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compile-and-verify-the-authored-sensor-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compile and verify the authored sensor application
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#command-line" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1315,10 +1337,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#optional-external-validation" class="md-nav__link">
+  <a href="#official-xsd-and-separate-checker-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Optional external validation
+        Official XSD and separate Checker validation
       
     </span>
   </a>
@@ -1523,6 +1545,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#recover-a-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recover a project
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compile-and-verify-the-authored-sensor-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compile and verify the authored sensor application
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#command-line" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1534,10 +1578,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#optional-external-validation" class="md-nav__link">
+  <a href="#official-xsd-and-separate-checker-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Optional external validation
+        Official XSD and separate Checker validation
       
     </span>
   </a>
@@ -1583,15 +1627,15 @@
 
 
 
-<h1 id="local-iodd-authoring-with-mcp-and-cli">Local IODD authoring with MCP and CLI</h1>
-<p>The browser editor, command line and local MCP server use the same XML-preserving authoring engine. They create and reopen projects, edit identity, parameters, process fields, texts, events and menus, retain package assets, compare revisions and generate firmware mapping headers.</p>
+<h1 id="iodd-authoring-recovery-and-firmware-proof-with-mcp">IODD authoring, recovery and firmware proof with MCP</h1>
+<p>The browser editor, command line and hosted/local MCP servers use the same XML-preserving authoring engine. The MCP server provides 20 typed tools for authoring, recovery, reusable definitions and firmware artifacts. They create and reopen projects, edit identity, parameters, process fields, texts, events and menus, retain package assets, compare revisions and generate firmware mapping headers.</p>
 <p>The examples contain example vendor/device IDs. Replace them with IDs assigned to your device before release. Basic model and CRC checks help catch authoring errors; they do not constitute official IODD approval or a manufacturer declaration. Run the official checker separately for release validation.</p>
 <h2 id="connect-your-assistant">Connect your assistant</h2>
 <p>Use the <a href="https://iolinki.com/iodd-mcp.html">client picker</a> for copyable ChatGPT, Claude, Codex, Cursor and VS Code setup instructions.</p>
 <p>The hosted Streamable HTTP endpoint is:</p>
 <div class="highlight"><pre><span></span><code>https://iolinki-iodd-mcp.shylenkoa.workers.dev/mcp
 </code></pre></div>
-<p>No iolinki account is needed. Hosted projects are processed on the server; export project JSON or a ZIP to keep your work. For private files, run the local server.</p>
+<p>No iolinki account is needed. Hosted projects are processed on the server. Export project JSON or a ZIP for a copy you control, or explicitly save a private-token recovery snapshot for up to 24 hours. Use the local server when files should stay on your machine; submitting its firmware sources to LabWired sends them to that service.</p>
 <ul>
 <li><strong>ChatGPT:</strong> enable Developer mode in Settings → Security and login, then open <a href="https://chatgpt.com/plugins">Plugins</a>, select +, and enter the endpoint. Availability depends on account and workspace policy. <a href="https://developers.openai.com/plugins/deploy/connect-chatgpt">Official guide</a>.</li>
 <li><strong>Claude Code:</strong> <code>claude mcp add --transport http iolinki-iodd https://iolinki-iodd-mcp.shylenkoa.workers.dev/mcp</code>. <a href="https://code.claude.com/docs/en/mcp">Official guide</a>.</li>
@@ -1601,27 +1645,27 @@
 </ul>
 <h3 id="run-locally">Run locally</h3>
 <p>Install Node.js 22 or newer, then start the pinned package:</p>
-<div class="highlight"><pre><span></span><code>npx<span class="w"> </span>-y<span class="w"> </span>https://iolinki.com/downloads/iodd-mcp-1.0.0.tgz
+<div class="highlight"><pre><span></span><code>npx<span class="w"> </span>-y<span class="w"> </span>https://iolinki.com/downloads/iodd-mcp-1.1.0.tgz
 </code></pre></div>
 <p>For clients using <code>mcpServers</code> JSON (such as Cursor or Claude Desktop):</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">"iolinki-iodd"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"-y"</span><span class="p">,</span><span class="w"> </span><span class="s2">"https://iolinki.com/downloads/iodd-mcp-1.0.0.tgz"</span><span class="p">]</span>
+<span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"-y"</span><span class="p">,</span><span class="w"> </span><span class="s2">"https://iolinki.com/downloads/iodd-mcp-1.1.0.tgz"</span><span class="p">]</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Codex local setup: <code>codex mcp add iolinki-iodd -- npx -y https://iolinki.com/downloads/iodd-mcp-1.0.0.tgz</code>.
-Claude Code local setup: <code>claude mcp add iolinki-iodd -- npx -y https://iolinki.com/downloads/iodd-mcp-1.0.0.tgz</code>.
+<p>Codex local setup: <code>codex mcp add iolinki-iodd -- npx -y https://iolinki.com/downloads/iodd-mcp-1.1.0.tgz</code>.
+Claude Code local setup: <code>claude mcp add iolinki-iodd -- npx -y https://iolinki.com/downloads/iodd-mcp-1.1.0.tgz</code>.
 VS Code uses a top-level <code>servers</code> object and <code>type: "stdio"</code> for the local configuration.</p>
-<p>The local server uses stdio and keeps projects in memory. Export project JSON or a ZIP before restarting. It reads bundled templates; imports receive content from the client without arbitrary filesystem paths or shell commands.</p>
+<p>The local server uses stdio and keeps projects and recovery snapshots in process memory. Its save result reports <code>durable:false</code>; a token does not survive a local process restart. Export project JSON or a ZIP before restarting. It reads bundled templates; imports receive content from the client without arbitrary filesystem paths or shell commands.</p>
 <h3 id="give-your-agent-context">Give your agent context</h3>
 <p>Read <a href="https://iolinki.com/llms.txt">llms.txt</a> or download the <a href="https://iolinki.com/downloads/iolinki-agent-plugin.zip">agent plugin and skills</a> for stack, hardware and IODD workflows.</p>
 <p>Example prompt:</p>
 <blockquote>
-<p>Create a switching-sensor IODD. Ask me for my assigned vendor and device IDs. Inspect its threshold, hysteresis and process-data fields, validate it, and export the project, XML, ZIP and C firmware mapping header.</p>
+<p>Create a switching-sensor IODD. Ask for my assigned vendor and device IDs. Inspect its threshold, hysteresis and process-data fields, apply my defaults, and validate it. Export editable JSON, XML and ZIP, save a recovery snapshot, and keep its token private. Generate the firmware source kit; if LabWired is connected, compile it and verify the sensor behavior. Report basic checks, official XSD, official Checker and MCU execution separately.</p>
 </blockquote>
 <p>Validation covers model references, ranges, process bits and CRC. Official checker results are reported separately when a checker is configured.</p>
 <h2 id="tools">Tools</h2>
@@ -1635,7 +1679,7 @@ VS Code uses a top-level <code>servers</code> object and <code>type: "stdio"</co
 <tbody>
 <tr>
 <td><code>iodd_create</code></td>
-<td>Create <code>counter</code> or <code>switching-sensor</code> template</td>
+<td>Create a minimal <code>new</code>, <code>counter</code> or <code>switching-sensor</code> project</td>
 </tr>
 <tr>
 <td><code>iodd_import</code></td>
@@ -1651,11 +1695,11 @@ VS Code uses a top-level <code>servers</code> object and <code>type: "stdio"</co
 </tr>
 <tr>
 <td><code>iodd_validate</code></td>
-<td>Report basic model and CRC checks</td>
+<td>Report basic model/CRC and separate external validation results</td>
 </tr>
 <tr>
 <td><code>iodd_export</code></td>
-<td>Export XML, project JSON or ZIP</td>
+<td>Export XML, editable project JSON or ZIP</td>
 </tr>
 <tr>
 <td><code>iodd_diff</code></td>
@@ -1663,11 +1707,55 @@ VS Code uses a top-level <code>servers</code> object and <code>type: "stdio"</co
 </tr>
 <tr>
 <td><code>iodd_header</code></td>
-<td>Generate a C mapping header</td>
+<td>Generate a C parameter/process mapping header</td>
 </tr>
 <tr>
 <td><code>iodd_close</code></td>
-<td>Release a project from memory</td>
+<td>Release a session project from memory</td>
+</tr>
+<tr>
+<td><code>iodd_tree</code></td>
+<td>Read the complete preserving XML tree</td>
+</tr>
+<tr>
+<td><code>iodd_elements_inspect</code></td>
+<td>Inspect supplied reusable definition XML</td>
+</tr>
+<tr>
+<td><code>iodd_elements_export</code></td>
+<td>Export selected definitions with dependencies</td>
+</tr>
+<tr>
+<td><code>iodd_profile_inspect</code></td>
+<td>Inspect supplied profile variants and placeholders</td>
+</tr>
+<tr>
+<td><code>iodd_firmware_create</code></td>
+<td>Package supplied binary/resources as IOLFW1.0</td>
+</tr>
+<tr>
+<td><code>iodd_firmware_inspect</code></td>
+<td>Inspect IOLFW metadata, inventory and CRC</td>
+</tr>
+<tr>
+<td><code>iodd_save</code></td>
+<td>Save an explicit snapshot and return a private recovery token</td>
+</tr>
+<tr>
+<td><code>iodd_restore</code></td>
+<td>Restore a snapshot into a new session project</td>
+</tr>
+<tr>
+<td><code>iodd_delete_saved</code></td>
+<td>Delete a snapshot using its token</td>
+</tr>
+<tr>
+<td><code>iodd_firmware_source</code></td>
+<td>Generate arguments for LabWired compile and verify</td>
+</tr>
+<tr>
+<td><code>iodd_firmware_kit</code></td>
+<td>Export complete switching-sensor application proof source</td>
 </tr>
 </tbody>
 </table>
@@ -1683,6 +1771,15 @@ VS Code uses a top-level <code>servers</code> object and <code>type: "stdio"</co
 </code></pre></div>
 <p>Inspect the project before editing to discover existing IDs. Tool schemas enumerate identity and parameter fields, datatype/access choices, and numeric bounds. Partial edits preserve omitted values. Process fields accept <code>name</code>, <code>type</code> (<code>BooleanT</code>, <code>UIntegerT</code>, <code>IntegerT</code>), <code>offset</code> (0–255), and <code>bits</code> (1 for BooleanT, 2–64 for integers); they must fit without overlap. Field <code>index</code> is the zero-based position returned by inspection, separate from the IODD subindex. Supported operations include <code>identity</code>, <code>addVariable</code>, <code>editVariable</code>, <code>removeVariable</code>, <code>addProcessField</code>, <code>editProcessField</code>, <code>removeProcessField</code>, <code>text</code>, <code>event</code>, <code>menu</code>, <code>asset</code>, <code>removeEvent</code>, <code>removeMenu</code> and <code>removeAsset</code>. Tool schemas describe the required ID, field index, language or content. Errors include an actionable message; correct the input and retry.</p>
 <p>The server allows up to 32 projects and 64 MiB of serialized project state per process. Individual imports retain the engine's limits: 4 MiB XML, 16 MiB expanded package content, 128 files and safe relative filenames. Close unused projects to release state. The server bounds incoming MCP frames to 32 MiB; clients exporting large packages or project JSON may need a receive limit of at least 32 MiB.</p>
+<h2 id="recover-a-project">Recover a project</h2>
+<p>Call <code>iodd_save</code> with <code>{ "projectId": "YOUR-PROJECT-ID" }</code>. Its response includes <code>token</code>, <code>expiresAt</code>, <code>lifetimeMs</code>, <code>bytes</code> and <code>durable</code>. Hosted storage is durable across runtime/session restarts, with a maximum 24-hour lifetime from the save. Session projects are still temporary; edits do not automatically update a saved snapshot. Save again to capture later work.</p>
+<p>Keep the token private: anyone possessing it can restore or delete that snapshot. In a new session, call <code>iodd_restore</code> with <code>{ "token": "YOUR-PRIVATE-TOKEN" }</code> and use the new returned <code>projectId</code>. Restoration leaves the snapshot available until expiry or <code>iodd_delete_saved</code>. Delete with the same token when recovery is no longer needed. <code>iodd_close</code> releases only the current session project, not its saved snapshots or exported files.</p>
+<p>Local stdio snapshots are memory-only, even though the same tools are present. A local restart loses projects and tokens. Hosted recovery currently accepts at most 8 MiB of serialized project data per snapshot; an export can remain useful when the recovery limit is exceeded. A saved snapshot is distinct from an expiring export-download URL. Download exports promptly and keep project JSON for longer retention.</p>
+<h2 id="compile-and-verify-the-authored-sensor-application">Compile and verify the authored sensor application</h2>
+<p>For a compatible <code>switching-sensor</code> project, call <code>iodd_firmware_source</code> with <code>projectId</code>. It returns <code>compile</code> arguments, <code>verify</code> arguments, <code>scope</code> and source provenance. Call the connected LabWired plugin's <code>labwired_compile</code> with <code>compile</code>, then call <code>labwired_verify</code> with <code>verify</code> plus the returned <code>firmware_ref</code>. For larger requests, <code>labwired_put_source</code> can store <code>compile.source</code> and <code>compile.files</code> first; pass its <code>source_tree_ref</code> instead of those inline sources. These are existing LabWired tools; the IODD server does not execute arbitrary shell commands.</p>
+<p><code>iodd_firmware_kit</code> exports a ZIP containing the same source, editable project JSON/XML, generated mapping and defaults, license, upstream hashes, checksums and <code>labwired.json</code> instructions. The unchanged GPL-3.0-or-later sensor implementation is pinned to <a href="https://github.com/w1ne/iolinki/releases/tag/v2.1.0">iolinki v2.1.0</a>, commit <code>ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca</code>. The kit rejects incompatible parameter indexes, access/ranges or process bits rather than inventing matching code. Authored valid defaults are applied through the actual parameter service.</p>
+<p>The target is <code>stm32f401cdu6-blackpill</code>, with C entry <code>src/main.c</code> and a UART2 oracle. The firmware checks authored defaults, threshold/hysteresis, validity, parameter write/readback, big-endian process-byte decoding, inversion and teach. Hosted tests observed <code>model_verified</code> for both template and changed defaults; a tampered default emitted <code>IODD_SENSOR_PROOF_FAIL</code> and failed verification, and a changed validity bit failed compilation.</p>
+<p>This is genuine sensor <strong>application MCU execution</strong>, not an IO-Link transport/PHY image or a physical test. Report the actual LabWired verdict, console evidence and model gaps. The observed model assumes an ideal 3.3 V supply and derives device time from CPU frequency without tracking PLL changes. It does not prove analog cable/PHY behavior, physical-master operation, retained flash, EWARM compilation or official conformity. Source generation alone is not a compile or execution result.</p>
 <h2 id="command-line">Command line</h2>
 <p>Every command uses explicit paths and rejects invalid UTF-8 text. Saves write and sync a temporary file in the destination directory, then rename it over the destination; failed writes preserve the prior file. Reads are bounded before allocating input: 4 MiB for XML, 24 MiB for project JSON, 16 MiB for ZIP, and 1 MiB for an operation file. Status/inspection/diff reports are JSON on stdout; errors are JSON on stderr. Exit code <code>0</code> means the command completed, <code>1</code> means an input or operation failed, and <code>2</code> means validation found basic errors.</p>
 <div class="highlight"><pre><span></span><code>node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>create<span class="w"> </span>--template<span class="w"> </span>counter<span class="w"> </span>--output<span class="w"> </span>counter.project.json
@@ -1696,13 +1793,15 @@ node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>diff<span 
 node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>header<span class="w"> </span>--input<span class="w"> </span>edited.project.json<span class="w"> </span>--output<span class="w"> </span>counter-map.h
 </code></pre></div>
 <p><code>identity-edit.json</code> contains only the operation, for example <code>{"type":"identity","values":{"vendorName":"My Company"}}</code>. A project JSON file preserves XML and assets for reopening. Exported XML is stamped after basic errors are resolved. A firmware mapping header describes indexes and bit offsets; check it against your firmware implementation. Generating it does not prove firmware execution or physical device behavior.</p>
-<h2 id="optional-external-validation">Optional external validation</h2>
-<p>Install an official IODD XSD and, separately, a licensed official checker according to their distribution terms. The CLI can record actual results separately from basic checks:</p>
+<h2 id="official-xsd-and-separate-checker-validation">Official XSD and separate Checker validation</h2>
+<p>Hosted <code>iodd_validate</code> runs the published October 2025 official IODD schema package through an XSD validator after the full basic check set passes. The package is pinned by archive SHA-256; included schemas resolve locally, with no request-selected schema URLs or external-entity fetching. Inspect the returned <code>schema</code> status, validator and provenance/digest: a failed or unavailable validator is not a schema pass.</p>
+<p>An XSD pass establishes schema validity. It does not run the official IODD Checker or issue a manufacturer declaration. The hosted official Checker is unavailable until an actual permitted distribution is installed and executed; its separate <code>officialChecker</code> result must not be treated as passed. The repository does not redistribute it.</p>
+<p>For local CLI/stdio use, install the official IODD XSD and, separately, an official Checker under its distribution terms. The CLI records actual results independently from basic checks:</p>
 <div class="highlight"><pre><span></span><code>node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>validate<span class="w"> </span>--input<span class="w"> </span>edited.project.json<span class="w"> </span>--schema<span class="w"> </span>/absolute/path/IODD1.1.xsd
 node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>validate<span class="w"> </span>--input<span class="w"> </span>edited.project.json<span class="w"> </span>--checker<span class="w"> </span>/absolute/path/checker<span class="w"> </span>--checker-args<span class="w"> </span><span class="s1">'["{file}"]'</span>
 </code></pre></div>
 <p>Use the argument list required by your installed checker, including one standalone <code>{file}</code> placeholder. The runner substitutes a temporary XML filename, invokes the executable without a shell, limits captured output and times out after 30 seconds. XSD validation requires <code>xmllint</code>. A successful XSD result is separate from an official checker result.</p>
-<p>For MCP, the operator may set <code>IODD_SCHEMA</code>, <code>IODD_CHECKER</code>, and <code>IODD_CHECKER_ARGS</code> (a JSON argument array) in the server's startup environment. Tool calls cannot select an executable or argument list. Without configuration, external statuses are <code>not-run</code>. Resolve basic errors before external checks run; invalid projects retain their basic diagnostic report. The repository does not redistribute the official checker.</p>
+<p>For local stdio MCP, the operator may set <code>IODD_SCHEMA</code>, <code>IODD_CHECKER</code>, and <code>IODD_CHECKER_ARGS</code> (a JSON argument array) in the server's startup environment. Tool calls cannot select an executable or argument list. Without configuration, external statuses are <code>not-run</code>. Resolve basic errors before external checks run; invalid projects retain their basic diagnostic report. The repository does not redistribute the official checker.</p>
 <h2 id="full-xml-profiles-and-firmware-packages">Full XML, profiles and firmware packages</h2>
 <p><code>iodd_tree</code> reads the complete XML tree. <code>iodd_edit</code> supports atomic <code>tree</code> operations (<code>attributes</code>, <code>text</code>, <code>insert</code>, <code>remove</code>) using an XML ID or a root-relative child-index array as its selector; <code>[]</code> means the root. Attribute values are strings; <code>null</code> removes an attribute. Generic tree edits preserve supported unfamiliar sections, and export still requires basic checks to pass.</p>
 <p><code>iodd_elements_inspect</code> reads supplied XML for reusable elements. <code>iodd_elements_export</code> exports selected project elements and their dependencies. Import them through an <code>importElements</code> edit with <code>xml</code>, <code>selectors</code>, optional <code>destination</code>, and <code>collision</code> (<code>rename</code> or <code>error</code>). <code>iodd_profile_inspect</code> lists variants and placeholders in supplied official <code>IODDProfileDefinitions</code> XML. Load it with a <code>profile</code> edit (<code>action:"load"</code>, <code>xml</code>), inspect the returned project for the pack ID, then apply with <code>action:"apply"</code>, <code>id</code>, <code>profileId</code>, and <code>replacements</code>. Official profile files are obtained separately from IO-Link; the repository does not redistribute their documents.</p>
@@ -1764,7 +1863,7 @@ node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>fw-inspect
 </tr>
 <tr>
 <td>Save/reopen and templates</td>
-<td>Project JSON, preserving ZIP/XML, revision comparison</td>
+<td>Project JSON, preserving ZIP/XML, revision comparison; explicit hosted 24-hour snapshots</td>
 <td>Browser desktop/mobile roundtrips, CLI atomic saves, real MCP roundtrips and package limits tested.</td>
 </tr>
 <tr>

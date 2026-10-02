@@ -7,7 +7,7 @@
 ## Start here
 
 - [Agent skill](https://iolinki.com/plugins/iolinki/skills/iolinki/SKILL.md): Instructions for IODD creation, firmware integration and validation.
-- [Connect MCP](https://iolinki.com/iodd-mcp.html): Client-specific setup and local installation.
+- [Connect MCP](https://iolinki.com/iodd-mcp.html): 20 authoring/recovery/firmware tools, client setup and local package 1.1.0.
 - [Agent plugin](https://iolinki.com/downloads/iolinki-agent-plugin.zip): Portable skill plus MCP configuration for supported clients.
 - [IODD editor](https://iolinki.com/iodd-editor.html): Create, import, edit and export device descriptions in the browser.
 
@@ -20,6 +20,14 @@
 - [Device releases](https://github.com/w1ne/iolinki/releases): Source, examples, IAR project and reproducible test artifacts.
 - [Master releases](https://github.com/w1ne/iolinki-master/releases): Master stack releases.
 - [IODD examples](https://iolinki.com/docs/tools/iodd-examples/): Counter and switching-sensor packages and exact firmware mappings.
+
+## Authoring, recovery and MCU proof
+
+Inspect before edits, validate, and export editable JSON/XML/ZIP. Hosted `iodd_save` provides an explicit durable snapshot for up to 24 hours with a private recovery token; `iodd_restore` opens it in a new session and `iodd_delete_saved` deletes it. Anyone with the token can restore/delete it. Local stdio snapshots are memory-only and do not survive restart.
+
+For a compatible switching sensor, `iodd_firmware_source` supplies arguments to the LabWired plugin's existing compile/verify tools, and `iodd_firmware_kit` exports complete GPL application source with mapping/defaults and provenance. Report actual compile and oracle results. STM32F401 application MCU execution checks threshold/hysteresis, validity, parameters and process bytes; it does not prove IO-Link PHY/cable, physical hardware or conformity.
+
+Hosted validation uses the pinned October 2025 official IODD XSD package. Read schema status and provenance; official Checker execution is separate and remains unavailable until a permitted executable is installed and run.
 
 ## Evidence and commercial scope
 

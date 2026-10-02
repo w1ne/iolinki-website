@@ -14,7 +14,7 @@ test("standalone npm package has complete allowlisted runtime and a reproducible
   assert.deepEqual(first.bytes, second.bytes);
   assert.deepEqual(first.bytes, await readFile(output));
   const names = first.manifest.files.map(file => file.path);
-  for (const name of ["bin/iodd-mcp.mjs", "tools/iodd/mcp.mjs", "tools/iodd/mcp-factory.mjs", "tools/iodd/checker.mjs", "assets/js/iodd/project.js", "assets/js/iodd/vendor/checker/LICENSE", "assets/iodd/counter.xml", "assets/iodd/switching-sensor.xml", "assets/iodd/LICENSE.GPL-3.0", "LICENSE"])
+  for (const name of ["bin/iodd-mcp.mjs", "tools/iodd/mcp.mjs", "tools/iodd/mcp-factory.mjs", "tools/iodd/checker.mjs", "tools/iodd/project-vault.mjs", "tools/iodd/firmware-kit.mjs", "assets/iodd/firmware-kit/switching_sensor.c", "assets/js/iodd/project.js", "assets/js/iodd/vendor/checker/LICENSE", "assets/iodd/counter.xml", "assets/iodd/switching-sensor.xml", "assets/iodd/LICENSE.GPL-3.0", "LICENSE"])
     assert.ok(names.includes(name), name);
   assert.ok(!names.some(name => /editor|finder|node_modules|package-lock|catalog-worker/.test(name)));
   assert.equal(first.manifest.name, "iolinki-iodd-mcp");
@@ -39,6 +39,16 @@ test("clean npx tarball launch initializes real MCP and creates/exports XML and 
     assert.ok(!exported.isError, JSON.stringify(exported));
     const result = exported.structuredContent || JSON.parse(exported.content[0].text);
     assert.match(result.content, /<IODevice\s/);
+    const saved = await client.callTool({name: "iodd_save", arguments: {projectId: data.projectId}});
+    assert.ok(!saved.isError);
+    const receipt = JSON.parse(saved.content[0].text);
+    assert.equal(receipt.durable, false);
+    const restored = await client.callTool({name: "iodd_restore", arguments: {token: receipt.token}});
+    assert.ok(!restored.isError);
+    const sensor = JSON.parse((await client.callTool({name: "iodd_create", arguments: {template: "switching-sensor"}})).content[0].text);
+    const kit = await client.callTool({name: "iodd_firmware_kit", arguments: {projectId: sensor.projectId}});
+    assert.ok(!kit.isError, JSON.stringify(kit));
+    assert.equal(JSON.parse(kit.content[0].text).encoding, "base64");
     const {stdout} = await exec(join(dirname(process.execPath), "npx"), ["-y", "file:" + output, "cli", "--help"], {cwd: work, env, timeout: 30000});
     assert.match(stdout, /Commands: create/);
   } finally {
