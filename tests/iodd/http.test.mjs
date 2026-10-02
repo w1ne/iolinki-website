@@ -204,3 +204,20 @@ test("concurrent initialization reserves capacity and rejected requests leave no
     for (const id of host.sessions.keys()) await host.removeSession(id);
   }
 });
+
+test('durable exports remain downloadable in a recreated HTTP host after session shutdown', async () => {
+  const {createArtifactStore} = await import('../../tools/iodd/artifact-store.mjs');
+  const {createMemoryProjectStorage} = await import('../../tools/iodd/project-vault.mjs');
+  const storage = createMemoryProjectStorage();
+  const first = new IoddHttpHost({loadTemplate, artifactStore: createArtifactStore({storage})});
+  const connection = await connect(first);
+  const project = await connection.call('create', {template:'switching-sensor'});
+  const artifact = await connection.call('export', {projectId:project.projectId, format:'xml'});
+  await connection.transport.terminateSession();
+  await connection.client.close();
+  const restarted = new IoddHttpHost({loadTemplate, artifactStore: createArtifactStore({storage})});
+  const download = await restarted.fetch(new Request(artifact.downloadUrl));
+  assert.equal(download.status, 200);
+  assert.match(await download.text(), /<IODevice/);
+  assert.equal(restarted.sessions.size, 0);
+});

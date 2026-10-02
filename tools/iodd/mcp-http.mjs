@@ -19,6 +19,7 @@ export class IoddHttpHost {
     maxProjectBytes = 8 * 1024 * 1024,
     maxArtifactBytes = 16 * 1024 * 1024,
     artifactOrigin,
+    artifactStore,
     externalValidation,
     projectVaultFactory,
     firmwareKit,
@@ -32,6 +33,7 @@ export class IoddHttpHost {
       maxProjectBytes,
       maxArtifactBytes,
       artifactOrigin,
+      artifactStore,
       externalValidation,
       projectVaultFactory,
       firmwareKit,
@@ -58,6 +60,7 @@ export class IoddHttpHost {
         await this.removeSession(id);
     for (const [key, value] of this.artifacts)
       if (value.expires <= now) this.artifacts.delete(key);
+    await this.artifactStore?.prune();
   }
   async fetch(request, newSessionId = crypto.randomUUID()) {
     await this.prune();
@@ -80,7 +83,9 @@ export class IoddHttpHost {
     if (url.pathname.startsWith("/artifacts/")) {
       if (request.method !== "GET") return fail(405, "Use GET.");
       const token = url.pathname.slice("/artifacts/".length);
-      const artifact = UUID.test(token) && this.artifacts.get(token);
+      const artifact = UUID.test(token) && (this.artifactStore
+        ? await this.artifactStore.get(token)
+        : this.artifacts.get(token));
       if (!artifact) return fail(404, "Artifact expired or not found.");
       return new Response(artifact.bytes, {
         headers: {
@@ -146,13 +151,9 @@ export class IoddHttpHost {
             filename = "device-export.bin";
           const token = sessionId[0] + crypto.randomUUID().slice(1),
             expires = this.now() + this.artifactTTL;
-          this.artifacts.set(token, {
-            bytes: Uint8Array.from(bytes),
-            filename,
-            mimeType,
-            expires,
-            sessionId,
-          });
+          const artifact = { bytes: Uint8Array.from(bytes), filename, mimeType, expires };
+          if (this.artifactStore) await this.artifactStore.save({token, ...artifact});
+          else this.artifacts.set(token, artifact);
           return {
             filename,
             downloadUrl: `${this.artifactOrigin ?? url.origin}/artifacts/${token}`,

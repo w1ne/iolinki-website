@@ -4,6 +4,7 @@ import counter from "../../assets/iodd/counter.xml";
 import switching from "../../assets/iodd/switching-sensor.xml";
 import { IoddHttpHost } from "./mcp-http.mjs";
 import { createProjectVault, isRecoveryToken } from "./project-vault.mjs";
+import { createArtifactStore } from "./artifact-store.mjs";
 import { createWorkerSchemaValidation } from "./schema-worker.mjs";
 const externalValidation = createWorkerSchemaValidation();
 import { createFirmwareKit } from "./firmware-kit.mjs";
@@ -20,9 +21,11 @@ export class IoddMcpSessions extends DurableObject {
     super(state, env);
     this.state = state;
     this.vault = createProjectVault({ storage: state.storage, durable: true });
+    this.artifactStore = createArtifactStore({ storage: state.storage });
     this.host = new IoddHttpHost({
       externalValidation,
       artifactOrigin: env.PUBLIC_ORIGIN,
+      artifactStore: this.artifactStore,
       firmwareKit: project => createFirmwareKit(project, {loadAsset: async name => firmwareAssets[name]}),
       loadTemplate: async (name) => (name === "counter" ? counter : switching),
       projectVaultFactory: (sessionId) => ({
@@ -63,9 +66,9 @@ export class IoddMcpSessions extends DurableObject {
     await this.scheduleAlarm();
   }
   async scheduleAlarm() {
-    const nextExpiry = await this.vault.nextExpiry();
+    const [nextExpiry, nextArtifact] = await Promise.all([this.vault.nextExpiry(), this.artifactStore.nextExpiry()]);
     const nextSession = this.host.sessions.size || this.host.artifacts.size ? Date.now() + 60 * 1000 : null;
-    const next = [nextExpiry, nextSession].filter(value => value !== null);
+    const next = [nextExpiry, nextArtifact, nextSession].filter(value => value !== null);
     if (next.length) await this.state.storage.setAlarm(Math.min(...next));
     else await this.state.storage.deleteAlarm();
   }
