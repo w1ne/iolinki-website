@@ -474,7 +474,7 @@ export function createIoddMcpServer({
   const server = new McpServer(
     {
       name: "iolinki-iodd",
-      version: "1.1.0",
+      version: "1.1.1",
       websiteUrl: "https://iolinki.com/iodd-mcp.html",
     },
     { instructions },
@@ -707,8 +707,13 @@ export function createIoddMcpServer({
     { projectId, format },
     async ({ projectId, format }) => {
       const project = get(projectId);
+      const basename = project.filename.split(/[\\/]/).pop();
+      const stem = basename.replace(/\.xml$/i, "");
       return {
         format,
+        filename: format === "xml" ? basename : format === "package"
+          ? `${stem.slice(0, 236)}.zip`
+          : `${stem.slice(0, 222)}.iodd-project.json`,
         encoding: format === "package" ? "base64" : "utf8",
         content:
           format === "xml"

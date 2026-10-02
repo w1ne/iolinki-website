@@ -426,3 +426,13 @@ test('generated starter filenames follow the official naming convention without 
   assert.equal(p.inspectProject(created).identity.vendorName, 'Vendor Example Inc.');
   assert.equal(p.createNewProject({}, 'explicit.xml').filename, 'explicit.xml');
 });
+
+test('suggested names prefix leading hyphens while identity and explicit names remain intact', () => {
+  const identity = {vendorName:'-Vendor', productId:'-sensor-01', releaseDate:'2026-10-02'};
+  const created = p.createNewProject(identity);
+  assert.equal(created.filename, '_-Vendor-_-sensor-01-20261002-IODD1.1.xml');
+  assert.equal(p.inspectProject(created).identity.vendorName, '-Vendor');
+  assert.equal(p.inspectProject(created).identity.productId, '-sensor-01');
+  assert.equal(p.createNewProject(identity, '-explicit.xml').filename, '-explicit.xml');
+  assert.equal(p.createProject(created.xml, 'nested/-imported.xml').filename, 'nested/-imported.xml');
+});

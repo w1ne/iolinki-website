@@ -33,7 +33,7 @@ test('transaction write failure leaves no partial chunks or capacity usage',asyn
 test('invalid nonce, body, lifetime, filename and mime type are refused',async()=>{
  const s=store();for(const token of ['bad','../x','00000000-0000-0000-0000-000000000000',crypto.randomUUID().toUpperCase(),crypto.randomUUID()+'\n']){assert.equal(await s.get(token),null);await assert.rejects(s.save(artifact({token})),/token/);}
  assert.equal(await s.get(crypto.randomUUID()),null);
- for(const overrides of [{expires:1000},{expires:601001},{expires:Infinity},{bytes:new Uint8Array(16*1024*1024+1)},{bytes:'no'},{filename:'../x'},{filename:'device.zip\n'},{mimeType:'text/plain\n'},{filename:'x'.repeat(241)},{mimeType:'text/plain\r\nx:bad'}])await assert.rejects(s.save(artifact(overrides)));
+ for(const overrides of [{expires:1000},{expires:601001},{expires:Infinity},{bytes:new Uint8Array(16*1024*1024+1)},{bytes:'no'},{filename:'../x'},{filename:'.hidden'},{filename:'a/b.xml'},{filename:'a\\b.xml'},{filename:'a".xml'},{filename:'device.zip\n'},{mimeType:'text/plain\n'},{filename:'x'.repeat(241)},{mimeType:'text/plain\r\nx:bad'}])await assert.rejects(s.save(artifact(overrides)));
 });
 test('same-size chunk corruption and malformed metadata never return bytes',async()=>{
  const storage=createMemoryProjectStorage(),s=store({storage}),a=artifact();await s.save(a);
@@ -54,4 +54,12 @@ test('save automatically prunes expired capacity and nextExpiry picks earliest r
  let now=1000;const s=store({clock:()=>now,maxEntries:2,maxBytes:6});
  const first=artifact({expires:1100}),second=artifact({expires:1300});await s.save(first);await s.save(second);assert.equal(await s.nextExpiry(),1100);
  now=1100;await s.save(artifact({expires:1400}));assert.equal(await s.get(first.token),null);assert.equal(await s.nextExpiry(),1300);
+});
+
+test('canonical hash, underscore and hyphen leading filenames survive durable save and recreation',async()=>{
+ const storage=createMemoryProjectStorage();
+ for(const filename of ['#Vendor-device-20261002-IODD1.1.xml','_Vendor-device.xml','-Vendor-device.xml']){
+  const a=artifact({filename});await store({storage}).save(a);
+  assert.equal((await store({storage}).get(a.token)).filename,filename);
+ }
 });

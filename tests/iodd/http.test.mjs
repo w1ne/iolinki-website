@@ -1,7 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import "../../tools/iodd/node-runtime.mjs";
-import { readFile } from "node:fs/promises";
+import { readFile, mkdtemp, writeFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { promisify } from "node:util";
+import { execFile } from "node:child_process";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import { IoddHttpHost } from "../../tools/iodd/mcp-http.mjs";
@@ -220,4 +224,78 @@ test('durable exports remain downloadable in a recreated HTTP host after session
   assert.equal(download.status, 200);
   assert.match(await download.text(), /<IODevice/);
   assert.equal(restarted.sessions.size, 0);
+});
+
+test("SDK exports preserve project basenames in metadata and download headers", async () => {
+  const host = new IoddHttpHost({ loadTemplate });
+  const connection = await connect(host);
+  try {
+    for (const template of ["new", "counter", "switching-sensor"]) {
+      const project = await connection.call("create", { template });
+      const snapshot = await connection.call("export", { projectId: project.projectId, format: "project" });
+      const filename = (await (await host.fetch(new Request(snapshot.downloadUrl))).json()).filename;
+      assert.match(filename, /-\d{8}-IODD1\.1\.xml$/);
+      for (const [format, expected] of [["xml", filename], ["package", filename.replace(/\.xml$/i, ".zip")], ["project", filename.replace(/\.xml$/i, ".iodd-project.json")]]) {
+        const artifact = await connection.call("export", { projectId: project.projectId, format });
+        assert.equal(artifact.filename, expected);
+        const response = await host.fetch(new Request(artifact.downloadUrl));
+        assert.equal(response.headers.get("Content-Disposition"), `attachment; filename="${expected}"`);
+      }
+    }
+    const longName = `${"X".repeat(236)}.xml`;
+    const longProject = await connection.call("create", { template: "counter", filename: longName });
+    for (const [format, expected] of [["xml", longName], ["package", `${"X".repeat(236)}.zip`], ["project", `${"X".repeat(222)}.iodd-project.json`]]) {
+      const artifact = await connection.call("export", { projectId: longProject.projectId, format });
+      assert.equal(artifact.filename, expected);
+      assert.equal(artifact.filename.length, 240);
+      const response = await host.fetch(new Request(artifact.downloadUrl));
+      assert.equal(response.headers.get("Content-Disposition"), `attachment; filename="${expected}"`);
+    }
+    const imported = await connection.call("import", { format: "xml", content: await loadTemplate("counter"), filename: "folder/Custom-IODD.xml" });
+    const artifact = await connection.call("export", { projectId: imported.projectId, format: "xml" });
+    assert.equal(artifact.filename, "Custom-IODD.xml");
+  } finally {
+    await connection.client.close();
+    for (const id of host.sessions.keys()) await host.removeSession(id);
+  }
+});
+
+test("default-created hosted XML passes genuine Checker using returned filename", { skip: !process.env.IODD_GENUINE_CHECKER }, async () => {
+  const directory = await mkdtemp(join(tmpdir(), "iodd-hosted-checker-"));
+  const host = new IoddHttpHost({ loadTemplate });
+  const connection = await connect(host);
+  try {
+    for (const identity of [{}, { vendorName: "-Vendor" }]) {
+      const project = await connection.call("create", { identity });
+      const artifact = await connection.call("export", { projectId: project.projectId, format: "xml" });
+      const response = await host.fetch(new Request(artifact.downloadUrl));
+      assert.match(artifact.filename, /-\d{8}-IODD1\.1\.xml$/);
+      assert.ok(!artifact.filename.startsWith("-"));
+      const filename = join(directory, artifact.filename);
+      await writeFile(filename, await response.text());
+      const { stdout } = await promisify(execFile)(process.env.IODD_GENUINE_CHECKER, [filename], { timeout: 45000 });
+      assert.match(stdout, /0 errors found/);
+    }
+  } finally {
+    await connection.client.close();
+    for (const id of host.sessions.keys()) await host.removeSession(id);
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
+test("canonical leading hash, underscore and hyphen exports retain metadata and headers", async () => {
+  const host = new IoddHttpHost({ loadTemplate });
+  const connection = await connect(host);
+  try {
+    for (const vendorName of ["#Vendor", "_Vendor", "-Vendor"]) {
+      const project = await connection.call("create", { identity: { vendorName, releaseDate: "2026-10-02" } });
+      const artifact = await connection.call("export", { projectId: project.projectId, format: "xml" });
+      assert.equal(artifact.filename, `${vendorName.startsWith("-") ? "_" : ""}${vendorName}-new-device-20261002-IODD1.1.xml`);
+      const response = await host.fetch(new Request(artifact.downloadUrl));
+      assert.equal(response.headers.get("Content-Disposition"), `attachment; filename="${artifact.filename}"`);
+    }
+  } finally {
+    await connection.client.close();
+    for (const id of host.sessions.keys()) await host.removeSession(id);
+  }
 });
