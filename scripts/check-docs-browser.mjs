@@ -54,11 +54,10 @@ try {
       await page.waitForURL('**/docs/device/v2.1.0/');
     }
     const search = page.locator('input[data-md-component="search-query"]');
-    if (!(await search.isVisible())) {
-      await page.locator('label[for="__search"]:visible').first().click();
-    }
+    const searchToggle = page.locator('.md-header label[for="__search"]');
+    if (await searchToggle.isVisible()) await searchToggle.click();
+    else await search.click();
     // Material updates its search query on keyup; emulate actual typing.
-    await search.click();
     await search.pressSequentially('TIOL112');
     await page.locator('.md-search-result__link').first().waitFor({ state: 'visible' });
     assert.ok((await page.locator('.md-search-result').innerText()).includes('TIOL112'), 'search finds transceiver guides');
