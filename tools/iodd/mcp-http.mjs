@@ -18,6 +18,11 @@ export class IoddHttpHost {
     maxSessions = 8,
     maxProjectBytes = 8 * 1024 * 1024,
     maxArtifactBytes = 16 * 1024 * 1024,
+    artifactOrigin,
+    artifactStore,
+    externalValidation,
+    projectVaultFactory,
+    firmwareKit,
   } = {}) {
     Object.assign(this, {
       loadTemplate,
@@ -27,7 +32,17 @@ export class IoddHttpHost {
       maxSessions,
       maxProjectBytes,
       maxArtifactBytes,
+      artifactOrigin,
+      artifactStore,
+      externalValidation,
+      projectVaultFactory,
+      firmwareKit,
     });
+    if (artifactOrigin !== undefined) {
+      const origin = new URL(artifactOrigin);
+      if (origin.protocol !== "https:" || origin.origin !== artifactOrigin)
+        throw Error("Artifact origin must be an HTTPS origin without a path.");
+    }
     this.sessions = new Map();
     this.pendingSessions = 0;
     this.artifacts = new Map();
@@ -35,8 +50,7 @@ export class IoddHttpHost {
   async removeSession(id) {
     const session = this.sessions.get(id);
     this.sessions.delete(id);
-    for (const [key, value] of this.artifacts)
-      if (value.sessionId === id) this.artifacts.delete(key);
+    // Export capabilities keep their own bounded expiry after clients disconnect.
     if (session) await session.server.close();
   }
   async prune() {
@@ -46,6 +60,7 @@ export class IoddHttpHost {
         await this.removeSession(id);
     for (const [key, value] of this.artifacts)
       if (value.expires <= now) this.artifacts.delete(key);
+    await this.artifactStore?.prune();
   }
   async fetch(request, newSessionId = crypto.randomUUID()) {
     await this.prune();
@@ -68,7 +83,9 @@ export class IoddHttpHost {
     if (url.pathname.startsWith("/artifacts/")) {
       if (request.method !== "GET") return fail(405, "Use GET.");
       const token = url.pathname.slice("/artifacts/".length);
-      const artifact = UUID.test(token) && this.artifacts.get(token);
+      const artifact = UUID.test(token) && (this.artifactStore
+        ? await this.artifactStore.get(token)
+        : this.artifacts.get(token));
       if (!artifact) return fail(404, "Artifact expired or not found.");
       return new Response(artifact.bytes, {
         headers: {
@@ -113,6 +130,9 @@ export class IoddHttpHost {
       this.pendingSessions++;
       const server = createIoddMcpServer({
         loadTemplate: this.loadTemplate,
+        externalValidation: this.externalValidation,
+        projectVault: this.projectVaultFactory?.(sessionId),
+        firmwareKit: this.firmwareKit,
         maxBytes: this.maxProjectBytes,
         publishArtifact: async ({ bytes, filename, mimeType }) => {
           await this.prune();
@@ -131,16 +151,12 @@ export class IoddHttpHost {
             filename = "device-export.bin";
           const token = sessionId[0] + crypto.randomUUID().slice(1),
             expires = this.now() + this.artifactTTL;
-          this.artifacts.set(token, {
-            bytes: Uint8Array.from(bytes),
-            filename,
-            mimeType,
-            expires,
-            sessionId,
-          });
+          const artifact = { bytes: Uint8Array.from(bytes), filename, mimeType, expires };
+          if (this.artifactStore) await this.artifactStore.save({token, ...artifact});
+          else this.artifacts.set(token, artifact);
           return {
             filename,
-            downloadUrl: `${url.origin}/artifacts/${token}`,
+            downloadUrl: `${this.artifactOrigin ?? url.origin}/artifacts/${token}`,
             byteLength: bytes.length,
             expiresAt: new Date(expires).toISOString(),
           };

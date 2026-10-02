@@ -7,7 +7,7 @@
 ## Start here
 
 - [Agent skill](https://iolinki.com/plugins/iolinki/skills/iolinki/SKILL.md): Instructions for IODD creation, firmware integration and validation.
-- [Connect MCP](https://iolinki.com/iodd-mcp.html): Client-specific setup and local installation.
+- [Connect MCP](https://iolinki.com/iodd-mcp.html): 20 authoring/recovery/firmware tools, client setup and local package 1.1.0.
 - [Agent plugin](https://iolinki.com/downloads/iolinki-agent-plugin.zip): Portable skill plus MCP configuration for supported clients.
 - [IODD editor](https://iolinki.com/iodd-editor.html): Create, import, edit and export device descriptions in the browser.
 
@@ -21,6 +21,14 @@
 - [Master releases](https://github.com/w1ne/iolinki-master/releases): Master stack releases.
 - [IODD examples](https://iolinki.com/docs/tools/iodd-examples/): Counter and switching-sensor packages and exact firmware mappings.
 
+## Authoring, recovery and MCU proof
+
+Inspect before edits, validate, and export editable JSON/XML/ZIP. Hosted `iodd_save` provides an explicit durable snapshot for up to 24 hours with a private recovery token; `iodd_restore` opens it in a new session and `iodd_delete_saved` deletes it. Anyone with the token can restore/delete it. Local stdio snapshots are memory-only and do not survive restart.
+
+For a compatible switching sensor, `iodd_firmware_source` supplies arguments to the LabWired plugin's existing compile/verify tools, and `iodd_firmware_kit` exports complete GPL application source with mapping/defaults and provenance. Report actual compile and oracle results. STM32F401 application MCU execution checks threshold/hysteresis, validity, parameters and process bytes; it does not prove IO-Link PHY/cable, physical hardware or conformity.
+
+Hosted validation uses the pinned October 2025 official IODD XSD package. Read schema status and provenance; official Checker execution is separate and is not configured in this deployment; its official distribution is being checked separately.
+
 ## Evidence and commercial scope
 
 - [Validation](https://iolinki.com/validation.html): Published test evidence.
@@ -30,7 +38,7 @@ Example vendor/device IDs are illustrative. Basic IODD validation, official XSD 
 
 ---
 name: iolinki
-description: Create, edit and validate IO-Link IODDs, generate C mappings, or integrate the iolinki device or master stack using its released examples and test evidence.
+description: Use when authoring or recovering IO-Link IODDs, preparing a switching-sensor firmware proof, or integrating the iolinki device or master stack.
 ---
 
 # iolinki
@@ -39,13 +47,27 @@ Use https://iolinki.com/llms.txt to discover the current released documentation 
 
 ## IODD workflow
 
-Use the iolinki IODD MCP server when connected. Discover its tool schemas rather than guessing arguments. Tools use the `iodd_` prefix, for example `iodd_create`, `iodd_inspect`, `iodd_edit`, `iodd_validate`, `iodd_export` and `iodd_header`. If unavailable, use the browser editor at https://iolinki.com/iodd-editor.html or the local CLI described at https://iolinki.com/iodd-mcp.html.
+Use the iolinki IODD MCP server when connected. Discover its tool schemas rather than guessing arguments. The hosted/local server exposes 20 tools using the `iodd_` prefix, for example `iodd_create`, `iodd_inspect`, `iodd_edit`, `iodd_validate`, `iodd_export` and `iodd_header`. If unavailable, use the browser editor at https://iolinki.com/iodd-editor.html or the local CLI described at https://iolinki.com/iodd-mcp.html.
 
 - Create with the `new`, `counter` or `switching-sensor` template, or import the user's XML, ZIP or saved project. Keep returned projectId in this session.
 - Inspect before editing. Confirm vendor/device IDs, product identity, parameter indexes/access/defaults, process lengths and bit offsets against the actual firmware. Example IDs 1234/5678 and 1234/5679 are illustrative.
 - Apply typed atomic edits. For fields outside typed forms use `tree` to inspect selectors before a document operation. Preserve unfamiliar XML, localized text, images and package assets. Use profile inspection before applying supplied profile XML.
-- Validate after edits. Treat basic/model/CRC, official XSD and official IODD Checker results as separate evidence. A not-run checker is not a pass; none of these results certifies a finished device.
+- Validate after edits. Hosted validation uses the pinned October 2025 official XSD package and reports its validator/provenance separately from basic/model/CRC checks. Inspect actual statuses; unavailable, failed or not-run means no pass. The official IODD Checker is a separate tool installation and is not configured on the hosted server; its official distribution is being checked separately. None of these results certifies a finished device.
 - Export a ZIP for device-tool import and a generated C header for firmware mapping. Save project JSON when the user needs editable work. Report filenames and the checks actually run. For firmware update packages use the separate firmware tools, not an IODD export.
+
+## Recovery
+
+When the user needs recoverable work, call `iodd_save` explicitly. Keep its private `token` and reported expiry; do not publish tokens in shared artifacts. Anyone with the token can restore or delete that snapshot. Hosted saves report `durable:true` and survive session/runtime restarts for up to 24 hours from saving. Changes after a save require another save. Use `iodd_restore` with the token in a new session and keep the new returned projectId. Use `iodd_delete_saved` when recovery is no longer needed; closing a session project does not delete snapshots.
+
+Local stdio saves report `durable:false` and live only in process memory. Export JSON/ZIP before restarting locally or before the hosted snapshot expires. Export-download URLs and recovery tokens have different lifetimes. Do not describe a successful save as permanent storage.
+
+## Actual firmware proof
+
+For a compatible switching-sensor IODD, call `iodd_firmware_source`. Pass its returned `compile` object to the connected LabWired plugin's `labwired_compile`, then pass `verify` plus the actual compiled `firmware_ref` to `labwired_verify`. Optionally use `labwired_put_source` for the provided source/files first. If LabWired is unavailable, export the kit and state that compilation/execution has not been performed; do not manufacture a result.
+
+`iodd_firmware_kit` exports complete GPL-3.0-or-later application source, authored JSON/XML, generated mapping/defaults, pinned released sensor implementation, license/hashes and `labwired.json` arguments. It rejects unsupported parameter/process contracts. It is distinct from `iodd_firmware_create`/`iodd_firmware_inspect`, which package or inspect supplied IOLFW binaries.
+
+The supported proof target is STM32F401 Blackpill (`stm32f401cdu6-blackpill`), C entry `src/main.c`, UART2 output. The actual firmware checks authored defaults, threshold/hysteresis, validity, parameter write/readback, process-byte decoding, inversion and teach before printing `IODD_SENSOR_PROOF_PASS`. Report the returned verdict, observed console and model gaps. A source kit, compile or printed partial marker alone is not a verification pass. This proof executes the sensor application on the MCU model; it excludes IO-Link transport/PHY/cable, physical master, retained flash, IAR and official conformity. Retain supply/clock approximations disclosed by LabWired.
 
 ## Stack integration
 
@@ -61,11 +83,11 @@ Commercial questions should use https://iolinki.com/faq.html#licensing and the a
 
 # Use iolinki with an agent
 
-Connect the [IODD MCP tools](https://iolinki.com/iodd-mcp.html), then ask your agent to create, inspect, edit, validate and export a device description. The tools also generate the C header that maps the IODD to your firmware.
+Connect the [IODD MCP tools](https://iolinki.com/iodd-mcp.html), then ask your agent to create, inspect, edit, validate and export a device description. The 20 tools also generate C mappings, save explicit recoverable snapshots and prepare sensor source for the connected LabWired compile/verify tools.
 
 Try:
 
-> Create a switching-sensor IODD. Inspect the parameter dictionary and process data, validate the result, then export the IODD ZIP and C mapping header. Tell me which validation checks ran.
+> Create a switching-sensor IODD with my assigned identity and parameter defaults. Inspect and validate it, export editable JSON/XML/ZIP, and save a recovery snapshot with its token kept private. Generate the source kit, then use LabWired to compile and verify the sensor application if connected. Report each validation and execution result separately.
 
 ## Give an agent the instructions
 
@@ -101,7 +123,11 @@ In ChatGPT, enable Developer mode in **Settings → Security and login**, then o
 
 The downloadable plugin follows the portable Agent Plugins format with a skill and Streamable HTTP MCP configuration. For a registered ChatGPT plugin, its technical `plugin_asdk_app…` connection ID is assigned after registration; it cannot be prefilled for another account. A public Plugins Directory listing requires submission and review. The downloadable package and direct MCP connection are separate from that listing.
 
-A useful first workflow is “describe my sensor → build its IODD → validate → export the ZIP and firmware mapping.” Firmware flashing, physical wiring and official conformity remain actions performed with the relevant tools and hardware.
+A useful workflow is “describe my sensor → author and validate its IODD → export and save → compile its sensor application → verify the behavior.” Hosted snapshots survive session/runtime restarts for up to 24 hours; keep the private token and expiry, and restore into a new project. Local stdio snapshots disappear on process restart. Neither replaces a downloaded editable project for longer retention.
+
+`iodd_firmware_source` returns LabWired compile/verify arguments; `iodd_firmware_kit` returns the same source as a ZIP. They support the released switching-sensor parameter/process contract and apply authored defaults. STM32F401 MCU execution proves application behavior against a UART oracle, not IO-Link transport, analog PHY/cable or physical-master communication. Report LabWired's actual verdict and model gaps. Source generation alone is not execution.
+
+Hosted XSD validation uses the pinned October 2025 official schema package. Basic checks, XSD status and official Checker status are separate; the official Checker is not configured in this deployment; its official distribution is being checked separately. Firmware flashing, physical wiring and official conformity require their own evidence.
 
 Packaging and setup follow [OpenAI's plugin guide](https://developers.openai.com/plugins/build/plugins) and [MCP guide](https://learn.chatgpt.com/docs/extend/mcp?surface=cli).
 
@@ -116,7 +142,7 @@ Example vendor/device IDs: Counter button LED 1234/5678; Switching sensor 1234/5
 
 # Counter, button and LED — importable IODD example
 
-This package contains stamped iolinki example-reference-device-20261002-IODD1.1.xml, this guide, a generated C firmware mapping header and both MIT/GPL license grants. The iolinki-authored XML templates are additionally available under MIT; this does not change the protocol stack license. Import the ZIP directly into the browser editor or another IODD importer. The examples describe the released [iolinki stack](https://github.com/w1ne/iolinki) applications.
+This package contains stamped iolinki_example-reference-device-20261002-IODD1.1.xml, this guide, a generated C firmware mapping header and both MIT/GPL license grants. The iolinki-authored XML templates are additionally available under MIT; this does not change the protocol stack license. Import the ZIP directly into the browser editor or another IODD importer. The examples describe the released [iolinki stack](https://github.com/w1ne/iolinki) applications.
 
 The released reference-device demo produces a 16-bit counter followed by one button/state byte. Output bit 0 drives the LED; preserve the remaining output bits when changing it.
 
@@ -156,7 +182,7 @@ The repository's firmware proof compiles and runs the released application C aga
 
 # Switching sensor — importable IODD example
 
-This package contains stamped iolinki example-switching-sensor-20261002-IODD1.1.xml, this guide, a generated C firmware mapping header and both MIT/GPL license grants. The iolinki-authored XML templates are additionally available under MIT; this does not change the protocol stack license. Import the ZIP directly into the browser editor or another IODD importer. The examples describe the released [iolinki stack](https://github.com/w1ne/iolinki) applications.
+This package contains stamped iolinki_example-switching-sensor-20261002-IODD1.1.xml, this guide, a generated C firmware mapping header and both MIT/GPL license grants. The iolinki-authored XML templates are additionally available under MIT; this does not change the protocol stack license. Import the ZIP directly into the browser editor or another IODD importer. The examples describe the released [iolinki stack](https://github.com/w1ne/iolinki) applications.
 
 The released switching-sensor application returns a 16-bit measurement scaled by 100, a validity bit and a switching-output bit. Its ISDU service supplies setpoint, hysteresis, inversion and a teach command.
 

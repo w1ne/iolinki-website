@@ -403,3 +403,26 @@ test("unused new menus get actionable navigation warning without blocking creati
     ),
   );
 });
+
+test('authoring starters include mandatory standard variables and preserve the single teach command', () => {
+  for (const source of [xml, readFileSync(new URL('../../assets/iodd/switching-sensor.xml', import.meta.url), 'utf8'), p.createNewProject().xml]) {
+    for (const id of ['V_DirectParameters_1', 'V_DirectParameters_2', 'V_ProductName'])
+      assert.match(source, new RegExp('<StdVariableRef id="' + id + '"'));
+  }
+  const sensor = p.createProject(readFileSync(new URL('../../assets/iodd/switching-sensor.xml', import.meta.url), 'utf8'));
+  const teach = p.inspectProject(sensor).variables.find(v => v.id === 'V_Teach');
+  assert.deepEqual(teach.singleValues, ['1']);
+  assert.equal(teach.lower, '');
+  assert.equal(teach.upper, '');
+  assert.equal(teach.editable, false);
+  assert.match(p.exportProjectXML(sensor), /<SingleValue value="1"/);
+  assert.match(sensor.xml, /<Config1 index="24" testValue="0x49"/);
+  assert.match(sensor.xml, /<Config2 index="256" testValue="0x13,0x88"/);
+});
+
+test('generated starter filenames follow the official naming convention without changing identity', () => {
+  const created = p.createNewProject({vendorName:'Vendor Example Inc.', productId:'sensor-01', releaseDate:'2026-10-02'});
+  assert.equal(created.filename, 'Vendor_Example_Inc_-sensor-01-20261002-IODD1.1.xml');
+  assert.equal(p.inspectProject(created).identity.vendorName, 'Vendor Example Inc.');
+  assert.equal(p.createNewProject({}, 'explicit.xml').filename, 'explicit.xml');
+});

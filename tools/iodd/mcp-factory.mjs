@@ -433,6 +433,8 @@ export function createIoddMcpServer({
     },
   }),
   publishArtifact,
+  projectVault,
+  firmwareKit,
   maxBytes = 64 * 1024 * 1024,
 } = {}) {
   const projects = new Map();
@@ -468,11 +470,11 @@ export function createIoddMcpServer({
     return new Uint8Array(Buffer.from(source, "base64"));
   }
   const instructions =
-    "Author IO-Link device descriptions with session-local projects. Start with iodd_create or import supplied XML; inspect before editing, validate after edits, and export downloadable artifacts. Basic checks do not certify official conformance. Vendor/device IDs must be assigned to the user. No device flashing or filesystem/network access. Product and setup information: https://iolinki.com/llms.txt";
+    "Author IO-Link device descriptions with session-local projects. Start with iodd_create or import supplied XML; inspect before editing, validate after edits, and export downloadable artifacts. Basic checks do not certify official conformance. Vendor/device IDs must be assigned to the user. Use iodd_save for an explicit recoverable snapshot when available; keep its private token and restore in a new session. For the supported switching sensor, iodd_firmware_source supplies arguments for the LabWired compile and verify tools; record the returned verdict and model gaps. iodd_firmware_kit exports complete source. No device flashing or arbitrary filesystem/network access. Product and setup information: https://iolinki.com/llms.txt";
   const server = new McpServer(
     {
       name: "iolinki-iodd",
-      version: "1.0.0",
+      version: "1.1.0",
       websiteUrl: "https://iolinki.com/iodd-mcp.html",
     },
     { instructions },
@@ -530,8 +532,10 @@ export function createIoddMcpServer({
             "profile_inspect",
             "firmware_create",
             "firmware_inspect",
+            "firmware_source",
+            "firmware_kit",
           ].includes(name),
-          destructiveHint: false,
+          destructiveHint: name === "delete_saved",
           openWorldHint: false,
         },
       },
@@ -540,7 +544,7 @@ export function createIoddMcpServer({
           let result = await run(args);
           if (
             publishArtifact &&
-            ["export", "header", "firmware_create", "elements_export"].includes(
+            ["export", "header", "firmware_create", "firmware_kit", "elements_export"].includes(
               name,
             )
           ) {
@@ -603,7 +607,7 @@ export function createIoddMcpServer({
     async ({ template, filename, identity = {} }) => {
       if (template === "new")
         return put(
-          api.createNewProject(identity, filename || "new-device.xml"),
+          api.createNewProject(identity, filename),
         );
       let project = api.createProject(
         await loadTemplate(template),
@@ -614,6 +618,7 @@ export function createIoddMcpServer({
           type: "identity",
           values: identity,
         });
+      if (filename === undefined) project.filename = api.suggestProjectFilename(project);
       return put(project);
     },
   );
@@ -640,6 +645,25 @@ export function createIoddMcpServer({
     { projectId },
     ({ projectId }) => api.inspectProject(get(projectId)),
   );
+  if (firmwareKit) {
+    tool("firmware_source", "Generate compile and verify arguments from a compatible switching-sensor IODD using released sensor C source. Call LabWired labwired_compile with compile, then labwired_verify with verify plus firmware_ref. This tool does not compile, execute or prove physical IO-Link communication.", { projectId }, async ({ projectId }) => {
+      const { compile, verify, scope, provenance } = await firmwareKit(get(projectId));
+      return { compile, verify, scope, provenance };
+    });
+    tool("firmware_kit", "Export a complete GPL switching-sensor application proof kit with authored IODD, generated mapping/defaults, released C source, license, hashes and LabWired compile/verify instructions. Requires the supported parameter and process-data contract; not a complete IO-Link PHY/stack image.", { projectId }, async ({ projectId }) => {
+      const { bytes, filename, scope, provenance } = await firmwareKit(get(projectId));
+      return { filename, encoding: "base64", content: Buffer.from(bytes).toString("base64"), scope, provenance };
+    });
+  }
+  if (projectVault) {
+    const token = z.string().uuid().describe("Private recovery token returned by iodd_save. Anyone with this token can restore or delete the saved project.");
+    tool("save", "Save a recoverable project snapshot. Hosted saves survive runtime/session restart for the reported lifetime; local saves report whether storage is durable. Keep the recovery token private.", { projectId },
+      ({ projectId }) => projectVault.save(api.saveProject(get(projectId))));
+    tool("restore", "Restore a saved snapshot into this session using its private recovery token. Returns a new projectId; the saved snapshot remains available until expiry or explicit deletion.", { token },
+      async ({ token }) => put(api.loadProject(await projectVault.restore(token))));
+    tool("delete_saved", "Permanently delete a saved snapshot using its private recovery token. Session-local projects and exported files remain available.", { token },
+      async ({ token }) => ({ deleted: await projectVault.delete(token) }));
+  }
   tool(
     "edit",
     "Apply one atomic edit. Inspect first for IDs and field values.",
@@ -667,7 +691,14 @@ export function createIoddMcpServer({
               output: "Resolve basic errors before external validation.",
             },
           };
-      return { ...result, ...external };
+      return {
+        ...result, ...external,
+        coverage: {
+          ...result.coverage,
+          xsd: ["passed", "failed"].includes(external.schema?.status),
+          official: ["passed", "failed"].includes(external.officialChecker?.status),
+        },
+      };
     },
   );
   tool(

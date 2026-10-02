@@ -88,3 +88,22 @@ test("checker stages original main filename and binary attachments", async () =>
     await rm(dir, { recursive: true, force: true });
   }
 });
+
+test('operator-installed genuine Checker accepts starters and rejects missing mandatory references', {skip: !process.env.IODD_GENUINE_CHECKER}, async () => {
+  const {createNewProject} = await import('../../assets/js/iodd/project.js');
+  const options = {checkerPath: process.env.IODD_GENUINE_CHECKER, checkerArgs: ['{file}']};
+  const sources = [
+    createNewProject({}, 'iolinki-NewDevice-20261002-IODD1.1.xml'),
+    ...await Promise.all(['counter', 'switching-sensor'].map(async name => createProject(await readFile(new URL('../../assets/iodd/'+name+'.xml', import.meta.url), 'utf8'), 'iolinki-'+(name==='counter'?'Counter':'SwitchingSensor')+'-20261002-IODD1.1.xml'))),
+  ];
+  for (const source of sources) {
+    const result = await runExternalValidation(source, options);
+    assert.equal(result.officialChecker.exitCode, 0, result.officialChecker.output);
+    assert.equal(result.officialChecker.status, 'passed');
+    assert.match(result.officialChecker.output, /0 errors found/);
+  }
+  const invalid = createProject(sources[2].xml.replace(/<StdVariableRef id="V_ProductName"\s*\/>/, ''), sources[2].filename);
+  const rejected = await runExternalValidation(invalid, options);
+  assert.equal(rejected.officialChecker.status, 'failed');
+  assert.match(rejected.officialChecker.output, /V_ProductName is missing/);
+});

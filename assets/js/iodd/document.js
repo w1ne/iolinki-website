@@ -263,6 +263,7 @@ export function getVariables(doc) {
       defaultValue: node.attrs.defaultValue ?? "",
       lower: range?.attrs.lowerValue ?? "",
       upper: range?.attrs.upperValue ?? "",
+      singleValues: elements(dt, "SingleValue").map((n) => n.attrs.value),
       editable:
         kinds.includes(type) &&
         type !== "BooleanT" &&

@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "iolinki",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Create IO-Link IODDs and integrate the iolinki firmware stacks.",
   "author": {
     "name": "Andrii Shylenko",
@@ -25,7 +25,7 @@
         "category": "Developer Tools",
         "websiteURL": "https://iolinki.com",
         "defaultPrompt": [
-          "Create a switching-sensor IODD, validate it and generate its C mapping header."
+          "Author a switching-sensor IODD, validate and export it, save a private recovery snapshot, then compile/verify its sensor application with LabWired if connected."
         ]
       }
     }

@@ -1,10 +1,10 @@
 # Use iolinki with an agent
 
-Connect the [IODD MCP tools](https://iolinki.com/iodd-mcp.html), then ask your agent to create, inspect, edit, validate and export a device description. The tools also generate the C header that maps the IODD to your firmware.
+Connect the [IODD MCP tools](https://iolinki.com/iodd-mcp.html), then ask your agent to create, inspect, edit, validate and export a device description. The 20 tools also generate C mappings, save explicit recoverable snapshots and prepare sensor source for the connected LabWired compile/verify tools.
 
 Try:
 
-> Create a switching-sensor IODD. Inspect the parameter dictionary and process data, validate the result, then export the IODD ZIP and C mapping header. Tell me which validation checks ran.
+> Create a switching-sensor IODD with my assigned identity and parameter defaults. Inspect and validate it, export editable JSON/XML/ZIP, and save a recovery snapshot with its token kept private. Generate the source kit, then use LabWired to compile and verify the sensor application if connected. Report each validation and execution result separately.
 
 ## Give an agent the instructions
 
@@ -40,6 +40,10 @@ In ChatGPT, enable Developer mode in **Settings → Security and login**, then o
 
 The downloadable plugin follows the portable Agent Plugins format with a skill and Streamable HTTP MCP configuration. For a registered ChatGPT plugin, its technical `plugin_asdk_app…` connection ID is assigned after registration; it cannot be prefilled for another account. A public Plugins Directory listing requires submission and review. The downloadable package and direct MCP connection are separate from that listing.
 
-A useful first workflow is “describe my sensor → build its IODD → validate → export the ZIP and firmware mapping.” Firmware flashing, physical wiring and official conformity remain actions performed with the relevant tools and hardware.
+A useful workflow is “describe my sensor → author and validate its IODD → export and save → compile its sensor application → verify the behavior.” Hosted snapshots survive session/runtime restarts for up to 24 hours; keep the private token and expiry, and restore into a new project. Local stdio snapshots disappear on process restart. Neither replaces a downloaded editable project for longer retention.
+
+`iodd_firmware_source` returns LabWired compile/verify arguments; `iodd_firmware_kit` returns the same source as a ZIP. They support the released switching-sensor parameter/process contract and apply authored defaults. STM32F401 MCU execution proves application behavior against a UART oracle, not IO-Link transport, analog PHY/cable or physical-master communication. Report LabWired's actual verdict and model gaps. Source generation alone is not execution.
+
+Hosted XSD validation uses the pinned October 2025 official schema package. Basic checks, XSD status and official Checker status are separate; the official Checker is not configured in this deployment; its official distribution is being checked separately. Firmware flashing, physical wiring and official conformity require their own evidence.
 
 Packaging and setup follow [OpenAI's plugin guide](https://developers.openai.com/plugins/build/plugins) and [MCP guide](https://learn.chatgpt.com/docs/extend/mcp?surface=cli).

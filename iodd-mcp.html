@@ -46,8 +46,8 @@
       <h1>Your assistant. Your IODD.</h1>
       <p class="setup-lead">
         Create device descriptions, check parameters and process data, and
-        export XML, ZIP packages and firmware headers. Connect your assistant in
-        a minute.
+        export editable projects and firmware source. Connect your assistant, then
+        use LabWired to check the supported sensor application.
       </p>
       <section class="setup-card" aria-labelledby="connect-title">
         <div class="setup-heading">
@@ -78,7 +78,7 @@
           account and workspace policy.
         </p>
         <div class="copy-block">
-          <pre><code id="client-config">https://iolinki-iodd-mcp.shylenkoa.workers.dev/mcp</code></pre>
+          <pre><code id="client-config">https://mcp.iolinki.com/mcp</code></pre>
           <button type="button" data-copy="client-config">Copy URL</button>
         </div>
         <div class="setup-actions">
@@ -97,17 +97,20 @@
           >
         </div>
         <p class="setup-note">
-          No iolinki account needed. Hosted projects run on our server; export
-          your work to keep it. Use the local option for private files.
+          No iolinki account needed. Hosted projects run on our server. Save an
+          explicit recovery snapshot for up to 24 hours and keep its token
+          private, or download a project for longer retention. Use local stdio
+          when files should stay on your machine.
         </p>
         <details class="local-setup">
           <summary>Prefer to run locally?</summary>
           <p>
             Install Node.js 22 or newer. This command downloads and starts the
-            local stdio server:
+            local stdio server. Local projects and snapshots are memory-only;
+            export before restarting:
           </p>
           <div class="copy-block">
-            <pre><code id="local-command">npx -y https://iolinki.com/downloads/iodd-mcp-1.0.0.tgz</code></pre>
+            <pre><code id="local-command">npx -y https://iolinki.com/downloads/iodd-mcp-1.1.0.tgz</code></pre>
             <button type="button" data-copy="local-command">
               Copy command
             </button>
@@ -127,13 +130,21 @@
       <section class="setup-card" aria-labelledby="prompt-title">
         <h2 id="prompt-title">2. Ask for your first device</h2>
         <div class="copy-block">
-          <pre><code id="example-prompt">Create a switching-sensor IODD. Ask me for my assigned vendor and device IDs. Inspect its threshold, hysteresis and process-data fields, validate it, and export the project, XML, ZIP and C firmware mapping header.</code></pre>
+          <pre><code id="example-prompt">Create a switching-sensor IODD with my assigned vendor/device IDs and defaults. Inspect and validate it, export editable JSON/XML/ZIP, and save a recovery snapshot with its token kept private. Generate the source kit. If LabWired is connected, compile and verify the sensor application. Report schema, official Checker and execution results separately.</code></pre>
           <button type="button" data-copy="example-prompt">Copy prompt</button>
         </div>
         <p>
           Open the exported project or ZIP in the
           <a href="/iodd-editor.html">browser editor</a> to review and continue
-          editing.
+          editing. Restore a saved snapshot in a new session using its private
+          token; anyone holding the token can restore or delete it.
+        </p>
+        <p class="setup-note">
+          The 20 tools include firmware source and recovery. The sensor kit runs
+          the released application on a modeled STM32F401 and checks thresholds,
+          hysteresis, validity, parameters and process bytes. LabWired receives
+          the submitted firmware source; report its actual verdict and model gaps.
+          Physical IO-Link master, PHY and cable tests remain separate.
         </p>
       </section>
       <section class="setup-resources" aria-label="Agent resources">
@@ -157,9 +168,10 @@
         </div>
       </section>
       <p class="setup-note">
-        Validation covers model references, ranges, process bits and CRC.
-        Official checker results are reported separately when a checker is
-        configured.
+        Basic model/CRC checks and validation against the pinned official
+        October 2025 XSD package are separate results. The official IODD Checker
+        is not configured on this hosted deployment; its official distribution is
+        being checked separately; schema validity does not constitute official approval.
       </p>
       <p>
         <a href="/docs/tools/iodd-mcp/">Full MCP and CLI guide</a> ·

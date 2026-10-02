@@ -9,7 +9,7 @@ Example vendor/device IDs: Counter button LED 1234/5678; Switching sensor 1234/5
 
 # Counter, button and LED — importable IODD example
 
-This package contains stamped iolinki example-reference-device-20261002-IODD1.1.xml, this guide, a generated C firmware mapping header and both MIT/GPL license grants. The iolinki-authored XML templates are additionally available under MIT; this does not change the protocol stack license. Import the ZIP directly into the browser editor or another IODD importer. The examples describe the released [iolinki stack](https://github.com/w1ne/iolinki) applications.
+This package contains stamped iolinki_example-reference-device-20261002-IODD1.1.xml, this guide, a generated C firmware mapping header and both MIT/GPL license grants. The iolinki-authored XML templates are additionally available under MIT; this does not change the protocol stack license. Import the ZIP directly into the browser editor or another IODD importer. The examples describe the released [iolinki stack](https://github.com/w1ne/iolinki) applications.
 
 The released reference-device demo produces a 16-bit counter followed by one button/state byte. Output bit 0 drives the LED; preserve the remaining output bits when changing it.
 
@@ -49,7 +49,7 @@ The repository's firmware proof compiles and runs the released application C aga
 
 # Switching sensor — importable IODD example
 
-This package contains stamped iolinki example-switching-sensor-20261002-IODD1.1.xml, this guide, a generated C firmware mapping header and both MIT/GPL license grants. The iolinki-authored XML templates are additionally available under MIT; this does not change the protocol stack license. Import the ZIP directly into the browser editor or another IODD importer. The examples describe the released [iolinki stack](https://github.com/w1ne/iolinki) applications.
+This package contains stamped iolinki_example-switching-sensor-20261002-IODD1.1.xml, this guide, a generated C firmware mapping header and both MIT/GPL license grants. The iolinki-authored XML templates are additionally available under MIT; this does not change the protocol stack license. Import the ZIP directly into the browser editor or another IODD importer. The examples describe the released [iolinki stack](https://github.com/w1ne/iolinki) applications.
 
 The released switching-sensor application returns a 16-bit measurement scaled by 100, a validity bit and a switching-output bit. Its ISDU service supplies setpoint, hysteresis, inversion and a teach command.
 
