@@ -7,7 +7,7 @@ import { promisify } from "node:util";
 import { execFile } from "node:child_process";
 const exec = promisify(execFile);
 const root = fileURLToPath(new URL("../", import.meta.url));
-export const output = join(root, "downloads/iodd-mcp-1.1.0.tgz");
+export const output = join(root, "downloads/iodd-mcp-1.1.1.tgz");
 const source = join(root, "tools/iodd/package");
 const runtimeFiles = [
   "tools/iodd/mcp.mjs", "tools/iodd/mcp-factory.mjs", "tools/iodd/cli.mjs", "tools/iodd/node-runtime.mjs", "tools/iodd/checker.mjs", "tools/iodd/project-vault.mjs", "tools/iodd/firmware-kit.mjs", "tools/iodd/LICENSE",
@@ -59,6 +59,6 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   } else {
     await mkdir(dirname(output), {recursive: true});
     await writeFile(output, result.bytes);
-    console.log(`Wrote downloads/iodd-mcp-1.1.0.tgz (${result.bytes.length} bytes)`);
+    console.log(`Wrote downloads/iodd-mcp-1.1.1.tgz (${result.bytes.length} bytes)`);
   }
 }

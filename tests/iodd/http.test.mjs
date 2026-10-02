@@ -260,7 +260,7 @@ test("SDK exports preserve project basenames in metadata and download headers", 
   }
 });
 
-test("default-created hosted XML passes genuine Checker using returned filename", { skip: !process.env.IODD_CHECKER }, async () => {
+test("default-created hosted XML passes genuine Checker using returned filename", { skip: !process.env.IODD_GENUINE_CHECKER }, async () => {
   const directory = await mkdtemp(join(tmpdir(), "iodd-hosted-checker-"));
   const host = new IoddHttpHost({ loadTemplate });
   const connection = await connect(host);
@@ -271,7 +271,7 @@ test("default-created hosted XML passes genuine Checker using returned filename"
     assert.match(artifact.filename, /-\d{8}-IODD1\.1\.xml$/);
     const filename = join(directory, artifact.filename);
     await writeFile(filename, await response.text());
-    const { stdout } = await promisify(execFile)(process.env.IODD_CHECKER, [filename], { timeout: 45000 });
+    const { stdout } = await promisify(execFile)(process.env.IODD_GENUINE_CHECKER, [filename], { timeout: 45000 });
     assert.match(stdout, /0 errors found/);
   } finally {
     await connection.client.close();

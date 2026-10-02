@@ -11,7 +11,7 @@ OUTPUT = ROOT / 'downloads/iodd-tools.zip'
 
 
 def bundle():
-    files = [ROOT / 'package.json', ROOT / 'package-lock.json', ROOT / 'docs/iodd-mcp.md', ROOT / 'docs/iodd-examples.md', ROOT / 'scripts/package-iodd-examples.mjs', ROOT / 'scripts/package-iodd-npm.mjs', ROOT / 'scripts/check-iodd-mcp-recovery.mjs', ROOT / 'downloads/iodd-counter.zip', ROOT / 'downloads/iodd-switching-sensor.zip', ROOT / 'downloads/iodd-mcp-1.1.0.tgz']
+    files = [ROOT / 'package.json', ROOT / 'package-lock.json', ROOT / 'docs/iodd-mcp.md', ROOT / 'docs/iodd-examples.md', ROOT / 'scripts/package-iodd-examples.mjs', ROOT / 'scripts/package-iodd-npm.mjs', ROOT / 'scripts/check-iodd-mcp-recovery.mjs', ROOT / 'downloads/iodd-counter.zip', ROOT / 'downloads/iodd-switching-sensor.zip', ROOT / 'downloads/iodd-mcp-1.1.1.tgz']
     for folder in ['tools/iodd', 'assets/js/iodd', 'assets/iodd', 'tests/iodd', 'catalog-worker']:
         files.extend(p for p in (ROOT / folder).rglob('*') if p.is_file() and not any(part.startswith('.') or part in {'node_modules', '__pycache__'} for part in p.relative_to(ROOT / folder).parts))
     files = sorted(set(files))
