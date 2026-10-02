@@ -54,7 +54,7 @@ try {
       await page.waitForURL('**/docs/device/v2.1.0/');
     }
     const search = page.locator('input[data-md-component="search-query"]');
-    const searchToggle = page.locator('.md-header label[for="__search"]');
+    const searchToggle = page.locator('.md-header__button[for="__search"]');
     if (await searchToggle.isVisible()) await searchToggle.click();
     else await search.click();
     // Material updates its search query on keyup; emulate actual typing.
