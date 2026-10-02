@@ -2,10 +2,14 @@
   "name": "iolinki-site",
   "private": true,
   "type": "module",
+  "engines": { "node": ">=22" },
   "scripts": {
     "check:browser": "node scripts/check-browser.mjs",
     "check:docs-browser": "node scripts/check-docs-browser.mjs",
-    "check:iodd": "node scripts/check-iodd-editor.mjs"
+    "check:iodd": "node scripts/check-iodd-editor.mjs",
+    "test:iodd": "node --test tests/iodd/*.test.mjs",
+    "iodd": "node tools/iodd/cli.mjs",
+    "iodd:mcp": "node tools/iodd/mcp.mjs"
   },
   "devDependencies": {
     "playwright": "1.60.0"

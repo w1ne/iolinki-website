@@ -81,4 +81,10 @@
     <url>
          <loc>https://iolinki.com/docs/master/v1.0.0/testing/</loc>
          </url>
+    <url>
+         <loc>https://iolinki.com/docs/tools/iodd-examples/</loc>
+         </url>
+    <url>
+         <loc>https://iolinki.com/docs/tools/iodd-mcp/</loc>
+         </url>
 </urlset>

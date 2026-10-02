@@ -45,109 +45,633 @@
 
     <main id="main" class="editor-page" tabindex="-1">
       <header class="editor-intro">
-        <p class="eyebrow">FREE DEVELOPER TOOL</p>
-        <h1>IODD editor</h1>
-        <p>
-          Create your IO-Link device description. Start with an example or open
-          your XML. Your files stay in your browser. No signup.
-        </p>
+        <div>
+          <p class="eyebrow">FREE IO-LINK WORKSPACE</p>
+          <h1>Your device. Described.</h1>
+          <p>
+            Build an IODD, keep its files together, and export the firmware map.
+          </p>
+        </div>
+        <span class="privacy-pill"
+          ><span aria-hidden="true">●</span> Local to your browser</span
+        >
       </header>
-      <section class="tool-actions" aria-label="Open an IODD">
-        <button type="button" id="counter">Counter / button / LED</button
-        ><button type="button" id="sensor">Switching sensor</button>
-        <label class="file-button"
-          >Open XML<input
-            id="import-file"
-            type="file"
-            accept=".xml,application/xml,text/xml"
-        /></label>
-        <button type="button" id="download" disabled>Download IODD</button>
-      </section>
+      <div class="project-toolbar">
+        <div class="template-actions">
+          <button id="new-device" type="button">New device</button>
+          <button id="counter" type="button">Counter / button / LED</button
+          ><button id="sensor" type="button">Switching sensor</button
+          ><label class="file-button"
+            >Open XML, ZIP or project<input
+              id="import-file"
+              type="file"
+              accept=".xml,.zip,.json,application/xml,application/zip,application/json"
+          /></label>
+        </div>
+        <div class="export-actions">
+          <button id="save-project" type="button" disabled>Save project</button
+          ><label class="export-label"
+            ><span class="visually-hidden">Export format</span
+            ><select id="export-format" aria-label="Export format">
+              <option value="xml">IODD XML</option>
+              <option value="zip">IODD ZIP package</option>
+              <option value="header">Firmware C header</option>
+            </select></label
+          ><button id="download" type="button" disabled>Download IODD</button>
+        </div>
+      </div>
+      <div class="project-state">
+        <strong id="project-title">No device open</strong
+        ><span id="save-state">Choose an example or open a file</span>
+      </div>
       <p id="status" role="status" aria-live="polite">
-        Choose an example or open an IODD XML file.
+        Start with an example, or bring your existing IODD.
       </p>
       <noscript
         ><p>
-          Enable JavaScript to use the browser editor. The
+          Enable JavaScript to edit locally, or use the
           <a href="https://github.com/w1ne/iolinki/releases/tag/v2.1.0"
-            >released command-line tool</a
-          >
-          is also available.
+            >IODD CLI</a
+          >.
         </p></noscript
       >
-      <div id="workspace" hidden>
-        <section class="editor-card">
-          <h2>Device identity</h2>
-          <p>
-            Use your assigned vendor and device IDs. Example IDs are
-            illustrative.
-          </p>
-          <form id="identity-form">
-            <div class="form-grid" id="identity-fields"></div>
-            <button type="submit">Apply identity</button>
-          </form>
-        </section>
-        <section class="editor-card">
-          <div class="section-heading">
-            <h2>Parameters</h2>
-            <button id="add-parameter" type="button">Add parameter</button>
-          </div>
-          <p>
-            ISDU indexes, access rights, datatypes and default values. Names
-            edit the primary-language text.
-          </p>
-          <div id="parameters"></div>
-        </section>
-        <section class="editor-card">
-          <h2>Process data</h2>
-          <p>
-            Bit offset 0 is the least significant bit of the last byte. Layouts
-            preserve the configured record size.
-          </p>
-          <div id="process-data"></div>
-        </section>
-        <section class="editor-card">
-          <h2>Checks</h2>
-          <ul id="checks" aria-live="polite"></ul>
-          <p class="small-note">
-            Checks cover XML structure, identifiers, ranges, references, layout
-            and CRC. For full schema checks, use the
-            <a href="https://github.com/w1ne/iolinki/releases/tag/v2.1.0"
-              >IODD CLI</a
-            >
-            with the official XSD. Product conformance is a separate test.
-          </p>
-        </section>
-        <details class="editor-card" id="xml-panel">
-          <summary>XML preview &amp; advanced editing</summary>
-          <p>
-            All imported sections remain in the document. Edit unsupported
-            types, events, menus, communication settings or language records
-            here, then apply XML.
-          </p>
-          <label for="xml-source">IODD XML</label
-          ><textarea id="xml-source" spellcheck="false" rows="18"></textarea
-          ><button id="apply-xml" type="button">Apply XML</button>
-        </details>
+      <div id="workspace" class="workspace" hidden>
+        <nav class="workspace-nav" role="tablist" aria-label="IODD sections">
+          <button
+            id="tab-identity"
+            role="tab"
+            aria-controls="panel-identity"
+            aria-selected="true"
+            data-panel="identity"
+          >
+            Identity
+          </button>
+          <button
+            id="tab-parameters"
+            role="tab"
+            aria-controls="panel-parameters"
+            aria-selected="false"
+            data-panel="parameters"
+          >
+            Parameters
+          </button>
+          <button
+            id="tab-process"
+            role="tab"
+            aria-controls="panel-process"
+            aria-selected="false"
+            data-panel="process"
+          >
+            Process data
+          </button>
+          <button
+            id="tab-texts"
+            role="tab"
+            aria-controls="panel-texts"
+            aria-selected="false"
+            data-panel="texts"
+          >
+            Texts &amp; languages
+          </button>
+          <button
+            id="tab-events"
+            role="tab"
+            aria-controls="panel-events"
+            aria-selected="false"
+            data-panel="events"
+          >
+            Events &amp; menus
+          </button>
+          <button
+            id="tab-files"
+            role="tab"
+            aria-controls="panel-files"
+            aria-selected="false"
+            data-panel="files"
+          >
+            Files &amp; changes
+          </button>
+          <button
+            id="tab-validation"
+            role="tab"
+            aria-controls="panel-validation"
+            aria-selected="false"
+            data-panel="validation"
+          >
+            Validation
+          </button>
+          <button
+            id="tab-tree"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-tree"
+            data-panel="tree"
+          >
+            Document tree
+          </button>
+          <button
+            id="tab-library"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-library"
+            data-panel="library"
+          >
+            Element library
+          </button>
+          <button
+            id="tab-communication"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-communication"
+            data-panel="communication"
+          >
+            Communication
+          </button>
+          <button
+            id="tab-finder"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-finder"
+            data-panel="finder"
+          >
+            IODD Finder
+          </button>
+          <button
+            id="tab-firmware"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-firmware"
+            data-panel="firmware"
+          >
+            Firmware package
+          </button>
+          <button
+            id="tab-xml"
+            role="tab"
+            aria-controls="panel-xml"
+            aria-selected="false"
+            data-panel="xml"
+          >
+            XML
+          </button>
+          <p class="nav-note">One project.<br />Every export.</p>
+        </nav>
+        <div class="workspace-body">
+          <section
+            id="panel-identity"
+            class="workspace-panel"
+            role="tabpanel"
+            aria-labelledby="tab-identity"
+          >
+            <div class="panel-heading">
+              <div>
+                <h2>Device identity</h2>
+                <p>
+                  The identifiers your master uses to recognize this device.
+                </p>
+              </div>
+              <span class="section-tag">IODD 1.1</span>
+            </div>
+            <form id="identity-form">
+              <div class="form-grid" id="identity-fields"></div>
+              <button type="submit" class="primary-button">
+                Apply identity
+              </button>
+            </form>
+            <div class="identity-note">
+              Use your assigned vendor and device IDs when shipping. The example
+              identifiers are illustrative.
+            </div>
+          </section>
+          <section
+            id="panel-parameters"
+            class="workspace-panel"
+            role="tabpanel"
+            aria-labelledby="tab-parameters"
+            hidden
+          >
+            <div class="panel-heading">
+              <div>
+                <h2>Parameters</h2>
+                <p>Your ISDU map, with one parameter open at a time.</p>
+              </div>
+              <button id="add-parameter" type="button">+ Add parameter</button>
+            </div>
+            <label class="search-label"
+              ><span class="visually-hidden">Search parameters</span
+              ><input
+                id="parameter-search"
+                type="search"
+                placeholder="Search by name, index or ID"
+                aria-label="Search parameters"
+            /></label>
+            <div class="split-editor">
+              <div class="table-scroll">
+                <table class="parameter-table">
+                  <thead>
+                    <tr>
+                      <th>Index</th>
+                      <th>Parameter</th>
+                      <th>Access</th>
+                    </tr>
+                  </thead>
+                  <tbody id="parameter-rows"></tbody>
+                </table>
+                <p id="parameter-empty" class="empty-note" hidden>
+                  No matching parameters.
+                </p>
+              </div>
+              <div id="parameter-detail" class="detail-editor"></div>
+            </div>
+          </section>
+          <section
+            id="panel-process"
+            class="workspace-panel"
+            role="tabpanel"
+            aria-labelledby="tab-process"
+            hidden
+          >
+            <div class="panel-heading">
+              <div>
+                <h2>Process data</h2>
+                <p>The wire layout, from the first byte to the last.</p>
+              </div>
+            </div>
+            <div id="process-data"></div>
+            <div id="process-detail" class="detail-editor"></div>
+          </section>
+          <section
+            id="panel-texts"
+            class="workspace-panel"
+            role="tabpanel"
+            aria-labelledby="tab-texts"
+            hidden
+          >
+            <div class="panel-heading">
+              <div>
+                <h2>Texts &amp; languages</h2>
+                <p>Keep names, descriptions and translations together.</p>
+              </div>
+            </div>
+            <div class="text-toolbar">
+              <label>Language<select id="text-language"></select></label
+              ><label
+                >Search texts<input
+                  id="text-search"
+                  type="search"
+                  placeholder="Text ID or value"
+              /></label>
+            </div>
+            <div class="split-editor">
+              <div id="text-rows" class="text-list"></div>
+              <form id="text-form" class="detail-editor">
+                <label
+                  >Language code<input
+                    name="language"
+                    id="text-language-code"
+                    value="en" /></label
+                ><label>Text ID<input name="id" id="text-id" /></label
+                ><label
+                  >Text value<textarea
+                    name="value"
+                    id="text-value"
+                    rows="5"
+                  ></textarea></label
+                ><button type="submit" class="primary-button">Save text</button>
+                <p class="small-note">
+                  Use a new language code and an existing ID to add its
+                  translation.
+                </p>
+              </form>
+            </div>
+          </section>
+          <section
+            id="panel-events"
+            class="workspace-panel"
+            role="tabpanel"
+            aria-labelledby="tab-events"
+            hidden
+          >
+            <div class="panel-heading">
+              <div>
+                <h2>Events &amp; menus</h2>
+                <p>Describe diagnosis and organize the device's controls.</p>
+              </div>
+            </div>
+            <div class="event-grid">
+              <section>
+                <h3>Events</h3>
+                <div id="event-list" class="item-list"></div>
+                <form id="event-form" class="detail-editor">
+                  <label
+                    >Event code<input
+                      name="code"
+                      value="36000"
+                      inputmode="numeric" /></label
+                  ><label
+                    >Event type<select name="type">
+                      <option>Notification</option>
+                      <option>Warning</option>
+                      <option>Error</option>
+                    </select></label
+                  ><label
+                    >Event name<input
+                      name="name"
+                      placeholder="Measurement ready" /></label
+                  ><label
+                    >Event description<textarea
+                      name="description"
+                      rows="3"
+                    ></textarea></label
+                  ><button type="submit">Save event</button>
+                </form>
+              </section>
+              <section>
+                <h3>Menus</h3>
+                <div id="menu-list" class="item-list"></div>
+                <form id="menu-form" class="detail-editor">
+                  <label
+                    >Menu ID<input name="id" placeholder="M_Service" /></label
+                  ><label
+                    >Menu name<input name="name" placeholder="Service" /></label
+                  ><label
+                    >Variable IDs<input
+                      name="variableIds"
+                      placeholder="V_SP1, V_Hysteresis" /></label
+                  ><label
+                    >Nested menu IDs<input
+                      name="menuIds"
+                      placeholder="M_Identification" /></label
+                  ><button type="submit">Save menu</button>
+                </form>
+              </section>
+            </div>
+          </section>
+          <section
+            id="panel-files"
+            class="workspace-panel"
+            role="tabpanel"
+            aria-labelledby="tab-files"
+            hidden
+          >
+            <div class="panel-heading">
+              <div>
+                <h2>Files &amp; changes</h2>
+                <p>Images and language files travel with your package.</p>
+              </div>
+              <label class="file-button"
+                >Add files<input id="asset-file" type="file" multiple
+              /></label>
+            </div>
+            <div id="asset-list" class="asset-list"></div>
+            <div class="comparison-box">
+              <h3>Compare a saved revision</h3>
+              <label class="file-button"
+                >Open comparison project<input
+                  id="compare-file"
+                  type="file"
+                  accept=".json,application/json"
+              /></label>
+              <div id="comparison-result">
+                <p class="small-note">
+                  Save a project before a change, then open it here to compare.
+                </p>
+              </div>
+            </div>
+          </section>
+          <section
+            id="panel-validation"
+            class="workspace-panel"
+            role="tabpanel"
+            aria-labelledby="tab-validation"
+            hidden
+          >
+            <div class="panel-heading">
+              <div>
+                <h2>Validation</h2>
+                <p>Find issues before exporting.</p>
+              </div>
+              <span id="validation-summary" class="section-tag"></span>
+            </div>
+            <form id="validation-options" class="validation-options">
+              <fieldset>
+                <legend>Checks to run</legend>
+                <label
+                  ><input name="structure" type="checkbox" checked />
+                  Structure</label
+                ><label
+                  ><input name="references" type="checkbox" checked />
+                  References</label
+                ><label
+                  ><input name="ranges" type="checkbox" checked /> Ranges</label
+                ><label
+                  ><input name="processData" type="checkbox" checked /> Process
+                  layout</label
+                ><label><input name="crc" type="checkbox" checked /> CRC</label>
+              </fieldset>
+            </form>
+            <div id="validation-rule-editor" class="detail-card"></div>
+            <div id="validation-coverage" class="coverage-row"></div>
+            <ul id="checks" aria-live="polite"></ul>
+            <div class="identity-note">
+              Browser checks cover the document model, ranges, references,
+              process layout and CRC. Export reruns the required checks even
+              when a checkbox is disabled. Use the official checker for its full
+              rule set; device conformity is a separate test.
+            </div>
+          </section>
+          <section
+            id="panel-tree"
+            class="workspace-panel"
+            role="tabpanel"
+            aria-labelledby="tab-tree"
+            hidden
+          >
+            <div class="panel-heading">
+              <div>
+                <h2>Document tree</h2>
+                <p>
+                  Navigate every element and edit its attributes without writing
+                  XML.
+                </p>
+              </div>
+            </div>
+            <label
+              >Find an element<input
+                id="tree-search"
+                type="search"
+                placeholder="Element, attribute or ID"
+            /></label>
+            <div class="tree-workspace">
+              <div
+                id="document-tree"
+                class="document-tree"
+                aria-label="Document elements"
+              ></div>
+              <div id="node-editor" class="detail-card"></div>
+            </div>
+          </section>
+          <section
+            id="panel-library"
+            class="workspace-panel"
+            role="tabpanel"
+            aria-labelledby="tab-library"
+            hidden
+          >
+            <div class="panel-heading">
+              <div>
+                <h2>Reusable elements</h2>
+                <p>
+                  Keep profile fragments and reusable descriptions together.
+                </p>
+              </div>
+            </div>
+            <div class="file-toolbar">
+              <button id="export-snippet" type="button">
+                Export selected element</button
+              ><label class="file-button"
+                >Open element or profile XML<input
+                  id="snippet-file"
+                  type="file"
+                  accept=".xml"
+              /></label>
+            </div>
+            <p id="snippet-target" class="small-note"></p>
+            <div id="snippet-preview" class="detail-card"></div>
+            <h3>Profile definitions</h3>
+            <label class="file-button"
+              >Open profile definitions XML<input
+                id="profile-file"
+                type="file"
+                accept=".xml"
+            /></label>
+            <div id="profile-catalog"></div>
+          </section>
+          <section
+            id="panel-communication"
+            class="workspace-panel"
+            role="tabpanel"
+            aria-labelledby="tab-communication"
+            hidden
+          >
+            <div class="panel-heading">
+              <div>
+                <h2>Communication</h2>
+                <p>
+                  Edit the selected wired or wireless communication profile.
+                </p>
+              </div>
+            </div>
+            <div id="communication-editor"></div>
+          </section>
+          <section
+            id="panel-finder"
+            class="workspace-panel"
+            role="tabpanel"
+            aria-labelledby="tab-finder"
+            hidden
+          >
+            <div class="panel-heading">
+              <div>
+                <h2>IODD Finder</h2>
+                <p>
+                  Find public device descriptions, then open the manufacturer
+                  package locally.
+                </p>
+              </div>
+            </div>
+            <form id="finder-form" class="file-toolbar">
+              <label
+                >Device, product or manufacturer<input
+                  name="query"
+                  id="finder-query"
+                  required /></label
+              ><label
+                >Search by<select id="finder-field">
+                  <option value="productName">Product name</option>
+                  <option value="vendorName">Manufacturer</option>
+                  <option value="productId">Product ID</option>
+                  <option value="deviceId">Device ID</option>
+                </select></label
+              ><button type="submit">Search IODD Finder</button>
+            </form>
+            <div id="finder-results" aria-live="polite"></div>
+            <p class="small-note">
+              Public search uses IO-Link IODD Finder. Your open project and
+              files stay in this browser.
+            </p>
+          </section>
+          <section
+            id="panel-firmware"
+            class="workspace-panel"
+            role="tabpanel"
+            aria-labelledby="tab-firmware"
+            hidden
+          >
+            <div class="panel-heading">
+              <div>
+                <h2>Firmware update package</h2>
+                <p>
+                  Build an IOLFW package from your firmware and manufacturer
+                  metadata.
+                </p>
+              </div>
+            </div>
+            <div id="firmware-editor"></div>
+          </section>
+          <section
+            id="panel-xml"
+            class="workspace-panel"
+            role="tabpanel"
+            aria-labelledby="tab-xml"
+            hidden
+          >
+            <div class="panel-heading">
+              <div>
+                <h2>XML</h2>
+                <p>
+                  The complete description, including sections preserved on
+                  import.
+                </p>
+              </div>
+              <button id="apply-xml" type="button">Apply XML</button>
+            </div>
+            <label for="xml-source" class="visually-hidden">IODD XML</label
+            ><textarea id="xml-source" spellcheck="false" rows="22"></textarea>
+            <p class="small-note">
+              Apply these changes before using another editor or downloading.
+            </p>
+          </section>
+        </div>
       </div>
       <section class="editor-help">
-        <h2>From description to device</h2>
         <p>
-          Use the matching
+          <strong>From description to device.</strong> Use
           <a href="https://github.com/w1ne/iolinki/releases/tag/v2.1.0"
-            >source examples and IODD CLI</a
-          >, then run your firmware in <a href="/validation.html">LabWired</a>.
-          <a href="/getting-started.html">Get started with the stack</a>.
+            >the matching examples</a
+          >, explore <a href="/validation.html">LabWired validation</a>, or
+          <a href="/getting-started.html">integrate the stack</a>. Use the same
+          authoring tools from your
+          <a href="/iodd-mcp.html">AI assistant or CLI</a>.
+        </p>
+        <p>
+          <strong>Importable examples:</strong>
+          <a href="/downloads/iodd-switching-sensor.zip" download
+            >Switching sensor IODD ZIP</a
+          >
+          ·
+          <a href="/downloads/iodd-counter.zip" download
+            >Counter / button / LED IODD ZIP</a
+          >. Open either ZIP above to edit the description that matches the
+          released stack example.
         </p>
         <p class="small-note">
-          XML/tree editing reuses
+          No signup. No uploads. Reuses MIT-licensed
           <a href="https://github.com/calumk/IODDForge_Studio"
-            >IODDForge Studio</a
-          >; CRC stamping reuses
-          <a href="https://github.com/calumk/IODDForge_Checker"
-            >IODDForge Checker</a
-          >, under their MIT licenses. Downloads identify the iolinki editor,
-          without claiming official checker approval.
+            >IODDForge XML/tree</a
+          >
+          and
+          <a href="https://github.com/calumk/IODDForge_Checker">CRC</a> modules.
         </p>
       </section>
     </main>

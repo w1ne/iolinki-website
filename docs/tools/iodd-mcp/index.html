@@ -1,0 +1,1768 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Versioned guides and reference documentation for iolinki device and master stacks.">
+      
+      
+      
+        <link rel="canonical" href="https://iolinki.com/docs/tools/iodd-mcp/">
+      
+      
+        <link rel="prev" href="../../master/v1.0.0/hardware-validation/">
+      
+      
+        <link rel="next" href="../iodd-examples/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>IODD authoring, CLI and MCP - iolinki docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/docs.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#local-iodd-authoring-with-mcp-and-cli" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="iolinki docs" class="md-header__button md-logo" aria-label="iolinki docs" data-md-component="logo">
+      
+  <img src="../../assets/favicon.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            iolinki docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              IODD authoring, CLI and MCP
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="iolinki docs" class="md-nav__button md-logo" aria-label="iolinki docs" data-md-component="logo">
+      
+  <img src="../../assets/favicon.svg" alt="logo">
+
+    </a>
+    iolinki docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device · v2.1.0
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Device · v2.1.0
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../device/v2.1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../device/v2.1.0/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../device/v2.1.0/api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../device/v2.1.0/porting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Porting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../device/v2.1.0/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../device/v2.1.0/tiol112/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TIOL112 driver
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_7" id="__nav_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../device/v2.1.0/examples/counter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Counter, button and LED
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../device/v2.1.0/examples/switching-sensor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Switching sensor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../device/v2.1.0/examples/stm32g0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STM32G0 and native IAR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../device/v2.1.0/examples/esp32-c3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ESP32-C3 and L6362A
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../device/v2.1.0/examples/stm32u5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STM32U5 and Zephyr
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../device/v2.1.0/iodd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IODD tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../device/v2.1.0/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../device/v2.1.0/simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Released simulation evidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../device/v2.1.0/physical-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../device/v2.1.0/conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conformance boundary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Master · v1.0.0
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Master · v1.0.0
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../master/v1.0.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../master/v1.0.0/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../master/v1.0.0/api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../master/v1.0.0/porting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Porting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../master/v1.0.0/phy-contract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PHY contract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../master/v1.0.0/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../master/v1.0.0/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../master/v1.0.0/implementation-status/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation status
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../master/v1.0.0/hardware-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hardware validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developer tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Developer tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IODD authoring, CLI and MCP
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IODD authoring, CLI and MCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#install-and-connect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install and connect
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tools
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#command-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command line
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optional-external-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional external validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#full-xml-profiles-and-firmware-packages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full XML, profiles and firmware packages
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capability-and-verification-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capability and verification matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iodd-examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Importable IODD examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../licensing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Licensing and sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#install-and-connect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install and connect
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tools
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#command-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command line
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optional-external-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional external validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#full-xml-profiles-and-firmware-packages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full XML, profiles and firmware packages
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capability-and-verification-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capability and verification matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="local-iodd-authoring-with-mcp-and-cli">Local IODD authoring with MCP and CLI</h1>
+<p>The browser editor, command line and local MCP server use the same XML-preserving authoring engine. They create and reopen projects, edit identity, parameters, process fields, texts, events and menus, retain package assets, compare revisions and generate firmware mapping headers.</p>
+<p>The examples contain example vendor/device IDs. Replace them with IDs assigned to your device before release. Basic model and CRC checks help catch authoring errors; they do not constitute official IODD approval or a manufacturer declaration. Run the official checker separately for release validation.</p>
+<h2 id="install-and-connect">Install and connect</h2>
+<p>Use Node.js 22 or newer. Clone this repository and install the pinned dependencies:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/w1ne/iolinki-website.git
+<span class="nb">cd</span><span class="w"> </span>iolinki-website
+npm<span class="w"> </span>ci
+node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>--help
+</code></pre></div>
+<p>Configure your MCP client with the <strong>absolute</strong> path to this checkout's server. Replace the example path below with your local path:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"iolinki-iodd"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"node"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"/absolute/path/iolinki-website/tools/iodd/mcp.mjs"</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This starts a local stdio server. Its standard output carries MCP protocol messages only. It does not provide a hosted public MCP endpoint. Each server process keeps its own projects in memory; restarting it clears them. Export project JSON or a ZIP to save your work. The server reads only bundled templates; imports receive content from the client, with no arbitrary filesystem paths, network requests or shell commands.</p>
+<p>Example prompt:</p>
+<blockquote>
+<p>Create an IODD from the counter template. Inspect its parameters and process data. Set the vendor name to “My Company” and the product name to “Pulse Counter”. Ask me for my assigned vendor and device IDs before replacing the example IDs. Run basic validation, explain any remaining issues, and export project JSON, stamped XML, a package ZIP and a firmware mapping header. Do not claim official checker approval.</p>
+</blockquote>
+<h2 id="tools">Tools</h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>iodd_create</code></td>
+<td>Create <code>counter</code> or <code>switching-sensor</code> template</td>
+</tr>
+<tr>
+<td><code>iodd_import</code></td>
+<td>Import XML, project JSON or package ZIP content</td>
+</tr>
+<tr>
+<td><code>iodd_inspect</code></td>
+<td>Read identity, parameters, process fields and assets</td>
+</tr>
+<tr>
+<td><code>iodd_edit</code></td>
+<td>Apply one atomic authoring operation</td>
+</tr>
+<tr>
+<td><code>iodd_validate</code></td>
+<td>Report basic model and CRC checks</td>
+</tr>
+<tr>
+<td><code>iodd_export</code></td>
+<td>Export XML, project JSON or ZIP</td>
+</tr>
+<tr>
+<td><code>iodd_diff</code></td>
+<td>Compare two project revisions</td>
+</tr>
+<tr>
+<td><code>iodd_header</code></td>
+<td>Generate a C mapping header</td>
+</tr>
+<tr>
+<td><code>iodd_close</code></td>
+<td>Release a project from memory</td>
+</tr>
+</tbody>
+</table>
+<p>Create/import returns a <code>projectId</code>; pass it to subsequent tools. <code>iodd_diff</code> takes <code>beforeId</code> and <code>afterId</code>. Imports take <code>format</code>, <code>content</code> and optional <code>filename</code>. XML and project JSON content are UTF-8 text; ZIP content is base64. Export replies identify their encoding. Editing a project changes only that project; a rejected edit leaves it intact.</p>
+<p>An edit operation has a <code>type</code> and its required fields. For example:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"projectId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ID-FROM-CREATE"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"operation"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"identity"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"values"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"vendorName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"My Company"</span><span class="p">,</span><span class="w"> </span><span class="nt">"productName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Pulse Counter"</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Inspect the project before editing to discover existing IDs. Tool schemas enumerate identity and parameter fields, datatype/access choices, and numeric bounds. Partial edits preserve omitted values. Process fields accept <code>name</code>, <code>type</code> (<code>BooleanT</code>, <code>UIntegerT</code>, <code>IntegerT</code>), <code>offset</code> (0–255), and <code>bits</code> (1 for BooleanT, 2–64 for integers); they must fit without overlap. Field <code>index</code> is the zero-based position returned by inspection, separate from the IODD subindex. Supported operations include <code>identity</code>, <code>addVariable</code>, <code>editVariable</code>, <code>removeVariable</code>, <code>addProcessField</code>, <code>editProcessField</code>, <code>removeProcessField</code>, <code>text</code>, <code>event</code>, <code>menu</code>, <code>asset</code>, <code>removeEvent</code>, <code>removeMenu</code> and <code>removeAsset</code>. Tool schemas describe the required ID, field index, language or content. Errors include an actionable message; correct the input and retry.</p>
+<p>The server allows up to 32 projects and 64 MiB of serialized project state per process. Individual imports retain the engine's limits: 4 MiB XML, 16 MiB expanded package content, 128 files and safe relative filenames. Close unused projects to release state. The server bounds incoming MCP frames to 32 MiB; clients exporting large packages or project JSON may need a receive limit of at least 32 MiB.</p>
+<h2 id="command-line">Command line</h2>
+<p>Every command uses explicit paths and rejects invalid UTF-8 text. Saves write and sync a temporary file in the destination directory, then rename it over the destination; failed writes preserve the prior file. Reads are bounded before allocating input: 4 MiB for XML, 24 MiB for project JSON, 16 MiB for ZIP, and 1 MiB for an operation file. Status/inspection/diff reports are JSON on stdout; errors are JSON on stderr. Exit code <code>0</code> means the command completed, <code>1</code> means an input or operation failed, and <code>2</code> means validation found basic errors.</p>
+<div class="highlight"><pre><span></span><code>node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>create<span class="w"> </span>--template<span class="w"> </span>counter<span class="w"> </span>--output<span class="w"> </span>counter.project.json
+node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>inspect<span class="w"> </span>--input<span class="w"> </span>counter.project.json
+node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>edit<span class="w"> </span>--input<span class="w"> </span>counter.project.json<span class="w"> </span>--operation<span class="w"> </span>identity-edit.json<span class="w"> </span>--output<span class="w"> </span>edited.project.json
+node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>validate<span class="w"> </span>--input<span class="w"> </span>edited.project.json
+node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--input<span class="w"> </span>edited.project.json<span class="w"> </span>--format<span class="w"> </span>xml<span class="w"> </span>--output<span class="w"> </span>counter.xml
+node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--input<span class="w"> </span>edited.project.json<span class="w"> </span>--format<span class="w"> </span>package<span class="w"> </span>--output<span class="w"> </span>counter.zip
+node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>import<span class="w"> </span>--format<span class="w"> </span>package<span class="w"> </span>--input<span class="w"> </span>counter.zip<span class="w"> </span>--output<span class="w"> </span>reopened.project.json
+node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>diff<span class="w"> </span>--before<span class="w"> </span>counter.project.json<span class="w"> </span>--after<span class="w"> </span>edited.project.json
+node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>header<span class="w"> </span>--input<span class="w"> </span>edited.project.json<span class="w"> </span>--output<span class="w"> </span>counter-map.h
+</code></pre></div>
+<p><code>identity-edit.json</code> contains only the operation, for example <code>{"type":"identity","values":{"vendorName":"My Company"}}</code>. A project JSON file preserves XML and assets for reopening. Exported XML is stamped after basic errors are resolved. A firmware mapping header describes indexes and bit offsets; check it against your firmware implementation. Generating it does not prove firmware execution or physical device behavior.</p>
+<h2 id="optional-external-validation">Optional external validation</h2>
+<p>Install an official IODD XSD and, separately, a licensed official checker according to their distribution terms. The CLI can record actual results separately from basic checks:</p>
+<div class="highlight"><pre><span></span><code>node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>validate<span class="w"> </span>--input<span class="w"> </span>edited.project.json<span class="w"> </span>--schema<span class="w"> </span>/absolute/path/IODD1.1.xsd
+node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>validate<span class="w"> </span>--input<span class="w"> </span>edited.project.json<span class="w"> </span>--checker<span class="w"> </span>/absolute/path/checker<span class="w"> </span>--checker-args<span class="w"> </span><span class="s1">'["{file}"]'</span>
+</code></pre></div>
+<p>Use the argument list required by your installed checker, including one standalone <code>{file}</code> placeholder. The runner substitutes a temporary XML filename, invokes the executable without a shell, limits captured output and times out after 30 seconds. XSD validation requires <code>xmllint</code>. A successful XSD result is separate from an official checker result.</p>
+<p>For MCP, the operator may set <code>IODD_SCHEMA</code>, <code>IODD_CHECKER</code>, and <code>IODD_CHECKER_ARGS</code> (a JSON argument array) in the server's startup environment. Tool calls cannot select an executable or argument list. Without configuration, external statuses are <code>not-run</code>. Resolve basic errors before external checks run; invalid projects retain their basic diagnostic report. The repository does not redistribute the official checker.</p>
+<h2 id="full-xml-profiles-and-firmware-packages">Full XML, profiles and firmware packages</h2>
+<p><code>iodd_tree</code> reads the complete XML tree. <code>iodd_edit</code> supports atomic <code>tree</code> operations (<code>attributes</code>, <code>text</code>, <code>insert</code>, <code>remove</code>) using an XML ID or a root-relative child-index array as its selector; <code>[]</code> means the root. Attribute values are strings; <code>null</code> removes an attribute. Generic tree edits preserve supported unfamiliar sections, and export still requires basic checks to pass.</p>
+<p><code>iodd_elements_inspect</code> reads supplied XML for reusable elements. <code>iodd_elements_export</code> exports selected project elements and their dependencies. Import them through an <code>importElements</code> edit with <code>xml</code>, <code>selectors</code>, optional <code>destination</code>, and <code>collision</code> (<code>rename</code> or <code>error</code>). <code>iodd_profile_inspect</code> lists variants and placeholders in supplied official <code>IODDProfileDefinitions</code> XML. Load it with a <code>profile</code> edit (<code>action:"load"</code>, <code>xml</code>), inspect the returned project for the pack ID, then apply with <code>action:"apply"</code>, <code>id</code>, <code>profileId</code>, and <code>replacements</code>. Official profile files are obtained separately from IO-Link; the repository does not redistribute their documents.</p>
+<p>Communication edits use <code>type:"communication"</code>, <code>mode:"wired"</code> or <code>"wireless"</code>, and <code>values</code>. Wired fields include <code>bitrate</code>, <code>minCycleTime</code>, <code>mSequenceCapability</code> and <code>sioSupported</code>. Wireless fields include <code>WMinCycleTimeIn</code>, <code>WMinCycleTimeOut</code>, <code>maxTxPower</code>, <code>defaultSlotType</code>, <code>isABridge</code> and <code>isLowPowerDevice</code>. The schemas describe their bounds. Declarative <code>validationRules</code> edits accept up to 128 <code>required</code>, <code>range</code> or bounded <code>pattern</code> checks; they cannot execute code or bypass export checks.</p>
+<p><code>iodd_firmware_create</code> packages supplied base64 binary and optional resources into an IOLFW1.0 archive. <code>iodd_firmware_inspect</code> verifies the archive's metadata, file references and continuous CRC, and reports informational SHA-256 fingerprints. These operations create and inspect files; they do not sign firmware, approve device compatibility or flash hardware. The format follows the released <a href="https://io-link.com/fileadmin/user_upload/Downloads/Package_2025/IO-Link_Profile_Firmware-Update_10.082_V1.2.1_Oct2025.zip">IO-Link BLOBs &amp; Firmware Update V1.2.1 package</a>, which retains IOLFW1.0.</p>
+<p>Firmware metadata uses this shape:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"vendorId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1234</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"vendorName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Example"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"firmwareDescriptor"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Counter"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"releaseDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-10-02"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"V1.0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"copyright"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Example"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"fwRevision"</span><span class="p">:</span><span class="w"> </span><span class="s2">"V1.0"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"hardwareIds"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">"idPattern"</span><span class="p">:</span><span class="w"> </span><span class="s2">"COUNTER-A"</span><span class="w"> </span><span class="p">}],</span>
+<span class="w">  </span><span class="nt">"binaryName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"firmware.bin"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Replace example IDs and hardware patterns with values assigned to and implemented by your device. Optional fields include <code>fwPasswordRequired</code>, <code>fwActivationRetryCount</code>, <code>descriptions</code> and <code>infoMessages</code> (arrays of <code>{lang,description}</code>). Each MCP resource is <code>{id,name,base64}</code>. Package filenames are derived from vendor, descriptor and release date; the metadata XML uses the same basename.</p>
+<p>The CLI supports the same workflows:</p>
+<div class="highlight"><pre><span></span><code>node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>tree<span class="w"> </span>--input<span class="w"> </span>device.project.json
+node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>elements<span class="w"> </span>--input<span class="w"> </span>elements.xml
+node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>elements-export<span class="w"> </span>--input<span class="w"> </span>device.project.json<span class="w"> </span>--selectors<span class="w"> </span>selectors.json<span class="w"> </span>--output<span class="w"> </span>elements.xml
+node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>profile-inspect<span class="w"> </span>--input<span class="w"> </span>official-profile.xml
+node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>fw-create<span class="w"> </span>--metadata<span class="w"> </span>firmware.json<span class="w"> </span>--binary<span class="w"> </span>firmware.bin<span class="w"> </span>--output<span class="w"> </span>Example-Counter-20261002-IOLFW1.0.iolfw
+node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>fw-inspect<span class="w"> </span>--input<span class="w"> </span>Example-Counter-20261002-IOLFW1.0.iolfw
+</code></pre></div>
+<p><code>selectors.json</code> is an array of XML IDs or child-index arrays. Firmware creation optionally takes <code>--resources resources.json</code>, an array of <code>{id,name,path}</code> entries pointing to local resource files. IOLFW output names must match the required naming convention. Packages contain flat filenames, at most 128 files and at most 16 MiB of expanded content. Firmware CRC covers metadata with the root CRC value emptied, then binary bytes, then resource bytes in metadata order.</p>
+<h2 id="capability-and-verification-matrix">Capability and verification matrix</h2>
+<p>The <a href="https://teconcept.de/en/products/io-link-iodd-studio/">published IODD Studio feature list</a> informed this workflow checklist. This records implemented functionality and observed tests; it does not establish equivalence with every behavior of proprietary software.</p>
+<table>
+<thead>
+<tr>
+<th>Workflow</th>
+<th>Available here</th>
+<th>Independent verification and limits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create a device or manufacturer template</td>
+<td>True minimal <code>new</code> device plus editable counter/sensor examples; browser, CLI and MCP</td>
+<td>New projects have no invented application parameters or process fields. Default IDs are illustrative; enter assigned IDs.</td>
+</tr>
+<tr>
+<td>Wired/wireless authoring</td>
+<td>Typed communication forms and complete XML tree</td>
+<td>Generated wired/wireless XML checked with released official IODD XSD; no physical RF or device execution proof.</td>
+</tr>
+<tr>
+<td>Parameter/process/XML editing</td>
+<td>Atomic forms, bit layout, preserving tree and XML</td>
+<td>Negative edits leave prior projects intact; export keeps full safety checks. Unsupported mixed-content or prefixed-root documents are rejected with guidance.</td>
+</tr>
+<tr>
+<td>Configurable validators</td>
+<td>Inspection switches and declarative required/range/pattern rules</td>
+<td>Switches filter reports and cannot bypass export safety. Patterns use a bounded linear matcher supporting atoms, classes, anchors and quantifiers; groups, alternatives and backreferences are rejected.</td>
+</tr>
+<tr>
+<td>Save/reopen and templates</td>
+<td>Project JSON, preserving ZIP/XML, revision comparison</td>
+<td>Browser desktop/mobile roundtrips, CLI atomic saves, real MCP roundtrips and package limits tested.</td>
+</tr>
+<tr>
+<td>Finder search/import</td>
+<td>Browser search against the official public Finder through a narrow read-only CORS proxy</td>
+<td>Real browser CORS, ten Festo SDAT results, 54,097-byte download and browser import verified through the deployed proxy. Finder requires network access; local edits and supplied imports stay local.</td>
+</tr>
+<tr>
+<td>Identification/diagnostic and BLOB/FW profiles</td>
+<td>Load supplied official definition packs; inspect variants/placeholders, bind and apply</td>
+<td>Common Profile <code>16384</code>, Locator <code>33025</code> and BLOB Transfer <code>48</code> generated XML independently checked against released official XSD. Other pack variants are available for inspection/application but have not all been individually certified. Required-profile dependencies produce guidance.</td>
+</tr>
+<tr>
+<td>Reusable imported elements</td>
+<td>Export/import selected definitions and dependency closure with collision policies</td>
+<td>Existing IODDs and reusable libraries tested; collisions remap references and variable indexes or report errors.</td>
+</tr>
+<tr>
+<td>IOLFW package creation</td>
+<td>Original IOLFW1.0 flat ZIP creator/inspector in browser, CLI and MCP</td>
+<td>Released V1.2.1 sample CRC, generated official-XSD validation, corruption rejection, and actual desktop/mobile browser downloads verified. Packaging does not sign, flash or validate hardware compatibility.</td>
+</tr>
+<tr>
+<td>Official conformance checking</td>
+<td>Optional operator-installed official checker and official XSD</td>
+<td>Actual process status/output remains separate from model/CRC checks. No automatic manufacturer declaration or official checker approval is generated.</td>
+</tr>
+</tbody>
+</table>
+<p>The default MCP/CLI create mode is <code>new</code>. MCP creation accepts optional typed <code>identity</code> values; CLI creation accepts <code>--identity identity.json</code>. Use <code>iodd_validate</code> with a <code>checks</code> object or CLI <code>validate --checks '{"rules":false}'</code> to inspect a selected check set. Supported keys are <code>structure</code>, <code>references</code>, <code>ranges</code>, <code>processData</code>, <code>crc</code>, <code>assets</code> and <code>rules</code>. External validation runs only when the full basic check set passes.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://iolinki.com/" target="_blank" rel="noopener" title="iolinki home" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M277.8 8.6c-12.3-11.4-31.3-11.4-43.5 0l-224 208c-9.6 9-12.8 22.9-8 35.1S18.8 272 32 272h16v176c0 35.3 28.7 64 64 64h288c35.3 0 64-28.7 64-64V272h16c13.2 0 25-8.1 29.8-20.3s1.6-26.2-8-35.1zM240 320h32c26.5 0 48 21.5 48 48v96H192v-96c0-26.5 21.5-48 48-48"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,5 +1,9 @@
 # Shared IODD authoring and MCP
 
+## Expanded acceptance: TEConcept feature parity
+
+User subsequently requested a functional web equivalent of TEConcept IODD Studio. Its advertised feature list is the acceptance checklist: wired/wireless IODD authoring, configurable validators, project save/restore, IODD Finder integration, IOLFW package creation, XML/tree editing, BLOB/Firmware Download and Identification/Diagnostic profiles, reusable imported elements and manufacturer templates. Implement against official current schema/profile files, with independently tested imports and exports. Preserve a truthful matrix of implemented/tested capabilities and any externally blocked integration rather than asserting parity on raw XML preservation alone. Generic tree forms must allow authoring complex attributes/elements; schema-correct profile snippet import must preserve/remap dependencies and flag collisions. Configurable validators are declarative bounded rules, never eval. IOLFW packaging is a deterministic archive creator/inspector and does not flash devices. Finder uses actual public API with browser CORS validation or clearly labels a required external download flow.
+
 The user approved the shared browser/CLI/MCP authoring engine on 2026-10-02 and explicitly requested subagents. The existing XML-preserving model and CRC library remain the foundation. Build practical authoring rather than a collection of long forms.
 
 ## Architecture and contract
