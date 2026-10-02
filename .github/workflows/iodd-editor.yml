@@ -1,0 +1,42 @@
+name: IODD browser editor
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  editor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Browser edits, downloads, preservation and negative checks
+        run: npm run check:iodd
+      - uses: actions/checkout@v4
+        with:
+          repository: w1ne/iolinki
+          ref: ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca
+          path: .validation/iolinki
+      - name: Validate browser downloads with released CLI and official XSD
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y libxml2-utils unzip
+          curl --fail --location --max-time 90 https://io-link.com/fileadmin/user_upload/Downloads/Package_2025/IO-Device-Description_Specification_10.012_V1.1.5_Oct2025.zip -o "$RUNNER_TEMP/iodd-spec.zip"
+          printf '%s  %s\n' d4b3f53bfc777e45938cf7b7d14fe9b65aa4dccea6875745b3912e1cc59d4dd2 "$RUNNER_TEMP/iodd-spec.zip" | sha256sum --check
+          unzip -q "$RUNNER_TEMP/iodd-spec.zip" -d "$RUNNER_TEMP/iodd-spec"
+          schema="$RUNNER_TEMP/iodd-spec/IO-Device-Description_Specification_10.012_V1.1.5_Oct2025/Schemas/IODD1.1.xsd"
+          for file in artifacts/iodd-editor/*.xml; do
+            python3 .validation/iolinki/tools/iodd_cli.py validate "$file" --schema "$schema"
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: iodd-editor-browser-evidence
+          path: artifacts/iodd-editor/
+          if-no-files-found: error
