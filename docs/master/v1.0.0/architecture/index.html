@@ -1,0 +1,1620 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Versioned guides and reference documentation for iolinki device and master stacks.">
+      
+      
+      
+        <link rel="canonical" href="https://iolinki.com/docs/master/v1.0.0/architecture/">
+      
+      
+        <link rel="prev" href="../phy-contract/">
+      
+      
+        <link rel="next" href="../testing/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Architecture - iolinki docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/docs.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#iolinki-master-architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="iolinki docs" class="md-header__button md-logo" aria-label="iolinki docs" data-md-component="logo">
+      
+  <img src="../../../assets/favicon.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            iolinki docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Architecture
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="iolinki docs" class="md-nav__button md-logo" aria-label="iolinki docs" data-md-component="logo">
+      
+  <img src="../../../assets/favicon.svg" alt="logo">
+
+    </a>
+    iolinki docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device · v2.1.0
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Device · v2.1.0
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/porting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Porting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/tiol112/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TIOL112 driver
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_7" id="__nav_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/examples/counter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Counter, button and LED
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/examples/switching-sensor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Switching sensor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/examples/stm32g0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STM32G0 and native IAR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/examples/esp32-c3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ESP32-C3 and L6362A
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/examples/stm32u5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STM32U5 and Zephyr
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/iodd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IODD tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Released simulation evidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/physical-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../device/v2.1.0/conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conformance boundary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Master · v1.0.0
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Master · v1.0.0
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../porting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Porting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../phy-contract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PHY contract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-repository-and-shared-helper-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Repository and shared-helper boundary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-public-api-vs-private-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Public API vs private state
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-protocol-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Protocol core
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-timing-and-scheduler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Timing and scheduler
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-phy-adapter-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. PHY adapter boundary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-controller-multi-port-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Controller / multi-port runtime
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-services-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Services layer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Design principles
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implementation-status/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation status
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardware-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hardware validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../licensing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Licensing and sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-repository-and-shared-helper-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Repository and shared-helper boundary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-public-api-vs-private-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Public API vs private state
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-protocol-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Protocol core
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-timing-and-scheduler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Timing and scheduler
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-phy-adapter-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. PHY adapter boundary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-controller-multi-port-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Controller / multi-port runtime
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-services-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Services layer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Design principles
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="iolinki-master-architecture">iolinki-master Architecture</h1>
+<blockquote>
+<p>Source snapshot: <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/docs/ARCHITECTURE.md">docs/ARCHITECTURE.md</a>, <code>d23fd3034c02</code>.</p>
+</blockquote>
+<p>The companion device stack is <a href="https://github.com/w1ne/iolinki">iolinki</a>.</p>
+<p><code>iolinki-master</code> is a standalone, hardware-independent IO-Link <strong>master</strong> protocol
+library. The design goal is a portable embedded master core with clean boundaries:
+no heap, caller-owned storage, a public API that hides private state, and no
+coupling to the device-stack singleton. This document describes the layering. It
+does <strong>not</strong> restate the build order — that is <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/docs/ROADMAP.md"><code>ROADMAP.md</code></a> — and it
+cross-references the PHY contract in <a href="../phy-contract/"><code>PHY_BOUNDARY.md</code></a> rather
+than duplicating it.</p>
+<h2 id="1-repository-and-shared-helper-boundary">1. Repository and shared-helper boundary</h2>
+<p>The master is a <em>sibling</em> of the device stack, not a fork of it. It compiles only
+the narrow shared helper sources it needs from a local <code>iolinki</code> checkout — <code>crc.c</code>
+and <code>frame.c</code> (CRC6/checksum and frame encode/decode) — into its own build via
+<code>CMakeLists.txt</code>. It must never <code>add_subdirectory()</code> the full device stack or call
+device singleton entry points (<code>iolink_init()</code>, <code>iolink_process()</code>). The device
+checkout is located through <code>-DIOLINKI_DEVICE_DIR</code> and defaults to a sibling
+<code>../iolinki</code>.</p>
+<h2 id="2-public-api-vs-private-state">2. Public API vs private state</h2>
+<p>The central architectural move: <strong>callers own opaque storage; private state lives
+under <code>src/</code>.</strong></p>
+<ul>
+<li>Public users allocate <code>iolink_master_port_t</code> (per port) or
+  <code>iolink_master_controller_t</code> (per multi-port controller). These are unions sized
+  by audited budgets — <code>IOLINK_MASTER_PORT_STORAGE_SIZE</code> (1280 B) and
+  <code>IOLINK_MASTER_CONTROLLER_STORAGE_SIZE</code> (32 B) — giving embedded integrators a
+  fixed, auditable RAM ceiling and keeping the ABI heap-free and caller-owned.</li>
+<li>The real layout lives in <code>src/master_internal.h</code> and is reached only through
+  <code>iolink_master_port_state()</code> inside <code>src/master_*.c</code>; the public header
+  (<code>include/iolinki_master/master.h</code>) exposes none of it.</li>
+<li>Every public function has a documented return contract expressed as named result
+  codes (<code>IOLINK_MASTER_STATUS_OK</code>, <code>IOLINK_MASTER_STATUS_PENDING</code>,
+  <code>IOLINK_MASTER_ERR_*</code>, and the per-domain <code>..._ISDU_ERR_*</code> / <code>..._SIO_ERR_*</code> /
+  <code>..._PARAM_ERR_*</code> enums), never bare magic integers.</li>
+</ul>
+<p>This boundary matters because every later feature becomes harder to change once
+external users compile against the storage sizes and result codes.</p>
+<h2 id="3-protocol-core">3. Protocol core</h2>
+<p><code>src/master_port.c</code> is the core engine. It owns:</p>
+<ul>
+<li><strong>Port lifecycle</strong>: <code>INACTIVE → STARTUP → PREOPERATE → OPERATE</code>, plus <code>ERROR</code>
+  (<code>iolink_master_state_t</code>), driven by <code>iolink_master_process</code> /
+  <code>iolink_master_poll_rx</code>.</li>
+<li><strong>Startup</strong>: wake-up request, Type-0 idle exchange, operate transition command,
+  and OPERATE entry; fixed baudrate or auto-baud scan across COM3→COM2→COM1 with a
+  configurable per-baud <code>wake_retry_limit</code>.</li>
+<li><strong>Cyclic process data</strong>: configured PD in/out for M-sequence Types 0, 1_1/1_2/1_V,
+  2_1/2_2/2_V (<code>iolink_master_m_seq_type_t</code>), exposed via <code>iolink_master_set_pd_out</code>
+  / <code>iolink_master_get_pd_in</code> / <code>iolink_master_get_od_status</code>.</li>
+<li><strong>RX/retry</strong>: byte accumulation, checksum/CRC verification, bounded retry, and the
+  diagnostics counters (<code>checksum_errors</code>, <code>response_timeouts</code>, <code>cycle_slips</code>,
+  jitter, derived link quality).</li>
+</ul>
+<p>Frame encode/decode and CRC come from the shared <code>../iolinki</code> helpers; the core adds
+master-side sequencing on top.</p>
+<h2 id="4-timing-and-scheduler">4. Timing and scheduler</h2>
+<p>The core does <strong>not</strong> own a clock — the caller does. Timing is expressed as explicit
+monotonic 100µs inputs so it is testable without wall-clock sleeps:</p>
+<ul>
+<li><code>iolink_master_tick</code> / <code>iolink_master_tick_event</code> take an explicit tick event
+  (<code>IOLINK_MASTER_TICK_CYCLE_DUE</code>, <code>..._RESPONSE_TIMEOUT</code>, <code>..._NONE</code>).</li>
+<li><code>iolink_master_tick_at(port, event, now_100us)</code> applies <code>min_cycle_time</code> pacing
+  and response-deadline scheduling against caller-supplied time.</li>
+<li><code>iolink_master_get_next_tick_time(port, now_100us, out_next_100us)</code> tells the
+  caller-owned hardware timer when the port is next due.</li>
+<li><code>iolink_master_get_timing</code> exposes a read-only snapshot of scheduler-visible state
+  (<code>iolink_master_timing_t</code>).</li>
+</ul>
+<p>Response timeout (<code>response_timeout_100us</code>) is kept distinct from cycle spacing
+(<code>min_cycle_time</code>); a zero response timeout falls back to <code>min_cycle_time</code>. The
+MasterCycleTime octet (time-base + multiplier) is decoded to 100µs units by
+<code>iolink_master_decode_min_cycle_time_100us</code> for both validation and pacing. This is
+the current architecture-priority layer — see <a href="https://github.com/w1ne/iolinki-master/blob/d23fd3034c0203ef829bd9734806389f8708fa94/docs/ROADMAP.md"><code>ROADMAP.md</code></a> §4.</p>
+<h2 id="5-phy-adapter-boundary">5. PHY adapter boundary</h2>
+<p>The core is board-agnostic. Board support enters only through <code>iolink_phy_api_t</code>
+(shared PHY struct: <code>init</code>/<code>set_mode</code>/<code>set_baudrate</code>/<code>send</code>/<code>recv_byte</code>, plus
+optional <code>set_cq_line</code>/<code>detect_wakeup</code>/<code>get_voltage_mv</code>/<code>is_short_circuit</code>) and the
+fallible adapter hooks carried in <code>iolink_master_config_t</code>
+(<code>set_mode_checked</code>, <code>set_baudrate_checked</code>, <code>flush_rx</code>, <code>prepare_tx</code>, <code>prepare_rx</code>,
+<code>read_cq_line</code> / <code>read_cq_line_checked</code>, <code>wake_up</code>). The PHY is retained <strong>by
+pointer</strong> and must outlive the port. <code>iolink_master_validate_phy_contract</code> checks
+that a PHY/config pair is complete enough for real hardware. The physical 80µs WURQ
+pulse and <code>t_WU</code>/<code>t_REN</code>/<code>TDMT</code> startup timing are the adapter's responsibility and
+are unverified on silicon. Full contract: <a href="../phy-contract/"><code>PHY_BOUNDARY.md</code></a>;
+implementing an adapter: <a href="../porting/"><code>PORTING.md</code></a>.</p>
+<h2 id="6-controller-multi-port-runtime">6. Controller / multi-port runtime</h2>
+<p><code>src/master_controller.c</code> initializes and drives an array of ports. It fans one
+controller timestamp out to per-port cycle pacing
+(<code>iolink_master_controller_tick_at</code>), applies per-port response deadlines, supports
+independent per-port modes/timings, and exposes port count and per-port access
+(<code>iolink_master_controller_get_port_count</code> / <code>..._get_port</code>). A failing port
+returns its result without corrupting siblings. The controller computes the earliest
+next due time across ports (<code>iolink_master_controller_get_next_tick_time</code>). It is a
+fan-out helper, not yet a full port-policy scheduler.</p>
+<h2 id="7-services-layer">7. Services layer</h2>
+<p>Services sit <strong>above</strong> cyclic transport in <code>src/master_isdu.c</code> (with identity in
+<code>src/master_parameters.c</code>), kept independent of startup policy:</p>
+<ul>
+<li><strong>ISDU</strong> read/write with segmentation into fixed buffers.</li>
+<li><strong>Direct Parameter Page 1</strong> parse/apply/get/validate and capability-driven config
+  selection (<code>src/master_parameters.c</code>), plus VendorID/DeviceID inspection.</li>
+<li><strong>Events</strong>: code/detail read and ack, with optional rising-edge event-pending and
+  per-event dispatch callbacks.</li>
+<li><strong>Data Storage</strong>: read/write/restore with readback verification.</li>
+<li><strong>Block parameterization</strong>: download/upload/store system commands and a
+  write-with-readback sequence.</li>
+<li><strong>SIO DI/DQ</strong> and dynamic mode transitions in <code>src/master_sio.c</code>.</li>
+</ul>
+<h2 id="8-design-principles">8. Design principles</h2>
+<ul>
+<li><strong>No dynamic memory</strong> anywhere in <code>src/</code> or <code>include/</code> — all state is in
+  caller-owned fixed storage.</li>
+<li><strong>No board headers in <code>src/master_*.c</code></strong>; no sleeping inside core calls.</li>
+<li><strong>Fixed-width types</strong> (<code>&lt;stdint.h&gt;</code>) throughout for portability.</li>
+<li><strong>Named result codes</strong>, checked at every call site.</li>
+</ul>
+<p>Note on maturity: the core is protocol- and simulation-validated only. It is not
+timing-certified, hardware-validated, or IO-Link-conformance validated — see
+<a href="../implementation-status/"><code>IMPLEMENTATION_STATUS.md</code></a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://iolinki.com/" target="_blank" rel="noopener" title="iolinki home" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M277.8 8.6c-12.3-11.4-31.3-11.4-43.5 0l-224 208c-9.6 9-12.8 22.9-8 35.1S18.8 272 32 272h16v176c0 35.3 28.7 64 64 64h288c35.3 0 64-28.7 64-64V272h16c13.2 0 25-8.1 29.8-20.3s1.6-26.2-8-35.1zM240 320h32c26.5 0 48 21.5 48 48v96H192v-96c0-26.5 21.5-48 48-48"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

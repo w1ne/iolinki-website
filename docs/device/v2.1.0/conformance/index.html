@@ -1,0 +1,2437 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Versioned guides and reference documentation for iolinki device and master stacks.">
+      
+      
+      
+        <link rel="canonical" href="https://iolinki.com/docs/device/v2.1.0/conformance/">
+      
+      
+        <link rel="prev" href="../physical-validation/">
+      
+      
+        <link rel="next" href="../../../master/v1.0.0/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Conformance boundary - iolinki docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/docs.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#io-link-v115-conformance-testing" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="iolinki docs" class="md-header__button md-logo" aria-label="iolinki docs" data-md-component="logo">
+      
+  <img src="../../../assets/favicon.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            iolinki docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Conformance boundary
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="teal"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="iolinki docs" class="md-nav__button md-logo" aria-label="iolinki docs" data-md-component="logo">
+      
+  <img src="../../../assets/favicon.svg" alt="logo">
+
+    </a>
+    iolinki docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device · v2.1.0
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Device · v2.1.0
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../porting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Porting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tiol112/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TIOL112 driver
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_7" id="__nav_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/counter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Counter, button and LED
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/switching-sensor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Switching sensor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/stm32g0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STM32G0 and native IAR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/esp32-c3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ESP32-C3 and L6362A
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/stm32u5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STM32U5 and Zephyr
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iodd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IODD tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Released simulation evidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../physical-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Physical validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conformance boundary
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conformance boundary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-coverage-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Coverage Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-suites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Suites
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Test Suites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-state-machine-conformance-test_conformance_state_machinepy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. State Machine Conformance (test_conformance_state_machine.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-timing-requirements-test_conformance_timingpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Timing Requirements (test_conformance_timing.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-isdu-protocol-validation-test_conformance_isdupy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. ISDU Protocol Validation (test_conformance_isdu.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-error-injection-recovery-test_conformance_error_injectionpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Error Injection &amp; Recovery (test_conformance_error_injection.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-performance-stress-testing-test_conformance_performancepy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Performance &amp; Stress Testing (test_conformance_performance.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-conformance-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running Conformance Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Running Conformance Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#individual-test-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Individual Test Suite
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-validation-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Validation Suite
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docker-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#specification-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Specification Coverage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Specification Coverage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#io-link-v115-sections-covered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IO-Link V1.1.5 Sections Covered
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mandatory-isdu-indices-100-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mandatory ISDU Indices (100% Coverage)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#io-link-v115-specification-cross-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IO-Link V1.1.5 Specification Cross-Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-execution-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Execution Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#success-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations-future-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitations &amp; Future Work
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Limitations &amp; Future Work">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#not-yet-covered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Not Yet Covered
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planned-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned Enhancements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Master · v1.0.0
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Master · v1.0.0
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../master/v1.0.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../master/v1.0.0/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../master/v1.0.0/api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../master/v1.0.0/porting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Porting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../master/v1.0.0/phy-contract/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PHY contract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../master/v1.0.0/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../master/v1.0.0/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../master/v1.0.0/implementation-status/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation status
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../master/v1.0.0/hardware-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hardware validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../licensing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Licensing and sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-coverage-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Coverage Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-suites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Suites
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Test Suites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-state-machine-conformance-test_conformance_state_machinepy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. State Machine Conformance (test_conformance_state_machine.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-timing-requirements-test_conformance_timingpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Timing Requirements (test_conformance_timing.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-isdu-protocol-validation-test_conformance_isdupy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. ISDU Protocol Validation (test_conformance_isdu.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-error-injection-recovery-test_conformance_error_injectionpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Error Injection &amp; Recovery (test_conformance_error_injection.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-performance-stress-testing-test_conformance_performancepy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Performance &amp; Stress Testing (test_conformance_performance.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-conformance-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running Conformance Tests
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Running Conformance Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#individual-test-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Individual Test Suite
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-validation-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Validation Suite
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docker-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#specification-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Specification Coverage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Specification Coverage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#io-link-v115-sections-covered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IO-Link V1.1.5 Sections Covered
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mandatory-isdu-indices-100-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mandatory ISDU Indices (100% Coverage)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#io-link-v115-specification-cross-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IO-Link V1.1.5 Specification Cross-Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-execution-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Execution Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#success-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations-future-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitations &amp; Future Work
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Limitations &amp; Future Work">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#not-yet-covered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Not Yet Covered
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planned-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned Enhancements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="io-link-v115-conformance-testing">IO-Link V1.1.5 Conformance Testing</h1>
+<blockquote>
+<p>Source snapshot: <a href="https://github.com/w1ne/iolinki/blob/ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca/docs/CONFORMANCE.md">docs/CONFORMANCE.md</a>, <code>ad892f43fa72</code>.</p>
+</blockquote>
+<h2 id="overview">Overview</h2>
+<p>iolinki includes a comprehensive conformance test suite that validates compliance with the IO-Link V1.1.5 specification. The suite consists of <strong>49 automated test cases</strong> across 7 categories, executed via the Virtual IO-Link Master.</p>
+<h2 id="test-coverage-summary">Test Coverage Summary</h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Test Cases</th>
+<th>Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>State Machine</td>
+<td>7</td>
+<td>DLL transitions, ESTAB_COM, fallback behavior</td>
+</tr>
+<tr>
+<td>Timing Requirements</td>
+<td>5</td>
+<td>Cycle times, response delays, wake-up timing</td>
+</tr>
+<tr>
+<td>ISDU Protocol</td>
+<td>13</td>
+<td>All mandatory indices + error handling</td>
+</tr>
+<tr>
+<td>System Commands</td>
+<td>9</td>
+<td>Reset, factory restore, Data Storage upload/download</td>
+</tr>
+<tr>
+<td>Error Injection</td>
+<td>7</td>
+<td>Recovery, robustness, edge cases</td>
+</tr>
+<tr>
+<td>PD / Events / SIO</td>
+<td>3</td>
+<td>Process Data, event signalling, SIO fallback</td>
+</tr>
+<tr>
+<td>Performance</td>
+<td>5</td>
+<td>Sustained operation, stress testing</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>49</strong></td>
+<td><strong>IO-Link V1.1.5 Device Specification</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="test-suites">Test Suites</h2>
+<h3 id="1-state-machine-conformance-test_conformance_state_machinepy">1. State Machine Conformance (<code>test_conformance_state_machine.py</code>)</h3>
+<p><strong>Requirement</strong>: IO-Link V1.1.5 Section 7.3 - DLL State Machine</p>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Description</th>
+<th>Validates</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>test_01_startup_to_preoperate_transition</code></td>
+<td>Wake-up sequence</td>
+<td>Wake-up request, M-sequence response, PREOPERATE entry</td>
+</tr>
+<tr>
+<td><code>test_02_preoperate_to_operate_transition</code></td>
+<td>PD length negotiation</td>
+<td>PD length setup, M-sequence change, cyclic data start</td>
+</tr>
+<tr>
+<td><code>test_03_operate_state_persistence</code></td>
+<td>State retention</td>
+<td>10 consecutive PD exchanges without errors</td>
+</tr>
+<tr>
+<td><code>test_04_communication_fallback_behavior</code></td>
+<td>Baud rate fallback</td>
+<td>COM1 (4.8 kbaud) mandatory support</td>
+</tr>
+<tr>
+<td><code>test_05_invalid_state_transition_rejection</code></td>
+<td>Error handling</td>
+<td>Graceful rejection of invalid transitions</td>
+</tr>
+<tr>
+<td><code>test_06_isdu_during_operate</code></td>
+<td>Concurrent operations</td>
+<td>ISDU access while PD exchange active</td>
+</tr>
+<tr>
+<td><code>test_07_estab_com_to_operate_transition</code></td>
+<td>ESTAB_COM state</td>
+<td>Transition command → ESTAB_COM → OPERATE on first valid frame</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Coverage</strong>: Startup → PREOPERATE → ESTAB_COM → OPERATE transitions, COM rate fallback, concurrent PD/ISDU operations.</p>
+<hr />
+<h3 id="2-timing-requirements-test_conformance_timingpy">2. Timing Requirements (<code>test_conformance_timing.py</code>)</h3>
+<p><strong>Requirement</strong>: IO-Link V1.1.5 Section 6.2.2 - Communication Timing</p>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Description</th>
+<th>Validates</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>test_01_cycle_time_com1</code></td>
+<td>COM1 cycle time</td>
+<td>Minimum cycle time &gt; 5ms, &lt; 100ms</td>
+</tr>
+<tr>
+<td><code>test_02_isdu_response_time</code></td>
+<td>ISDU response delay</td>
+<td>Response time &lt; 1 second</td>
+</tr>
+<tr>
+<td><code>test_03_wakeup_timing</code></td>
+<td>Wake-up sequence</td>
+<td>Wake-up completion &lt; 200ms</td>
+</tr>
+<tr>
+<td><code>test_04_pd_exchange_consistency</code></td>
+<td>Timing jitter</td>
+<td>PD cycle jitter &lt; 50% of average</td>
+</tr>
+<tr>
+<td><code>test_05_wakeup_timing_path_compliance</code></td>
+<td>Wake-up timing path</td>
+<td>t_dwu (80μs) compliance, AWAITING_COMM state</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Coverage</strong>: Cycle time validation, ISDU response timing, wake-up delays, wake-up timing path (t_dwu), timing consistency.</p>
+<hr />
+<h3 id="3-isdu-protocol-validation-test_conformance_isdupy">3. ISDU Protocol Validation (<code>test_conformance_isdu.py</code>)</h3>
+<p><strong>Requirement</strong>: IO-Link V1.1.5 Section 8 - ISDU Specification</p>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>ISDU Index</th>
+<th>Parameter</th>
+<th>Access</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>test_01_vendor_name_0x0010</code></td>
+<td>0x0010</td>
+<td>Vendor Name</td>
+<td>Read</td>
+</tr>
+<tr>
+<td><code>test_02_vendor_text_0x0011</code></td>
+<td>0x0011</td>
+<td>Vendor Text</td>
+<td>Read</td>
+</tr>
+<tr>
+<td><code>test_03_product_name_0x0012</code></td>
+<td>0x0012</td>
+<td>Product Name</td>
+<td>Read</td>
+</tr>
+<tr>
+<td><code>test_04_product_id_0x0013</code></td>
+<td>0x0013</td>
+<td>Product ID</td>
+<td>Read</td>
+</tr>
+<tr>
+<td><code>test_05_product_text_0x0014</code></td>
+<td>0x0014</td>
+<td>Product Text</td>
+<td>Read</td>
+</tr>
+<tr>
+<td><code>test_06_serial_number_0x0015</code></td>
+<td>0x0015</td>
+<td>Serial Number</td>
+<td>Read</td>
+</tr>
+<tr>
+<td><code>test_07_hardware_revision_0x0016</code></td>
+<td>0x0016</td>
+<td>Hardware Revision</td>
+<td>Read</td>
+</tr>
+<tr>
+<td><code>test_08_firmware_revision_0x0017</code></td>
+<td>0x0017</td>
+<td>Firmware Revision</td>
+<td>Read</td>
+</tr>
+<tr>
+<td><code>test_09_application_tag_0x0018_read_write</code></td>
+<td>0x0018</td>
+<td>Application Tag</td>
+<td>Read/Write</td>
+</tr>
+<tr>
+<td><code>test_10_device_access_locks_0x000C</code></td>
+<td>0x000C</td>
+<td>Device Access Locks</td>
+<td>Read</td>
+</tr>
+<tr>
+<td><code>test_11_profile_characteristic_0x000D</code></td>
+<td>0x000D</td>
+<td>Profile Characteristic</td>
+<td>Read</td>
+</tr>
+<tr>
+<td><code>test_12_device_status_0x0024</code></td>
+<td>0x0024</td>
+<td>Device Status (Table B.13)</td>
+<td>Read</td>
+</tr>
+<tr>
+<td><code>test_13_invalid_index_error_handling</code></td>
+<td>0xFFFF</td>
+<td>(Invalid)</td>
+<td>Error handling</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Coverage</strong>: All 12 mandatory ISDU indices, read/write operations, persistence (0x0018), error handling for invalid indices.</p>
+<hr />
+<h3 id="4-error-injection-recovery-test_conformance_error_injectionpy">4. Error Injection &amp; Recovery (<code>test_conformance_error_injection.py</code>)</h3>
+<p><strong>Requirement</strong>: IO-Link V1.1.5 Section 7.3.5 - Error Handling</p>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Description</th>
+<th>Validates</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>test_01_communication_loss_recovery</code></td>
+<td>Master dropout</td>
+<td>Recovery after 500ms communication loss</td>
+</tr>
+<tr>
+<td><code>test_02_rapid_state_transitions</code></td>
+<td>State machine stress</td>
+<td>5 rapid wake-up cycles</td>
+</tr>
+<tr>
+<td><code>test_03_invalid_pd_length_handling</code></td>
+<td>Boundary condition</td>
+<td>Rejection of PD length &gt; 32 bytes</td>
+</tr>
+<tr>
+<td><code>test_04_concurrent_isdu_requests</code></td>
+<td>Flow control</td>
+<td>ISDU Busy state handling</td>
+</tr>
+<tr>
+<td><code>test_05_boundary_condition_max_isdu_size</code></td>
+<td>Segmentation</td>
+<td>16-byte ISDU write/read</td>
+</tr>
+<tr>
+<td><code>test_05_error_recovery_sequence</code></td>
+<td>Full recovery</td>
+<td>Functionality restoration after errors</td>
+</tr>
+<tr>
+<td><code>test_06_bad_crc_handling</code></td>
+<td>CRC error detection</td>
+<td>Device detects and handles CRC errors</td>
+</tr>
+<tr>
+<td><code>test_07_crc_fallback_recovery</code></td>
+<td>CRC fallback</td>
+<td>Fallback to COM1 after 3 CRC errors, full recovery</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Coverage</strong>: Communication loss, rapid state changes, invalid parameters, concurrent requests, boundary conditions, CRC fallback to COM1, full recovery sequences.</p>
+<hr />
+<h3 id="5-performance-stress-testing-test_conformance_performancepy">5. Performance &amp; Stress Testing (<code>test_conformance_performance.py</code>)</h3>
+<p><strong>Requirement</strong>: IO-Link V1.1.5 - General Reliability</p>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Description</th>
+<th>Validates</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>test_01_sustained_pd_exchange</code></td>
+<td>100 PD cycles</td>
+<td>≥ 90% success rate</td>
+</tr>
+<tr>
+<td><code>test_02_high_frequency_isdu_access</code></td>
+<td>20 rapid ISDU reads</td>
+<td>≥ 15/20 success rate</td>
+</tr>
+<tr>
+<td><code>test_03_mixed_pd_and_isdu_load</code></td>
+<td>Concurrent traffic</td>
+<td>Both PD and ISDU functional</td>
+</tr>
+<tr>
+<td><code>test_04_rapid_state_cycling</code></td>
+<td>10 PREOPERATE↔OPERATE</td>
+<td>≥ 7/10 success rate</td>
+</tr>
+<tr>
+<td><code>test_05_long_duration_stability</code></td>
+<td>30-second operation</td>
+<td>≥ 85% success rate</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Coverage</strong>: Sustained operation, high-frequency access, mixed workloads, state cycling, long-duration stability.</p>
+<hr />
+<h2 id="running-conformance-tests">Running Conformance Tests</h2>
+<h3 id="individual-test-suite">Individual Test Suite</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run specific conformance test</span>
+python3<span class="w"> </span>tools/virtual_master/test_conformance_state_machine.py
+python3<span class="w"> </span>tools/virtual_master/test_conformance_timing.py
+python3<span class="w"> </span>tools/virtual_master/test_conformance_isdu.py
+python3<span class="w"> </span>tools/virtual_master/test_conformance_error_injection.py
+python3<span class="w"> </span>tools/virtual_master/test_conformance_performance.py
+</code></pre></div>
+<h3 id="full-validation-suite">Full Validation Suite</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Runs all tests including conformance suite</span>
+./test_all.sh
+</code></pre></div>
+<h3 id="docker-validation">Docker Validation</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Runs all tests in isolated Docker environment</span>
+./run_all_tests_docker.sh
+</code></pre></div>
+<hr />
+<h2 id="specification-coverage">Specification Coverage</h2>
+<h3 id="io-link-v115-sections-covered">IO-Link V1.1.5 Sections Covered</h3>
+<ul>
+<li>✅ <strong>Section 6.2.2</strong>: Communication Rates (COM1/COM2/COM3)</li>
+<li>✅ <strong>Section 7.3</strong>: DLL State Machine (Startup, PREOPERATE, OPERATE)</li>
+<li>✅ <strong>Section 7.3.2</strong>: Wake-up Sequence</li>
+<li>✅ <strong>Section 7.3.3</strong>: PD Length Negotiation</li>
+<li>✅ <strong>Section 7.3.4</strong>: State Retention</li>
+<li>✅ <strong>Section 7.3.5</strong>: Error Handling &amp; Recovery</li>
+<li>✅ <strong>Section 8.1</strong>: ISDU Acyclic Messaging</li>
+<li>✅ <strong>Section 8.1.2</strong>: ISDU Segmentation</li>
+<li>✅ <strong>Section 8.1.3</strong>: Concurrent PD/ISDU Operations</li>
+<li>✅ <strong>Section 9.1</strong>: Process Data Exchange</li>
+</ul>
+<h3 id="mandatory-isdu-indices-100-coverage">Mandatory ISDU Indices (100% Coverage)</h3>
+<table>
+<thead>
+<tr>
+<th>Index</th>
+<th>Parameter</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0x0010</td>
+<td>Vendor Name</td>
+<td>✅ Tested</td>
+</tr>
+<tr>
+<td>0x0011</td>
+<td>Vendor Text</td>
+<td>✅ Tested</td>
+</tr>
+<tr>
+<td>0x0012</td>
+<td>Product Name</td>
+<td>✅ Tested</td>
+</tr>
+<tr>
+<td>0x0013</td>
+<td>Product ID</td>
+<td>✅ Tested</td>
+</tr>
+<tr>
+<td>0x0014</td>
+<td>Product Text</td>
+<td>✅ Tested</td>
+</tr>
+<tr>
+<td>0x0015</td>
+<td>Serial Number</td>
+<td>✅ Tested</td>
+</tr>
+<tr>
+<td>0x0016</td>
+<td>Hardware Revision</td>
+<td>✅ Tested</td>
+</tr>
+<tr>
+<td>0x0017</td>
+<td>Firmware Revision</td>
+<td>✅ Tested</td>
+</tr>
+<tr>
+<td>0x0018</td>
+<td>Application Tag</td>
+<td>✅ Tested (R/W + Persistence)</td>
+</tr>
+<tr>
+<td>0x000C</td>
+<td>Device Access Locks</td>
+<td>✅ Tested</td>
+</tr>
+<tr>
+<td>0x000D</td>
+<td>Profile Characteristic</td>
+<td>✅ Tested</td>
+</tr>
+<tr>
+<td>0x0024</td>
+<td>Device Status</td>
+<td>✅ Tested</td>
+</tr>
+</tbody>
+</table>
+<h3 id="io-link-v115-specification-cross-reference">IO-Link V1.1.5 Specification Cross-Reference</h3>
+<p>The following table maps our conformance tests to specific sections of the <strong>IO-Link Interface and System Specification V1.1.5</strong> (IEC 61131-9):</p>
+<table>
+<thead>
+<tr>
+<th>Test Category</th>
+<th>Spec Section</th>
+<th>Requirement</th>
+<th>Test Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Wake-up Sequence</td>
+<td>7.3.2</td>
+<td>Device must respond to wake-up request</td>
+<td><code>test_01_startup_to_preoperate_transition</code></td>
+</tr>
+<tr>
+<td>PD Negotiation</td>
+<td>7.3.3</td>
+<td>PD length must be negotiated before OPERATE</td>
+<td><code>test_02_preoperate_to_operate_transition</code></td>
+</tr>
+<tr>
+<td>State Retention</td>
+<td>7.3.4</td>
+<td>Device must maintain state during operation</td>
+<td><code>test_03_operate_state_persistence</code></td>
+</tr>
+<tr>
+<td>Error Recovery</td>
+<td>7.3.5</td>
+<td>Device must recover from communication errors</td>
+<td><code>test_01_communication_loss_recovery</code></td>
+</tr>
+<tr>
+<td>COM1 Support</td>
+<td>6.2.2</td>
+<td>COM1 (4.8 kbaud) is mandatory</td>
+<td><code>test_04_communication_fallback_behavior</code></td>
+</tr>
+<tr>
+<td>Concurrent ISDU/PD</td>
+<td>8.1.3</td>
+<td>ISDU must work during PD exchange</td>
+<td><code>test_06_isdu_during_operate</code></td>
+</tr>
+<tr>
+<td>ISDU Indices 0x0010-0x0018</td>
+<td>8.2.1</td>
+<td>Mandatory device identification parameters</td>
+<td><code>test_01</code> through <code>test_09</code> (ISDU suite)</td>
+</tr>
+<tr>
+<td>Device Access Locks</td>
+<td>8.2.1.30</td>
+<td>Index 0x000C must be readable</td>
+<td><code>test_10_device_access_locks_0x000C</code></td>
+</tr>
+<tr>
+<td>Profile Characteristic</td>
+<td>8.2.1.36</td>
+<td>Index 0x000D must indicate device profile</td>
+<td><code>test_11_profile_characteristic_0x000D</code></td>
+</tr>
+<tr>
+<td>Device Status</td>
+<td>8.2.1</td>
+<td>Index 0x0024 must be readable</td>
+<td><code>test_12_device_status_0x0024</code></td>
+</tr>
+<tr>
+<td>ISDU Segmentation</td>
+<td>8.1.2</td>
+<td>Support for multi-frame ISDU transfers</td>
+<td><code>test_05_boundary_condition_max_isdu_size</code></td>
+</tr>
+<tr>
+<td>Timing Requirements</td>
+<td>6.2.2, Table 12</td>
+<td>Cycle time and response delay limits</td>
+<td>All timing tests</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="test-execution-flow">Test Execution Flow</h2>
+<div class="highlight"><pre><span></span><code>graph TD
+    A[Start Test Suite] --&gt; B[Build Device]
+    B --&gt; C[Start Virtual Master]
+    C --&gt; D[Run State Machine Tests]
+    D --&gt; E[Run Timing Tests]
+    E --&gt; F[Run ISDU Protocol Tests]
+    F --&gt; G[Run Error Injection Tests]
+    G --&gt; H[Run Performance Tests]
+    H --&gt; I{All Passed?}
+    I --&gt;|Yes| J[✅ Conformance Validated]
+    I --&gt;|No| K[❌ Report Failures]
+</code></pre></div>
+<hr />
+<h2 id="success-criteria">Success Criteria</h2>
+<p>For iolinki to be considered <strong>IO-Link V1.1.5 conformant</strong>, all 49 test cases must pass:</p>
+<ul>
+<li><strong>State Machine</strong>: All 7 tests pass</li>
+<li><strong>Timing</strong>: All 5 tests pass</li>
+<li><strong>ISDU Protocol</strong>: All 13 tests pass</li>
+<li><strong>System Commands</strong>: All 9 tests pass</li>
+<li><strong>Error Injection</strong>: All 7 tests pass</li>
+<li><strong>PD / Events / SIO</strong>: All 3 tests pass</li>
+<li><strong>Performance</strong>: All 5 tests pass</li>
+</ul>
+<p><strong>Current Status</strong>: ✅ All 49 tests passing</p>
+<hr />
+<h2 id="limitations-future-work">Limitations &amp; Future Work</h2>
+<h3 id="not-yet-covered">Not Yet Covered</h3>
+<ul>
+<li><strong>EMC Robustness Testing</strong>: Requires specialized hardware (per IO-Link Test Spec)</li>
+<li><strong>Safety Communication Layer (SCL)</strong>: Not applicable (iolinki is a standard device stack)</li>
+<li><strong>Physical Layer Testing</strong>: Requires oscilloscope and signal analysis</li>
+<li><strong>Multi-Master Scenarios</strong>: Requires multiple master instances</li>
+</ul>
+<h3 id="planned-enhancements">Planned Enhancements</h3>
+<ul>
+<li><strong>IODD Validation</strong>: Automatic IODD file generation and validation</li>
+<li><strong>Extended Stress Testing</strong>: 24-hour continuous operation tests</li>
+<li><strong>Coverage Metrics</strong>: Automated code coverage reporting</li>
+<li><strong>Certification Support</strong>: Test report generation for official certification</li>
+</ul>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://io-link.com/en/Downloads/Downloads_public.php">IO-Link Specification V1.1.5</a></li>
+<li><a href="https://io-link.com/en/Downloads/Downloads_public.php">IO-Link Test Specification V1.1.5</a></li>
+<li>Virtual Master implementation: <code>tools/virtual_master/</code></li>
+<li>Conformance tests: <code>tools/virtual_master/test_conformance_*.py</code></li>
+</ul>
+<hr />
+<p><strong>Copyright (C) 2026 Andrii Shylenko</strong>
+<strong>License</strong>: See <a href="https://github.com/w1ne/iolinki/blob/ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca/LICENSE">LICENSE</a> and <a href="https://github.com/w1ne/iolinki/blob/ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca/LICENSE.COMMERCIAL">LICENSE.COMMERCIAL</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://iolinki.com/" target="_blank" rel="noopener" title="iolinki home" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M277.8 8.6c-12.3-11.4-31.3-11.4-43.5 0l-224 208c-9.6 9-12.8 22.9-8 35.1S18.8 272 32 272h16v176c0 35.3 28.7 64 64 64h288c35.3 0 64-28.7 64-64V272h16c13.2 0 25-8.1 29.8-20.3s1.6-26.2-8-35.1zM240 320h32c26.5 0 48 21.5 48 48v96H192v-96c0-26.5 21.5-48 48-48"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

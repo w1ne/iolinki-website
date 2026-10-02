@@ -33,7 +33,8 @@ def check():
     pages = {}
     references = []
     errors = []
-    for path in sorted([*ROOT.glob('*.html'), *(ROOT / 'terms').glob('*.html')]):
+    for path in sorted([*ROOT.glob('*.html'), *(ROOT / 'terms').glob('*.html'),
+                        *(ROOT / 'docs').rglob('*.html')]):
         page = Page(path.relative_to(ROOT))
         page.feed(path.read_text())
         pages[path.resolve()] = page
