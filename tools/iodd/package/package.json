@@ -1,0 +1,16 @@
+{
+  "name": "iolinki-iodd-mcp",
+  "version": "1.0.0",
+  "description": "Local IO-Link IODD authoring MCP server and CLI",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=22" },
+  "bin": { "iodd-mcp": "bin/iodd-mcp.mjs" },
+  "files": ["bin", "tools/iodd", "assets/js/iodd", "assets/iodd", "LICENSE", "README.md"],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.31.0",
+    "@xmldom/xmldom": "0.9.12",
+    "fflate": "0.8.3",
+    "zod": "3.25.76"
+  }
+}

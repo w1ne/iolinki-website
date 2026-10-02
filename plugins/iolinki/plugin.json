@@ -1,0 +1,33 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "iolinki",
+  "version": "1.0.0",
+  "description": "Create IO-Link IODDs and integrate the iolinki firmware stacks.",
+  "author": {
+    "name": "Andrii Shylenko",
+    "url": "https://iolinki.com"
+  },
+  "homepage": "https://iolinki.com/iodd-mcp.html",
+  "repository": "https://github.com/w1ne/iolinki-website",
+  "license": "MIT",
+  "keywords": [
+    "io-link",
+    "iodd",
+    "embedded",
+    "firmware"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "iolinki",
+        "shortDescription": "Build IODDs and integrate IO-Link firmware",
+        "developerName": "Andrii Shylenko",
+        "category": "Developer Tools",
+        "websiteURL": "https://iolinki.com",
+        "defaultPrompt": [
+          "Create a switching-sensor IODD, validate it and generate its C mapping header."
+        ]
+      }
+    }
+  }
+}

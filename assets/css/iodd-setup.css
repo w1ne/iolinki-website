@@ -1,0 +1,159 @@
+.tool-guide {
+  max-width: 960px;
+  margin: auto;
+  padding: 3rem 1.25rem;
+}
+.tool-guide h1 {
+  font-size: clamp(2.1rem, 6vw, 3.8rem);
+  line-height: 1.1;
+  margin: 0.8rem 0;
+}
+.setup-lead {
+  max-width: 740px;
+  font-size: 1.15rem;
+  line-height: 1.7;
+}
+.setup-card {
+  margin: 2rem 0;
+  padding: 1.6rem;
+  border: 1px solid #cbdcdd;
+  border-radius: 18px;
+  background: #fff;
+  min-width: 0;
+}
+.setup-card h2 {
+  margin-top: 0;
+  font-size: 1.4rem;
+}
+.setup-card h3 {
+  margin-bottom: 0.5rem;
+}
+.setup-card p {
+  line-height: 1.65;
+}
+.setup-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.setup-badge {
+  background: #e6f4ee;
+  color: #216047;
+  border-radius: 20px;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.8rem;
+}
+.client-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 1.5rem;
+}
+.client-picker button,
+.copy-block button {
+  border: 1px solid #aabfc0;
+  background: #f5faf9;
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  color: #193b3d;
+  font: inherit;
+  cursor: pointer;
+}
+.client-picker button[aria-pressed="true"] {
+  background: #163e40;
+  color: white;
+  border-color: #163e40;
+}
+.tool-guide button:focus-visible,
+.tool-guide a:focus-visible {
+  outline: 3px solid #20a899;
+  outline-offset: 3px;
+}
+.copy-block {
+  display: flex;
+  align-items: start;
+  gap: 0.75rem;
+  background: #102b32;
+  border-radius: 10px;
+  padding: 1rem;
+  min-width: 0;
+}
+.copy-block pre {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  color: #e4f4f2;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.copy-block button {
+  flex-shrink: 0;
+  font-size: 0.82rem;
+}
+.setup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1.2rem 0;
+}
+.setup-actions a:first-child {
+  background: #163e40;
+  color: white;
+  padding: 0.65rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+}
+.setup-actions a {
+  align-self: center;
+}
+.setup-note {
+  color: #52696c;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.local-setup {
+  border-top: 1px solid #dbe5e6;
+  margin-top: 1.3rem;
+  padding-top: 1rem;
+}
+.local-setup summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.setup-resources {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  line-height: 1.7;
+}
+.setup-resources h2 {
+  font-size: 1.25rem;
+}
+.tool-guide footer {
+  margin-top: 2rem;
+  border-top: 1px solid #dbe5e6;
+  padding-top: 1rem;
+}
+#copy-status {
+  min-height: 1.5rem;
+  color: #216047;
+}
+@media (max-width: 600px) {
+  .tool-guide {
+    padding: 2rem 1rem;
+  }
+  .setup-card {
+    padding: 1rem;
+  }
+  .copy-block {
+    flex-direction: column;
+  }
+  .setup-resources {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}

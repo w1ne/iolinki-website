@@ -1,0 +1,11 @@
+interface:
+  display_name: "iolinki"
+  short_description: "Build IODDs and integrate IO-Link firmware"
+  default_prompt: "Use $iolinki to create an IODD for my device and generate its C mapping header."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "iolinki-iodd"
+      description: "Create, validate and export IO-Link device descriptions"
+      transport: "streamable_http"
+      url: "https://iolinki-iodd-mcp.shylenkoa.workers.dev/mcp"

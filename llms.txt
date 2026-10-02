@@ -1,0 +1,29 @@
+# iolinki
+
+> IO-Link device and master firmware stacks, an IODD editor, CLI and MCP tools. Use released documentation and distinguish software/simulation evidence from physical validation.
+
+- [Full agent instructions](https://iolinki.com/llms-full.txt): Single plain-text guide with workflow and example mappings.
+
+## Start here
+
+- [Agent skill](https://iolinki.com/plugins/iolinki/skills/iolinki/SKILL.md): Instructions for IODD creation, firmware integration and validation.
+- [Connect MCP](https://iolinki.com/iodd-mcp.html): Client-specific setup and local installation.
+- [Agent plugin](https://iolinki.com/downloads/iolinki-agent-plugin.zip): Portable skill plus MCP configuration for supported clients.
+- [IODD editor](https://iolinki.com/iodd-editor.html): Create, import, edit and export device descriptions in the browser.
+
+- [Agent setup guide](https://iolinki.com/docs/tools/agents/): Install the skill/plugin and add project instructions.
+
+## Firmware
+
+- [Device stack v2.1.0](https://iolinki.com/docs/device/v2.1.0/): Getting started, API, porting, board examples and LabWired simulation.
+- [Master stack v1.0.0](https://iolinki.com/docs/master/v1.0.0/): Master API, porting and PHY contract.
+- [Device releases](https://github.com/w1ne/iolinki/releases): Source, examples, IAR project and reproducible test artifacts.
+- [Master releases](https://github.com/w1ne/iolinki-master/releases): Master stack releases.
+- [IODD examples](https://iolinki.com/docs/tools/iodd-examples/): Counter and switching-sensor packages and exact firmware mappings.
+
+## Evidence and commercial scope
+
+- [Validation](https://iolinki.com/validation.html): Published test evidence.
+- [Licensing](https://iolinki.com/faq.html#licensing): Current product-family license scope and integration assistance.
+
+Example vendor/device IDs are illustrative. Basic IODD validation, official XSD checks, official Checker results, LabWired execution and physical master testing are separate claims. Match the IODD to the actual firmware identity, ISDU dictionary and process-data layout.

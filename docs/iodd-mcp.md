@@ -4,35 +4,60 @@ The browser editor, command line and local MCP server use the same XML-preservin
 
 The examples contain example vendor/device IDs. Replace them with IDs assigned to your device before release. Basic model and CRC checks help catch authoring errors; they do not constitute official IODD approval or a manufacturer declaration. Run the official checker separately for release validation.
 
-## Install and connect
+## Connect your assistant
 
-Use Node.js 22 or newer. Clone this repository and install the pinned dependencies:
+Use the [client picker](https://iolinki.com/iodd-mcp.html) for copyable ChatGPT, Claude, Codex, Cursor and VS Code setup instructions.
 
-```sh
-git clone https://github.com/w1ne/iolinki-website.git
-cd iolinki-website
-npm ci
-node tools/iodd/cli.mjs --help
+The hosted Streamable HTTP endpoint is:
+
+```text
+https://iolinki-iodd-mcp.shylenkoa.workers.dev/mcp
 ```
 
-Configure your MCP client with the **absolute** path to this checkout's server. Replace the example path below with your local path:
+No iolinki account is needed. Hosted projects are processed on the server; export project JSON or a ZIP to keep your work. For private files, run the local server.
+
+- **ChatGPT:** enable Developer mode in Settings → Security and login, then open [Plugins](https://chatgpt.com/plugins), select +, and enter the endpoint. Availability depends on account and workspace policy. [Official guide](https://developers.openai.com/plugins/deploy/connect-chatgpt).
+- **Claude Code:** `claude mcp add --transport http iolinki-iodd https://iolinki-iodd-mcp.shylenkoa.workers.dev/mcp`. [Official guide](https://code.claude.com/docs/en/mcp).
+- **Codex:** `codex mcp add iolinki-iodd --url https://iolinki-iodd-mcp.shylenkoa.workers.dev/mcp`. [Official guide](https://developers.openai.com/codex/mcp).
+- **Cursor:** use the install button in the client picker, or add the URL in MCP settings. [Official install-link format](https://prod.cursor.com/docs/mcp/install-links).
+- **VS Code:** run **MCP: Add Server**, choose HTTP, and enter the endpoint. [Official guide](https://code.visualstudio.com/docs/agent-customization/mcp-servers).
+
+### Run locally
+
+Install Node.js 22 or newer, then start the pinned package:
+
+```sh
+npx -y https://iolinki.com/downloads/iodd-mcp-1.0.0.tgz
+```
+
+For clients using `mcpServers` JSON (such as Cursor or Claude Desktop):
 
 ```json
 {
   "mcpServers": {
     "iolinki-iodd": {
-      "command": "node",
-      "args": ["/absolute/path/iolinki-website/tools/iodd/mcp.mjs"]
+      "command": "npx",
+      "args": ["-y", "https://iolinki.com/downloads/iodd-mcp-1.0.0.tgz"]
     }
   }
 }
 ```
 
-This starts a local stdio server. Its standard output carries MCP protocol messages only. It does not provide a hosted public MCP endpoint. Each server process keeps its own projects in memory; restarting it clears them. Export project JSON or a ZIP to save your work. The server reads only bundled templates; imports receive content from the client, with no arbitrary filesystem paths, network requests or shell commands.
+Codex local setup: `codex mcp add iolinki-iodd -- npx -y https://iolinki.com/downloads/iodd-mcp-1.0.0.tgz`.
+Claude Code local setup: `claude mcp add iolinki-iodd -- npx -y https://iolinki.com/downloads/iodd-mcp-1.0.0.tgz`.
+VS Code uses a top-level `servers` object and `type: "stdio"` for the local configuration.
+
+The local server uses stdio and keeps projects in memory. Export project JSON or a ZIP before restarting. It reads bundled templates; imports receive content from the client without arbitrary filesystem paths or shell commands.
+
+### Give your agent context
+
+Read [llms.txt](https://iolinki.com/llms.txt) or download the [agent plugin and skills](https://iolinki.com/downloads/iolinki-agent-plugin.zip) for stack, hardware and IODD workflows.
 
 Example prompt:
 
-> Create an IODD from the counter template. Inspect its parameters and process data. Set the vendor name to “My Company” and the product name to “Pulse Counter”. Ask me for my assigned vendor and device IDs before replacing the example IDs. Run basic validation, explain any remaining issues, and export project JSON, stamped XML, a package ZIP and a firmware mapping header. Do not claim official checker approval.
+> Create a switching-sensor IODD. Ask me for my assigned vendor and device IDs. Inspect its threshold, hysteresis and process-data fields, validate it, and export the project, XML, ZIP and C firmware mapping header.
+
+Validation covers model references, ranges, process bits and CRC. Official checker results are reported separately when a checker is configured.
 
 ## Tools
 

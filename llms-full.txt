@@ -1,0 +1,203 @@
+# iolinki
+
+> IO-Link device and master firmware stacks, an IODD editor, CLI and MCP tools. Use released documentation and distinguish software/simulation evidence from physical validation.
+
+- [Full agent instructions](https://iolinki.com/llms-full.txt): Single plain-text guide with workflow and example mappings.
+
+## Start here
+
+- [Agent skill](https://iolinki.com/plugins/iolinki/skills/iolinki/SKILL.md): Instructions for IODD creation, firmware integration and validation.
+- [Connect MCP](https://iolinki.com/iodd-mcp.html): Client-specific setup and local installation.
+- [Agent plugin](https://iolinki.com/downloads/iolinki-agent-plugin.zip): Portable skill plus MCP configuration for supported clients.
+- [IODD editor](https://iolinki.com/iodd-editor.html): Create, import, edit and export device descriptions in the browser.
+
+- [Agent setup guide](https://iolinki.com/docs/tools/agents/): Install the skill/plugin and add project instructions.
+
+## Firmware
+
+- [Device stack v2.1.0](https://iolinki.com/docs/device/v2.1.0/): Getting started, API, porting, board examples and LabWired simulation.
+- [Master stack v1.0.0](https://iolinki.com/docs/master/v1.0.0/): Master API, porting and PHY contract.
+- [Device releases](https://github.com/w1ne/iolinki/releases): Source, examples, IAR project and reproducible test artifacts.
+- [Master releases](https://github.com/w1ne/iolinki-master/releases): Master stack releases.
+- [IODD examples](https://iolinki.com/docs/tools/iodd-examples/): Counter and switching-sensor packages and exact firmware mappings.
+
+## Evidence and commercial scope
+
+- [Validation](https://iolinki.com/validation.html): Published test evidence.
+- [Licensing](https://iolinki.com/faq.html#licensing): Current product-family license scope and integration assistance.
+
+Example vendor/device IDs are illustrative. Basic IODD validation, official XSD checks, official Checker results, LabWired execution and physical master testing are separate claims. Match the IODD to the actual firmware identity, ISDU dictionary and process-data layout.
+
+---
+name: iolinki
+description: Create, edit and validate IO-Link IODDs, generate C mappings, or integrate the iolinki device or master stack using its released examples and test evidence.
+---
+
+# iolinki
+
+Use https://iolinki.com/llms.txt to discover the current released documentation and connection instructions. Prefer the user's existing stack version; use the release pages for a new integration. Device and master are separate stacks and need the corresponding PHY and port contract.
+
+## IODD workflow
+
+Use the iolinki IODD MCP server when connected. Discover its tool schemas rather than guessing arguments. Tools use the `iodd_` prefix, for example `iodd_create`, `iodd_inspect`, `iodd_edit`, `iodd_validate`, `iodd_export` and `iodd_header`. If unavailable, use the browser editor at https://iolinki.com/iodd-editor.html or the local CLI described at https://iolinki.com/iodd-mcp.html.
+
+- Create with the `new`, `counter` or `switching-sensor` template, or import the user's XML, ZIP or saved project. Keep returned projectId in this session.
+- Inspect before editing. Confirm vendor/device IDs, product identity, parameter indexes/access/defaults, process lengths and bit offsets against the actual firmware. Example IDs 1234/5678 and 1234/5679 are illustrative.
+- Apply typed atomic edits. For fields outside typed forms use `tree` to inspect selectors before a document operation. Preserve unfamiliar XML, localized text, images and package assets. Use profile inspection before applying supplied profile XML.
+- Validate after edits. Treat basic/model/CRC, official XSD and official IODD Checker results as separate evidence. A not-run checker is not a pass; none of these results certifies a finished device.
+- Export a ZIP for device-tool import and a generated C header for firmware mapping. Save project JSON when the user needs editable work. Report filenames and the checks actually run. For firmware update packages use the separate firmware tools, not an IODD export.
+
+## Stack integration
+
+Read the released device getting-started, API, porting and matching board example before changing firmware: https://iolinki.com/docs/device/v2.1.0/. For the master use https://iolinki.com/docs/master/v1.0.0/ and its PHY contract.
+
+Match IODD identity, ISDU indexes, parameter widths/defaults and process lengths to the application. IODD bit offset zero is the least-significant bit of the last process-data byte; use generated `iodd_read_bits` / `iodd_write_bits` helpers instead of assuming native endianness or packed structs.
+
+Start from the counter or switching-sensor examples when their behavior fits. The sensor declares three input bytes, indexes 256–259, a 16-bit measurement scaled by 100, validity and switching bits. Read the example guide for exact defaults and layout: https://iolinki.com/docs/tools/iodd-examples/.
+
+Keep host tests, compiler builds, LabWired digital-twin execution, physical master/PHY tests and official conformity results distinct. Use the release's simulation recipes for reproducible LabWired runs; report only evidence collected for the user's target. An IAR project being present does not prove that their EWARM version compiled it.
+
+Commercial questions should use https://iolinki.com/faq.html#licensing and the agreed quote. Do not infer new redistribution rights from generated IODD/header tooling's MIT license; protocol stack terms are separate.
+
+# Use iolinki with an agent
+
+Connect the [IODD MCP tools](https://iolinki.com/iodd-mcp.html), then ask your agent to create, inspect, edit, validate and export a device description. The tools also generate the C header that maps the IODD to your firmware.
+
+Try:
+
+> Create a switching-sensor IODD. Inspect the parameter dictionary and process data, validate the result, then export the IODD ZIP and C mapping header. Tell me which validation checks ran.
+
+## Give an agent the instructions
+
+The public entry point is [iolinki.com/llms.txt](https://iolinki.com/llms.txt). It links to current releases, device and master documentation, examples, setup and test evidence. The [iolinki skill](https://iolinki.com/plugins/iolinki/skills/iolinki/SKILL.md) contains the actual authoring and integration workflow.
+
+For a project's `AGENTS.md`, add:
+
+```markdown
+For IO-Link device descriptions and iolinki firmware integration, read
+https://iolinki.com/plugins/iolinki/skills/iolinki/SKILL.md.
+Use https://iolinki.com/llms.txt to find released documentation and examples.
+Match vendor/device identity, ISDU indexes and process-data layout to the firmware.
+Report compiler, simulation, physical and conformance checks separately.
+```
+
+This makes the guidance available when an agent works in that project. Publishing `llms.txt` also gives search and browsing agents a readable starting point; it does not force every search engine or agent to discover the site.
+
+## Install the skill and plugin
+
+Download the [portable agent plugin](https://iolinki.com/downloads/iolinki-agent-plugin.zip) and extract it into a directory of your choice. It includes `plugins/iolinki/plugin.json`, a remote `mcp.json`, the skill and a repo marketplace catalog.
+
+To add the repository as a Codex marketplace:
+
+```sh
+codex plugin marketplace add w1ne/iolinki-website --ref master
+```
+
+Use the supported client's Plugins Directory to install **iolinki** from that marketplace and start a new session. Alternatively, copy `plugins/iolinki/skills/iolinki` into your client's skills directory; for Codex this is `~/.codex/skills/iolinki`. Add the MCP connection using the setup page.
+
+## ChatGPT
+
+In ChatGPT, enable Developer mode in **Settings → Security and login**, then open [Plugins](https://chatgpt.com/plugins), select **+** and register the hosted MCP URL shown on the setup page. Availability depends on your account and workspace policy.
+
+The downloadable plugin follows the portable Agent Plugins format with a skill and Streamable HTTP MCP configuration. For a registered ChatGPT plugin, its technical `plugin_asdk_app…` connection ID is assigned after registration; it cannot be prefilled for another account. A public Plugins Directory listing requires submission and review. The downloadable package and direct MCP connection are separate from that listing.
+
+A useful first workflow is “describe my sensor → build its IODD → validate → export the ZIP and firmware mapping.” Firmware flashing, physical wiring and official conformity remain actions performed with the relevant tools and hardware.
+
+Packaging and setup follow [OpenAI's plugin guide](https://developers.openai.com/plugins/build/plugins) and [MCP guide](https://learn.chatgpt.com/docs/extend/mcp?surface=cli).
+
+# Importable IODD examples
+
+Download and import these ZIPs directly into the [browser editor](https://iolinki.com/iodd-editor.html):
+
+- [Counter button LED](https://iolinki.com/downloads/iodd-counter.zip) — stamped XML, README, generated C mapping header and MIT/GPL licenses.
+- [Switching sensor](https://iolinki.com/downloads/iodd-switching-sensor.zip) — stamped XML, README, generated C mapping header and MIT/GPL licenses.
+
+Example vendor/device IDs: Counter button LED 1234/5678; Switching sensor 1234/5679. These IDs must match the connected firmware for automatic IODD selection. Replace them with assigned production identifiers when describing your own device.
+
+# Counter, button and LED — importable IODD example
+
+This package contains stamped iolinki example-reference-device-20261002-IODD1.1.xml, this guide, a generated C firmware mapping header and both MIT/GPL license grants. The iolinki-authored XML templates are additionally available under MIT; this does not change the protocol stack license. Import the ZIP directly into the browser editor or another IODD importer. The examples describe the released [iolinki stack](https://github.com/w1ne/iolinki) applications.
+
+The released reference-device demo produces a 16-bit counter followed by one button/state byte. Output bit 0 drives the LED; preserve the remaining output bits when changing it.
+
+## Identity and use
+
+Vendor ID 1234 and device ID 5678 are example identifiers. Product ID: reference-device. Replace example identity with IDs assigned to your own device before production use. Importing a file does not program the device or change its firmware IDs. A connected device must expose matching identity and process-data lengths.
+
+## Parameters
+
+This counter example has no application ISDU parameters. Standard identification records remain in the IODD.
+
+## Process data
+
+| Direction | Field | Subindex | Bit offset | Width |
+| --- | --- | --- | --- | --- |
+| Input | Counter | 1 | 8 | 16 |
+| Input | Button | 2 | 0 | 8 |
+| Output | LED | 1 | 0 | 1 |
+
+Byte 0 is most significant. IODD offset 0 denotes the least-significant bit of the final process-data byte. Use the generated `iodd_read_bits` / `iodd_write_bits` helpers to avoid host endianness or packed-struct assumptions. Input length is 3 bytes; output length is 1 byte.
+
+## Reopen and generate
+
+From the iolinki website source checkout:
+
+```sh
+node tools/iodd/cli.mjs import --format package --input downloads/iodd-counter.zip --output counter.project.json
+node tools/iodd/cli.mjs inspect --input counter.project.json
+node tools/iodd/cli.mjs validate --input counter.project.json
+node tools/iodd/cli.mjs export --input counter.project.json --format xml --output counter.xml
+node tools/iodd/cli.mjs header --input counter.project.json --output counter-mapping.h
+```
+
+The repository's firmware proof compiles and runs the released application C against generated indexes, parameter defaults and bit mappings. That provides host execution evidence; physical IO-Link communication and hardware behavior require a connected-device test. Basic model/CRC validation, official XSD validation and official checker approval are separate results. This package contains no manufacturer declaration.
+
+---
+
+# Switching sensor — importable IODD example
+
+This package contains stamped iolinki example-switching-sensor-20261002-IODD1.1.xml, this guide, a generated C firmware mapping header and both MIT/GPL license grants. The iolinki-authored XML templates are additionally available under MIT; this does not change the protocol stack license. Import the ZIP directly into the browser editor or another IODD importer. The examples describe the released [iolinki stack](https://github.com/w1ne/iolinki) applications.
+
+The released switching-sensor application returns a 16-bit measurement scaled by 100, a validity bit and a switching-output bit. Its ISDU service supplies setpoint, hysteresis, inversion and a teach command.
+
+## Identity and use
+
+Vendor ID 1234 and device ID 5679 are example identifiers. Product ID: switching-sensor. Replace example identity with IDs assigned to your own device before production use. Importing a file does not program the device or change its firmware IDs. A connected device must expose matching identity and process-data lengths.
+
+## Parameters
+
+| Parameter | ISDU index | Access | Default | Width |
+| --- | --- | --- | --- | --- |
+| Switch-on threshold x100 | 256 | rw | 5000 | 16 bits |
+| Hysteresis x100 | 257 | rw | 200 | 16 bits |
+| Invert switching output | 258 | rw | 0 | 8 bits |
+| Teach current value: write 1 | 259 | wo | Command; no default | 8 bits |
+
+## Process data
+
+| Direction | Field | Subindex | Bit offset | Width |
+| --- | --- | --- | --- | --- |
+| Input | Measurement x100 | 1 | 8 | 16 |
+| Input | Valid | 2 | 1 | 1 |
+| Input | Switching output | 3 | 0 | 1 |
+
+Byte 0 is most significant. IODD offset 0 denotes the least-significant bit of the final process-data byte. Use the generated `iodd_read_bits` / `iodd_write_bits` helpers to avoid host endianness or packed-struct assumptions. Input length is 3 bytes; no process-data output is declared.
+
+## Reopen and generate
+
+From the iolinki website source checkout:
+
+```sh
+node tools/iodd/cli.mjs import --format package --input downloads/iodd-switching-sensor.zip --output switching-sensor.project.json
+node tools/iodd/cli.mjs inspect --input switching-sensor.project.json
+node tools/iodd/cli.mjs validate --input switching-sensor.project.json
+node tools/iodd/cli.mjs export --input switching-sensor.project.json --format xml --output switching-sensor.xml
+node tools/iodd/cli.mjs header --input switching-sensor.project.json --output switching-sensor-mapping.h
+```
+
+The repository's firmware proof compiles and runs the released application C against generated indexes, parameter defaults and bit mappings. That provides host execution evidence; physical IO-Link communication and hardware behavior require a connected-device test. Basic model/CRC validation, official XSD validation and official checker approval are separate results. This package contains no manufacturer declaration.
+
+
+## Reproducible release files
+
+Run `node scripts/package-iodd-examples.mjs` to rebuild the downloadable ZIPs and this guide from the same engine/templates used by browser, CLI and MCP. Run with `--check` to verify committed files byte-for-byte without writing.

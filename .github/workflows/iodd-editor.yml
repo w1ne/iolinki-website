@@ -40,7 +40,13 @@ jobs:
         run: node scripts/package-iodd-examples.mjs --check
       - name: Verify reproducible public MCP source download
         run: python3 scripts/package-iodd-tools.py --check
+      - name: Verify one-command local MCP package
+        run: node scripts/package-iodd-npm.mjs --check
+      - name: Verify portable agent plugin download
+        run: python3 scripts/package-agent-plugin.py --check
       - run: npx playwright install --with-deps chromium
+      - name: Client setup and copy/config checks
+        run: node scripts/check-iodd-setup.mjs
       - name: Browser edits, downloads, preservation and negative checks
         run: npm run check:iodd
       - uses: actions/checkout@v4

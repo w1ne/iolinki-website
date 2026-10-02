@@ -1254,13 +1254,41 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#install-and-connect" class="md-nav__link">
+  <a href="#connect-your-assistant" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Install and connect
+        Connect your assistant
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Connect your assistant">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#run-locally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run locally
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#give-your-agent-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Give your agent context
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1356,6 +1384,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents and plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1417,13 +1473,41 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#install-and-connect" class="md-nav__link">
+  <a href="#connect-your-assistant" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Install and connect
+        Connect your assistant
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Connect your assistant">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#run-locally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run locally
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#give-your-agent-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Give your agent context
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1502,28 +1586,44 @@
 <h1 id="local-iodd-authoring-with-mcp-and-cli">Local IODD authoring with MCP and CLI</h1>
 <p>The browser editor, command line and local MCP server use the same XML-preserving authoring engine. They create and reopen projects, edit identity, parameters, process fields, texts, events and menus, retain package assets, compare revisions and generate firmware mapping headers.</p>
 <p>The examples contain example vendor/device IDs. Replace them with IDs assigned to your device before release. Basic model and CRC checks help catch authoring errors; they do not constitute official IODD approval or a manufacturer declaration. Run the official checker separately for release validation.</p>
-<h2 id="install-and-connect">Install and connect</h2>
-<p>Use Node.js 22 or newer. Clone this repository and install the pinned dependencies:</p>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/w1ne/iolinki-website.git
-<span class="nb">cd</span><span class="w"> </span>iolinki-website
-npm<span class="w"> </span>ci
-node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>--help
+<h2 id="connect-your-assistant">Connect your assistant</h2>
+<p>Use the <a href="https://iolinki.com/iodd-mcp.html">client picker</a> for copyable ChatGPT, Claude, Codex, Cursor and VS Code setup instructions.</p>
+<p>The hosted Streamable HTTP endpoint is:</p>
+<div class="highlight"><pre><span></span><code>https://iolinki-iodd-mcp.shylenkoa.workers.dev/mcp
 </code></pre></div>
-<p>Configure your MCP client with the <strong>absolute</strong> path to this checkout's server. Replace the example path below with your local path:</p>
+<p>No iolinki account is needed. Hosted projects are processed on the server; export project JSON or a ZIP to keep your work. For private files, run the local server.</p>
+<ul>
+<li><strong>ChatGPT:</strong> enable Developer mode in Settings → Security and login, then open <a href="https://chatgpt.com/plugins">Plugins</a>, select +, and enter the endpoint. Availability depends on account and workspace policy. <a href="https://developers.openai.com/plugins/deploy/connect-chatgpt">Official guide</a>.</li>
+<li><strong>Claude Code:</strong> <code>claude mcp add --transport http iolinki-iodd https://iolinki-iodd-mcp.shylenkoa.workers.dev/mcp</code>. <a href="https://code.claude.com/docs/en/mcp">Official guide</a>.</li>
+<li><strong>Codex:</strong> <code>codex mcp add iolinki-iodd --url https://iolinki-iodd-mcp.shylenkoa.workers.dev/mcp</code>. <a href="https://developers.openai.com/codex/mcp">Official guide</a>.</li>
+<li><strong>Cursor:</strong> use the install button in the client picker, or add the URL in MCP settings. <a href="https://prod.cursor.com/docs/mcp/install-links">Official install-link format</a>.</li>
+<li><strong>VS Code:</strong> run <strong>MCP: Add Server</strong>, choose HTTP, and enter the endpoint. <a href="https://code.visualstudio.com/docs/agent-customization/mcp-servers">Official guide</a>.</li>
+</ul>
+<h3 id="run-locally">Run locally</h3>
+<p>Install Node.js 22 or newer, then start the pinned package:</p>
+<div class="highlight"><pre><span></span><code>npx<span class="w"> </span>-y<span class="w"> </span>https://iolinki.com/downloads/iodd-mcp-1.0.0.tgz
+</code></pre></div>
+<p>For clients using <code>mcpServers</code> JSON (such as Cursor or Claude Desktop):</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">"iolinki-iodd"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"node"</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"/absolute/path/iolinki-website/tools/iodd/mcp.mjs"</span><span class="p">]</span>
+<span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"-y"</span><span class="p">,</span><span class="w"> </span><span class="s2">"https://iolinki.com/downloads/iodd-mcp-1.0.0.tgz"</span><span class="p">]</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>This starts a local stdio server. Its standard output carries MCP protocol messages only. It does not provide a hosted public MCP endpoint. Each server process keeps its own projects in memory; restarting it clears them. Export project JSON or a ZIP to save your work. The server reads only bundled templates; imports receive content from the client, with no arbitrary filesystem paths, network requests or shell commands.</p>
+<p>Codex local setup: <code>codex mcp add iolinki-iodd -- npx -y https://iolinki.com/downloads/iodd-mcp-1.0.0.tgz</code>.
+Claude Code local setup: <code>claude mcp add iolinki-iodd -- npx -y https://iolinki.com/downloads/iodd-mcp-1.0.0.tgz</code>.
+VS Code uses a top-level <code>servers</code> object and <code>type: "stdio"</code> for the local configuration.</p>
+<p>The local server uses stdio and keeps projects in memory. Export project JSON or a ZIP before restarting. It reads bundled templates; imports receive content from the client without arbitrary filesystem paths or shell commands.</p>
+<h3 id="give-your-agent-context">Give your agent context</h3>
+<p>Read <a href="https://iolinki.com/llms.txt">llms.txt</a> or download the <a href="https://iolinki.com/downloads/iolinki-agent-plugin.zip">agent plugin and skills</a> for stack, hardware and IODD workflows.</p>
 <p>Example prompt:</p>
 <blockquote>
-<p>Create an IODD from the counter template. Inspect its parameters and process data. Set the vendor name to “My Company” and the product name to “Pulse Counter”. Ask me for my assigned vendor and device IDs before replacing the example IDs. Run basic validation, explain any remaining issues, and export project JSON, stamped XML, a package ZIP and a firmware mapping header. Do not claim official checker approval.</p>
+<p>Create a switching-sensor IODD. Ask me for my assigned vendor and device IDs. Inspect its threshold, hysteresis and process-data fields, validate it, and export the project, XML, ZIP and C firmware mapping header.</p>
 </blockquote>
+<p>Validation covers model references, ranges, process bits and CRC. Official checker results are reported separately when a checker is configured.</p>
 <h2 id="tools">Tools</h2>
 <table>
 <thead>

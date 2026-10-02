@@ -1,0 +1,19 @@
+name = "iolinki-iodd-mcp"
+main = "mcp-worker.mjs"
+account_id = "53f45abe9550f62856af4475880e0a77"
+compatibility_date = "2026-09-25"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+
+[[durable_objects.bindings]]
+name = "IODD_SESSIONS"
+class_name = "IoddMcpSessions"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["IoddMcpSessions"]
+
+[[rules]]
+type = "Text"
+globs = ["**/*.xml"]
+fallthrough = true
