@@ -47,7 +47,7 @@
       <header class="editor-intro">
         <div>
           <p class="eyebrow">FREE IO-LINK WORKSPACE</p>
-          <h1>Your device. Described.</h1>
+          <h1>IODD editor</h1>
           <p>
             Build an IODD, keep its files together, and export the firmware map.
           </p>
@@ -85,7 +85,7 @@
         ><span id="save-state">Choose an example or open a file</span>
       </div>
       <p id="status" role="status" aria-live="polite">
-        Start with an example, or bring your existing IODD.
+        Create a device, open a file, or load an example to start editing.
       </p>
       <noscript
         ><p>
@@ -585,9 +585,11 @@
                 >Device, product or manufacturer<input
                   name="query"
                   id="finder-query"
+                  placeholder="ifm, SDAT or a product code"
                   required /></label
               ><label
-                >Search by<select id="finder-field">
+                >Search by<select id="finder-field" aria-label="Search by">
+                  <option value="auto">Product, manufacturer or ID</option>
                   <option value="productName">Product name</option>
                   <option value="vendorName">Manufacturer</option>
                   <option value="productId">Product ID</option>
