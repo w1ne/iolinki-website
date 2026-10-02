@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Free online IODD editor | iolinki</title>
+    <meta
+      name="description"
+      content="Create and edit IO-Link IODD descriptions in your browser. Free templates, parameter and process-data forms, validation and XML download. No signup or uploads."
+    />
+    <link rel="canonical" href="https://iolinki.com/iodd-editor.html" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/css/site.css" />
+    <link rel="stylesheet" href="/assets/css/iodd-editor.css" />
+    <script src="/assets/js/site.js" defer></script>
+    <script type="module" src="/assets/js/iodd/editor.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header" id="header">
+      <div class="header-inner">
+        <a class="brand" href="/index.html" aria-label="iolinki home"
+          >io<span>linki</span><span class="brand-dot" aria-hidden="true"></span
+        ></a>
+        <button
+          class="menu-button"
+          type="button"
+          aria-expanded="false"
+          aria-controls="primary-navigation"
+          hidden
+        >
+          Menu
+        </button>
+        <nav id="primary-navigation" aria-label="Primary navigation">
+          <a href="/index.html#two">Stacks</a
+          ><a href="/getting-started.html">Guides</a
+          ><a href="/hardware.html">Hardware</a
+          ><a href="/validation.html">Validation</a><a href="/faq.html">FAQ</a
+          ><a href="https://iolinki.com/docs/">Docs</a
+          ><a href="/iodd-editor.html">IODD editor</a
+          ><a href="/purchase.html">Licensing</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="editor-page" tabindex="-1">
+      <header class="editor-intro">
+        <p class="eyebrow">FREE DEVELOPER TOOL</p>
+        <h1>IODD editor</h1>
+        <p>
+          Create your IO-Link device description. Start with an example or open
+          your XML. Your files stay in your browser. No signup.
+        </p>
+      </header>
+      <section class="tool-actions" aria-label="Open an IODD">
+        <button type="button" id="counter">Counter / button / LED</button
+        ><button type="button" id="sensor">Switching sensor</button>
+        <label class="file-button"
+          >Open XML<input
+            id="import-file"
+            type="file"
+            accept=".xml,application/xml,text/xml"
+        /></label>
+        <button type="button" id="download" disabled>Download IODD</button>
+      </section>
+      <p id="status" role="status" aria-live="polite">
+        Choose an example or open an IODD XML file.
+      </p>
+      <noscript
+        ><p>
+          Enable JavaScript to use the browser editor. The
+          <a href="https://github.com/w1ne/iolinki/releases/tag/v2.1.0"
+            >released command-line tool</a
+          >
+          is also available.
+        </p></noscript
+      >
+      <div id="workspace" hidden>
+        <section class="editor-card">
+          <h2>Device identity</h2>
+          <p>
+            Use your assigned vendor and device IDs. Example IDs are
+            illustrative.
+          </p>
+          <form id="identity-form">
+            <div class="form-grid" id="identity-fields"></div>
+            <button type="submit">Apply identity</button>
+          </form>
+        </section>
+        <section class="editor-card">
+          <div class="section-heading">
+            <h2>Parameters</h2>
+            <button id="add-parameter" type="button">Add parameter</button>
+          </div>
+          <p>
+            ISDU indexes, access rights, datatypes and default values. Names
+            edit the primary-language text.
+          </p>
+          <div id="parameters"></div>
+        </section>
+        <section class="editor-card">
+          <h2>Process data</h2>
+          <p>
+            Bit offset 0 is the least significant bit of the last byte. Layouts
+            preserve the configured record size.
+          </p>
+          <div id="process-data"></div>
+        </section>
+        <section class="editor-card">
+          <h2>Checks</h2>
+          <ul id="checks" aria-live="polite"></ul>
+          <p class="small-note">
+            Checks cover XML structure, identifiers, ranges, references, layout
+            and CRC. For full schema checks, use the
+            <a href="https://github.com/w1ne/iolinki/releases/tag/v2.1.0"
+              >IODD CLI</a
+            >
+            with the official XSD. Product conformance is a separate test.
+          </p>
+        </section>
+        <details class="editor-card" id="xml-panel">
+          <summary>XML preview &amp; advanced editing</summary>
+          <p>
+            All imported sections remain in the document. Edit unsupported
+            types, events, menus, communication settings or language records
+            here, then apply XML.
+          </p>
+          <label for="xml-source">IODD XML</label
+          ><textarea id="xml-source" spellcheck="false" rows="18"></textarea
+          ><button id="apply-xml" type="button">Apply XML</button>
+        </details>
+      </div>
+      <section class="editor-help">
+        <h2>From description to device</h2>
+        <p>
+          Use the matching
+          <a href="https://github.com/w1ne/iolinki/releases/tag/v2.1.0"
+            >source examples and IODD CLI</a
+          >, then run your firmware in <a href="/validation.html">LabWired</a>.
+          <a href="/getting-started.html">Get started with the stack</a>.
+        </p>
+        <p class="small-note">
+          XML/tree editing reuses
+          <a href="https://github.com/calumk/IODDForge_Studio"
+            >IODDForge Studio</a
+          >; CRC stamping reuses
+          <a href="https://github.com/calumk/IODDForge_Checker"
+            >IODDForge Checker</a
+          >, under their MIT licenses. Downloads identify the iolinki editor,
+          without claiming official checker approval.
+        </p>
+      </section>
+    </main>
+    <footer class="editor-footer">
+      <a href="/index.html">iolinki</a> ·
+      <a href="/faq.html#licensing">Licensing</a> ·
+      <a href="/legal.html">Legal</a>
+    </footer>
+  </body>
+</html>

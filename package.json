@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "check:browser": "node scripts/check-browser.mjs",
-    "check:docs-browser": "node scripts/check-docs-browser.mjs"
+    "check:docs-browser": "node scripts/check-docs-browser.mjs",
+    "check:iodd": "node scripts/check-iodd-editor.mjs"
   },
   "devDependencies": {
     "playwright": "1.60.0"
