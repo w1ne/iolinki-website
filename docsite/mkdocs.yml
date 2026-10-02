@@ -81,4 +81,5 @@ nav:
   - Developer tools:
     - IODD authoring, CLI and MCP: tools/iodd-mcp.md
     - Importable IODD examples: tools/iodd-examples.md
+    - Agents and plugin: tools/agents.md
   - Licensing and sources: licensing.md
