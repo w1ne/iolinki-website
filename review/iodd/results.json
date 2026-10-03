@@ -1,0 +1,2340 @@
+{
+  "started": "2026-10-03T08:39:48.065Z",
+  "completed": "2026-10-03T08:40:01.337Z",
+  "endpoint": "https://mcp.iolinki.com/mcp",
+  "client": "MCP SDK direct client; these are not ChatGPT UI tests",
+  "server": {
+    "name": "iolinki-iodd",
+    "version": "1.1.1",
+    "websiteUrl": "https://iolinki.com/iodd-mcp.html"
+  },
+  "toolCount": 20,
+  "cases": [
+    {
+      "id": "positive-1",
+      "passed": true,
+      "detail": "Created switching sensor, official XSD passed; XML and ZIP downloaded.",
+      "artifacts": [
+        {
+          "filename": "iolinki_example-switching-sensor-20261002-IODD1.1.xml",
+          "bytes": 6982,
+          "sha256": "ae993f29e244f7e3c394c28498485089c68fdba569b65f1984480d29f247664a"
+        },
+        {
+          "filename": "iolinki_example-switching-sensor-20261002-IODD1.1.zip",
+          "bytes": 2107,
+          "sha256": "0f39a1d77f118602db35df3832fd54d40e4d4a19622ab0217f1605eaf0185a7d"
+        }
+      ],
+      "officialChecker": "unavailable"
+    },
+    {
+      "id": "positive-2",
+      "passed": true,
+      "detail": "Inspected threshold variable, changed default to 6400; official XSD and generated header passed.",
+      "artifacts": [
+        {
+          "filename": "iodd-mapping.h",
+          "bytes": 1895,
+          "sha256": "1f548dc5798f23a7bbffc5df16cd7b4906b9b7c04e5f2aec0bfede4748227a18"
+        }
+      ]
+    },
+    {
+      "id": "positive-3",
+      "passed": true,
+      "detail": "Counter XML exported and reimported; identity and variable mapping equal, official XSD passed."
+    },
+    {
+      "id": "positive-4",
+      "passed": true,
+      "detail": "Durable snapshot restored in a new MCP session with threshold 6400, deleted and revocation verified.",
+      "lifetimeMs": 86400000
+    },
+    {
+      "id": "positive-5",
+      "passed": true,
+      "detail": "Generated source and compile/verify arguments plus downloaded complete application kit. Compilation, execution and physical IO-Link not performed in this case.",
+      "artifacts": [
+        {
+          "filename": "iodd-switching-sensor-firmware-kit.zip",
+          "bytes": 21160,
+          "sha256": "c6fbbe90cad1a443cb74aa4ba7e5b4664d8aa18da5bbacdee005bb783bd27002"
+        }
+      ],
+      "scope": "Switching-sensor application MCU execution: authored defaults, threshold/hysteresis, validity, parameter service/readback, byte decoding, inversion and teach. Excludes IO-Link stack/PHY/cable, physical hardware, retained flash, IAR and official conformity."
+    },
+    {
+      "id": "negative-1",
+      "passed": true,
+      "detail": {
+        "error": {
+          "code": "IODD_OPERATION_FAILED",
+          "message": "Reporting fatalError \"unclosed xml tag(s): not-an-iodd\" caused Error: XML syntax is invalid: unclosed xml tag(s): not-an-iodd",
+          "action": "Correct the input and retry; the saved project was not changed."
+        }
+      }
+    },
+    {
+      "id": "negative-2",
+      "passed": true,
+      "detail": {
+        "message": "MCP error -32602: Input validation error: Invalid arguments for tool iodd_create: Number must be greater than or equal to 1 at identity.vendorId\nUse an integer from 1 to 65535. at identity.vendorId"
+      }
+    },
+    {
+      "id": "negative-3",
+      "passed": true,
+      "detail": {
+        "error": {
+          "code": "IODD_OPERATION_FAILED",
+          "message": "Recovery token unavailable.",
+          "action": "Correct the input and retry; the saved project was not changed."
+        }
+      }
+    }
+  ],
+  "trace": [
+    {
+      "time": "2026-10-03T08:39:50.194Z",
+      "tool": "iodd_create",
+      "input": {
+        "template": "switching-sensor"
+      },
+      "isError": false,
+      "result": {
+        "projectId": "[private or omitted]",
+        "communication": {
+          "mode": "wired",
+          "revision": "V1.1",
+          "physicalLayer": {
+            "attrs": {
+              "bitrate": "COM2",
+              "minCycleTime": "1000",
+              "sioSupported": "false",
+              "mSequenceCapability": "11"
+            }
+          }
+        },
+        "profiles": [],
+        "rules": [],
+        "identity": {
+          "vendorId": "1234",
+          "deviceId": "5679",
+          "vendorName": "iolinki example",
+          "productName": "Switching sensor",
+          "productId": "switching-sensor",
+          "releaseDate": "2026-10-02",
+          "version": "V1.0"
+        },
+        "variables": [
+          {
+            "id": "V_SP1",
+            "index": "256",
+            "name": "Switch-on threshold x100",
+            "access": "rw",
+            "type": "UIntegerT",
+            "bits": "16",
+            "defaultValue": "5000",
+            "lower": "0",
+            "upper": "65535",
+            "singleValues": [],
+            "editable": true
+          },
+          {
+            "id": "V_Hysteresis",
+            "index": "257",
+            "name": "Hysteresis x100",
+            "access": "rw",
+            "type": "UIntegerT",
+            "bits": "16",
+            "defaultValue": "200",
+            "lower": "0",
+            "upper": "65535",
+            "singleValues": [],
+            "editable": true
+          },
+          {
+            "id": "V_Inversion",
+            "index": "258",
+            "name": "Invert switching output",
+            "access": "rw",
+            "type": "UIntegerT",
+            "bits": "8",
+            "defaultValue": "0",
+            "lower": "0",
+            "upper": "1",
+            "singleValues": [],
+            "editable": true
+          },
+          {
+            "id": "V_Teach",
+            "index": "259",
+            "name": "Teach current value: write 1",
+            "access": "wo",
+            "type": "UIntegerT",
+            "bits": "8",
+            "defaultValue": "",
+            "lower": "",
+            "upper": "",
+            "singleValues": [
+              "1"
+            ],
+            "editable": false
+          }
+        ],
+        "processData": [
+          {
+            "id": "PD_IN",
+            "direction": "in",
+            "bits": "24",
+            "editable": true,
+            "fields": [
+              {
+                "index": 0,
+                "subindex": "1",
+                "name": "Measurement x100",
+                "offset": "8",
+                "bits": "16",
+                "type": "UIntegerT",
+                "editable": true
+              },
+              {
+                "index": 1,
+                "subindex": "2",
+                "name": "Valid",
+                "offset": "1",
+                "bits": "1",
+                "type": "BooleanT",
+                "editable": true
+              },
+              {
+                "index": 2,
+                "subindex": "3",
+                "name": "Switching output",
+                "offset": "0",
+                "bits": "1",
+                "type": "BooleanT",
+                "editable": true
+              }
+            ]
+          }
+        ],
+        "texts": [
+          {
+            "language": "en",
+            "primary": true,
+            "texts": [
+              {
+                "id": "T_VendorText",
+                "value": "iolinki example"
+              },
+              {
+                "id": "T_VendorUrl",
+                "value": "https://iolinki.com"
+              },
+              {
+                "id": "T_DeviceName",
+                "value": "Switching sensor"
+              },
+              {
+                "id": "T_DeviceFamily",
+                "value": "iolinki reference examples"
+              },
+              {
+                "id": "T_ProductName",
+                "value": "Switching sensor"
+              },
+              {
+                "id": "T_Description",
+                "value": "Example application; replace illustrative IDs with assigned production identifiers."
+              },
+              {
+                "id": "T_V_SP1",
+                "value": "Switch-on threshold x100"
+              },
+              {
+                "id": "TD_V_SP1",
+                "value": "Switch-on threshold, 0.01 units; must be >= hysteresis. Volatile."
+              },
+              {
+                "id": "T_V_Hysteresis",
+                "value": "Hysteresis x100"
+              },
+              {
+                "id": "TD_V_Hysteresis",
+                "value": "Hysteresis, 0.01 units; must be <= threshold. Volatile."
+              },
+              {
+                "id": "T_V_Inversion",
+                "value": "Invert switching output"
+              },
+              {
+                "id": "TD_V_Inversion",
+                "value": "0 normal, 1 inverted. Volatile."
+              },
+              {
+                "id": "T_V_Teach",
+                "value": "Teach current value: write 1"
+              },
+              {
+                "id": "TD_V_Teach",
+                "value": "Write 1 to teach the current valid measurement. Subindex 0 only."
+              },
+              {
+                "id": "T_PD_IN_1",
+                "value": "Measurement x100"
+              },
+              {
+                "id": "T_PD_IN_2",
+                "value": "Valid"
+              },
+              {
+                "id": "T_PD_IN_3",
+                "value": "Switching output"
+              },
+              {
+                "id": "T_PD_IN",
+                "value": "Process data in"
+              },
+              {
+                "id": "T_Menu_Identification",
+                "value": "Identification"
+              },
+              {
+                "id": "T_Menu_Parameter",
+                "value": "Parameter"
+              }
+            ]
+          }
+        ],
+        "events": [],
+        "menus": [
+          {
+            "id": "M_Identification",
+            "name": "Identification",
+            "variableIds": [
+              "V_DirectParameters_1",
+              "V_ApplicationSpecificTag"
+            ],
+            "menuIds": []
+          },
+          {
+            "id": "M_Parameter",
+            "name": "Parameter",
+            "variableIds": [
+              "V_SP1",
+              "V_Hysteresis",
+              "V_Inversion",
+              "V_Teach"
+            ],
+            "menuIds": []
+          }
+        ],
+        "assets": []
+      }
+    },
+    {
+      "time": "2026-10-03T08:39:50.816Z",
+      "tool": "iodd_validate",
+      "input": {
+        "projectId": "[private or omitted]"
+      },
+      "isError": false,
+      "result": {
+        "packageValid": true,
+        "valid": true,
+        "issues": [
+          {
+            "severity": "warning",
+            "message": "CRC will be refreshed when you download."
+          }
+        ],
+        "coverage": {
+          "basic": true,
+          "model": true,
+          "crc": true,
+          "assets": true,
+          "xsd": true,
+          "official": false,
+          "checks": {
+            "structure": true,
+            "references": true,
+            "ranges": true,
+            "processData": true,
+            "crc": true,
+            "assets": true,
+            "rules": true
+          }
+        },
+        "schema": {
+          "validator": "libxml2-wasm 0.7.2 / libxml2 XSD 1.0",
+          "provenance": {
+            "url": "https://io-link.com/fileadmin/user_upload/Downloads/Package_2025/IO-Device-Description_Specification_10.012_V1.1.5_Oct2025.zip",
+            "sha256": "d4b3f53bfc777e45938cf7b7d14fe9b65aa4dccea6875745b3912e1cc59d4dd2",
+            "version": "IODD 1.1 / Specification 1.1.5, October 2025"
+          },
+          "status": "passed",
+          "output": "Official XSD validates 1 XML document(s)."
+        },
+        "officialChecker": {
+          "status": "unavailable",
+          "output": "Official IODD Checker 2025.1 executable is not installed. Its supplier download requires registration; XSD validation is a separate check."
+        }
+      }
+    },
+    {
+      "time": "2026-10-03T08:39:51.049Z",
+      "tool": "iodd_export",
+      "input": {
+        "projectId": "[private or omitted]",
+        "format": "xml"
+      },
+      "isError": false,
+      "result": {
+        "format": "xml",
+        "filename": "iolinki_example-switching-sensor-20261002-IODD1.1.xml",
+        "encoding": "utf8",
+        "downloadUrl": "[private or omitted]",
+        "byteLength": 6982,
+        "expiresAt": "2026-10-03T08:49:50.761Z"
+      }
+    },
+    {
+      "time": "2026-10-03T08:39:51.265Z",
+      "tool": "iodd_export",
+      "input": {
+        "projectId": "[private or omitted]",
+        "format": "package"
+      },
+      "isError": false,
+      "result": {
+        "format": "package",
+        "filename": "iolinki_example-switching-sensor-20261002-IODD1.1.zip",
+        "encoding": "base64",
+        "downloadUrl": "[private or omitted]",
+        "byteLength": 2107,
+        "expiresAt": "2026-10-03T08:49:50.981Z"
+      }
+    },
+    {
+      "time": "2026-10-03T08:39:51.838Z",
+      "tool": "iodd_inspect",
+      "input": {
+        "projectId": "[private or omitted]"
+      },
+      "isError": false,
+      "result": {
+        "communication": {
+          "mode": "wired",
+          "revision": "V1.1",
+          "physicalLayer": {
+            "attrs": {
+              "bitrate": "COM2",
+              "minCycleTime": "1000",
+              "sioSupported": "false",
+              "mSequenceCapability": "11"
+            }
+          }
+        },
+        "profiles": [],
+        "rules": [],
+        "identity": {
+          "vendorId": "1234",
+          "deviceId": "5679",
+          "vendorName": "iolinki example",
+          "productName": "Switching sensor",
+          "productId": "switching-sensor",
+          "releaseDate": "2026-10-02",
+          "version": "V1.0"
+        },
+        "variables": [
+          {
+            "id": "V_SP1",
+            "index": "256",
+            "name": "Switch-on threshold x100",
+            "access": "rw",
+            "type": "UIntegerT",
+            "bits": "16",
+            "defaultValue": "5000",
+            "lower": "0",
+            "upper": "65535",
+            "singleValues": [],
+            "editable": true
+          },
+          {
+            "id": "V_Hysteresis",
+            "index": "257",
+            "name": "Hysteresis x100",
+            "access": "rw",
+            "type": "UIntegerT",
+            "bits": "16",
+            "defaultValue": "200",
+            "lower": "0",
+            "upper": "65535",
+            "singleValues": [],
+            "editable": true
+          },
+          {
+            "id": "V_Inversion",
+            "index": "258",
+            "name": "Invert switching output",
+            "access": "rw",
+            "type": "UIntegerT",
+            "bits": "8",
+            "defaultValue": "0",
+            "lower": "0",
+            "upper": "1",
+            "singleValues": [],
+            "editable": true
+          },
+          {
+            "id": "V_Teach",
+            "index": "259",
+            "name": "Teach current value: write 1",
+            "access": "wo",
+            "type": "UIntegerT",
+            "bits": "8",
+            "defaultValue": "",
+            "lower": "",
+            "upper": "",
+            "singleValues": [
+              "1"
+            ],
+            "editable": false
+          }
+        ],
+        "processData": [
+          {
+            "id": "PD_IN",
+            "direction": "in",
+            "bits": "24",
+            "editable": true,
+            "fields": [
+              {
+                "index": 0,
+                "subindex": "1",
+                "name": "Measurement x100",
+                "offset": "8",
+                "bits": "16",
+                "type": "UIntegerT",
+                "editable": true
+              },
+              {
+                "index": 1,
+                "subindex": "2",
+                "name": "Valid",
+                "offset": "1",
+                "bits": "1",
+                "type": "BooleanT",
+                "editable": true
+              },
+              {
+                "index": 2,
+                "subindex": "3",
+                "name": "Switching output",
+                "offset": "0",
+                "bits": "1",
+                "type": "BooleanT",
+                "editable": true
+              }
+            ]
+          }
+        ],
+        "texts": [
+          {
+            "language": "en",
+            "primary": true,
+            "texts": [
+              {
+                "id": "T_VendorText",
+                "value": "iolinki example"
+              },
+              {
+                "id": "T_VendorUrl",
+                "value": "https://iolinki.com"
+              },
+              {
+                "id": "T_DeviceName",
+                "value": "Switching sensor"
+              },
+              {
+                "id": "T_DeviceFamily",
+                "value": "iolinki reference examples"
+              },
+              {
+                "id": "T_ProductName",
+                "value": "Switching sensor"
+              },
+              {
+                "id": "T_Description",
+                "value": "Example application; replace illustrative IDs with assigned production identifiers."
+              },
+              {
+                "id": "T_V_SP1",
+                "value": "Switch-on threshold x100"
+              },
+              {
+                "id": "TD_V_SP1",
+                "value": "Switch-on threshold, 0.01 units; must be >= hysteresis. Volatile."
+              },
+              {
+                "id": "T_V_Hysteresis",
+                "value": "Hysteresis x100"
+              },
+              {
+                "id": "TD_V_Hysteresis",
+                "value": "Hysteresis, 0.01 units; must be <= threshold. Volatile."
+              },
+              {
+                "id": "T_V_Inversion",
+                "value": "Invert switching output"
+              },
+              {
+                "id": "TD_V_Inversion",
+                "value": "0 normal, 1 inverted. Volatile."
+              },
+              {
+                "id": "T_V_Teach",
+                "value": "Teach current value: write 1"
+              },
+              {
+                "id": "TD_V_Teach",
+                "value": "Write 1 to teach the current valid measurement. Subindex 0 only."
+              },
+              {
+                "id": "T_PD_IN_1",
+                "value": "Measurement x100"
+              },
+              {
+                "id": "T_PD_IN_2",
+                "value": "Valid"
+              },
+              {
+                "id": "T_PD_IN_3",
+                "value": "Switching output"
+              },
+              {
+                "id": "T_PD_IN",
+                "value": "Process data in"
+              },
+              {
+                "id": "T_Menu_Identification",
+                "value": "Identification"
+              },
+              {
+                "id": "T_Menu_Parameter",
+                "value": "Parameter"
+              }
+            ]
+          }
+        ],
+        "events": [],
+        "menus": [
+          {
+            "id": "M_Identification",
+            "name": "Identification",
+            "variableIds": [
+              "V_DirectParameters_1",
+              "V_ApplicationSpecificTag"
+            ],
+            "menuIds": []
+          },
+          {
+            "id": "M_Parameter",
+            "name": "Parameter",
+            "variableIds": [
+              "V_SP1",
+              "V_Hysteresis",
+              "V_Inversion",
+              "V_Teach"
+            ],
+            "menuIds": []
+          }
+        ],
+        "assets": []
+      }
+    },
+    {
+      "time": "2026-10-03T08:39:52.056Z",
+      "tool": "iodd_edit",
+      "input": {
+        "projectId": "[private or omitted]",
+        "operation": {
+          "type": "editVariable",
+          "id": "V_SP1",
+          "values": {
+            "defaultValue": 6400
+          }
+        }
+      },
+      "isError": false,
+      "result": {
+        "projectId": "[private or omitted]",
+        "communication": {
+          "mode": "wired",
+          "revision": "V1.1",
+          "physicalLayer": {
+            "attrs": {
+              "bitrate": "COM2",
+              "minCycleTime": "1000",
+              "sioSupported": "false",
+              "mSequenceCapability": "11"
+            }
+          }
+        },
+        "profiles": [],
+        "rules": [],
+        "identity": {
+          "vendorId": "1234",
+          "deviceId": "5679",
+          "vendorName": "iolinki example",
+          "productName": "Switching sensor",
+          "productId": "switching-sensor",
+          "releaseDate": "2026-10-02",
+          "version": "V1.0"
+        },
+        "variables": [
+          {
+            "id": "V_SP1",
+            "index": "256",
+            "name": "Switch-on threshold x100",
+            "access": "rw",
+            "type": "UIntegerT",
+            "bits": "16",
+            "defaultValue": "6400",
+            "lower": "0",
+            "upper": "65535",
+            "singleValues": [],
+            "editable": true
+          },
+          {
+            "id": "V_Hysteresis",
+            "index": "257",
+            "name": "Hysteresis x100",
+            "access": "rw",
+            "type": "UIntegerT",
+            "bits": "16",
+            "defaultValue": "200",
+            "lower": "0",
+            "upper": "65535",
+            "singleValues": [],
+            "editable": true
+          },
+          {
+            "id": "V_Inversion",
+            "index": "258",
+            "name": "Invert switching output",
+            "access": "rw",
+            "type": "UIntegerT",
+            "bits": "8",
+            "defaultValue": "0",
+            "lower": "0",
+            "upper": "1",
+            "singleValues": [],
+            "editable": true
+          },
+          {
+            "id": "V_Teach",
+            "index": "259",
+            "name": "Teach current value: write 1",
+            "access": "wo",
+            "type": "UIntegerT",
+            "bits": "8",
+            "defaultValue": "",
+            "lower": "",
+            "upper": "",
+            "singleValues": [
+              "1"
+            ],
+            "editable": false
+          }
+        ],
+        "processData": [
+          {
+            "id": "PD_IN",
+            "direction": "in",
+            "bits": "24",
+            "editable": true,
+            "fields": [
+              {
+                "index": 0,
+                "subindex": "1",
+                "name": "Measurement x100",
+                "offset": "8",
+                "bits": "16",
+                "type": "UIntegerT",
+                "editable": true
+              },
+              {
+                "index": 1,
+                "subindex": "2",
+                "name": "Valid",
+                "offset": "1",
+                "bits": "1",
+                "type": "BooleanT",
+                "editable": true
+              },
+              {
+                "index": 2,
+                "subindex": "3",
+                "name": "Switching output",
+                "offset": "0",
+                "bits": "1",
+                "type": "BooleanT",
+                "editable": true
+              }
+            ]
+          }
+        ],
+        "texts": [
+          {
+            "language": "en",
+            "primary": true,
+            "texts": [
+              {
+                "id": "T_VendorText",
+                "value": "iolinki example"
+              },
+              {
+                "id": "T_VendorUrl",
+                "value": "https://iolinki.com"
+              },
+              {
+                "id": "T_DeviceName",
+                "value": "Switching sensor"
+              },
+              {
+                "id": "T_DeviceFamily",
+                "value": "iolinki reference examples"
+              },
+              {
+                "id": "T_ProductName",
+                "value": "Switching sensor"
+              },
+              {
+                "id": "T_Description",
+                "value": "Example application; replace illustrative IDs with assigned production identifiers."
+              },
+              {
+                "id": "T_V_SP1",
+                "value": "Switch-on threshold x100"
+              },
+              {
+                "id": "TD_V_SP1",
+                "value": "Switch-on threshold, 0.01 units; must be >= hysteresis. Volatile."
+              },
+              {
+                "id": "T_V_Hysteresis",
+                "value": "Hysteresis x100"
+              },
+              {
+                "id": "TD_V_Hysteresis",
+                "value": "Hysteresis, 0.01 units; must be <= threshold. Volatile."
+              },
+              {
+                "id": "T_V_Inversion",
+                "value": "Invert switching output"
+              },
+              {
+                "id": "TD_V_Inversion",
+                "value": "0 normal, 1 inverted. Volatile."
+              },
+              {
+                "id": "T_V_Teach",
+                "value": "Teach current value: write 1"
+              },
+              {
+                "id": "TD_V_Teach",
+                "value": "Write 1 to teach the current valid measurement. Subindex 0 only."
+              },
+              {
+                "id": "T_PD_IN_1",
+                "value": "Measurement x100"
+              },
+              {
+                "id": "T_PD_IN_2",
+                "value": "Valid"
+              },
+              {
+                "id": "T_PD_IN_3",
+                "value": "Switching output"
+              },
+              {
+                "id": "T_PD_IN",
+                "value": "Process data in"
+              },
+              {
+                "id": "T_Menu_Identification",
+                "value": "Identification"
+              },
+              {
+                "id": "T_Menu_Parameter",
+                "value": "Parameter"
+              }
+            ]
+          }
+        ],
+        "events": [],
+        "menus": [
+          {
+            "id": "M_Identification",
+            "name": "Identification",
+            "variableIds": [
+              "V_DirectParameters_1",
+              "V_ApplicationSpecificTag"
+            ],
+            "menuIds": []
+          },
+          {
+            "id": "M_Parameter",
+            "name": "Parameter",
+            "variableIds": [
+              "V_SP1",
+              "V_Hysteresis",
+              "V_Inversion",
+              "V_Teach"
+            ],
+            "menuIds": []
+          }
+        ],
+        "assets": []
+      }
+    },
+    {
+      "time": "2026-10-03T08:39:52.252Z",
+      "tool": "iodd_inspect",
+      "input": {
+        "projectId": "[private or omitted]"
+      },
+      "isError": false,
+      "result": {
+        "communication": {
+          "mode": "wired",
+          "revision": "V1.1",
+          "physicalLayer": {
+            "attrs": {
+              "bitrate": "COM2",
+              "minCycleTime": "1000",
+              "sioSupported": "false",
+              "mSequenceCapability": "11"
+            }
+          }
+        },
+        "profiles": [],
+        "rules": [],
+        "identity": {
+          "vendorId": "1234",
+          "deviceId": "5679",
+          "vendorName": "iolinki example",
+          "productName": "Switching sensor",
+          "productId": "switching-sensor",
+          "releaseDate": "2026-10-02",
+          "version": "V1.0"
+        },
+        "variables": [
+          {
+            "id": "V_SP1",
+            "index": "256",
+            "name": "Switch-on threshold x100",
+            "access": "rw",
+            "type": "UIntegerT",
+            "bits": "16",
+            "defaultValue": "6400",
+            "lower": "0",
+            "upper": "65535",
+            "singleValues": [],
+            "editable": true
+          },
+          {
+            "id": "V_Hysteresis",
+            "index": "257",
+            "name": "Hysteresis x100",
+            "access": "rw",
+            "type": "UIntegerT",
+            "bits": "16",
+            "defaultValue": "200",
+            "lower": "0",
+            "upper": "65535",
+            "singleValues": [],
+            "editable": true
+          },
+          {
+            "id": "V_Inversion",
+            "index": "258",
+            "name": "Invert switching output",
+            "access": "rw",
+            "type": "UIntegerT",
+            "bits": "8",
+            "defaultValue": "0",
+            "lower": "0",
+            "upper": "1",
+            "singleValues": [],
+            "editable": true
+          },
+          {
+            "id": "V_Teach",
+            "index": "259",
+            "name": "Teach current value: write 1",
+            "access": "wo",
+            "type": "UIntegerT",
+            "bits": "8",
+            "defaultValue": "",
+            "lower": "",
+            "upper": "",
+            "singleValues": [
+              "1"
+            ],
+            "editable": false
+          }
+        ],
+        "processData": [
+          {
+            "id": "PD_IN",
+            "direction": "in",
+            "bits": "24",
+            "editable": true,
+            "fields": [
+              {
+                "index": 0,
+                "subindex": "1",
+                "name": "Measurement x100",
+                "offset": "8",
+                "bits": "16",
+                "type": "UIntegerT",
+                "editable": true
+              },
+              {
+                "index": 1,
+                "subindex": "2",
+                "name": "Valid",
+                "offset": "1",
+                "bits": "1",
+                "type": "BooleanT",
+                "editable": true
+              },
+              {
+                "index": 2,
+                "subindex": "3",
+                "name": "Switching output",
+                "offset": "0",
+                "bits": "1",
+                "type": "BooleanT",
+                "editable": true
+              }
+            ]
+          }
+        ],
+        "texts": [
+          {
+            "language": "en",
+            "primary": true,
+            "texts": [
+              {
+                "id": "T_VendorText",
+                "value": "iolinki example"
+              },
+              {
+                "id": "T_VendorUrl",
+                "value": "https://iolinki.com"
+              },
+              {
+                "id": "T_DeviceName",
+                "value": "Switching sensor"
+              },
+              {
+                "id": "T_DeviceFamily",
+                "value": "iolinki reference examples"
+              },
+              {
+                "id": "T_ProductName",
+                "value": "Switching sensor"
+              },
+              {
+                "id": "T_Description",
+                "value": "Example application; replace illustrative IDs with assigned production identifiers."
+              },
+              {
+                "id": "T_V_SP1",
+                "value": "Switch-on threshold x100"
+              },
+              {
+                "id": "TD_V_SP1",
+                "value": "Switch-on threshold, 0.01 units; must be >= hysteresis. Volatile."
+              },
+              {
+                "id": "T_V_Hysteresis",
+                "value": "Hysteresis x100"
+              },
+              {
+                "id": "TD_V_Hysteresis",
+                "value": "Hysteresis, 0.01 units; must be <= threshold. Volatile."
+              },
+              {
+                "id": "T_V_Inversion",
+                "value": "Invert switching output"
+              },
+              {
+                "id": "TD_V_Inversion",
+                "value": "0 normal, 1 inverted. Volatile."
+              },
+              {
+                "id": "T_V_Teach",
+                "value": "Teach current value: write 1"
+              },
+              {
+                "id": "TD_V_Teach",
+                "value": "Write 1 to teach the current valid measurement. Subindex 0 only."
+              },
+              {
+                "id": "T_PD_IN_1",
+                "value": "Measurement x100"
+              },
+              {
+                "id": "T_PD_IN_2",
+                "value": "Valid"
+              },
+              {
+                "id": "T_PD_IN_3",
+                "value": "Switching output"
+              },
+              {
+                "id": "T_PD_IN",
+                "value": "Process data in"
+              },
+              {
+                "id": "T_Menu_Identification",
+                "value": "Identification"
+              },
+              {
+                "id": "T_Menu_Parameter",
+                "value": "Parameter"
+              }
+            ]
+          }
+        ],
+        "events": [],
+        "menus": [
+          {
+            "id": "M_Identification",
+            "name": "Identification",
+            "variableIds": [
+              "V_DirectParameters_1",
+              "V_ApplicationSpecificTag"
+            ],
+            "menuIds": []
+          },
+          {
+            "id": "M_Parameter",
+            "name": "Parameter",
+            "variableIds": [
+              "V_SP1",
+              "V_Hysteresis",
+              "V_Inversion",
+              "V_Teach"
+            ],
+            "menuIds": []
+          }
+        ],
+        "assets": []
+      }
+    },
+    {
+      "time": "2026-10-03T08:39:52.568Z",
+      "tool": "iodd_validate",
+      "input": {
+        "projectId": "[private or omitted]"
+      },
+      "isError": false,
+      "result": {
+        "packageValid": true,
+        "valid": true,
+        "issues": [
+          {
+            "severity": "warning",
+            "message": "CRC will be refreshed when you download."
+          }
+        ],
+        "coverage": {
+          "basic": true,
+          "model": true,
+          "crc": true,
+          "assets": true,
+          "xsd": true,
+          "official": false,
+          "checks": {
+            "structure": true,
+            "references": true,
+            "ranges": true,
+            "processData": true,
+            "crc": true,
+            "assets": true,
+            "rules": true
+          }
+        },
+        "schema": {
+          "validator": "libxml2-wasm 0.7.2 / libxml2 XSD 1.0",
+          "provenance": {
+            "url": "https://io-link.com/fileadmin/user_upload/Downloads/Package_2025/IO-Device-Description_Specification_10.012_V1.1.5_Oct2025.zip",
+            "sha256": "d4b3f53bfc777e45938cf7b7d14fe9b65aa4dccea6875745b3912e1cc59d4dd2",
+            "version": "IODD 1.1 / Specification 1.1.5, October 2025"
+          },
+          "status": "passed",
+          "output": "Official XSD validates 1 XML document(s)."
+        },
+        "officialChecker": {
+          "status": "unavailable",
+          "output": "Official IODD Checker 2025.1 executable is not installed. Its supplier download requires registration; XSD validation is a separate check."
+        }
+      }
+    },
+    {
+      "time": "2026-10-03T08:39:52.852Z",
+      "tool": "iodd_header",
+      "input": {
+        "projectId": "[private or omitted]"
+      },
+      "isError": false,
+      "result": {
+        "encoding": "utf8",
+        "filename": "iodd-mapping.h",
+        "downloadUrl": "[private or omitted]",
+        "byteLength": 1895,
+        "expiresAt": "2026-10-03T08:49:52.565Z"
+      }
+    },
+    {
+      "time": "2026-10-03T08:39:53.254Z",
+      "tool": "iodd_create",
+      "input": {
+        "template": "counter"
+      },
+      "isError": false,
+      "result": {
+        "projectId": "[private or omitted]",
+        "communication": {
+          "mode": "wired",
+          "revision": "V1.1",
+          "physicalLayer": {
+            "attrs": {
+              "bitrate": "COM2",
+              "minCycleTime": "1000",
+              "sioSupported": "false",
+              "mSequenceCapability": "11"
+            }
+          }
+        },
+        "profiles": [],
+        "rules": [],
+        "identity": {
+          "vendorId": "1234",
+          "deviceId": "5678",
+          "vendorName": "iolinki example",
+          "productName": "Counter button LED",
+          "productId": "reference-device",
+          "releaseDate": "2026-10-02",
+          "version": "V1.0"
+        },
+        "variables": [],
+        "processData": [
+          {
+            "id": "PD_IN",
+            "direction": "in",
+            "bits": "24",
+            "editable": true,
+            "fields": [
+              {
+                "index": 0,
+                "subindex": "1",
+                "name": "Counter",
+                "offset": "8",
+                "bits": "16",
+                "type": "UIntegerT",
+                "editable": true
+              },
+              {
+                "index": 1,
+                "subindex": "2",
+                "name": "Button",
+                "offset": "0",
+                "bits": "8",
+                "type": "UIntegerT",
+                "editable": true
+              }
+            ]
+          },
+          {
+            "id": "PD_OUT",
+            "direction": "out",
+            "bits": "8",
+            "editable": true,
+            "fields": [
+              {
+                "index": 0,
+                "subindex": "1",
+                "name": "LED",
+                "offset": "0",
+                "bits": "1",
+                "type": "BooleanT",
+                "editable": true
+              }
+            ]
+          }
+        ],
+        "texts": [
+          {
+            "language": "en",
+            "primary": true,
+            "texts": [
+              {
+                "id": "T_VendorText",
+                "value": "iolinki example"
+              },
+              {
+                "id": "T_VendorUrl",
+                "value": "https://iolinki.com"
+              },
+              {
+                "id": "T_DeviceName",
+                "value": "Counter button LED"
+              },
+              {
+                "id": "T_DeviceFamily",
+                "value": "iolinki reference examples"
+              },
+              {
+                "id": "T_ProductName",
+                "value": "Counter button LED"
+              },
+              {
+                "id": "T_Description",
+                "value": "Example application; replace illustrative IDs with assigned production identifiers."
+              },
+              {
+                "id": "T_PD_IN_1",
+                "value": "Counter"
+              },
+              {
+                "id": "T_PD_IN_2",
+                "value": "Button"
+              },
+              {
+                "id": "T_PD_IN",
+                "value": "Process data in"
+              },
+              {
+                "id": "T_PD_OUT_1",
+                "value": "LED"
+              },
+              {
+                "id": "T_PD_OUT",
+                "value": "Process data out"
+              },
+              {
+                "id": "T_Menu_Identification",
+                "value": "Identification"
+              },
+              {
+                "id": "T_Menu_Parameter",
+                "value": "Parameter"
+              }
+            ]
+          }
+        ],
+        "events": [],
+        "menus": [
+          {
+            "id": "M_Identification",
+            "name": "Identification",
+            "variableIds": [
+              "V_DirectParameters_1",
+              "V_ApplicationSpecificTag"
+            ],
+            "menuIds": []
+          },
+          {
+            "id": "M_Parameter",
+            "name": "Parameter",
+            "variableIds": [
+              "V_DirectParameters_1"
+            ],
+            "menuIds": []
+          }
+        ],
+        "assets": []
+      }
+    },
+    {
+      "time": "2026-10-03T08:39:53.472Z",
+      "tool": "iodd_export",
+      "input": {
+        "projectId": "[private or omitted]",
+        "format": "xml"
+      },
+      "isError": false,
+      "result": {
+        "format": "xml",
+        "filename": "iolinki_example-reference-device-20261002-IODD1.1.xml",
+        "encoding": "utf8",
+        "downloadUrl": "[private or omitted]",
+        "byteLength": 5256,
+        "expiresAt": "2026-10-03T08:49:53.284Z"
+      }
+    },
+    {
+      "time": "2026-10-03T08:39:53.860Z",
+      "tool": "iodd_inspect",
+      "input": {
+        "projectId": "[private or omitted]"
+      },
+      "isError": false,
+      "result": {
+        "communication": {
+          "mode": "wired",
+          "revision": "V1.1",
+          "physicalLayer": {
+            "attrs": {
+              "bitrate": "COM2",
+              "minCycleTime": "1000",
+              "sioSupported": "false",
+              "mSequenceCapability": "11"
+            }
+          }
+        },
+        "profiles": [],
+        "rules": [],
+        "identity": {
+          "vendorId": "1234",
+          "deviceId": "5678",
+          "vendorName": "iolinki example",
+          "productName": "Counter button LED",
+          "productId": "reference-device",
+          "releaseDate": "2026-10-02",
+          "version": "V1.0"
+        },
+        "variables": [],
+        "processData": [
+          {
+            "id": "PD_IN",
+            "direction": "in",
+            "bits": "24",
+            "editable": true,
+            "fields": [
+              {
+                "index": 0,
+                "subindex": "1",
+                "name": "Counter",
+                "offset": "8",
+                "bits": "16",
+                "type": "UIntegerT",
+                "editable": true
+              },
+              {
+                "index": 1,
+                "subindex": "2",
+                "name": "Button",
+                "offset": "0",
+                "bits": "8",
+                "type": "UIntegerT",
+                "editable": true
+              }
+            ]
+          },
+          {
+            "id": "PD_OUT",
+            "direction": "out",
+            "bits": "8",
+            "editable": true,
+            "fields": [
+              {
+                "index": 0,
+                "subindex": "1",
+                "name": "LED",
+                "offset": "0",
+                "bits": "1",
+                "type": "BooleanT",
+                "editable": true
+              }
+            ]
+          }
+        ],
+        "texts": [
+          {
+            "language": "en",
+            "primary": true,
+            "texts": [
+              {
+                "id": "T_VendorText",
+                "value": "iolinki example"
+              },
+              {
+                "id": "T_VendorUrl",
+                "value": "https://iolinki.com"
+              },
+              {
+                "id": "T_DeviceName",
+                "value": "Counter button LED"
+              },
+              {
+                "id": "T_DeviceFamily",
+                "value": "iolinki reference examples"
+              },
+              {
+                "id": "T_ProductName",
+                "value": "Counter button LED"
+              },
+              {
+                "id": "T_Description",
+                "value": "Example application; replace illustrative IDs with assigned production identifiers."
+              },
+              {
+                "id": "T_PD_IN_1",
+                "value": "Counter"
+              },
+              {
+                "id": "T_PD_IN_2",
+                "value": "Button"
+              },
+              {
+                "id": "T_PD_IN",
+                "value": "Process data in"
+              },
+              {
+                "id": "T_PD_OUT_1",
+                "value": "LED"
+              },
+              {
+                "id": "T_PD_OUT",
+                "value": "Process data out"
+              },
+              {
+                "id": "T_Menu_Identification",
+                "value": "Identification"
+              },
+              {
+                "id": "T_Menu_Parameter",
+                "value": "Parameter"
+              }
+            ]
+          }
+        ],
+        "events": [],
+        "menus": [
+          {
+            "id": "M_Identification",
+            "name": "Identification",
+            "variableIds": [
+              "V_DirectParameters_1",
+              "V_ApplicationSpecificTag"
+            ],
+            "menuIds": []
+          },
+          {
+            "id": "M_Parameter",
+            "name": "Parameter",
+            "variableIds": [
+              "V_DirectParameters_1"
+            ],
+            "menuIds": []
+          }
+        ],
+        "assets": []
+      }
+    },
+    {
+      "time": "2026-10-03T08:39:54.090Z",
+      "tool": "iodd_import",
+      "input": {
+        "format": "xml",
+        "filename": "iolinki_example-reference-device-20261002-IODD1.1.xml",
+        "content": "[private or omitted]"
+      },
+      "isError": false,
+      "result": {
+        "projectId": "[private or omitted]",
+        "communication": {
+          "mode": "wired",
+          "revision": "V1.1",
+          "physicalLayer": {
+            "attrs": {
+              "bitrate": "COM2",
+              "minCycleTime": "1000",
+              "sioSupported": "false",
+              "mSequenceCapability": "11"
+            }
+          }
+        },
+        "profiles": [],
+        "rules": [],
+        "identity": {
+          "vendorId": "1234",
+          "deviceId": "5678",
+          "vendorName": "iolinki example",
+          "productName": "Counter button LED",
+          "productId": "reference-device",
+          "releaseDate": "2026-10-02",
+          "version": "V1.0"
+        },
+        "variables": [],
+        "processData": [
+          {
+            "id": "PD_IN",
+            "direction": "in",
+            "bits": "24",
+            "editable": true,
+            "fields": [
+              {
+                "index": 0,
+                "subindex": "1",
+                "name": "Counter",
+                "offset": "8",
+                "bits": "16",
+                "type": "UIntegerT",
+                "editable": true
+              },
+              {
+                "index": 1,
+                "subindex": "2",
+                "name": "Button",
+                "offset": "0",
+                "bits": "8",
+                "type": "UIntegerT",
+                "editable": true
+              }
+            ]
+          },
+          {
+            "id": "PD_OUT",
+            "direction": "out",
+            "bits": "8",
+            "editable": true,
+            "fields": [
+              {
+                "index": 0,
+                "subindex": "1",
+                "name": "LED",
+                "offset": "0",
+                "bits": "1",
+                "type": "BooleanT",
+                "editable": true
+              }
+            ]
+          }
+        ],
+        "texts": [
+          {
+            "language": "en",
+            "primary": true,
+            "texts": [
+              {
+                "id": "T_VendorText",
+                "value": "iolinki example"
+              },
+              {
+                "id": "T_VendorUrl",
+                "value": "https://iolinki.com"
+              },
+              {
+                "id": "T_DeviceName",
+                "value": "Counter button LED"
+              },
+              {
+                "id": "T_DeviceFamily",
+                "value": "iolinki reference examples"
+              },
+              {
+                "id": "T_ProductName",
+                "value": "Counter button LED"
+              },
+              {
+                "id": "T_Description",
+                "value": "Example application; replace illustrative IDs with assigned production identifiers."
+              },
+              {
+                "id": "T_PD_IN_1",
+                "value": "Counter"
+              },
+              {
+                "id": "T_PD_IN_2",
+                "value": "Button"
+              },
+              {
+                "id": "T_PD_IN",
+                "value": "Process data in"
+              },
+              {
+                "id": "T_PD_OUT_1",
+                "value": "LED"
+              },
+              {
+                "id": "T_PD_OUT",
+                "value": "Process data out"
+              },
+              {
+                "id": "T_Menu_Identification",
+                "value": "Identification"
+              },
+              {
+                "id": "T_Menu_Parameter",
+                "value": "Parameter"
+              }
+            ]
+          }
+        ],
+        "events": [],
+        "menus": [
+          {
+            "id": "M_Identification",
+            "name": "Identification",
+            "variableIds": [
+              "V_DirectParameters_1",
+              "V_ApplicationSpecificTag"
+            ],
+            "menuIds": []
+          },
+          {
+            "id": "M_Parameter",
+            "name": "Parameter",
+            "variableIds": [
+              "V_DirectParameters_1"
+            ],
+            "menuIds": []
+          }
+        ],
+        "assets": []
+      }
+    },
+    {
+      "time": "2026-10-03T08:39:54.287Z",
+      "tool": "iodd_inspect",
+      "input": {
+        "projectId": "[private or omitted]"
+      },
+      "isError": false,
+      "result": {
+        "communication": {
+          "mode": "wired",
+          "revision": "V1.1",
+          "physicalLayer": {
+            "attrs": {
+              "bitrate": "COM2",
+              "minCycleTime": "1000",
+              "sioSupported": "false",
+              "mSequenceCapability": "11"
+            }
+          }
+        },
+        "profiles": [],
+        "rules": [],
+        "identity": {
+          "vendorId": "1234",
+          "deviceId": "5678",
+          "vendorName": "iolinki example",
+          "productName": "Counter button LED",
+          "productId": "reference-device",
+          "releaseDate": "2026-10-02",
+          "version": "V1.0"
+        },
+        "variables": [],
+        "processData": [
+          {
+            "id": "PD_IN",
+            "direction": "in",
+            "bits": "24",
+            "editable": true,
+            "fields": [
+              {
+                "index": 0,
+                "subindex": "1",
+                "name": "Counter",
+                "offset": "8",
+                "bits": "16",
+                "type": "UIntegerT",
+                "editable": true
+              },
+              {
+                "index": 1,
+                "subindex": "2",
+                "name": "Button",
+                "offset": "0",
+                "bits": "8",
+                "type": "UIntegerT",
+                "editable": true
+              }
+            ]
+          },
+          {
+            "id": "PD_OUT",
+            "direction": "out",
+            "bits": "8",
+            "editable": true,
+            "fields": [
+              {
+                "index": 0,
+                "subindex": "1",
+                "name": "LED",
+                "offset": "0",
+                "bits": "1",
+                "type": "BooleanT",
+                "editable": true
+              }
+            ]
+          }
+        ],
+        "texts": [
+          {
+            "language": "en",
+            "primary": true,
+            "texts": [
+              {
+                "id": "T_VendorText",
+                "value": "iolinki example"
+              },
+              {
+                "id": "T_VendorUrl",
+                "value": "https://iolinki.com"
+              },
+              {
+                "id": "T_DeviceName",
+                "value": "Counter button LED"
+              },
+              {
+                "id": "T_DeviceFamily",
+                "value": "iolinki reference examples"
+              },
+              {
+                "id": "T_ProductName",
+                "value": "Counter button LED"
+              },
+              {
+                "id": "T_Description",
+                "value": "Example application; replace illustrative IDs with assigned production identifiers."
+              },
+              {
+                "id": "T_PD_IN_1",
+                "value": "Counter"
+              },
+              {
+                "id": "T_PD_IN_2",
+                "value": "Button"
+              },
+              {
+                "id": "T_PD_IN",
+                "value": "Process data in"
+              },
+              {
+                "id": "T_PD_OUT_1",
+                "value": "LED"
+              },
+              {
+                "id": "T_PD_OUT",
+                "value": "Process data out"
+              },
+              {
+                "id": "T_Menu_Identification",
+                "value": "Identification"
+              },
+              {
+                "id": "T_Menu_Parameter",
+                "value": "Parameter"
+              }
+            ]
+          }
+        ],
+        "events": [],
+        "menus": [
+          {
+            "id": "M_Identification",
+            "name": "Identification",
+            "variableIds": [
+              "V_DirectParameters_1",
+              "V_ApplicationSpecificTag"
+            ],
+            "menuIds": []
+          },
+          {
+            "id": "M_Parameter",
+            "name": "Parameter",
+            "variableIds": [
+              "V_DirectParameters_1"
+            ],
+            "menuIds": []
+          }
+        ],
+        "assets": []
+      }
+    },
+    {
+      "time": "2026-10-03T08:39:54.498Z",
+      "tool": "iodd_validate",
+      "input": {
+        "projectId": "[private or omitted]"
+      },
+      "isError": false,
+      "result": {
+        "packageValid": true,
+        "valid": true,
+        "issues": [],
+        "coverage": {
+          "basic": true,
+          "model": true,
+          "crc": true,
+          "assets": true,
+          "xsd": true,
+          "official": false,
+          "checks": {
+            "structure": true,
+            "references": true,
+            "ranges": true,
+            "processData": true,
+            "crc": true,
+            "assets": true,
+            "rules": true
+          }
+        },
+        "schema": {
+          "validator": "libxml2-wasm 0.7.2 / libxml2 XSD 1.0",
+          "provenance": {
+            "url": "https://io-link.com/fileadmin/user_upload/Downloads/Package_2025/IO-Device-Description_Specification_10.012_V1.1.5_Oct2025.zip",
+            "sha256": "d4b3f53bfc777e45938cf7b7d14fe9b65aa4dccea6875745b3912e1cc59d4dd2",
+            "version": "IODD 1.1 / Specification 1.1.5, October 2025"
+          },
+          "status": "passed",
+          "output": "Official XSD validates 1 XML document(s)."
+        },
+        "officialChecker": {
+          "status": "unavailable",
+          "output": "Official IODD Checker 2025.1 executable is not installed. Its supplier download requires registration; XSD validation is a separate check."
+        }
+      }
+    },
+    {
+      "time": "2026-10-03T08:39:54.700Z",
+      "tool": "iodd_save",
+      "input": {
+        "projectId": "[private or omitted]"
+      },
+      "isError": false,
+      "result": {
+        "token": "[private or omitted]",
+        "expiresAt": 1791103194506,
+        "lifetimeMs": 86400000,
+        "bytes": 8081,
+        "durable": true
+      }
+    },
+    {
+      "time": "2026-10-03T08:39:57.051Z",
+      "tool": "iodd_restore",
+      "input": {
+        "token": "[private]"
+      },
+      "isError": false,
+      "result": {
+        "restoredInNewSession": true,
+        "threshold": 6400
+      }
+    },
+    {
+      "time": "2026-10-03T08:39:57.555Z",
+      "tool": "iodd_delete_saved",
+      "input": {
+        "token": "[private]"
+      },
+      "isError": false,
+      "result": {
+        "deleted": true
+      }
+    },
+    {
+      "time": "2026-10-03T08:39:59.143Z",
+      "tool": "iodd_create",
+      "input": {
+        "template": "switching-sensor"
+      },
+      "isError": false,
+      "result": {
+        "projectId": "[private or omitted]",
+        "communication": {
+          "mode": "wired",
+          "revision": "V1.1",
+          "physicalLayer": {
+            "attrs": {
+              "bitrate": "COM2",
+              "minCycleTime": "1000",
+              "sioSupported": "false",
+              "mSequenceCapability": "11"
+            }
+          }
+        },
+        "profiles": [],
+        "rules": [],
+        "identity": {
+          "vendorId": "1234",
+          "deviceId": "5679",
+          "vendorName": "iolinki example",
+          "productName": "Switching sensor",
+          "productId": "switching-sensor",
+          "releaseDate": "2026-10-02",
+          "version": "V1.0"
+        },
+        "variables": [
+          {
+            "id": "V_SP1",
+            "index": "256",
+            "name": "Switch-on threshold x100",
+            "access": "rw",
+            "type": "UIntegerT",
+            "bits": "16",
+            "defaultValue": "5000",
+            "lower": "0",
+            "upper": "65535",
+            "singleValues": [],
+            "editable": true
+          },
+          {
+            "id": "V_Hysteresis",
+            "index": "257",
+            "name": "Hysteresis x100",
+            "access": "rw",
+            "type": "UIntegerT",
+            "bits": "16",
+            "defaultValue": "200",
+            "lower": "0",
+            "upper": "65535",
+            "singleValues": [],
+            "editable": true
+          },
+          {
+            "id": "V_Inversion",
+            "index": "258",
+            "name": "Invert switching output",
+            "access": "rw",
+            "type": "UIntegerT",
+            "bits": "8",
+            "defaultValue": "0",
+            "lower": "0",
+            "upper": "1",
+            "singleValues": [],
+            "editable": true
+          },
+          {
+            "id": "V_Teach",
+            "index": "259",
+            "name": "Teach current value: write 1",
+            "access": "wo",
+            "type": "UIntegerT",
+            "bits": "8",
+            "defaultValue": "",
+            "lower": "",
+            "upper": "",
+            "singleValues": [
+              "1"
+            ],
+            "editable": false
+          }
+        ],
+        "processData": [
+          {
+            "id": "PD_IN",
+            "direction": "in",
+            "bits": "24",
+            "editable": true,
+            "fields": [
+              {
+                "index": 0,
+                "subindex": "1",
+                "name": "Measurement x100",
+                "offset": "8",
+                "bits": "16",
+                "type": "UIntegerT",
+                "editable": true
+              },
+              {
+                "index": 1,
+                "subindex": "2",
+                "name": "Valid",
+                "offset": "1",
+                "bits": "1",
+                "type": "BooleanT",
+                "editable": true
+              },
+              {
+                "index": 2,
+                "subindex": "3",
+                "name": "Switching output",
+                "offset": "0",
+                "bits": "1",
+                "type": "BooleanT",
+                "editable": true
+              }
+            ]
+          }
+        ],
+        "texts": [
+          {
+            "language": "en",
+            "primary": true,
+            "texts": [
+              {
+                "id": "T_VendorText",
+                "value": "iolinki example"
+              },
+              {
+                "id": "T_VendorUrl",
+                "value": "https://iolinki.com"
+              },
+              {
+                "id": "T_DeviceName",
+                "value": "Switching sensor"
+              },
+              {
+                "id": "T_DeviceFamily",
+                "value": "iolinki reference examples"
+              },
+              {
+                "id": "T_ProductName",
+                "value": "Switching sensor"
+              },
+              {
+                "id": "T_Description",
+                "value": "Example application; replace illustrative IDs with assigned production identifiers."
+              },
+              {
+                "id": "T_V_SP1",
+                "value": "Switch-on threshold x100"
+              },
+              {
+                "id": "TD_V_SP1",
+                "value": "Switch-on threshold, 0.01 units; must be >= hysteresis. Volatile."
+              },
+              {
+                "id": "T_V_Hysteresis",
+                "value": "Hysteresis x100"
+              },
+              {
+                "id": "TD_V_Hysteresis",
+                "value": "Hysteresis, 0.01 units; must be <= threshold. Volatile."
+              },
+              {
+                "id": "T_V_Inversion",
+                "value": "Invert switching output"
+              },
+              {
+                "id": "TD_V_Inversion",
+                "value": "0 normal, 1 inverted. Volatile."
+              },
+              {
+                "id": "T_V_Teach",
+                "value": "Teach current value: write 1"
+              },
+              {
+                "id": "TD_V_Teach",
+                "value": "Write 1 to teach the current valid measurement. Subindex 0 only."
+              },
+              {
+                "id": "T_PD_IN_1",
+                "value": "Measurement x100"
+              },
+              {
+                "id": "T_PD_IN_2",
+                "value": "Valid"
+              },
+              {
+                "id": "T_PD_IN_3",
+                "value": "Switching output"
+              },
+              {
+                "id": "T_PD_IN",
+                "value": "Process data in"
+              },
+              {
+                "id": "T_Menu_Identification",
+                "value": "Identification"
+              },
+              {
+                "id": "T_Menu_Parameter",
+                "value": "Parameter"
+              }
+            ]
+          }
+        ],
+        "events": [],
+        "menus": [
+          {
+            "id": "M_Identification",
+            "name": "Identification",
+            "variableIds": [
+              "V_DirectParameters_1",
+              "V_ApplicationSpecificTag"
+            ],
+            "menuIds": []
+          },
+          {
+            "id": "M_Parameter",
+            "name": "Parameter",
+            "variableIds": [
+              "V_SP1",
+              "V_Hysteresis",
+              "V_Inversion",
+              "V_Teach"
+            ],
+            "menuIds": []
+          }
+        ],
+        "assets": []
+      }
+    },
+    {
+      "time": "2026-10-03T08:39:59.468Z",
+      "tool": "iodd_firmware_source",
+      "input": {
+        "projectId": "[private or omitted]"
+      },
+      "isError": false,
+      "result": {
+        "compile": {
+          "board": "stm32f401cdu6-blackpill",
+          "language": "c",
+          "entryPath": "src/main.c",
+          "source": "[private or omitted]",
+          "files": "[private or omitted]"
+        },
+        "verify": {
+          "target": "stm32f401cdu6-blackpill",
+          "diagram": {
+            "board": "stm32f401cdu6-blackpill",
+            "parts": [
+              {
+                "id": "mcu",
+                "type": "stm32f401cdu6-blackpill"
+              }
+            ],
+            "wires": []
+          },
+          "oracle": {
+            "serial": [
+              {
+                "contains": "IODD_SENSOR_PROOF_PASS"
+              }
+            ]
+          },
+          "max_steps": 5000000,
+          "output": "serial"
+        },
+        "scope": "Switching-sensor application MCU execution: authored defaults, threshold/hysteresis, validity, parameter service/readback, byte decoding, inversion and teach. Excludes IO-Link stack/PHY/cable, physical hardware, retained flash, IAR and official conformity.",
+        "provenance": {
+          "repository": "https://github.com/w1ne/iolinki",
+          "release": "v2.1.0",
+          "commit": "ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca",
+          "license": "GPL-3.0-or-later",
+          "upstream": {
+            "switching_sensor.c": {
+              "path": "examples/switching_sensor/switching_sensor.c",
+              "sha256": "8290ff7bdde065b07a67e0d8f9caeaab19392367c04cd9e06bf6229175b5ad3f"
+            },
+            "switching_sensor.h": {
+              "path": "examples/switching_sensor/switching_sensor.h",
+              "sha256": "07c8f73ecd88f005da3beeb39df83eee4bb29300816f3c900297f6e01d41796c"
+            },
+            "protocol.h": {
+              "path": "include/iolinki/protocol.h",
+              "sha256": "c0a7f37bc3e20b033f96955de786dd50134f553904152fa8519cdf9dddac518e"
+            },
+            "LICENSE.GPL-3.0": {
+              "path": "LICENSE",
+              "sha256": "d3a010f30f7e4f4f374679b2eab948f3fc642c16f6a3e1739b7e0c1384292413"
+            }
+          },
+          "scope": "Switching-sensor application MCU execution: authored defaults, threshold/hysteresis, validity, parameter service/readback, byte decoding, inversion and teach. Excludes IO-Link stack/PHY/cable, physical hardware, retained flash, IAR and official conformity."
+        }
+      }
+    },
+    {
+      "time": "2026-10-03T08:39:59.811Z",
+      "tool": "iodd_firmware_kit",
+      "input": {
+        "projectId": "[private or omitted]"
+      },
+      "isError": false,
+      "result": {
+        "filename": "iodd-switching-sensor-firmware-kit.zip",
+        "encoding": "base64",
+        "scope": "Switching-sensor application MCU execution: authored defaults, threshold/hysteresis, validity, parameter service/readback, byte decoding, inversion and teach. Excludes IO-Link stack/PHY/cable, physical hardware, retained flash, IAR and official conformity.",
+        "provenance": {
+          "repository": "https://github.com/w1ne/iolinki",
+          "release": "v2.1.0",
+          "commit": "ad892f43fa7292cb3d4ccf60410f5541a0d0a5ca",
+          "license": "GPL-3.0-or-later",
+          "upstream": {
+            "switching_sensor.c": {
+              "path": "examples/switching_sensor/switching_sensor.c",
+              "sha256": "8290ff7bdde065b07a67e0d8f9caeaab19392367c04cd9e06bf6229175b5ad3f"
+            },
+            "switching_sensor.h": {
+              "path": "examples/switching_sensor/switching_sensor.h",
+              "sha256": "07c8f73ecd88f005da3beeb39df83eee4bb29300816f3c900297f6e01d41796c"
+            },
+            "protocol.h": {
+              "path": "include/iolinki/protocol.h",
+              "sha256": "c0a7f37bc3e20b033f96955de786dd50134f553904152fa8519cdf9dddac518e"
+            },
+            "LICENSE.GPL-3.0": {
+              "path": "LICENSE",
+              "sha256": "d3a010f30f7e4f4f374679b2eab948f3fc642c16f6a3e1739b7e0c1384292413"
+            }
+          },
+          "scope": "Switching-sensor application MCU execution: authored defaults, threshold/hysteresis, validity, parameter service/readback, byte decoding, inversion and teach. Excludes IO-Link stack/PHY/cable, physical hardware, retained flash, IAR and official conformity."
+        },
+        "downloadUrl": "[private or omitted]",
+        "byteLength": 21160,
+        "expiresAt": "2026-10-03T08:49:59.405Z"
+      }
+    },
+    {
+      "time": "2026-10-03T08:40:00.360Z",
+      "tool": "iodd_import",
+      "input": {
+        "format": "xml",
+        "content": "[private or omitted]"
+      },
+      "isError": true,
+      "result": {
+        "error": {
+          "code": "IODD_OPERATION_FAILED",
+          "message": "Reporting fatalError \"unclosed xml tag(s): not-an-iodd\" caused Error: XML syntax is invalid: unclosed xml tag(s): not-an-iodd",
+          "action": "Correct the input and retry; the saved project was not changed."
+        }
+      }
+    },
+    {
+      "time": "2026-10-03T08:40:00.574Z",
+      "tool": "iodd_create",
+      "input": {
+        "template": "counter",
+        "identity": {
+          "vendorId": 0
+        }
+      },
+      "isError": true,
+      "result": {
+        "message": "MCP error -32602: Input validation error: Invalid arguments for tool iodd_create: Number must be greater than or equal to 1 at identity.vendorId\nUse an integer from 1 to 65535. at identity.vendorId"
+      }
+    },
+    {
+      "time": "2026-10-03T08:40:01.336Z",
+      "tool": "iodd_restore",
+      "input": {
+        "token": "[private or omitted]"
+      },
+      "isError": true,
+      "result": {
+        "error": {
+          "code": "IODD_OPERATION_FAILED",
+          "message": "Recovery token unavailable.",
+          "action": "Correct the input and retry; the saved project was not changed."
+        }
+      }
+    }
+  ]
+}

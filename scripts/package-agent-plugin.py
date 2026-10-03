@@ -16,11 +16,10 @@ def bundle():
     stream = io.BytesIO()
     with zipfile.ZipFile(stream, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         files = sorted((ROOT / 'plugins/iolinki').rglob('*'))
-        files += [ROOT / '.agents/plugins/marketplace.json', ROOT / 'llms.txt']
         for path in files:
             if not path.is_file():
                 continue
-            name = path.relative_to(ROOT).as_posix()
+            name = path.relative_to(ROOT / 'plugins/iolinki').as_posix()
             item = zipfile.ZipInfo(name, (1980, 1, 1, 0, 0, 0))
             item.compress_type = zipfile.ZIP_DEFLATED
             item.external_attr = 0o100644 << 16

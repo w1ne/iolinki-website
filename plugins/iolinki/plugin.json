@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "iolinki",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Create IO-Link IODDs and integrate the iolinki firmware stacks.",
   "author": {
     "name": "Andrii Shylenko",
@@ -20,13 +20,91 @@
     "com.openai": {
       "interface": {
         "displayName": "iolinki",
-        "shortDescription": "Build IODDs and integrate IO-Link firmware",
+        "shortDescription": "Create and check IO-Link IODDs",
         "developerName": "Andrii Shylenko",
         "category": "Developer Tools",
-        "websiteURL": "https://iolinki.com",
+        "websiteURL": "https://iolinki.com/iodd-mcp.html",
         "defaultPrompt": [
-          "Author a switching-sensor IODD, validate and export it, save a private recovery snapshot, then compile/verify its sensor application with LabWired if connected."
-        ]
+          "Create a switching-sensor IODD, validate it and give me the XML and ZIP.",
+          "Set a switching sensor threshold to 6400, validate it and export a C mapping header.",
+          "Create a counter IODD and explain its parameter and process-data mapping."
+        ],
+        "longDescription": "Create, import, inspect and edit IO-Link device descriptions. Check their model, CRC and structure against the pinned official October 2025 IODD XML schemas, then download XML, ZIP packages, editable project JSON or C mapping headers. Explicitly saved hosted snapshots are recoverable for up to 24 hours with a private bearer token; export links expire after 10 minutes. The hosted service does not run the separately installed official IODD Checker or certify devices. Compatible switching-sensor projects can export application source and compile/verify arguments for LabWired, if that separate plugin is connected. Physical IO-Link communication, device flashing, power-cycle retention and official conformity are outside this plugin.",
+        "supportURL": "https://iolinki.com/legal.html#support",
+        "privacyPolicyURL": "https://iolinki.com/legal.html#mcp-privacy",
+        "termsOfServiceURL": "https://iolinki.com/legal.html#mcp-terms",
+        "capabilities": [
+          "Author IODDs",
+          "Validate IODD XML",
+          "Export device packages",
+          "Recover saved projects",
+          "Prepare sensor application source"
+        ],
+        "logo": "./assets/icon.svg",
+        "composerIcon": "./assets/icon.svg"
+      },
+      "onboardingSkill": "./skills/iolinki/SKILL.md",
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Create and validate a switching-sensor IODD",
+              "prompt": "Create an example switching-sensor IODD, validate it and export XML and ZIP.",
+              "tools_triggered": "iodd_create, iodd_validate, iodd_export",
+              "expected_behavior": "Return an editable example with illustrative IDs clearly identified, separate model/CRC/XSD results and downloadable XML and ZIP. Do not claim official Checker or physical-device conformity."
+            },
+            {
+              "description": "Edit threshold and generate a mapping header",
+              "prompt": "Create a switching-sensor example, inspect it, set the threshold default to 6400, validate it and export a C header.",
+              "tools_triggered": "iodd_create, iodd_inspect, iodd_edit, iodd_validate, iodd_header",
+              "expected_behavior": "Inspect the variable ID, apply an atomic edit, show threshold 6400 and return a downloadable header after validation."
+            },
+            {
+              "description": "Reimport authored XML",
+              "prompt": "Create a counter example and export its XML, then import that XML into a new project and inspect it.",
+              "tools_triggered": "iodd_create, iodd_export, iodd_import, iodd_inspect",
+              "expected_behavior": "Import XML supplied in tool context or downloaded by the client. Preserve its device identity, parameters and process-data mapping; the import tool itself does not fetch URLs."
+            },
+            {
+              "description": "Explicitly save, restore and revoke recovery",
+              "prompt": "Create a switching-sensor example, save a recovery snapshot, restore it and delete that saved snapshot.",
+              "tools_triggered": "iodd_create, iodd_save, iodd_restore, iodd_delete_saved",
+              "expected_behavior": "Report durable hosted storage and expiry, keep the token private, return a restored project and confirm snapshot deletion. Exported artifacts and session projects are separate."
+            },
+            {
+              "description": "Prepare firmware application source",
+              "prompt": "Create a switching-sensor example and prepare its application source and downloadable firmware kit. Explain what is still unverified.",
+              "tools_triggered": "iodd_create, iodd_firmware_source, iodd_firmware_kit",
+              "expected_behavior": "Return the source/compile/verify arguments and GPL source kit. State that these tools do not compile or run firmware; LabWired execution needs its separate connected plugin. Exclude physical IO-Link and conformity claims."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Reject malformed XML",
+              "prompt": "Import this as an IODD: <not-an-iodd>",
+              "tools_triggered": "iodd_import",
+              "expected_behavior": "Reject the malformed input; do not report a valid IODD or silently invent replacement content."
+            },
+            {
+              "description": "Reject an invalid vendor ID",
+              "prompt": "Create a counter IODD with vendor ID 0.",
+              "tools_triggered": "iodd_create",
+              "expected_behavior": "Explain that vendor ID must be within 1\u201365535 and assigned to the vendor; ask for a valid assigned ID. A direct invalid tool request must be rejected."
+            },
+            {
+              "description": "Reject unavailable recovery token",
+              "prompt": "Restore a saved project using token 00000000-0000-4000-8000-000000000000.",
+              "tools_triggered": "iodd_restore",
+              "expected_behavior": "Return recovery unavailable, without retrieving another project or enumerating saved data."
+            }
+          ]
+        },
+        "commerce": false,
+        "commerce_description": "This plugin does not process purchases or payments. Firmware licensing is documented separately.",
+        "demo_recording_url": "https://iolinki.com/review/iodd/walkthrough.mp4"
+      },
+      "publication": {
+        "release_notes": "Initial public submission package with the hosted 1.1.1 MCP, IODD authoring and official-XSD validation, private expiring snapshots, downloads and sensor application kits. Package metadata version 1.1.2; no physical-device certification."
       }
     }
   }

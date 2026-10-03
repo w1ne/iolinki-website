@@ -45,7 +45,7 @@
       </header>
       <section class="wrapper">
         <div class="inner guide-content">
-          <h2>Seller details</h2>
+          <h2 id="support">Support &amp; seller details</h2>
           <dl class="legal-details">
             <dt>Legal name</dt>
             <dd>Andrii Shylenko e.v.</dd>
@@ -70,6 +70,67 @@
             contact the seller for a quote and the applicable agreement. This
             information does not activate online purchase terms or represent a
             completed legal review.
+          </p>
+          <h2 id="mcp-privacy">Privacy for the hosted IODD MCP</h2>
+          <p>
+            The service at <code>https://mcp.iolinki.com/mcp</code> receives the
+            tool inputs you choose to send through your assistant, including
+            supplied IODD XML, device identity, project files and package assets.
+            It uses those inputs to author, inspect, validate and export your
+            device descriptions. It does not request access to your complete
+            ChatGPT history, local filesystem or physical IO-Link device.
+            Do not include credentials or personal information in device files.
+          </p>
+          <p>
+            Working projects belong to the active MCP session. An explicit save
+            stores a snapshot in Cloudflare Durable Object storage for up to
+            24 hours; it is accessible using its private recovery token. Anyone
+            with that token can restore or delete the snapshot. Use
+            <code>iodd_delete_saved</code> to revoke it before expiry.
+            Exported artifacts use separate private download URLs that expire
+            after 10 minutes. Expiry prevents access, and scheduled cleanup
+            removes expired entries. Export a local copy for longer retention.
+          </p>
+          <p>
+            Hosting and transport providers process request information,
+            including IP addresses, to deliver and protect the service. The MCP
+            uses a reverse proxy hosted by Hetzner and Cloudflare Workers for
+            processing and temporary storage. Your assistant provider processes
+            the conversation and tool results under its own privacy policy.
+            Local stdio use processes files locally; connected assistant
+            providers can still receive supplied content and tool results.
+            For privacy questions or access, correction or deletion requests,
+            contact <a href="mailto:andrii@shylenko.com">andrii@shylenko.com</a>.
+            Do not email private recovery tokens.
+          </p>
+          <h2 id="mcp-terms">Hosted IODD MCP service terms</h2>
+          <p>
+            The hosted IODD authoring service is provided without a subscription
+            charge. Use it for device descriptions you are entitled to supply;
+            use your assigned vendor and device IDs for real products. Example
+            IDs are illustrative. Do not use the service to access another
+            person's projects or disrupt the service. Availability, capacity
+            limits and temporary storage are not guaranteed; keep your own
+            exported copies.
+          </p>
+          <p>
+            Validation reports identify the checks actually performed. XML
+            schema or model checks do not certify an IO-Link device. The hosted
+            service does not run the separately installed official IODD Checker,
+            test a physical master/PHY, flash devices or verify power-cycle
+            retention. You are responsible for reviewing generated descriptions
+            and firmware mappings against your device and completing the
+            necessary hardware and conformity tests.
+          </p>
+          <p>
+            The authoring tooling is MIT licensed; see its
+            <a href="https://github.com/w1ne/iolinki-website/blob/master/tools/iodd/LICENSE">license and warranty terms</a>.
+            Exported sensor application kits include their GPL-3.0-or-later
+            license and source provenance. Protocol stack and commercial
+            licensing terms remain separate; this service does not grant
+            additional rights to third-party files or firmware stacks.
+            Support is available at
+            <a href="mailto:andrii@shylenko.com">andrii@shylenko.com</a>.
           </p>
           <h2>Privacy on this site</h2>
           <p>
