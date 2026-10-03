@@ -11,7 +11,8 @@
     "check:iodd": "node scripts/check-iodd-editor.mjs",
     "test:iodd": "node --test tests/iodd/*.test.mjs",
     "iodd": "node tools/iodd/cli.mjs",
-    "iodd:mcp": "node tools/iodd/mcp.mjs"
+    "iodd:mcp": "node tools/iodd/mcp.mjs",
+    "check:analytics": "node scripts/check-analytics.mjs"
   },
   "devDependencies": {
     "playwright": "1.60.0"

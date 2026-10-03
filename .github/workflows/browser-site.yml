@@ -16,6 +16,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - name: Check analytics consent, privacy and outcome events
+        run: npm run check:analytics
       - name: Check desktop and mobile pages and interactions
         run: npm run check:browser
       - name: Check rendered docs, version navigation and local search
