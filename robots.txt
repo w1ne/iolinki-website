@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://iolinki.com/sitemap.xml
+Sitemap: https://iolinki.com/docs/sitemap.xml

@@ -18,5 +18,9 @@ jobs:
         run: python3 scripts/build_docs.py --check
       - name: Verify documentation version and source contracts
         run: python3 scripts/test_docs.py
+      - name: Check search discovery and reproducible SEO metadata
+        run: |
+          python3 scripts/build_seo.py --check
+          python3 scripts/check_seo.py
       - name: Check pages, local links, fragments and assets
         run: python3 scripts/check_site.py
