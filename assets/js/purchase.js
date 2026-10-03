@@ -61,6 +61,7 @@
       }
       const url = new URL(data.url ?? '');
       if (!response.ok || url.protocol !== 'https:' || url.hostname !== 'checkout.stripe.com') throw Error('unavailable');
+      window.iolinkiAnalytics?.track("begin_checkout", { tier: tier() });
       location.assign(url.href);
     } catch { status.textContent = 'Checkout did not open. Retry this attempt, or contact us before paying again if Stripe already confirmed a payment.'; }
     finally { busy = false; update(); }

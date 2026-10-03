@@ -1,0 +1,11 @@
+# Consented website analytics
+
+Approved scope: visits, public download clicks, IODD editor outcomes, MCP setup copies, and real checkout starts. Use a dedicated Google Analytics 4 web stream in the owner's existing account, following the existing related-site pattern. GA4 integrates with current reporting; hosted alternatives would add an account, service, or ongoing deployment without improving this scoped request.
+
+A shared static script runs on marketing pages and generated documentation. Published purchase terms remain immutable and untracked. A small notice offers equally accessible Accept and Decline controls and a persistent Analytics settings button. No Google tag or collection request loads until explicit acceptance. Consent expires after 180 days; storage failure means acceptance applies only to this page. Withdrawal stops collection and removes GA cookies. DNT, GPC, internal-traffic exclusion, frames, and nonproduction hosts suppress collection.
+
+Send fixed event names and enumerated dimensions only. Canonical page URLs exclude queries and hashes. No document titles derived from user content, referrer URLs, file names, project XML, recovery tokens, clipboard text, identities, form fields, or Stripe IDs enter payloads. Disable enhanced measurement, advertising features, and user-provided data. Use short retention and no Google signals.
+
+IODD outcomes fire after successful operations; failure is never reported as success. Public download events describe artifact categories, not filenames. MCP setup events identify a supported client and action only. A checkout start fires only after an API returns a valid Stripe checkout URL. Checkout is currently disabled, so there is no truthful purchase-completion integration; returning to a public success URL cannot prove a payment.
+
+Browser tests exercise consent, reload, expiry, withdrawal, storage failure, suppression, query/referrer stripping, and actual editor/setup operations. Local verification connects to the user's existing Chrome; CI may use its normal Chromium. Release requires green checks, normal protected-branch merge, deployed-byte verification and a real Google collection response. Google receipt and dashboard reporting remain separate claims.

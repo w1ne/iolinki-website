@@ -40,6 +40,8 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.superfences
   - pymdownx.details
+extra_javascript:
+  - /assets/js/analytics.js
 extra_css:
   - assets/docs.css
 extra:

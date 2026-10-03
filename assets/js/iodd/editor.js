@@ -885,6 +885,7 @@ async function template(name) {
       ),
       "Example loaded. Edit, save or export your device project.",
     );
+    window.iolinkiAnalytics?.track("iodd_create", { template: name });
   } catch (error) {
     if (generation === templateGeneration) message(error.message);
   } finally {
@@ -1075,6 +1076,7 @@ function setupFirmware() {
       if (!report.validation.valid)
         throw Error(report.validation.issues.join("; "));
       download(bytes, report.filename, "application/zip");
+      window.iolinkiAnalytics?.track("iodd_export", { format: "firmware" });
       $("firmware-result").textContent =
         `Created ${report.filename}: ${report.binary.size} firmware bytes; SHA-256 ${report.binary.sha256}. Package CRC verified.`;
       message(
@@ -1223,6 +1225,7 @@ $("new-device").addEventListener("click", () => {
       createNewProject(),
       "New device created. Enter your assigned vendor/device IDs and describe your device.",
     );
+    window.iolinkiAnalytics?.track("iodd_create", { template: "blank" });
   } catch (error) {
     message(error.message);
   }
@@ -1244,6 +1247,7 @@ $("import-file").addEventListener("change", async (event) => {
         reset(loadProject(text), "Project opened locally.");
       else reset(createProject(text, file.name), "XML opened locally.");
     }
+    window.iolinkiAnalytics?.track("iodd_import", { format: file.name.toLowerCase().endsWith(".zip") ? "zip" : file.name.toLowerCase().endsWith(".json") ? "json" : "xml" });
   } catch (error) {
     message(error.message);
   }
@@ -1404,6 +1408,7 @@ $("save-project").addEventListener("click", () => {
     saved = true;
     updateState();
     message("Project saved. Reopen this JSON to continue later.");
+    window.iolinkiAnalytics?.track("iodd_export", { format: "json" });
   } catch (error) {
     message(error.message);
   }
@@ -1426,6 +1431,7 @@ $("download").addEventListener("click", async () => {
       );
     else
       download(exportProjectXML(project), project.filename, "application/xml");
+    window.iolinkiAnalytics?.track("iodd_export", { format });
     message(
       format === "xml"
         ? "IODD downloaded with an updated CRC."

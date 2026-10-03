@@ -78,7 +78,9 @@ const clients = {
   },
 };
 const find = (id) => document.getElementById(id);
+let selected = "chatgpt";
 function selectClient(name) {
+  selected = name;
   const client = clients[name];
   document
     .querySelectorAll("[data-client]")
@@ -113,6 +115,7 @@ document.querySelectorAll("[data-copy]").forEach((button) =>
     const content = find(button.dataset.copy).textContent;
     try {
       await navigator.clipboard.writeText(content);
+      window.iolinkiAnalytics?.track("mcp_setup_copy", { client: selected, action: button.dataset.copy });
       find("copy-status").textContent =
         "Copied. Paste it into your assistant or configuration.";
     } catch {
