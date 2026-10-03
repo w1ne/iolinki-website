@@ -63,6 +63,14 @@ test("real stdio MCP initializes, exposes typed tools, edits atomically and isol
       "firmware_inspect",
     ])
       assert.ok(list.tools.find((t) => t.name === `iodd_${name}`));
+    for (const name of ["edit", "close", "delete_saved"]) {
+      const tool = list.tools.find(t => t.name === `iodd_${name}`);
+      assert.equal(tool.annotations.readOnlyHint, false);
+      assert.equal(tool.annotations.destructiveHint, true);
+    }
+    const sourceTool = list.tools.find(t => t.name === "iodd_firmware_source");
+    assert.equal(sourceTool.annotations.readOnlyHint, true);
+    assert.doesNotMatch(sourceTool.description, /call.*labwired/i);
     const editSchema = list.tools.find(
       (t) => t.name === "iodd_edit",
     ).inputSchema;

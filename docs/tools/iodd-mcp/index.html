@@ -1667,20 +1667,20 @@
 </ul>
 <h3 id="run-locally">Run locally</h3>
 <p>Install Node.js 22 or newer, then start the pinned package:</p>
-<div class="highlight"><pre><span></span><code>npx<span class="w"> </span>-y<span class="w"> </span>https://iolinki.com/downloads/iodd-mcp-1.1.1.tgz
+<div class="highlight"><pre><span></span><code>npx<span class="w"> </span>-y<span class="w"> </span>https://iolinki.com/downloads/iodd-mcp-1.1.2.tgz
 </code></pre></div>
 <p>For clients using <code>mcpServers</code> JSON (such as Cursor or Claude Desktop):</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">"iolinki-iodd"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"-y"</span><span class="p">,</span><span class="w"> </span><span class="s2">"https://iolinki.com/downloads/iodd-mcp-1.1.1.tgz"</span><span class="p">]</span>
+<span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"-y"</span><span class="p">,</span><span class="w"> </span><span class="s2">"https://iolinki.com/downloads/iodd-mcp-1.1.2.tgz"</span><span class="p">]</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Codex local setup: <code>codex mcp add iolinki-iodd -- npx -y https://iolinki.com/downloads/iodd-mcp-1.1.1.tgz</code>.
-Claude Code local setup: <code>claude mcp add iolinki-iodd -- npx -y https://iolinki.com/downloads/iodd-mcp-1.1.1.tgz</code>.
+<p>Codex local setup: <code>codex mcp add iolinki-iodd -- npx -y https://iolinki.com/downloads/iodd-mcp-1.1.2.tgz</code>.
+Claude Code local setup: <code>claude mcp add iolinki-iodd -- npx -y https://iolinki.com/downloads/iodd-mcp-1.1.2.tgz</code>.
 VS Code uses a top-level <code>servers</code> object and <code>type: "stdio"</code> for the local configuration.</p>
 <p>The local server uses stdio and keeps projects and recovery snapshots in process memory. Its save result reports <code>durable:false</code>; a token does not survive a local process restart. Export project JSON or a ZIP before restarting. It reads bundled templates; imports receive content from the client without arbitrary filesystem paths or shell commands.</p>
 <h3 id="give-your-agent-context">Give your agent context</h3>
@@ -1832,7 +1832,7 @@ node<span class="w"> </span>tools/iodd/cli.mjs<span class="w"> </span>validate<s
 <p>To enable the same genuine Checker in local stdio MCP, launch it with operator configuration:</p>
 <div class="highlight"><pre><span></span><code><span class="nv">IODD_CHECKER</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/.local/share/iolinki/iodd-checker-1.1.4/iodd-checker"</span><span class="w"> </span><span class="se">\</span>
 <span class="nv">IODD_CHECKER_ARGS</span><span class="o">=</span><span class="s1">'["{file}"]'</span><span class="w"> </span><span class="se">\</span>
-npx<span class="w"> </span>-y<span class="w"> </span>https://iolinki.com/downloads/iodd-mcp-1.1.1.tgz
+npx<span class="w"> </span>-y<span class="w"> </span>https://iolinki.com/downloads/iodd-mcp-1.1.2.tgz
 </code></pre></div>
 <p>Install and verify the wrapper and its original Checker/runtime dependencies on the operator machine first; the npm package does not install them. Optional <code>IODD_SCHEMA</code> selects a locally installed XSD for stdio validation. The local wrapper verifies pinned binary/runtime hashes before invoking the original Checker.</p>
 <p>Use the argument list required by your installed checker, including one standalone <code>{file}</code> placeholder. The runner substitutes a temporary XML filename, invokes the executable without a shell, limits captured output and times out after 30 seconds. XSD validation requires <code>xmllint</code>. A successful XSD result is separate from an official checker result.</p>

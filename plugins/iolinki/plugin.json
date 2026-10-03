@@ -104,7 +104,7 @@
         "demo_recording_url": "https://iolinki.com/review/iodd/walkthrough.mp4"
       },
       "publication": {
-        "release_notes": "Initial public submission package with the hosted 1.1.1 MCP, IODD authoring and official-XSD validation, private expiring snapshots, downloads and sensor application kits. Package metadata version 1.1.2; no physical-device certification."
+        "release_notes": "Initial public submission package with the hosted 1.1.2 MCP, IODD authoring and official-XSD validation, private expiring snapshots, downloads and sensor application kits. Package metadata version 1.1.2; no physical-device certification."
       }
     }
   }

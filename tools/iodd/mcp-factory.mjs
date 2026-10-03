@@ -474,7 +474,7 @@ export function createIoddMcpServer({
   const server = new McpServer(
     {
       name: "iolinki-iodd",
-      version: "1.1.1",
+      version: "1.1.2",
       websiteUrl: "https://iolinki.com/iodd-mcp.html",
     },
     { instructions },
@@ -535,7 +535,7 @@ export function createIoddMcpServer({
             "firmware_source",
             "firmware_kit",
           ].includes(name),
-          destructiveHint: name === "delete_saved",
+          destructiveHint: ["edit", "close", "delete_saved"].includes(name),
           openWorldHint: false,
         },
       },
@@ -646,7 +646,7 @@ export function createIoddMcpServer({
     ({ projectId }) => api.inspectProject(get(projectId)),
   );
   if (firmwareKit) {
-    tool("firmware_source", "Generate compile and verify arguments from a compatible switching-sensor IODD using released sensor C source. Call LabWired labwired_compile with compile, then labwired_verify with verify plus firmware_ref. This tool does not compile, execute or prove physical IO-Link communication.", { projectId }, async ({ projectId }) => {
+    tool("firmware_source", "Generate compile and verify arguments from a compatible switching-sensor IODD using released sensor C source. This tool does not compile, execute or prove physical IO-Link communication.", { projectId }, async ({ projectId }) => {
       const { compile, verify, scope, provenance } = await firmwareKit(get(projectId));
       return { compile, verify, scope, provenance };
     });
@@ -666,7 +666,7 @@ export function createIoddMcpServer({
   }
   tool(
     "edit",
-    "Apply one atomic edit. Inspect first for IDs and field values.",
+    "Apply one atomic edit to a session project, including replacing values or removing XML, variables or fields. Inspect IDs and values first; save or export a copy before edits that discard content.",
     { projectId, operation },
     ({ projectId, operation }) =>
       put(api.applyOperation(get(projectId), operation), projectId),
@@ -741,7 +741,7 @@ export function createIoddMcpServer({
   );
   tool(
     "close",
-    "Release a project and its assets from this session.",
+    "Delete a project and its assets from this session. Unsaved changes are discarded; separately saved snapshots and previously exported files remain available.",
     { projectId },
     ({ projectId }) => {
       get(projectId);
