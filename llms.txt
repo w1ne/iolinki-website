@@ -7,7 +7,7 @@
 ## Start here
 
 - [Agent skill](https://iolinki.com/plugins/iolinki/skills/iolinki/SKILL.md): Instructions for IODD creation, firmware integration and validation.
-- [Connect MCP](https://iolinki.com/iodd-mcp.html): 20 authoring/recovery/firmware tools, client setup and local package 1.1.1.
+- [Connect MCP](https://iolinki.com/iodd-mcp.html): 20 authoring/recovery/firmware tools, client setup and local package 1.1.2.
 - [Agent plugin](https://iolinki.com/downloads/iolinki-agent-plugin.zip): Portable skill plus MCP configuration for supported clients.
 - [IODD editor](https://iolinki.com/iodd-editor.html): Create, import, edit and export device descriptions in the browser.
 

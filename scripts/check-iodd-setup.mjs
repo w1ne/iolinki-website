@@ -45,7 +45,7 @@ try {
       if (client === 'chatgpt') assert.equal(await page.locator('#client-install').getAttribute('href'), 'https://chatgpt.com/plugins');
       if (!await page.locator('.local-setup').evaluate(element => element.open)) await page.locator('.local-setup summary').click();
       const local = await page.locator('#local-config').textContent();
-      assert.ok(local.includes('https://iolinki.com/downloads/iodd-mcp-1.1.1.tgz'));
+      assert.ok(local.includes('https://iolinki.com/downloads/iodd-mcp-1.1.2.tgz'));
       if (['chatgpt', 'cursor'].includes(client)) assert.equal(JSON.parse(local).mcpServers['iolinki-iodd'].command, 'npx');
       if (client === 'vscode') assert.equal(JSON.parse(local).servers['iolinki-iodd'].type, 'stdio');
       await page.locator('[data-copy="local-config"]').click();

@@ -27,7 +27,7 @@ No iolinki account is needed. Hosted projects are processed on the server. Expor
 Install Node.js 22 or newer, then start the pinned package:
 
 ```sh
-npx -y https://iolinki.com/downloads/iodd-mcp-1.1.1.tgz
+npx -y https://iolinki.com/downloads/iodd-mcp-1.1.2.tgz
 ```
 
 For clients using `mcpServers` JSON (such as Cursor or Claude Desktop):
@@ -37,14 +37,14 @@ For clients using `mcpServers` JSON (such as Cursor or Claude Desktop):
   "mcpServers": {
     "iolinki-iodd": {
       "command": "npx",
-      "args": ["-y", "https://iolinki.com/downloads/iodd-mcp-1.1.1.tgz"]
+      "args": ["-y", "https://iolinki.com/downloads/iodd-mcp-1.1.2.tgz"]
     }
   }
 }
 ```
 
-Codex local setup: `codex mcp add iolinki-iodd -- npx -y https://iolinki.com/downloads/iodd-mcp-1.1.1.tgz`.
-Claude Code local setup: `claude mcp add iolinki-iodd -- npx -y https://iolinki.com/downloads/iodd-mcp-1.1.1.tgz`.
+Codex local setup: `codex mcp add iolinki-iodd -- npx -y https://iolinki.com/downloads/iodd-mcp-1.1.2.tgz`.
+Claude Code local setup: `claude mcp add iolinki-iodd -- npx -y https://iolinki.com/downloads/iodd-mcp-1.1.2.tgz`.
 VS Code uses a top-level `servers` object and `type: "stdio"` for the local configuration.
 
 The local server uses stdio and keeps projects and recovery snapshots in process memory. Its save result reports `durable:false`; a token does not survive a local process restart. Export project JSON or a ZIP before restarting. It reads bundled templates; imports receive content from the client without arbitrary filesystem paths or shell commands.
@@ -168,7 +168,7 @@ To enable the same genuine Checker in local stdio MCP, launch it with operator c
 ```sh
 IODD_CHECKER="$HOME/.local/share/iolinki/iodd-checker-1.1.4/iodd-checker" \
 IODD_CHECKER_ARGS='["{file}"]' \
-npx -y https://iolinki.com/downloads/iodd-mcp-1.1.1.tgz
+npx -y https://iolinki.com/downloads/iodd-mcp-1.1.2.tgz
 ```
 
 Install and verify the wrapper and its original Checker/runtime dependencies on the operator machine first; the npm package does not install them. Optional `IODD_SCHEMA` selects a locally installed XSD for stdio validation. The local wrapper verifies pinned binary/runtime hashes before invoking the original Checker.

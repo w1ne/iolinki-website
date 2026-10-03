@@ -1,6 +1,6 @@
 {
   "name": "iolinki-iodd-mcp",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Local IO-Link IODD authoring MCP server and CLI",
   "type": "module",
   "license": "(MIT AND GPL-3.0-or-later)",

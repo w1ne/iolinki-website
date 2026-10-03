@@ -93,7 +93,7 @@ test('operator-installed genuine Checker accepts starters and rejects missing ma
   const {createNewProject} = await import('../../assets/js/iodd/project.js');
   const options = {checkerPath: process.env.IODD_GENUINE_CHECKER, checkerArgs: ['{file}']};
   const sources = [
-    createNewProject({}, 'iolinki-NewDevice-20261002-IODD1.1.xml'),
+    createNewProject({releaseDate: '2026-10-02'}, 'iolinki-NewDevice-20261002-IODD1.1.xml'),
     ...await Promise.all(['counter', 'switching-sensor'].map(async name => createProject(await readFile(new URL('../../assets/iodd/'+name+'.xml', import.meta.url), 'utf8'), 'iolinki-'+(name==='counter'?'Counter':'SwitchingSensor')+'-20261002-IODD1.1.xml'))),
   ];
   for (const source of sources) {
