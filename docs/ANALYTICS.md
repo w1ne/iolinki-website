@@ -1,8 +1,10 @@
 # iolinki website analytics
 
+Property: `557179831`, account: `250514419`. [Open iolinki reports](https://analytics.google.com/analytics/web/#/a250514419p557179831/reports/intelligenthome).
+
 Measurement ID: `G-J1J05JDQEV`. Web stream: `15993348072`.
 
-Google Analytics 4 collects website visits and explicit outcomes after opt-in. `assets/js/analytics.js` implements basic consent: no Google tag or Google request before consent. The shared script is included on marketing, terms, editor/setup and generated MkDocs pages. No MCP server usage is collected by this script.
+Google Analytics 4 collects website visits and explicit outcomes after opt-in. `assets/js/analytics.js` implements basic consent: no Google tag or Google request before consent. The shared script is included on marketing, editor/setup and generated MkDocs pages. No MCP server usage is collected by this script. Published purchase terms remain byte-for-byte immutable and do not load the tracker.
 
 ## Collection contract
 
@@ -29,7 +31,7 @@ For staff visits, open `https://iolinki.com/?analytics_internal=1` once in each 
 
 ## Property configuration and verification
 
-Use a dedicated iolinki property under the existing owner account. Disable enhanced measurement so automatic outbound URLs, form interactions and site-search terms cannot leak content. Leave Google signals, advertising, and user-provided data collection disabled. Retain user/event data for two months.
+Use a dedicated iolinki property under the existing owner account. Disable enhanced measurement so automatic outbound URLs, form interactions and site-search terms cannot leak content. Google signals and user-provided data collection are off. Ads personalization is disallowed in all 307 regions. User/event retention is two months, with reset on new user activity disabled.
 
 Run `npm run check:analytics`. On this host set `ANALYTICS_CDP_URL` to the existing Chrome websocket; do not launch a new browser. CI uses its standard Chromium. Local tests route iolinki's production origin to local assets, exercise real UI outcomes, and stub Google's loader only. `SITE_URL=https://iolinki.com` reads the deployed site.
 

@@ -57,13 +57,17 @@ try {
   assert.ok(!JSON.stringify(sent).includes('PRIVATE')); assert.ok(!JSON.stringify(sent).includes('SECRET'));
   await f.page.evaluate(()=>window.iolinkiAnalytics.track('invented_event',{format:'xml'}));
   assert.equal((await events(f.page)).length,sent.length,'unknown events rejected');
+  await f.page.goto(origin+'/iodd-mcp.html');
+  await f.page.evaluate(()=>{const a=[...document.querySelectorAll('a')].find(a=>a.pathname==='/downloads/iolinki-agent-plugin.zip');a.addEventListener('click',e=>e.preventDefault());a.click();});
+  assert.equal((await events(f.page)).at(-1)[1],'file_download');
+  assert.equal((await events(f.page)).at(-1)[2].artifact,'agent-plugin');
   await f.page.evaluate(()=>{document.cookie='_ga=test; path=/';document.cookie='_ga_TEST=test; path=/; domain=.iolinki.com';});
   await f.page.getByRole('button',{name:'Analytics settings',exact:true}).click();
   await f.page.getByRole('button',{name:'Decline analytics',exact:true}).click();
   assert.equal(await f.page.evaluate(()=>document.cookie.includes('_ga')),false,'withdrawal removes cookies');
   await f.page.evaluate(()=>window.iolinkiAnalytics.track('iodd_export',{format:'xml'}));
   assert.equal((await events(f.page)).length,0,'withdrawal clears queued events and prevents collection');
-  await f.page.reload(); assert.equal(f.google.length,1,'no Google after withdrawal reload');
+  await f.page.reload(); assert.equal(f.google.length,2,'no Google after withdrawal reload');
   for(const signals of [{doNotTrack:'1'},{globalPrivacyControl:true}]) {
     const x=await fixture({choice:accepted,signals}); await visit(x);
     assert.equal(x.google.length,0,'privacy signal suppresses prior consent');
@@ -72,6 +76,20 @@ try {
     const x=await fixture({choice:accepted}); await visit(x,path); await x.page.goto(origin+'/hardware.html');
     assert.equal(x.google.length,0,'internal exclusion persists');
   }
+  const nonprod=await fixture({choice:accepted});
+  await nonprod.context.route('https://preview.example/**',async route=>{
+    const path=new URL(route.request().url()).pathname;
+    const file=path.endsWith('/')?'index.html':path.slice(1);
+    try {await route.fulfill({body:await readFile(resolve(root,file)),contentType:types[extname(file)]||'text/plain'});}catch{await route.fulfill({status:404,body:''});}
+  });
+  await nonprod.page.goto('https://preview.example/');
+  assert.equal(nonprod.google.length,0,'nonproduction host never collects');
+  const embedded=await fixture({choice:accepted});
+  await embedded.page.goto(origin+'/');
+  const beforeFrame=embedded.google.length;
+  await embedded.page.evaluate(()=>{const frame=document.createElement('iframe');frame.src='/hardware.html';document.body.append(frame);});
+  await embedded.page.frameLocator('iframe').locator('#analytics-choice').waitFor({state:'attached'});
+  assert.equal(embedded.google.length,beforeFrame,'embedded page never collects');
   const expired=await fixture({choice:{choice:'granted',expires:1}}); await visit(expired);
   assert.equal(expired.google.length,0,'expired consent does not collect');
   assert.equal(await expired.page.getByRole('button',{name:'Accept analytics',exact:true}).isVisible(),true);
@@ -94,9 +112,13 @@ try {
   await x.page.waitForFunction(()=>window.dataLayer?.some(v=>v[1]==='iodd_import'));
   assert.ok(!JSON.stringify(await events(x.page)).includes('PRIVATE'));
   await x.page.goto(origin+'/iodd-mcp.html');
-  await x.page.evaluate(()=>Object.defineProperty(navigator,'clipboard',{value:{writeText:async()=>{}}}));
+  await x.page.evaluate(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{}}}));
   await x.page.locator('[data-copy="client-config"]').click();
   await x.page.waitForFunction(()=>window.dataLayer?.some(v=>v[1]==='mcp_setup_copy'));
+  const copies=(await events(x.page)).filter(e=>e[1]==='mcp_setup_copy').length;
+  await x.page.evaluate(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{throw Error('denied');}}}));
+  await x.page.locator('[data-copy="client-config"]').click();
+  assert.equal((await events(x.page)).filter(e=>e[1]==='mcp_setup_copy').length,copies,'failed copy is not success');
   await x.page.goto(origin+'/purchase-success.html?session_id=SECRET');
   assert.equal((await events(x.page)).filter(e=>e[1]==='purchase').length,0,'success URL cannot prove payment');
   await x.page.goto(origin+'/docs/');
