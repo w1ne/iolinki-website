@@ -1,0 +1,54 @@
+{
+  "id": "ifm-ta2105",
+  "kind": "sensor",
+  "category": "temperature",
+  "part": "TA2105",
+  "vendor": "ifm electronic",
+  "vendor_id": 310,
+  "device_id": 377,
+  "in_catalog": true,
+  "measures": "medium temperature in liquids and gases",
+  "source_url": "https://core.instrumart.com/assets/ifm-efector-ta2-series-temperature-transmitter-datasheets.pdf",
+  "source": "ifm datasheet TA2105-00 (13.04.2023): measuring range -50...150 C, factory setting -50...150 C (no separate setting range given, so measuring range is used); Pt1000, analog 4...20 mA and IO-Link 1.1; DeviceID 377; probe 6 mm, body diameter 18.7 mm, length 88.9 mm.",
+  "job_words": [
+    "temperature",
+    "heat",
+    "hot",
+    "cold",
+    "coolant",
+    "thermometer"
+  ],
+  "refused": [
+    "pressure",
+    "flow",
+    "level",
+    "distance",
+    "presence"
+  ],
+  "settings": [
+    {
+      "key": "span_start",
+      "name": "Analog output start (4 mA)",
+      "unit": "°C",
+      "min": -50,
+      "max": 150,
+      "default": -50
+    },
+    {
+      "key": "span_end",
+      "name": "Analog output end (20 mA)",
+      "unit": "°C",
+      "min": -50,
+      "max": 150,
+      "default": 150
+    }
+  ],
+  "options": [],
+  "port_class": "A",
+  "connector": "M12",
+  "size_mm": [
+    18.7,
+    88.9,
+    18.7
+  ]
+}

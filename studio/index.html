@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>iolinki studio</title>
+  <link rel="stylesheet" href="studio.css" />
+</head>
+<body>
+  <header>
+    <a href="../index.html">iolinki</a>
+    <h1>iolinki studio</h1>
+    <p>Ask ChatGPT for the station. With the <a href="../iodd-mcp.html">iolinki connector</a> it places the machines, picks the sensors, wires each one to an IO-Link master port, and every setting is checked against the sensor's datasheet. The station opens here and in the chat. Adjust it if you want, then buy it and iolinki installs it. Payment is not taken here, and no settings have been written to a sensor.</p>
+  </header>
+  <main>
+    <form id="ask">
+      <label for="use-case">Describe the job</label>
+      <div class="ask-row">
+        <input id="use-case" type="text" value="Detect stainless at 3 mm, normally open, PNP." />
+        <button type="submit">Build</button>
+      </div>
+      <p id="ask-note"></p>
+    </form>
+
+    <div class="studio">
+      <aside id="palette" aria-label="Parts"></aside>
+      <div class="stage">
+        <canvas id="scene" class="station"></canvas>
+        <p class="hint">Drag a part to move it. Drag the floor to turn the view. Drag from the list, or click, to add.</p>
+      </div>
+      <aside id="inspector" aria-label="Selected part"></aside>
+    </div>
+
+    <section class="below">
+      <div>
+        <h2>Order</h2>
+        <div id="order"></div>
+        <form id="buy-form">
+          <label for="buyer-email">Email</label>
+          <input id="buyer-email" type="email" autocomplete="email" />
+          <label for="buyer-plant">Plant</label>
+          <input id="buyer-plant" type="text" autocomplete="organization" />
+          <button type="submit" id="buy">Buy and install</button>
+          <div id="order-note"></div>
+        </form>
+        <p class="tools"><button type="button" id="share">Copy station link</button> <button type="button" id="clear" class="quiet">Empty the floor</button></p>
+      </div>
+      <div>
+        <h2>IODD catalog</h2>
+        <label for="catalog-query">Search every IO-Link device in IODD Finder by part number</label>
+        <input id="catalog-query" type="search" placeholder="e.g. PN70, BOS 21M" />
+        <div id="catalog-results"></div>
+      </div>
+    </section>
+  </main>
+  <script src="library/browser_data.js"></script>
+  <script src="engine.js"></script>
+  <script src="station_view.js"></script>
+  <script src="page.js"></script>
+</body>
+</html>

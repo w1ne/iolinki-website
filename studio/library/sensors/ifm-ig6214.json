@@ -1,0 +1,26 @@
+{
+  "id": "ifm-ig6214",
+  "kind": "sensor",
+  "category": "inductive",
+  "part": "IG6214",
+  "vendor": "ifm electronic",
+  "vendor_id": 310,
+  "device_id": 1344,
+  "in_catalog": true,
+  "measures": "distance to a metal target",
+  "source_url": "https://www.ifm.com/de/en/product/IG6214",
+  "source": "IG6214-00 datasheet (EN-GB): switch point IO-Link 1.4...7 mm parameterisable; measuring range IO-Link 0.75...7.5 mm; correction factor steel 1 / stainless steel 0.7 / brass 0.5 / aluminium 0.5 / copper 0.4; PNP/NPN and NO/NC parameterisable; COM2; min. cycle 3.2 ms; M18 x 1, L = 60 mm.",
+  "job_words": ["presence", "detect", "proximity", "metal", "steel", "stainless", "brass", "aluminium", "aluminum", "copper", "inductive"],
+  "refused": ["pressure", "temperature", "flow", "level", "plastic", "wood", "liquid", "glass"],
+  "settings": [
+    { "key": "switch_point", "name": "Switching point", "unit": "mm", "min": 1.4, "max": 7, "default": 4, "corrected": true }
+  ],
+  "options": [
+    { "key": "output", "name": "Output function", "values": ["normally open", "normally closed"], "default": "normally open", "aliases": { "normally open": ["no"], "normally closed": ["nc"] } },
+    { "key": "polarity", "name": "Switching output", "values": ["PNP", "NPN"], "default": "PNP" }
+  ],
+  "correction": { "steel": 1, "stainless": 0.7, "brass": 0.5, "aluminium": 0.5, "aluminum": 0.5, "copper": 0.4, "metal": 1 },
+  "port_class": "A",
+  "connector": "M12",
+  "size_mm": [18, 60, 18]
+}
