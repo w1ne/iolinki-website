@@ -43,13 +43,15 @@
     <div class="studio">
       <aside id="palette" aria-label="Parts"></aside>
       <div class="stage">
-        <canvas id="scene" class="station"></canvas>
-        <p class="hint">Drag a part to move it. Drag the floor to turn the view. Drag from the list, or click, to add.</p>
+        <div id="scene" class="station"></div>
+        <p class="hint">Drag a part to move it. Drag empty floor to turn, scroll to zoom. Drag from the list, or click, to add.</p>
       </div>
       <aside id="inspector" aria-label="Selected part"></aside>
     </div>
 
     <section class="ports">
+      <h2>Wiring</h2>
+      <div id="wiring"></div>
       <h2>Ports and process data</h2>
       <p class="small">Read from each sensor's IODD in IODD Finder: what the PLC gets on every master port.</p>
       <div id="ports"></div>
@@ -80,7 +82,8 @@
   </main>
   <script src="library/browser_data.js"></script>
   <script src="engine.js"></script>
-  <script src="station_view.js"></script>
+  <script src="vendor/three.min.js"></script>
+  <script src="station_3d.js"></script>
   <script src="station_tables.js"></script>
   <script src="page.js"></script>
   <script src="/assets/js/analytics.js" defer></script>

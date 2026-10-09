@@ -2,7 +2,7 @@
 
 const library = window.IOLINKI_LIBRARY;
 const $ = (selector) => document.querySelector(selector);
-const canvas = $("#scene");
+const scene = $("#scene");
 const view = { station: null, library: library, selected: null };
 let redraw = () => {};
 
@@ -25,7 +25,7 @@ function start() {
   view.onSelect = () => drawInspector();
   view.onMove = () => changed();
   view.onDrop = (ref, at) => add(ref, at);
-  redraw = mountScene(canvas, view);
+  redraw = mountStation3d(scene, view);
   changed();
   if (new URLSearchParams(location.search).get("buy") === "1") {
     $("#buy-form").scrollIntoView({ block: "center" });
@@ -68,6 +68,7 @@ function changed() {
 }
 
 function drawPorts() {
+  $("#wiring").innerHTML = wiringSvg(view.station, library);
   $("#ports").innerHTML = portsHtml(view.station, library);
   $("#power").innerHTML = powerHtml(view.station, library);
 }
