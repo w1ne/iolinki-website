@@ -49,6 +49,13 @@
       <aside id="inspector" aria-label="Selected part"></aside>
     </div>
 
+    <section class="ports">
+      <h2>Ports and process data</h2>
+      <p class="small">Read from each sensor's IODD in IODD Finder: what the PLC gets on every master port.</p>
+      <div id="ports"></div>
+      <div id="power"></div>
+    </section>
+
     <section class="below">
       <div>
         <h2>Order</h2>
@@ -61,7 +68,7 @@
           <button type="submit" id="buy">Buy and install</button>
           <div id="order-note"></div>
         </form>
-        <p class="tools"><button type="button" id="share">Copy station link</button> <button type="button" id="clear" class="quiet">Empty the floor</button></p>
+        <p class="tools"><button type="button" id="share">Copy station link</button> <button type="button" id="csv-order" class="quiet">Order list (CSV)</button> <button type="button" id="csv-ports" class="quiet">Port table (CSV)</button> <button type="button" id="clear" class="quiet">Empty the floor</button></p>
       </div>
       <div>
         <h2>IODD catalog</h2>
@@ -74,6 +81,7 @@
   <script src="library/browser_data.js"></script>
   <script src="engine.js"></script>
   <script src="station_view.js"></script>
+  <script src="station_tables.js"></script>
   <script src="page.js"></script>
   <script src="/assets/js/analytics.js" defer></script>
 </body>

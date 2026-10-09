@@ -9,7 +9,7 @@
   "in_catalog": true,
   "measures": "distance to an object, laser background suppression",
   "source_url": "https://files.kempstoncontrols.com/files/20084f762550249295eb6c645c93c54c/O5D100.pdf",
-  "source": "ifm datasheet O5D100 (O5DLCPKG/US): measuring range 0.03...2 m on 90 % white target, background suppression up to 20 m, 2 complementary switching outputs (NO/NC), IO-Link 1.1 DeviceID 372; no separate setting range is given so the measuring range is used; drawing 18.2 x 70.3 x 46.8 mm.",
+  "source": "ifm datasheet O5D100 (O5DLCPKG/US): measuring range 0.03...2 m on 90 % white target, background suppression up to 20 m, 2 complementary switching outputs (NO/NC), IO-Link 1.1 DeviceID 372; no separate setting range is given so the measuring range is used; drawing 18.2 x 70.3 x 46.8 mm. IODD ifm-000174-20210526-IODD1.1.xml sets SP1 as 5–200 cm, so the switch point is 50–2000 mm.",
   "job_words": [
     "distance",
     "presence",
@@ -30,9 +30,10 @@
       "key": "switch_point",
       "name": "Switching distance",
       "unit": "mm",
-      "min": 30,
+      "min": 50,
       "max": 2000,
-      "default": null
+      "default": null,
+      "iodd_index": "60.1 (BDC1 SP1, 5–200 cm)"
     }
   ],
   "options": [
@@ -52,5 +53,25 @@
     18.2,
     70.3,
     46.8
-  ]
+  ],
+  "iodd": {
+    "file": "ifm-000174-20210526-IODD1.1.xml",
+    "iodd_finder_id": 11838,
+    "min_cycle_ms": 6.4,
+    "bitrate": "COM2",
+    "pd_in_bits": 16,
+    "pd_in": [
+      {
+        "name": "Distance",
+        "bit_offset": 4,
+        "bits": 12
+      },
+      {
+        "name": "Switch state [OUT1]",
+        "bit_offset": 0,
+        "bits": 1
+      }
+    ],
+    "pd_out_bits": 0
+  }
 }

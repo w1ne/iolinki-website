@@ -52,5 +52,25 @@
     18,
     87,
     18
-  ]
+  ],
+  "iodd": {
+    "file": "ifm-000183-20240612-IODD1.1.xml",
+    "iodd_finder_id": 25552,
+    "min_cycle_ms": 100.8,
+    "bitrate": "COM1",
+    "pd_in_bits": 16,
+    "pd_in": [
+      {
+        "name": "PDV1",
+        "bit_offset": 4,
+        "bits": 12
+      },
+      {
+        "name": "BDC1",
+        "bit_offset": 0,
+        "bits": 1
+      }
+    ],
+    "pd_out_bits": 0
+  }
 }

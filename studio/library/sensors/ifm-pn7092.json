@@ -31,7 +31,8 @@
       "unit": "bar",
       "min": 1,
       "max": 100,
-      "default": null
+      "default": null,
+      "iodd_index": "583 (SP_FH1, 10–1000 × 0.1 bar)"
     },
     {
       "key": "rp1",
@@ -40,7 +41,8 @@
       "min": 0.5,
       "max": 99.5,
       "default": null,
-      "below": "sp1"
+      "below": "sp1",
+      "iodd_index": "584 (RP_FL1, 5–995 × 0.1 bar)"
     }
   ],
   "options": [
@@ -60,5 +62,30 @@
     34,
     90.7,
     34
-  ]
+  ],
+  "iodd": {
+    "file": "ifm-000191_V104326821-20140909-IODD1.1.xml",
+    "iodd_finder_id": 97,
+    "min_cycle_ms": 2.3,
+    "bitrate": "COM2",
+    "pd_in_bits": 16,
+    "pd_in": [
+      {
+        "name": "Pressure",
+        "bit_offset": 2,
+        "bits": 14
+      },
+      {
+        "name": "Switch status [OUT2].",
+        "bit_offset": 1,
+        "bits": 1
+      },
+      {
+        "name": "Switch status [OUT1].",
+        "bit_offset": 0,
+        "bits": 1
+      }
+    ],
+    "pd_out_bits": 0
+  }
 }

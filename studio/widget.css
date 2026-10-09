@@ -12,3 +12,10 @@ a { color: #6aa6ff; }
 button { font: inherit; border: 0; padding: 8px 14px; border-radius: 6px; background: #2f81f7; color: #fff; cursor: pointer; }
 button.quiet { background: #2a2f3c; }
 button[disabled] { opacity: 0.45; cursor: not-allowed; }
+.scroll { overflow-x: auto; }
+.ports-table { border-collapse: collapse; width: 100%; font-size: 12px; margin: 8px 0; }
+.ports-table th, .ports-table td { text-align: left; vertical-align: top; padding: 4px 6px; border-bottom: 1px solid #2a2f3c; }
+.ports-table th { color: #9aa3b2; }
+.notes { color: #ffd479; margin: 6px 0; }
+.notes summary { cursor: pointer; }
+.notes ul { padding-left: 18px; }

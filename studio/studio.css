@@ -110,3 +110,11 @@ canvas.station {
   header, main { padding: 0.75rem 1rem; }
   .ask-row { flex-direction: column; }
 }
+
+.ports { margin-top: 1rem; }
+.scroll { overflow-x: auto; }
+.ports-table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+.ports-table th, .ports-table td { text-align: left; vertical-align: top; padding: 0.35rem 0.6rem; border-bottom: 1px solid #2a2f3c; }
+.ports-table th { color: #9aa3b2; font-weight: 600; }
+.warn { color: #ffd479; padding-left: 1.1rem; }
+#palette-filter { margin: 0.25rem 0 0.5rem; }

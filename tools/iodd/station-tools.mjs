@@ -65,7 +65,7 @@ export function registerStationTools(server) {
     "iolink_station",
     {
       title: "Build IO-Link station",
-      description: "Place machines, sensors and IO-Link masters on the factory floor and wire each sensor's C/Q to a master port (X1..Xn), then show the station. Every sensor setting is checked against its datasheet; inductive distances are converted with the material correction factor. A sensor with no wire is put on the first free port, and a master is added when all ports are used. Returns issues part by part, the corrected diagram, the order (sensors, masters, sized M12 cables) and a studio link with a buy button. To change the station, call again with the full updated diagram. Nothing is written to a sensor and no payment is taken.",
+      description: "Place machines, sensors and IO-Link masters on the factory floor and wire each sensor's C/Q to a master port (X1..Xn), then show the station. Every sensor setting is checked against its datasheet; inductive distances are converted with the material correction factor. A sensor with no wire is put on the first free port, and a master is added when all ports are used. Returns notes part by part (they never block the station or the order), the corrected diagram, the order (sensors, masters, sized M12 cables) and a studio link with a buy button. To change the station, call again with the full updated diagram. Nothing is written to a sensor and no payment is taken.",
       inputSchema: {
         title: z.string().max(120).optional(),
         parts: z.array(part).min(1).max(60),

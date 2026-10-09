@@ -64,17 +64,45 @@ function changed() {
   redraw();
   drawInspector();
   drawOrder();
+  drawPorts();
+}
+
+function drawPorts() {
+  $("#ports").innerHTML = portsHtml(view.station, library);
+  $("#power").innerHTML = powerHtml(view.station, library);
+}
+
+function download(name, text) {
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(new Blob([text], { type: "text/csv" }));
+  link.download = name;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
 }
 
 function paletteButton(def, label, sub) {
-  return "<button type=\"button\" draggable=\"true\" class=\"part\" data-ref=\"" + escapeText(def.id) + "\"><b>" + escapeText(label) + "</b><span>" + escapeText(sub) + "</span></button>";
+  // Search text also matches what the part measures and its job words.
+  const tags = [def.measures, (def.job_words || []).join(" ")].join(" ");
+  return "<button type=\"button\" draggable=\"true\" class=\"part\" data-ref=\"" + escapeText(def.id) + "\" title=\"" + escapeText(tags) + "\"><b>" + escapeText(label) + "</b><span>" + escapeText(sub) + "</span></button>";
 }
 
 function drawPalette() {
-  const sensors = library.sensors.map((def) => paletteButton(def, def.part, def.category + " · " + def.vendor)).join("");
+  const range = (def) => {
+    const setting = (def.settings || [])[0];
+    return setting ? " · " + setting.min + "–" + setting.max + " " + setting.unit : "";
+  };
+  const sensors = library.sensors.map((def) => paletteButton(def, def.part, def.category + range(def))).join("");
   const masters = library.masters.map((def) => paletteButton(def, def.part, def.ports + "-port master · class " + def.port_class)).join("");
   const equipment = library.equipment.map((def) => paletteButton(def, def.name, "generic")).join("");
-  $("#palette").innerHTML = "<h2>Sensors</h2><p class=\"small\">Datasheet limits filed</p>" + sensors + "<h2>Masters</h2>" + masters + "<h2>Machines</h2>" + equipment;
+  $("#palette").innerHTML = "<input type=\"search\" id=\"palette-filter\" placeholder=\"Filter: pressure, flow, PN70…\" aria-label=\"Filter parts\" /><h2>Sensors</h2>" + sensors + "<h2>Masters</h2>" + masters + "<h2>Machines</h2>" + equipment;
+  $("#palette-filter").addEventListener("input", (event) => {
+    const words = event.target.value.toLowerCase().split(/\s+/).filter(Boolean);
+    $("#palette").querySelectorAll(".part").forEach((button) => {
+      const text = (button.textContent + " " + button.dataset.ref + " " + button.title).toLowerCase();
+      button.hidden = !words.every((word) => text.includes(word));
+    });
+  });
   $("#palette").querySelectorAll(".part").forEach((button) => {
     button.addEventListener("click", () => add(button.dataset.ref, null));
     button.addEventListener("dragstart", (event) => event.dataTransfer.setData("text/plain", button.dataset.ref));
@@ -88,7 +116,7 @@ function drawInspector() {
   if (!item) {
     const counts = ["sensor", "master", "equipment"].map((kind) => view.station.items.filter((other) => other.kind === kind).length);
     box.innerHTML = "<h2>Station</h2><p>" + counts[0] + " sensors, " + counts[1] + " masters, " + counts[2] + " machines.</p>" +
-      (issues.length ? "<ul class=\"no\">" + issues.map((issue) => "<li>" + escapeText(issue.problem) + "</li>").join("") + "</ul>" : "<p>Every sensor is inside its datasheet and on a port.</p>") +
+      (issues.length ? "<p class=\"small\">Notes from the datasheets:</p><ul class=\"warn\">" + issues.map((issue) => "<li>" + escapeText(issue.problem) + "</li>").join("") + "</ul>" : "<p>Every sensor is inside its datasheet and on a port.</p>") +
       "<p class=\"small\">Click a part to set it up.</p>";
     return;
   }
@@ -129,7 +157,7 @@ function drawInspector() {
   }
   const mine = issues.filter((issue) => issue.uid === item.uid);
   if (mine.length) {
-    html += "<ul class=\"no\">" + mine.map((issue) => "<li>" + escapeText(issue.problem) + "</li>").join("") + "</ul>";
+    html += "<ul class=\"warn\">" + mine.map((issue) => "<li>" + escapeText(issue.problem) + "</li>").join("") + "</ul>";
   }
   html += "<button type=\"button\" class=\"quiet\" data-remove>Remove</button>";
   box.innerHTML = html;
@@ -192,7 +220,7 @@ $("#buy-form").addEventListener("submit", (event) => {
     note.innerHTML = "<p class=\"no\">" + escapeText(order.reason) + "</p>";
     return;
   }
-  note.innerHTML = "<p>" + escapeText(order.action) + " at " + escapeText(order.plant) + ".</p><p class=\"no\">Payment is not taken here. Nothing has been bought or installed yet.</p><p><a id=\"send-order\" href=\"" + escapeText(orderMail(order)) + "\">Send this order</a></p>";
+  note.innerHTML = "<p>" + escapeText(order.action) + " at " + escapeText(order.plant) + ".</p>" + (order.notes.length ? "<p class=\"small\">The order includes " + order.notes.length + " note" + (order.notes.length === 1 ? "" : "s") + " for the installer.</p>" : "") + "<p class=\"small\">Payment is not taken here. Nothing has been bought or installed yet.</p><p><a id=\"send-order\" href=\"" + escapeText(orderMail(order)) + "\">Send this order</a></p>";
 });
 
 $("#share").addEventListener("click", () => {
@@ -204,6 +232,9 @@ $("#share").addEventListener("click", () => {
     prompt("Station link", link);
   }
 });
+
+$("#csv-order").addEventListener("click", () => download("iolink-station-order.csv", orderCsv(view.station, library)));
+$("#csv-ports").addEventListener("click", () => download("iolink-station-ports.csv", portCsv(view.station, library)));
 
 $("#clear").addEventListener("click", () => {
   view.station = newStation();
@@ -226,7 +257,7 @@ function searchCatalog() {
     return;
   }
   out.innerHTML = "<p class=\"small\">Searching IODD Finder…</p>";
-  fetch(CATALOG_SEARCH + "?" + new URLSearchParams({ q: text, field: "productName", size: "40" })).then((response) => {
+  fetch(CATALOG_SEARCH + "?" + new URLSearchParams({ q: text, field: "productName", size: "24" })).then((response) => {
     if (!response.ok) {
       throw new Error(response.status);
     }

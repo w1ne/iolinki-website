@@ -54,9 +54,10 @@ function draw() {
     station.items.filter((i) => i.kind === "sensor").length + " sensors · " + station.items.filter((i) => i.kind === "master").length + " masters</span></div>" +
     "<canvas id=\"scene\" class=\"station\"></canvas>" +
     "<div id=\"detail\"></div>" +
-    (issues.length ? "<ul class=\"no\">" + issues.map((issue) => "<li>" + esc(issue.problem) + "</li>").join("") + "</ul>" : "<p class=\"ok\">Every sensor is inside its datasheet and wired to a master port.</p>") +
+    (issues.length ? "<details class=\"notes\"><summary>" + issues.length + " note" + (issues.length === 1 ? "" : "s") + " from the datasheets</summary><ul>" + issues.map((issue) => "<li>" + esc(issue.problem) + "</li>").join("") + "</ul></details>" : "<p class=\"ok\">Every sensor is inside its datasheet and wired to a master port.</p>") +
+    portsHtml(station, library) + powerHtml(station, library) +
     "<ul class=\"lines\">" + lines.map((line) => "<li>" + esc(line.kind === "cable" ? line.part + " · " + line.from + " X" + line.port + " → " + line.to : line.vendor + " " + line.part) + "</li>").join("") + "</ul>" +
-    "<div class=\"actions\"><button type=\"button\" id=\"buy\"" + (issues.length ? " disabled" : "") + ">Buy and install</button><button type=\"button\" class=\"quiet\" id=\"studio\">Open in studio</button></div>" +
+    "<div class=\"actions\"><button type=\"button\" id=\"buy\">Buy and install</button><button type=\"button\" class=\"quiet\" id=\"studio\">Open in studio</button></div>" +
     "<p class=\"small\">Payment is not taken in ChatGPT. Settings have not been written to a sensor.</p>";
   const view = { station: station, library: library, selected: null, readOnly: true };
   view.onSelect = (uid) => {
