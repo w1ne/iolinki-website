@@ -60,3 +60,5 @@ svg.wiring { font-family: inherit; }
 .w-cable { fill: none; stroke: #23262b; stroke-width: 3; }
 .w-wires { font-size: 10px; fill: #66707d; }
 @media (max-width: 560px) { header { flex-direction: column; } .pane { height: 340px; } .order { columns: 1; } }
+
+[hidden] { display: none !important; }

@@ -34,7 +34,8 @@
       "max": 145,
       "default": -50,
       "below": "span_end",
-      "iodd_index": "630 (ASP2, -500–1450 × 0.1 °C)"
+      "iodd_index": "630 (ASP2, -500–1450 × 0.1 °C)",
+      "default_source": "IODD factory default"
     },
     {
       "key": "span_end",
@@ -43,7 +44,8 @@
       "min": -45,
       "max": 150,
       "default": 150,
-      "iodd_index": "631 (AEP2, -450–1500 × 0.1 °C)"
+      "iodd_index": "631 (AEP2, -450–1500 × 0.1 °C)",
+      "default_source": "IODD factory default"
     }
   ],
   "options": [],

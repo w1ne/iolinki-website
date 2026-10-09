@@ -73,3 +73,21 @@ function wiringSvg(station, library) {
   const width = 182 + gap + cardW + 14;
   return "<div class=\"scroll\"><svg class=\"wiring\" viewBox=\"0 0 " + width + " " + y + "\" width=\"" + width + "\" height=\"" + y + "\" role=\"img\" aria-label=\"Wiring of masters and sensors\">" + blocks.join("") + "</svg></div>";
 }
+
+// Small line icons for part categories, 20 x 20, stroke uses currentColor.
+const PART_ICONS = {
+  inductive: "<path d='M7 3h6v11a3 3 0 0 1-6 0z'/><path d='M7 7h6M7 10h6'/>",
+  capacitive: "<path d='M6 4v12M14 4v12M3 10h3M14 10h3'/>",
+  pressure: "<circle cx='10' cy='10' r='7'/><path d='M10 10l4-3'/><circle cx='10' cy='10' r='1'/>",
+  flow: "<path d='M2 7h12l-3-3M18 13H6l3 3'/>",
+  temperature: "<path d='M8 3a2 2 0 0 1 4 0v8a4 4 0 1 1-4 0z'/><path d='M10 8v6'/>",
+  level: "<path d='M4 4v12h12V4'/><path d='M4 11c2-1.5 4 1.5 6 0s4 1.5 6 0'/>",
+  "optical distance": "<rect x='3' y='6' width='6' height='8' rx='1'/><path d='M9 10h9M15 7l3 3-3 3'/>",
+  master: "<rect x='3' y='6' width='14' height='8' rx='1.5'/><circle cx='6.5' cy='10' r='1'/><circle cx='10' cy='10' r='1'/><circle cx='13.5' cy='10' r='1'/>",
+  machine: "<path d='M3 15h14M5 15V9l4 2V9l4 2V6h2v9'/>",
+};
+
+function partIcon(category) {
+  const body = PART_ICONS[category] || PART_ICONS.machine;
+  return "<svg class=\"icon\" viewBox=\"0 0 20 20\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\">" + body + "</svg>";
+}

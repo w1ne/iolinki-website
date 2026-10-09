@@ -32,8 +32,9 @@
       "unit": "mm",
       "min": 50,
       "max": 2000,
-      "default": null,
-      "iodd_index": "60.1 (BDC1 SP1, 5–200 cm)"
+      "default": 500,
+      "iodd_index": "60.1 (BDC1 SP1, 5–200 cm)",
+      "default_source": "studio default, not a factory setting"
     }
   ],
   "options": [
@@ -44,7 +45,8 @@
         "normally open",
         "normally closed"
       ],
-      "default": null
+      "default": "normally open",
+      "default_source": "studio default, not a factory setting"
     }
   ],
   "port_class": "A",

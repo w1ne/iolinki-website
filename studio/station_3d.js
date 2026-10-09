@@ -211,7 +211,7 @@ function mountStation3d(container, view) {
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
     orbit.target.set(center.x, Math.min(center.y, 0.8), center.z);
-    orbit.radius = Math.max(7, Math.min(26, Math.hypot(size.x, size.z) * 0.95 + 2));
+    orbit.radius = Math.max(7, Math.min(26, Math.hypot(size.x, size.z) * 1.1 + 2.5));
   }
 
   function place() {
@@ -467,7 +467,26 @@ function mountStation3d(container, view) {
   }
   build();
   // Test hook: lets a headless check set the camera and re-render.
-  container.s3d = { orbit: orbit, render: render, scene: scene };
+  container.s3d = {
+    orbit: orbit,
+    render: render,
+    scene: scene,
+    fit: () => {
+      frame();
+      render();
+    },
+    view: (name) => {
+      frame();
+      if (name === "top") {
+        orbit.phi = 0.25;
+        orbit.theta = 0;
+      } else {
+        orbit.phi = 0.95;
+        orbit.theta = -0.55;
+      }
+      render();
+    },
+  };
   return build;
 }
 

@@ -32,7 +32,8 @@
       "unit": "% of sensing range",
       "min": 1,
       "max": 15,
-      "default": null
+      "default": 5,
+      "default_source": "studio default, not a factory setting"
     }
   ],
   "options": [
@@ -43,7 +44,8 @@
         "normally open",
         "normally closed"
       ],
-      "default": null
+      "default": "normally open",
+      "default_source": "studio default, not a factory setting"
     }
   ],
   "port_class": "A",

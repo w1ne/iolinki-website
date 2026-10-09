@@ -31,8 +31,9 @@
       "unit": "bar",
       "min": 1,
       "max": 100,
-      "default": null,
-      "iodd_index": "583 (SP_FH1, 10–1000 × 0.1 bar)"
+      "default": 25,
+      "iodd_index": "583 (SP_FH1, 10–1000 × 0.1 bar)",
+      "default_source": "IODD factory default"
     },
     {
       "key": "rp1",
@@ -40,9 +41,10 @@
       "unit": "bar",
       "min": 0.5,
       "max": 99.5,
-      "default": null,
+      "default": 23,
       "below": "sp1",
-      "iodd_index": "584 (RP_FL1, 5–995 × 0.1 bar)"
+      "iodd_index": "584 (RP_FL1, 5–995 × 0.1 bar)",
+      "default_source": "IODD factory default"
     }
   ],
   "options": [
@@ -53,7 +55,8 @@
         "normally open",
         "normally closed"
       ],
-      "default": null
+      "default": "normally open",
+      "default_source": "IODD factory default"
     }
   ],
   "port_class": "A",

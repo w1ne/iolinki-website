@@ -262,14 +262,17 @@ test("the text box picks the sensor whose unit and range fit", () => {
   });
 });
 
-test("values the datasheet leaves open are listed, and block the order", () => {
+test("IODD factory defaults fill what the job does not say", () => {
   const plan = engine.planFromText("watch pump pressure, switch at 40 bar", filed);
-  assert.ok(plan.todo.some((item) => /Reset|rP1|reset/i.test(item)), plan.todo.join(" | "));
+  assert.deepEqual(plan.todo, []);
+  const sensor = plan.station.items.find((item) => item.kind === "sensor");
+  assert.equal(sensor.settings.sp1, 40);
+  assert.equal(sensor.settings.rp1, 23);
+  assert.equal(sensor.options.output, "normally open");
   const order = engine.buyStation(plan.station, filed, { email: "a@b.co", plant: "Line 2" });
   assert.equal(order.ok, true);
-  assert.ok(order.notes.some((note) => /Reset point/.test(note)));
+  assert.deepEqual(order.notes, []);
 });
-
 test("a reset point above its set point is refused", () => {
   const def = filed.sensors.find((item) => item.part === "PN7092");
   const check = engine.checkSensor(def, { settings: { sp1: 40, rp1: 50 }, options: { output: "normally open" } });

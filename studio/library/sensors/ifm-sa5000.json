@@ -33,7 +33,8 @@
       "min": 5,
       "max": 100,
       "default": 20,
-      "iodd_index": "583 (SP_FH1_FLOW, % of measuring range end)"
+      "iodd_index": "583 (SP_FH1_FLOW, % of measuring range end)",
+      "default_source": "IODD factory default"
     },
     {
       "key": "flow_rp1",
@@ -43,7 +44,8 @@
       "max": 96,
       "default": 15,
       "below": "flow_sp1",
-      "iodd_index": "584 (rP_FL1_FLOW, %)"
+      "iodd_index": "584 (rP_FL1_FLOW, %)",
+      "default_source": "IODD factory default"
     }
   ],
   "options": [
