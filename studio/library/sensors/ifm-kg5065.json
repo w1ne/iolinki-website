@@ -1,0 +1,56 @@
+{
+  "id": "ifm-kg5065",
+  "kind": "sensor",
+  "category": "capacitive",
+  "part": "KG5065",
+  "vendor": "ifm electronic",
+  "vendor_id": 310,
+  "device_id": 387,
+  "in_catalog": true,
+  "measures": "presence of plastic, liquid or powder through non-metal walls (non-flush M18)",
+  "source_url": "https://docs.rs-online.com/f86e/A700000015266399.pdf",
+  "source": "ifm datasheet KG5065-02 (French): sensing range 12 mm, hysteresis 1...15 % of sensing range, NO/NC selectable, PNP/NPN, IO-Link 1.1 COM1, DeviceID 387, M18x1 body 87 mm long. No switch point range in mm is given, so only hysteresis is a setting.",
+  "job_words": [
+    "presence",
+    "detect",
+    "plastic",
+    "liquid",
+    "powder",
+    "fill",
+    "non-metal"
+  ],
+  "refused": [
+    "pressure",
+    "temperature",
+    "flow",
+    "distance"
+  ],
+  "settings": [
+    {
+      "key": "hysteresis",
+      "name": "Hysteresis",
+      "unit": "% of sensing range",
+      "min": 1,
+      "max": 15,
+      "default": null
+    }
+  ],
+  "options": [
+    {
+      "key": "output",
+      "name": "Output function",
+      "values": [
+        "normally open",
+        "normally closed"
+      ],
+      "default": null
+    }
+  ],
+  "port_class": "A",
+  "connector": "M12",
+  "size_mm": [
+    18,
+    87,
+    18
+  ]
+}

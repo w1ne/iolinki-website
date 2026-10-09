@@ -1,0 +1,17 @@
+{
+  "id": "ifm-al1301",
+  "kind": "master",
+  "part": "AL1301",
+  "vendor": "ifm electronic",
+  "vendor_id": 310,
+  "ports": 4,
+  "port_class": "A",
+  "fieldbus": "PROFINET (CC-C, IRT switch)",
+  "source_url": "https://docs.rs-online.com/0deb/A700000015314028.pdf",
+  "source": "ifm datasheet AL1301 (IO-Link Master DL PN 4P IP69K): number of ports class A 4, IO-Link 1.1, PROFINET interface; dimensions 152 x 59.3 x 38.4 mm.",
+  "size_mm": [
+    152,
+    59.3,
+    38.4
+  ]
+}

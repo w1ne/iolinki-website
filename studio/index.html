@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IO-Link station studio: build stations with ChatGPT | iolinki</title>
+  <meta name="description" content="Ask ChatGPT for an IO-Link station: it places sensors and masters, wires each port and checks every setting against the datasheet. Open it here and order the install." />
+  <link rel="stylesheet" href="studio.css" />
+
+    <!-- BEGIN GENERATED SEO -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="iolinki" />
+    <meta property="og:title" content="IO-Link station studio: build stations with ChatGPT | iolinki" />
+    <meta property="og:description" content="Ask ChatGPT for an IO-Link station: it places sensors and masters, wires each port and checks every setting against the datasheet. Open it here and order the install." />
+    <meta property="og:url" content="https://iolinki.com/studio/" />
+    <meta property="og:image" content="https://iolinki.com/assets/images/og-card.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="iolinki: IO-Link C stacks, IODD editor and MCP tools" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="IO-Link station studio: build stations with ChatGPT | iolinki" />
+    <meta name="twitter:description" content="Ask ChatGPT for an IO-Link station: it places sensors and masters, wires each port and checks every setting against the datasheet. Open it here and order the install." />
+    <meta name="twitter:image" content="https://iolinki.com/assets/images/og-card.png" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://iolinki.com/#organization","name":"iolinki","url":"https://iolinki.com/","logo":"https://iolinki.com/favicon.svg","sameAs":["https://github.com/w1ne/iolinki","https://github.com/w1ne/iolinki-master","https://github.com/w1ne/iolinki-website"]},{"@type":"WebSite","@id":"https://iolinki.com/#website","name":"iolinki","url":"https://iolinki.com/","inLanguage":"en","publisher":{"@id":"https://iolinki.com/#organization"}},{"@type":"WebPage","@id":"https://iolinki.com/studio/#webpage","url":"https://iolinki.com/studio/","name":"IO-Link station studio: build stations with ChatGPT | iolinki","description":"Ask ChatGPT for an IO-Link station: it places sensors and masters, wires each port and checks every setting against the datasheet. Open it here and order the install.","inLanguage":"en","isPartOf":{"@id":"https://iolinki.com/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"iolinki","item":"https://iolinki.com/"},{"@type":"ListItem","position":2,"name":"IO-Link station studio: build stations with ChatGPT","item":"https://iolinki.com/studio/"}]}]}</script>
+    <!-- END GENERATED SEO -->
+  </head>
+<body>
+  <header>
+    <a href="../index.html">iolinki</a>
+    <h1>iolinki studio</h1>
+    <p>Ask ChatGPT for the station. With the <a href="../iodd-mcp.html">iolinki connector</a> it places the machines, picks the sensors, wires each one to an IO-Link master port, and every setting is checked against the sensor's datasheet. The station opens here and in the chat. Adjust it if you want, then buy it and iolinki installs it. Payment is not taken here, and no settings have been written to a sensor.</p>
+  </header>
+  <main>
+    <form id="ask">
+      <label for="use-case">Describe the job</label>
+      <div class="ask-row">
+        <input id="use-case" type="text" value="Detect stainless at 3 mm, normally open, PNP." />
+        <button type="submit">Build</button>
+      </div>
+      <p id="ask-note"></p>
+    </form>
+
+    <div class="studio">
+      <aside id="palette" aria-label="Parts"></aside>
+      <div class="stage">
+        <canvas id="scene" class="station"></canvas>
+        <p class="hint">Drag a part to move it. Drag the floor to turn the view. Drag from the list, or click, to add.</p>
+      </div>
+      <aside id="inspector" aria-label="Selected part"></aside>
+    </div>
+
+    <section class="below">
+      <div>
+        <h2>Order</h2>
+        <div id="order"></div>
+        <form id="buy-form">
+          <label for="buyer-email">Email</label>
+          <input id="buyer-email" type="email" autocomplete="email" />
+          <label for="buyer-plant">Plant</label>
+          <input id="buyer-plant" type="text" autocomplete="organization" />
+          <button type="submit" id="buy">Buy and install</button>
+          <div id="order-note"></div>
+        </form>
+        <p class="tools"><button type="button" id="share">Copy station link</button> <button type="button" id="clear" class="quiet">Empty the floor</button></p>
+      </div>
+      <div>
+        <h2>IODD catalog</h2>
+        <label for="catalog-query">Search every IO-Link device in IODD Finder by part number</label>
+        <input id="catalog-query" type="search" placeholder="e.g. PN70, BOS 21M" />
+        <div id="catalog-results"></div>
+      </div>
+    </section>
+  </main>
+  <script src="library/browser_data.js"></script>
+  <script src="engine.js"></script>
+  <script src="station_view.js"></script>
+  <script src="page.js"></script>
+  <script src="/assets/js/analytics.js" defer></script>
+</body>
+</html>

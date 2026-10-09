@@ -1,0 +1,64 @@
+{
+  "id": "ifm-pn7092",
+  "kind": "sensor",
+  "category": "pressure",
+  "part": "PN7092",
+  "vendor": "ifm electronic",
+  "vendor_id": 310,
+  "device_id": 401,
+  "in_catalog": true,
+  "measures": "liquid pressure (relative), 0 to 100 bar",
+  "source_url": "https://www.tme.com/Document/64ce106eef60d69f10f5f260eb60985e/PN7092-02_EN-GB.pdf",
+  "source": "ifm datasheet PN7092-02: measuring range 0...100 bar; set point SP 1...100 bar, reset point rP 0.5...99.5 bar, steps 0.5 bar (factory mode, DeviceID 401); output NO/NC parameterisable; IO-Link 1.1, master port A; housing diameter 34 mm, length 90.7 mm. Factory defaults not stated in datasheet.",
+  "job_words": [
+    "pressure",
+    "hydraulic",
+    "pump",
+    "line pressure",
+    "liquid pressure"
+  ],
+  "refused": [
+    "temperature",
+    "flow",
+    "level",
+    "distance",
+    "presence"
+  ],
+  "settings": [
+    {
+      "key": "sp1",
+      "name": "Set point SP1",
+      "unit": "bar",
+      "min": 1,
+      "max": 100,
+      "default": null
+    },
+    {
+      "key": "rp1",
+      "name": "Reset point rP1",
+      "unit": "bar",
+      "min": 0.5,
+      "max": 99.5,
+      "default": null,
+      "below": "sp1"
+    }
+  ],
+  "options": [
+    {
+      "key": "output",
+      "name": "Output function",
+      "values": [
+        "normally open",
+        "normally closed"
+      ],
+      "default": null
+    }
+  ],
+  "port_class": "A",
+  "connector": "M12",
+  "size_mm": [
+    34,
+    90.7,
+    34
+  ]
+}

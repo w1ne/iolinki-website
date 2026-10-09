@@ -19,13 +19,17 @@ PAGES={
  'purchase.html':('IO-Link stack commercial licensing | iolinki','Explore commercial licensing for iolinki IO-Link device and master stacks. Review evaluation options and contact the developer for a product-family quote.'),
  'legal.html':('iolinki support, licensing & privacy information','Find iolinki support and seller details, software licensing information, website analytics preferences and hosted IODD MCP privacy and service terms.'),
  'iodd-editor.html':('Free online IODD editor for IO-Link devices | iolinki','Create, import, edit and validate IO-Link IODD XML and ZIP packages in your browser. Export XML, ZIPs and C mappings. Files stay local; no signup needed.'),
+ 'studio/index.html':('IO-Link station studio: build stations with ChatGPT | iolinki','Ask ChatGPT for an IO-Link station: it places sensors and masters, wires each port and checks every setting against the datasheet. Open it here and order the install.'),
  'iodd-mcp.html':('IO-Link IODD MCP server for ChatGPT & coding agents | iolinki','Create and check IO-Link IODDs with ChatGPT, Codex or Claude using the free iolinki MCP server. Export XML, ZIPs and firmware mappings; use hosted or local tools.'),
 }
 CALLBACKS=['purchase-success.html','purchase-cancelled.html','generic.html','elements.html']
 NS='http://www.sitemaps.org/schemas/sitemap/0.9'
 
+def page_url(name):
+ return ORIGIN+('/' if name=='index.html' else '/'+name[:-len('index.html')] if name.endswith('/index.html') else '/'+name)
+
 def render(name,src):
- title,description=PAGES[name];url=ORIGIN+('/' if name=='index.html' else '/'+name)
+ title,description=PAGES[name];url=page_url(name)
  src=re.sub(r'<title>.*?</title>','<title>'+html.escape(title)+'</title>',src,count=1,flags=re.S)
  src=re.sub(r'<meta\s+name="description"\s+content="[^"]*"\s*/?>','<meta name="description" content="'+html.escape(description,quote=True)+'" />',src,count=1,flags=re.S)
  src=re.sub(r'\s*<!-- BEGIN GENERATED SEO -->.*?<!-- END GENERATED SEO -->','',src,flags=re.S)
@@ -51,7 +55,7 @@ def generated():
   out[ROOT/name]=src
  ET.register_namespace('',NS)
  sitemap=ET.Element('{'+NS+'}urlset')
- urls=[ORIGIN+('/' if name=='index.html' else '/'+name) for name in PAGES]
+ urls=[page_url(name) for name in PAGES]
  urls += ['https://iolinki.com/terms/purchase-terms.html']
  urls += [e.text for e in ET.parse(ROOT/'docs/sitemap.xml').iter('{'+NS+'}loc')]
  for url in dict.fromkeys(urls):

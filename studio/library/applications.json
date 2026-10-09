@@ -1,0 +1,16 @@
+[
+  { "id": "part-presence", "title": "Part presence at a stop", "sensor": "ifm-ig6214",
+    "items": [ { "ref": "conveyor", "at": [-1.5, 0] }, { "ref": "stop", "at": [3, 0] }, { "ref": "ifm-ig6214", "at": [4.6, 0] }, { "ref": "cabinet", "at": [-5.5, -3.6] } ] },
+  { "id": "box-on-conveyor", "title": "Object distance on a conveyor", "sensor": "ifm-o5d100",
+    "items": [ { "ref": "conveyor", "at": [0, 0] }, { "ref": "ifm-o5d100", "at": [0, -1.4] }, { "ref": "cabinet", "at": [-5.5, -3.6] } ] },
+  { "id": "pump-pressure", "title": "Pump discharge pressure", "sensor": "ifm-pn7092",
+    "items": [ { "ref": "pump", "at": [-2, 0] }, { "ref": "pipe", "at": [2, 0] }, { "ref": "ifm-pn7092", "at": [1, 0.6] }, { "ref": "cabinet", "at": [-5.5, -3.6] } ] },
+  { "id": "line-flow", "title": "Coolant flow in a pipe", "sensor": "ifm-sa5000",
+    "items": [ { "ref": "pump", "at": [-2, 0] }, { "ref": "pipe", "at": [2, 0] }, { "ref": "ifm-sa5000", "at": [2.5, 0.6] }, { "ref": "cabinet", "at": [-5.5, -3.6] } ] },
+  { "id": "tank-level", "title": "Tank level", "sensor": "ifm-lr2050",
+    "items": [ { "ref": "tank", "at": [0, 0] }, { "ref": "ifm-lr2050", "at": [1.3, 0] }, { "ref": "cabinet", "at": [-5.5, -3.6] } ] },
+  { "id": "tank-temperature", "title": "Tank temperature", "sensor": "ifm-ta2105",
+    "items": [ { "ref": "tank", "at": [0, 0] }, { "ref": "ifm-ta2105", "at": [1.3, 0.6] }, { "ref": "cabinet", "at": [-5.5, -3.6] } ] },
+  { "id": "hopper-fill", "title": "Fill detection through a hopper wall", "sensor": "ifm-kg5065",
+    "items": [ { "ref": "tank", "at": [0, 0] }, { "ref": "ifm-kg5065", "at": [1.3, -0.4] }, { "ref": "cabinet", "at": [-5.5, -3.6] } ] }
+]
