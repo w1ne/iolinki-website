@@ -1,7 +1,7 @@
 interface:
   display_name: "iolinki"
-  short_description: "Build IO-Link stations, IODDs and firmware"
-  default_prompt: "Use $iolinki to author and validate my sensor IODD, export recoverable artifacts, and compile/verify its supported sensor application with LabWired if connected."
+  short_description: "IO-Link stations and IODDs"
+  default_prompt: "Use $iolinki to plan and wire an IO-Link station, or to author, validate and export my sensor IODD."
 dependencies:
   tools:
     - type: "mcp"

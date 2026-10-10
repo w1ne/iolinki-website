@@ -21,7 +21,7 @@
     "com.openai": {
       "interface": {
         "displayName": "iolinki",
-        "shortDescription": "Build IO-Link stations and IODDs",
+        "shortDescription": "IO-Link stations and IODDs",
         "developerName": "Andrii Shylenko",
         "category": "Developer Tools",
         "websiteURL": "https://iolinki.com/iodd-mcp.html",
