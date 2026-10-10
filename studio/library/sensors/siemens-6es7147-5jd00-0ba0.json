@@ -1,0 +1,18 @@
+{
+  "id": "siemens-6es7147-5jd00-0ba0",
+  "kind": "master",
+  "part": "SIMATIC ET 200AL CM 4x IO-Link (6ES7147-5JD00-0BA0)",
+  "vendor": "Siemens",
+  "ports": 4,
+  "port_class": "B",
+  "fieldbus": "PROFINET (also PROFIBUS GSD)",
+  "ip": "IP65/IP67",
+  "connector": "M12 5-pin (ports), M8 4-pin (supply)",
+  "size_mm": [
+    30,
+    159,
+    40
+  ],
+  "source_url": "https://cache.industry.siemens.com/dl/files/868/89254868/att_910050/v1/et200al_cm_4xio-link_4xm12_manual_en-US_en-US.pdf",
+  "source": "Siemens ET 200AL CM 4x IO-Link manual (04/2021): '4 ports, type class B'; 'The M12 connectors are designed according to IO-Link specification as port type Class B. Pins 2 and 5 contain an additional power supply.'; 'IO-Link Master according to IO-Link specification V1.1'; datasheet (FS05): 'Port type A Yes; via 3-core cable', 'Port type B Yes', 'IP degree of protection IP65/67', 'Width 30 mm / Height 159 mm / Depth 40 mm'. Vendor ID not published for this module."
+}

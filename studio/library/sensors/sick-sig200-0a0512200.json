@@ -1,0 +1,18 @@
+{
+  "id": "sick-sig200-0a0512200",
+  "kind": "master",
+  "part": "SIG200-0A0512200 (1089796)",
+  "vendor": "SICK",
+  "ports": 4,
+  "port_class": "A",
+  "fieldbus": "EtherNet/IP",
+  "ip": "IP67",
+  "connector": "M12 5-pin A-coded (ports), M12 D-coded (Ethernet), M12 4-pin A-coded (power)",
+  "size_mm": [
+    213.9,
+    57,
+    38.3
+  ],
+  "source_url": "https://www.sick.com/media/pdf/5/45/945/dataSheet_SIG200-0A0512200_1089796_en.pdf",
+  "source": "SICK SIG200-0A0512200 datasheet 2026-05-01: 'Number of IO-Link ports 4'; 'Port Class A'; 'IO-Link version V1.1, V1.0'; 'Enclosure rating IP67'; 'Dimensions (L x W x H) 213.9 mm x 57 mm x 38.3 mm'. Vendor ID and cable length not published. The PROFINET base type sheet could not be opened."
+}

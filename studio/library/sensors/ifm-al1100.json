@@ -1,0 +1,18 @@
+{
+  "id": "ifm-al1100",
+  "kind": "master",
+  "part": "AL1100",
+  "vendor": "ifm electronic",
+  "ports": 4,
+  "port_class": "A",
+  "fieldbus": "PROFINET (CC-C, IRT switch)",
+  "ip": "IP65/IP66/IP67",
+  "connector": "M12 A-coded (IO-Link), M12 D-coded (Ethernet), M12 A-coded (power)",
+  "size_mm": [
+    152,
+    59.3,
+    38.4
+  ],
+  "source_url": "https://media.ifm.com/dam/8eabb332-e850-4c1a-9579-739b7b521e54/Original/AL1100-01_EN-GB.pdf",
+  "source": "ifm AL1100-01 (27.08.2024), 'IO-Link Master SL PN 4P IP67': 'Number of ports class A 4'; 'IO-Link revision 1.1'; 'CC-C (Conformance Class C) (IRT-Switch)'; 'Protection IP 65; IP 66; IP 67'; '4 x M12; coding: A; Contacts: 4'; 'Dimensions [mm] 152 x 59.3 x 38.4'. Vendor ID not stated in the datasheet."
+}

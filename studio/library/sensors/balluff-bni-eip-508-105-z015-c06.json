@@ -1,0 +1,18 @@
+{
+  "id": "balluff-bni-eip-508-105-z015-c06",
+  "kind": "master",
+  "part": "BNI EIP-508-105-Z015-C06",
+  "vendor": "Balluff",
+  "ports": 8,
+  "port_class": "A",
+  "fieldbus": "EtherNet/IP",
+  "ip": "IP67",
+  "connector": "M12 A-coded (I/O, 8 sockets), M12 D-coded (Ethernet), 7/8\" 4-pin (power)",
+  "size_mm": [
+    68,
+    224,
+    37.9
+  ],
+  "source_url": "https://assets.balluff.com/WebBinary1/MAN_BNI_EIP_508_105_Z015_C06_EN_G17_DOK_898159_04_000.pdf",
+  "source": "Balluff user's guide BNI EIP-508-105-Z015-C06 (order code BNI007C): '508 = IP 67 IO-Link Master-Module, 8 IO-Link ports'; 'ports 0-3 and 4-7 IN / OUT / IO-Link'; 'IP 67 (only when plugged-in and threaded-in)'; 'Dimensions (W x H x D in mm) 68 x 224 x 37.9'. The guide never states 'class A'; port_class A is read from the pinout '5 n.a.' and the 4-pin 7/8\" supply (no aux supply). Vendor ID and IO-Link spec version not stated."
+}
