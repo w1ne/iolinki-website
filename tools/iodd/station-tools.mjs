@@ -11,8 +11,8 @@ export const CATALOG_ORIGIN = "https://iolinki-iodd-catalog.shylenkoa.workers.de
 const IODD_REF = /^iodd-(\d+)-(\d+)$/;
 const MAX_IODD_PARTS = 12;
 const WIDGET_META = {
-  "openai/widgetDescription": "3D view of an IO-Link station: machines, sensors, masters and the cable from each master port, with datasheet problems, the order list and a buy button.",
-  "openai/widgetPrefersBorder": true,
+  "openai/widgetDescription": "Interactive 3D IO-Link station: machines, sensors, masters and cables, with Run (live sensor switching and process data), wiring, port table, installer notes, the order and a Buy button. It already shows the order and notes, so the reply should stay short.",
+  "openai/widgetPrefersBorder": false,
   "openai/widgetCSP": { connect_domains: [], resource_domains: [] },
 };
 
@@ -139,7 +139,10 @@ export function registerStationTools(server, { catalogFetch = (url) => fetch(url
       built.check.issues = problems.concat(built.check.issues);
       built.check.ok = built.check.issues.length === 0;
       const data = Object.assign({ title: title || "IO-Link station" }, summary(built, library, extra));
-      const text = (data.ok ? "Station is inside every datasheet. " : data.issues.length + " issue(s): " + data.issues.map((issue) => issue.problem).join(" ") + " ") + "Studio: " + data.studio_link;
+      // The widget shows the station, notes and order; the reply only needs a line or two.
+      const text = "The station is shown in the iolinki widget (3D view, Run, wiring, ports, order, Buy). Keep the reply short and do not repeat the order list. " +
+        (data.ok ? "Every setting is inside its datasheet or IODD." : data.issues.length + " note(s) for the installer: " + data.issues.map((issue) => issue.problem).join(" ")) +
+        " Studio link: " + data.studio_link;
       return { content: [{ type: "text", text }], structuredContent: data };
     },
   );
