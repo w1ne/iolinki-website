@@ -8,6 +8,10 @@ workers_dev = true
 [vars]
 PUBLIC_ORIGIN = "https://mcp.iolinki.com"
 
+[[services]]
+binding = "CATALOG"
+service = "iolinki-iodd-catalog"
+
 [[durable_objects.bindings]]
 name = "IODD_SESSIONS"
 class_name = "IoddMcpSessions"

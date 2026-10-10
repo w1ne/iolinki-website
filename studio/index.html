@@ -25,55 +25,85 @@
     <!-- END GENERATED SEO -->
   </head>
 <body>
-  <header>
-    <a href="../index.html">iolinki</a>
-    <h1>iolinki studio</h1>
-    <p>Ask ChatGPT for the station. With the <a href="../iodd-mcp.html">iolinki connector</a> it places the machines, picks the sensors, wires each one to an IO-Link master port, and every setting is checked against the sensor's datasheet. The station opens here and in the chat. Adjust it if you want, then buy it and iolinki installs it. Payment is not taken here, and no settings have been written to a sensor.</p>
-  </header>
-  <main>
-    <form id="ask">
-      <label for="use-case">Describe the job</label>
-      <div class="ask-row">
-        <input id="use-case" type="text" value="Detect stainless at 3 mm, normally open, PNP." />
-        <button type="submit">Build</button>
-      </div>
-      <p id="ask-note"></p>
-    </form>
-
-    <div class="studio">
-      <aside id="palette" aria-label="Parts"></aside>
-      <div class="stage">
-        <canvas id="scene" class="station"></canvas>
-        <p class="hint">Drag a part to move it. Drag the floor to turn the view. Drag from the list, or click, to add.</p>
-      </div>
-      <aside id="inspector" aria-label="Selected part"></aside>
+  <header class="topbar">
+    <a class="brand" href="../index.html" aria-label="iolinki home"><span class="logo">io</span>linki</a>
+    <span class="divider"></span>
+    <div class="title">
+      <h1>Station studio</h1>
+      <div class="chips" id="summary"></div>
     </div>
+    <div class="top-actions">
+      <button type="button" class="ghost" id="share" title="Copy a link that opens this station">Share</button>
+      <div class="menu">
+        <button type="button" class="ghost" id="export-toggle" aria-haspopup="true" aria-expanded="false">Export</button>
+        <div class="menu-list" id="export-menu" hidden>
+          <button type="button" id="csv-order">Order list (CSV)</button>
+          <button type="button" id="csv-ports">Port table (CSV)</button>
+        </div>
+      </div>
+      <button type="button" class="primary" id="buy-open">Buy and install</button>
+    </div>
+  </header>
 
-    <section class="below">
-      <div>
-        <h2>Order</h2>
-        <div id="order"></div>
-        <form id="buy-form">
-          <label for="buyer-email">Email</label>
-          <input id="buyer-email" type="email" autocomplete="email" />
-          <label for="buyer-plant">Plant</label>
-          <input id="buyer-plant" type="text" autocomplete="organization" />
-          <button type="submit" id="buy">Buy and install</button>
-          <div id="order-note"></div>
-        </form>
-        <p class="tools"><button type="button" id="share">Copy station link</button> <button type="button" id="clear" class="quiet">Empty the floor</button></p>
+  <main class="app">
+    <aside class="panel library" aria-label="Parts">
+      <div class="search">
+        <input id="part-search" type="search" placeholder="Search parts or any IO-Link device" autocomplete="off" />
       </div>
-      <div>
-        <h2>IODD catalog</h2>
-        <label for="catalog-query">Search every IO-Link device in IODD Finder by part number</label>
-        <input id="catalog-query" type="search" placeholder="e.g. PN70, BOS 21M" />
-        <div id="catalog-results"></div>
+      <div class="segmented" role="tablist">
+        <button type="button" data-group="sensor" class="on">Sensors</button>
+        <button type="button" data-group="master">Masters</button>
+        <button type="button" data-group="equipment">Machines</button>
       </div>
+      <div id="parts" class="parts"></div>
+      <div id="catalog" class="catalog"></div>
+    </aside>
+
+    <section class="stage-wrap">
+      <div class="stage-bar">
+        <div class="tabs" role="tablist">
+          <button type="button" data-view="3d" class="on">3D</button>
+          <button type="button" data-view="wiring">Wiring</button>
+          <button type="button" data-view="ports">Ports</button>
+        </div>
+        <button type="button" class="run" id="run" title="Run the station: the machines move and every sensor switches on its own settings"><span class="run-icon" aria-hidden="true"></span><span id="run-label">Run</span></button>
+        <div class="view-tools" id="view-tools">
+          <button type="button" data-cam="fit" title="Fit the station">Fit</button>
+          <button type="button" data-cam="iso" title="3D view">3D</button>
+          <button type="button" data-cam="top" title="Top view">Top</button>
+        </div>
+      </div>
+      <div class="stage">
+        <div id="scene" class="pane"></div>
+        <div id="wiring" class="pane doc" hidden></div>
+        <div id="ports" class="pane doc" hidden></div>
+        <div id="empty" class="empty" hidden>
+          <h2>Ask ChatGPT for a station</h2>
+          <p>With the <a href="../iodd-mcp.html">iolinki connector</a>, ChatGPT picks the sensors, places them and wires each one to a master port. The station opens here.</p>
+          <form id="ask" class="ask">
+            <input id="use-case" type="text" placeholder="Or describe one job, e.g. detect stainless at 3 mm" />
+            <button type="submit" class="primary">Start</button>
+          </form>
+          <div class="examples" id="examples"></div>
+          <p class="muted" id="ask-note"></p>
+        </div>
+      </div>
+      <div class="stage-foot">
+        <span class="muted" id="stage-hint">Drag parts to move · drag the floor to orbit · scroll to zoom · Del removes · Ctrl+Z undoes · Space runs</span>
+        <button type="button" class="notes-pill" id="notes-pill" hidden></button>
+      </div>
+      <div class="notes-list" id="notes-list" hidden></div>
     </section>
+
+    <aside class="panel inspector" id="inspector" aria-label="Selected part"></aside>
   </main>
+
   <script src="library/browser_data.js"></script>
+  <script src="vendor/three.min.js"></script>
   <script src="engine.js"></script>
-  <script src="station_view.js"></script>
+  <script src="station_sim.js"></script>
+  <script src="station_3d.js"></script>
+  <script src="station_tables.js"></script>
   <script src="page.js"></script>
   <script src="/assets/js/analytics.js" defer></script>
 </body>

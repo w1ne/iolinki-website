@@ -32,7 +32,9 @@
       "unit": "mm",
       "min": 15,
       "max": 1970,
-      "default": null
+      "default": 60,
+      "iodd_index": "583 (SP_FH1, 15–1970 mm)",
+      "default_source": "IODD factory default"
     },
     {
       "key": "rp",
@@ -40,8 +42,10 @@
       "unit": "mm",
       "min": 10,
       "max": 1965,
-      "default": null,
-      "below": "sp"
+      "default": 55,
+      "below": "sp",
+      "iodd_index": "584 (rP_FL1, 10–1965 mm)",
+      "default_source": "IODD factory default"
     }
   ],
   "options": [],
@@ -51,5 +55,32 @@
     50,
     119,
     50
-  ]
+  ],
+  "iodd": {
+    "file": "ifm-0001DF-20150720-IODD1.1.xml",
+    "iodd_finder_id": 378,
+    "min_cycle_ms": 2.3,
+    "bitrate": "COM2",
+    "pd_in_bits": 16,
+    "pd_in": [
+      {
+        "name": "Level",
+        "bit_offset": 2,
+        "bits": 14,
+        "gradient": 1,
+        "unit": "mm"
+      },
+      {
+        "name": "OUT2",
+        "bit_offset": 1,
+        "bits": 1
+      },
+      {
+        "name": "OUT1",
+        "bit_offset": 0,
+        "bits": 1
+      }
+    ],
+    "pd_out_bits": 0
+  }
 }

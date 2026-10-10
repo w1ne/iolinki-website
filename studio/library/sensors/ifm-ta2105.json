@@ -9,7 +9,7 @@
   "in_catalog": true,
   "measures": "medium temperature in liquids and gases",
   "source_url": "https://core.instrumart.com/assets/ifm-efector-ta2-series-temperature-transmitter-datasheets.pdf",
-  "source": "ifm datasheet TA2105-00 (13.04.2023): measuring range -50...150 C, factory setting -50...150 C (no separate setting range given, so measuring range is used); Pt1000, analog 4...20 mA and IO-Link 1.1; DeviceID 377; probe 6 mm, body diameter 18.7 mm, length 88.9 mm.",
+  "source": "ifm datasheet TA2105-00 (13.04.2023): measuring range -50...150 C, factory setting -50...150 C (no separate setting range given, so measuring range is used); Pt1000, analog 4...20 mA and IO-Link 1.1; DeviceID 377; probe 6 mm, body diameter 18.7 mm, length 88.9 mm. Setting ranges from IODD ifm-000179-20200114-IODD1.1.xml: ASP2 -50.0–145.0 °C, AEP2 -45.0–150.0 °C.",
   "job_words": [
     "temperature",
     "heat",
@@ -28,19 +28,24 @@
   "settings": [
     {
       "key": "span_start",
-      "name": "Analog output start (4 mA)",
+      "name": "Analogue start point ASP2",
       "unit": "°C",
       "min": -50,
-      "max": 150,
-      "default": -50
+      "max": 145,
+      "default": -50,
+      "below": "span_end",
+      "iodd_index": "630 (ASP2, -500–1450 × 0.1 °C)",
+      "default_source": "IODD factory default"
     },
     {
       "key": "span_end",
-      "name": "Analog output end (20 mA)",
+      "name": "Analogue end point AEP2",
       "unit": "°C",
-      "min": -50,
+      "min": -45,
       "max": 150,
-      "default": 150
+      "default": 150,
+      "iodd_index": "631 (AEP2, -450–1500 × 0.1 °C)",
+      "default_source": "IODD factory default"
     }
   ],
   "options": [],
@@ -50,5 +55,22 @@
     18.7,
     88.9,
     18.7
-  ]
+  ],
+  "iodd": {
+    "file": "ifm-000179-20200114-IODD1.1.xml",
+    "iodd_finder_id": 9100,
+    "min_cycle_ms": 2.3,
+    "bitrate": "COM2",
+    "pd_in_bits": 16,
+    "pd_in": [
+      {
+        "name": "Temperature",
+        "bit_offset": 0,
+        "bits": 16,
+        "gradient": 0.1,
+        "unit": "°C"
+      }
+    ],
+    "pd_out_bits": 0
+  }
 }

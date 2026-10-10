@@ -7,6 +7,8 @@
 const CONDUCTORS = ["L+", "L-", "C/Q"];
 const FLOOR = [14, 9];
 const SENSOR_HEIGHT = 1.3;
+// IEC 61131-9 limits an IO-Link cable between master port and device to 20 m.
+const IOLINK_MAX_CABLE_M = 20;
 
 function byId(library, ref) {
   return (library.sensors || []).find((def) => def.id === ref)
@@ -57,6 +59,35 @@ function freeSpot(station) {
   return [0, 0];
 }
 
+// Where a new part goes when it is added without a spot: a sensor on the
+// machine it measures, a master by the control cabinet.
+const MOUNTS = {
+  pressure: { pipe: [[0.8, 0.45], [-0.8, 0.45], [1.6, 0.45], [-1.6, 0.45]], pump: [[0.8, 0.6]] },
+  flow: { pipe: [[1.2, 0.45], [-1.2, 0.45], [0, 0.45]] },
+  level: { tank: [[1.3, 0], [0, 1.3], [-1.3, 0]] },
+  temperature: { tank: [[1.3, 0.6], [0.6, 1.3], [-1.3, 0.6]], pipe: [[-0.4, 0.45]] },
+  capacitive: { tank: [[-1.1, 0.8]], conveyor: [[-1, 0.9]] },
+  inductive: { stop: [[1.6, 0]], conveyor: [[1, 0.9], [-1, 0.9], [2, 0.9]], press: [[1.3, 0.9]] },
+  "optical distance": { conveyor: [[0, -1.2], [1.5, -1.2], [-1.5, -1.2]], stop: [[0.6, -1.3]] },
+  master: { cabinet: [[1.3, 0.5], [-1.3, 0.5], [1.3, 1.3]] },
+};
+
+function mountSpot(station, def) {
+  const slots = MOUNTS[def.kind === "master" ? "master" : def.category] || {};
+  for (const ref of Object.keys(slots)) {
+    for (const machine of station.items.filter((item) => item.ref === ref)) {
+      for (const offset of slots[ref]) {
+        const at = [machine.at[0] + offset[0], machine.at[1] + offset[1]];
+        const taken = station.items.some((item) => item.kind !== "equipment" && Math.hypot(item.at[0] - at[0], item.at[1] - at[1]) < 0.5);
+        if (!taken) {
+          return at;
+        }
+      }
+    }
+  }
+  return null;
+}
+
 function defaults(def) {
   const settings = {};
   (def.settings || []).forEach((setting) => {
@@ -75,7 +106,7 @@ function addItem(station, library, ref, at, deferPorts) {
     return null;
   }
   const kind = def.kind || "equipment";
-  const item = { uid: nextUid(station, kind === "equipment" ? "eq" : kind), kind: kind, ref: ref, at: clampToFloor(station, at || freeSpot(station)) };
+  const item = { uid: nextUid(station, kind === "equipment" ? "eq" : kind), kind: kind, ref: ref, at: clampToFloor(station, at || (kind !== "equipment" && mountSpot(station, def)) || freeSpot(station)) };
   if (kind === "sensor") {
     const values = defaults(def);
     item.settings = values.settings;
@@ -194,7 +225,7 @@ function checkSensor(def, item) {
     const given = item.settings ? item.settings[setting.key] : undefined;
     const raw = given === undefined ? setting.default : given;
     if (raw === null || raw === undefined || raw === "") {
-      problems.push({ unset: true, text: "Set " + setting.name + " (" + setting.min + "–" + setting.max + " " + setting.unit + "). The datasheet gives no default." });
+      problems.push({ unset: true, text: "Set " + setting.name + " (" + setting.min + "–" + setting.max + " " + setting.unit + "). The " + (def.source_kind === "iodd" ? "IODD" : "datasheet") + " gives no default." });
       return;
     }
     const real = Number(raw);
@@ -265,7 +296,107 @@ function checkStation(station, library) {
       }
     }
   });
+  powerBudget(station, library).masters.forEach((master) => {
+    master.problems.forEach((problem) => issues.push({ uid: master.uid, problem: problem }));
+  });
+  cables(station, library).forEach((cable) => {
+    const master = station.items.find((item) => item.uid === cable.from);
+    const def = master && byId(library, master.ref);
+    const limit = (def && def.power && def.power.max_cable_m) || IOLINK_MAX_CABLE_M;
+    if (cableLength(cable) > limit) {
+      issues.push({ uid: cable.to, problem: "The cable from " + cable.from + " X" + cable.port + " to " + cable.to + " runs " + Math.round(cableLength(cable)) + " m. IO-Link allows " + limit + " m. Move the sensor or add a master closer to it." });
+    }
+  });
   return { ok: issues.length === 0, issues: issues };
+}
+
+// Sensor supply current per master port and per master, from the filed
+// datasheet figures. Parts without a filed figure are listed, not guessed.
+function powerBudget(station, library) {
+  const masters = station.items.filter((item) => item.kind === "master").map((master) => {
+    const def = byId(library, master.ref) || {};
+    const limits = def.power || {};
+    const ports = [];
+    const unknown = [];
+    const voltage = [];
+    let total = 0;
+    station.items.filter((item) => item.kind === "sensor" && item.master === master.uid).forEach((sensor) => {
+      const sensorDef = byId(library, sensor.ref) || {};
+      const ma = sensorDef.power && sensorDef.power.current_ma;
+      if (typeof ma !== "number") {
+        unknown.push(sensorDef.part || sensor.ref);
+        return;
+      }
+      total += ma;
+      ports.push({ port: sensor.port, uid: sensor.uid, part: sensorDef.part, ma: ma });
+      const need = sensorDef.power.supply_v;
+      const give = limits.supply_v;
+      if (need && give && (give[0] < need[0] || give[1] > need[1])) {
+        voltage.push(sensorDef.part + " runs on " + need[0] + "–" + need[1] + " V; " + def.part + " supplies " + give[0] + "–" + give[1] + " V.");
+      }
+    });
+    const problems = voltage.slice();
+    ports.forEach((row) => {
+      if (limits.port_supply_a && row.ma > limits.port_supply_a * 1000) {
+        problems.push(row.part + " on " + master.uid + " X" + row.port + " draws " + row.ma + " mA; the port supplies " + limits.port_supply_a * 1000 + " mA.");
+      }
+    });
+    if (limits.total_supply_a && total > limits.total_supply_a * 1000) {
+      problems.push(master.uid + " sensors draw " + total + " mA; " + def.part + " supplies " + limits.total_supply_a * 1000 + " mA in total.");
+    }
+    return { uid: master.uid, part: def.part, total_ma: total, port_limit_ma: limits.port_supply_a ? limits.port_supply_a * 1000 : null, total_limit_ma: limits.total_supply_a ? limits.total_supply_a * 1000 : null, ports: ports, unknown: unknown, problems: problems };
+  });
+  return { masters: masters };
+}
+
+// What a PLC engineer needs per port, read from the device's IODD.
+function portTable(station, library) {
+  return station.items.filter((item) => item.kind === "sensor" && item.master).sort((a, b) => (a.master + a.port).localeCompare(b.master + b.port, undefined, { numeric: true })).map((sensor) => {
+    const def = byId(library, sensor.ref) || {};
+    const iodd = def.iodd || {};
+    return {
+      master: sensor.master,
+      port: sensor.port,
+      uid: sensor.uid,
+      part: def.part,
+      vendor_id: def.vendor_id,
+      device_id: def.device_id,
+      min_cycle_ms: iodd.min_cycle_ms,
+      bitrate: iodd.bitrate,
+      pd_in_bits: iodd.pd_in_bits,
+      pd_out_bits: iodd.pd_out_bits,
+      pd_in: iodd.pd_in || [],
+      iodd: iodd.file,
+      parameters: checkSensor(def, sensor).parameters,
+    };
+  });
+}
+
+function csvRow(cells) {
+  return cells.map((cell) => {
+    const text = cell === undefined || cell === null ? "" : String(cell);
+    return /[",\n]/.test(text) ? "\"" + text.replace(/"/g, "\"\"") + "\"" : text;
+  }).join(",");
+}
+
+function orderCsv(station, library) {
+  const rows = new Map();
+  orderLines(station, library).forEach((line) => {
+    const key = line.kind + "|" + line.part;
+    const row = rows.get(key) || { qty: 0, kind: line.kind, vendor: line.vendor || "", part: line.part, vendor_id: line.vendor_id, device_id: line.device_id };
+    row.qty += 1;
+    rows.set(key, row);
+  });
+  return [csvRow(["qty", "kind", "vendor", "part", "vendor_id", "device_id"])].concat(Array.from(rows.values()).map((row) => csvRow([row.qty, row.kind, row.vendor, row.part, row.vendor_id, row.device_id]))).join("\n") + "\n";
+}
+
+function portCsv(station, library) {
+  return [csvRow(["master", "port", "tag", "part", "vendor_id", "device_id", "min_cycle_ms", "pd_in_bits", "pd_in_layout", "settings", "iodd"])].concat(portTable(station, library).map((row) => csvRow([
+    row.master, "X" + row.port, row.uid, row.part, row.vendor_id, row.device_id, row.min_cycle_ms, row.pd_in_bits,
+    row.pd_in.map((item) => item.name + "@" + item.bit_offset + ":" + item.bits).join("; "),
+    row.parameters.map((p) => p.name + "=" + p.value).join("; "),
+    row.iodd,
+  ]))).join("\n") + "\n";
 }
 
 function portPoint(master, port, ports) {
@@ -312,8 +443,8 @@ function cableLength(cable) {
   return total;
 }
 
-// Standard M12 cable lengths an installer stocks, in metres.
-const CABLE_STOCK = [1, 2, 5, 10, 15, 20, 25];
+// Standard M12 cable lengths an installer stocks, in metres, up to the IO-Link limit.
+const CABLE_STOCK = [1, 2, 5, 10, 15, 20];
 
 function orderLines(station, library) {
   const lines = [];
@@ -347,9 +478,6 @@ function buyStation(station, library, buyer) {
   if (!lines.some((line) => line.kind === "sensor")) {
     return { ok: false, paid: false, reason: "Add a sensor. There is nothing to buy." };
   }
-  if (!check.ok) {
-    return { ok: false, paid: false, reason: "Fix the station first: " + check.issues[0].problem };
-  }
   const email = String(buyer && buyer.email || "").trim();
   const plant = String(buyer && buyer.plant || "").trim();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -367,6 +495,7 @@ function buyStation(station, library, buyer) {
     email: email,
     plant: plant,
     lines: lines,
+    notes: check.issues.map((issue) => issue.problem),
     link: encodeStation(station),
   };
 }
@@ -389,6 +518,7 @@ function orderText(order) {
     "",
     rows.join("\n"),
     "",
+    order.notes && order.notes.length ? "Notes to check before install:\n" + order.notes.map((note) => "- " + note).join("\n") + "\n" : "",
     "Station: " + order.link,
     "Payment is not taken on the studio page. Settings have not been written to a sensor.",
   ].join("\n");
@@ -588,7 +718,7 @@ function hasWord(text, word) {
   return new RegExp("(^|[^a-z0-9])" + escaped + "($|[^a-z0-9])").test(text);
 }
 
-const UNIT_WORDS = { "°c": ["°c", "degc", "deg c", "c", "degrees"], "m/s": ["m/s"], "bar": ["bar"], "mm": ["mm"] };
+const UNIT_WORDS = { "°c": ["°c", "degc", "deg c", "c", "degrees"], "m/s": ["m/s"], "bar": ["bar"], "mm": ["mm"], "%": ["%", "percent"] };
 
 function readValue(job, unit) {
   const key = String(unit || "").toLowerCase();
@@ -605,13 +735,13 @@ function markFiled(library, rows) {
   const seen = new Set();
   const hits = [];
   (rows || []).forEach((row) => {
-    const hit = { vendor: row.vendorName, vendor_id: row.vendorId, device_id: row.deviceId, part: row.productName, revision: row.ioLinkRev };
+    const hit = { vendor: row.vendorName, vendor_id: row.vendorId, device_id: row.deviceId, iodd_id: row.ioddId, part: row.productName, revision: row.ioLinkRev };
     const key = hit.vendor_id + ":" + hit.device_id + ":" + String(hit.part).toLowerCase();
     if (seen.has(key)) {
       return;
     }
     seen.add(key);
-    const filed = (library.sensors || []).find((def) => def.vendor_id === hit.vendor_id && def.device_id === hit.device_id && def.part.toLowerCase() === String(hit.part).toLowerCase());
+    const filed = (library.sensors || []).find((def) => !def.source_kind && def.vendor_id === hit.vendor_id && def.device_id === hit.device_id && def.part.toLowerCase() === String(hit.part).toLowerCase());
     hit.filed = filed ? filed.id : null;
     hits.push(hit);
   });
@@ -703,5 +833,6 @@ if (typeof module !== "undefined") {
     newStation, addItem, removeItem, assignPorts, setPort, checkSensor, checkStation, cables, orderLines,
     buyStation, orderText, orderMail, encodeStation, decodeStation, fromSpec, describeLibrary, planFromText,
     markFiled, fromDiagram, toDiagram, byId, FLOOR, SENSOR_HEIGHT, CATALOG_SEARCH,
+    powerBudget, portTable, orderCsv, portCsv, cableLength,
   };
 }

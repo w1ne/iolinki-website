@@ -23,6 +23,7 @@ export class IoddHttpHost {
     externalValidation,
     projectVaultFactory,
     firmwareKit,
+    catalogFetch,
   } = {}) {
     Object.assign(this, {
       loadTemplate,
@@ -37,6 +38,7 @@ export class IoddHttpHost {
       externalValidation,
       projectVaultFactory,
       firmwareKit,
+      catalogFetch,
     });
     if (artifactOrigin !== undefined) {
       const origin = new URL(artifactOrigin);
@@ -133,6 +135,7 @@ export class IoddHttpHost {
         externalValidation: this.externalValidation,
         projectVault: this.projectVaultFactory?.(sessionId),
         firmwareKit: this.firmwareKit,
+        catalogFetch: this.catalogFetch,
         maxBytes: this.maxProjectBytes,
         publishArtifact: async ({ bytes, filename, mimeType }) => {
           await this.prune();

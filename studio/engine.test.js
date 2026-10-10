@@ -148,17 +148,18 @@ test("a station survives the share link", () => {
   assert.equal(engine.decodeStation("#s=garbage!", library), null);
 });
 
-test("buying needs a valid station, an email, and a plant, and is never marked paid", () => {
+test("buying needs a sensor, an email, and a plant; datasheet notes travel with the order", () => {
   const station = stationWith(2);
   assert.equal(engine.buyStation(station, library, { email: "a@b.co", plant: "Line 2" }).ok, true);
   assert.equal(engine.buyStation(station, library, { email: "nope", plant: "Line 2" }).ok, false);
   assert.equal(engine.buyStation(engine.newStation(), library, { email: "a@b.co", plant: "Line 2" }).ok, false);
   station.items.find((item) => item.kind === "sensor").settings.switch_point = 20;
-  const bad = engine.buyStation(station, library, { email: "a@b.co", plant: "Line 2" });
-  assert.equal(bad.ok, false);
-  assert.match(bad.reason, /1\.4–7/);
+  const order = engine.buyStation(station, library, { email: "a@b.co", plant: "Line 2" });
+  assert.equal(order.ok, true);
+  assert.equal(order.paid, false);
+  assert.match(order.notes.join(" "), /1\.4–7/);
+  assert.match(engine.orderText(order), /Notes to check before install/);
 });
-
 test("the order lists sensors, the master, and one sized cable per sensor", () => {
   const station = stationWith(3);
   const order = engine.buyStation(station, library, { email: "a@b.co", plant: "Line 2" });
@@ -247,7 +248,7 @@ test("the text box picks the sensor whose unit and range fit", () => {
   const cases = [
     ["watch pump pressure, switch at 40 bar", "PN7092"],
     ["tank temperature up to 90 °C", "TA2105"],
-    ["coolant flow 2 m/s", "SA5000"],
+    ["coolant flow, switch at 30 %", "SA5000"],
     ["tank level, full at 800 mm", "LR2050"],
     ["detect a box on the conveyor at 500 mm", "O5D100"],
     ["detect steel at 4 mm", "IG6214"],
@@ -261,13 +262,17 @@ test("the text box picks the sensor whose unit and range fit", () => {
   });
 });
 
-test("values the datasheet leaves open are listed, and block the order", () => {
+test("IODD factory defaults fill what the job does not say", () => {
   const plan = engine.planFromText("watch pump pressure, switch at 40 bar", filed);
-  assert.ok(plan.todo.some((item) => /Reset|rP1|reset/i.test(item)), plan.todo.join(" | "));
+  assert.deepEqual(plan.todo, []);
+  const sensor = plan.station.items.find((item) => item.kind === "sensor");
+  assert.equal(sensor.settings.sp1, 40);
+  assert.equal(sensor.settings.rp1, 23);
+  assert.equal(sensor.options.output, "normally open");
   const order = engine.buyStation(plan.station, filed, { email: "a@b.co", plant: "Line 2" });
-  assert.equal(order.ok, false);
+  assert.equal(order.ok, true);
+  assert.deepEqual(order.notes, []);
 });
-
 test("a reset point above its set point is refused", () => {
   const def = filed.sensors.find((item) => item.part === "PN7092");
   const check = engine.checkSensor(def, { settings: { sp1: 40, rp1: 50 }, options: { output: "normally open" } });
@@ -281,4 +286,118 @@ test("a filed four-port AL1301 takes four sensors, then a second is added", () =
     engine.addItem(station, filed, "ifm-pn7092", [i, 0]);
   }
   assert.equal(station.items.filter((item) => item.ref === "ifm-al1301").length, 2);
+});
+
+test("the port table carries IODD process data for every wired sensor", () => {
+  const plan = engine.planFromText("watch pump pressure, switch at 40 bar", filed);
+  const rows = engine.portTable(plan.station, filed);
+  const pn = rows.find((row) => row.part === "PN7092");
+  assert.equal(pn.pd_in_bits, 16);
+  assert.ok(pn.pd_in.some((item) => item.name === "Pressure" && item.bits === 14));
+  assert.equal(pn.min_cycle_ms, 2.3);
+  assert.match(engine.portCsv(plan.station, filed), /^master,port,tag,part/);
+});
+
+test("the order CSV totals parts by quantity", () => {
+  const station = engine.newStation();
+  engine.addItem(station, filed, "ifm-pn7092", [0, 0]);
+  engine.addItem(station, filed, "ifm-pn7092", [1, 0]);
+  const csv = engine.orderCsv(station, filed);
+  assert.match(csv, /\n2,sensor,ifm electronic,PN7092,310,401\n/);
+  assert.match(csv, /\n1,master,ifm electronic,AL1301/);
+});
+
+test("power budget refuses a master that cannot supply its sensors", () => {
+  const lib = JSON.parse(JSON.stringify(filed));
+  lib.masters[0].power = { port_supply_a: 0.2, total_supply_a: 0.3 };
+  lib.sensors.forEach((def) => { def.power = { current_ma: 120 }; });
+  const station = engine.newStation();
+  engine.addItem(station, lib, "ifm-pn7092", [0, 0]);
+  engine.addItem(station, lib, "ifm-pn7092", [1, 0]);
+  engine.addItem(station, lib, "ifm-pn7092", [2, 0]);
+  const budget = engine.powerBudget(station, lib).masters[0];
+  assert.equal(budget.total_ma, 360);
+  assert.match(engine.checkStation(station, lib).issues.map((i) => i.problem).join(" "), /draw 360 mA; AL1301 supplies 300 mA/);
+});
+
+test("a cable past the IO-Link length limit is refused", () => {
+  const lib = JSON.parse(JSON.stringify(filed));
+  lib.masters[0].power = { max_cable_m: 5 };
+  const station = engine.newStation();
+  engine.addItem(station, lib, "ifm-pn7092", [6, 4]);
+  assert.match(engine.checkStation(station, lib).issues.map((i) => i.problem).join(" "), /IO-Link allows 5 m/);
+});
+
+test("a sensor whose supply range does not cover the master supply is refused", () => {
+  const lib = JSON.parse(JSON.stringify(filed));
+  lib.masters[0].power = { supply_v: [20, 28] };
+  lib.sensors.forEach((def) => { def.power = { current_ma: 10, supply_v: [10, 24] }; });
+  const station = engine.newStation();
+  engine.addItem(station, lib, "ifm-pn7092", [0, 0]);
+  assert.match(engine.checkStation(station, lib).issues.map((i) => i.problem).join(" "), /runs on 10–24 V; AL1301 supplies 20–28 V/);
+});
+
+// Run mode ------------------------------------------------------------------
+
+const sim = require("./station_sim.js");
+const pn7092 = require("./library/sensors/ifm-pn7092.json");
+const simLibrary = Object.assign({}, library, { sensors: [ig6214, pn7092] });
+
+function pressureStation(settings, options) {
+  const station = engine.newStation();
+  engine.addItem(station, simLibrary, "test-master-4", [-4, -3]);
+  const sensor = engine.addItem(station, simLibrary, "ifm-pn7092", [0, 0]);
+  Object.assign(sensor.settings, settings);
+  Object.assign(sensor.options, options || {});
+  return { station: station, uid: sensor.uid };
+}
+
+test("run mode switches at SP and holds until rP", () => {
+  const { station, uid } = pressureStation({ sp1: 40, rp1: 30 });
+  const state = sim.simCreate();
+  const at = (value) => {
+    state.hold[uid] = value;
+    return sim.simStep(station, simLibrary, state, 0.1).readings[uid];
+  };
+  assert.equal(at(20).on, false);
+  assert.equal(at(39).on, false);
+  assert.equal(at(41).on, true);
+  assert.equal(at(35).on, true, "between rP and SP the output keeps its state");
+  assert.equal(at(29).on, false);
+  assert.equal(at(35).on, false);
+});
+
+test("run mode inverts the pin for normally closed", () => {
+  const { station, uid } = pressureStation({ sp1: 40, rp1: 30 }, { output: "normally closed" });
+  const state = sim.simCreate();
+  state.hold[uid] = 50;
+  const reading = sim.simStep(station, simLibrary, state, 0.1).readings[uid];
+  assert.equal(reading.on, true);
+  assert.equal(reading.pin, false);
+});
+
+test("run mode packs process data with the IODD layout", () => {
+  const { station, uid } = pressureStation({ sp1: 40, rp1: 30 });
+  const state = sim.simCreate();
+  state.hold[uid] = 33.9;
+  let reading = sim.simStep(station, simLibrary, state, 0.1).readings[uid];
+  // Pressure 339 (x 0.1 bar) at bit 2, OUT1 at bit 0 off: 339 * 4 = 0x054C.
+  assert.equal(reading.pd.hex, "05 4C");
+  state.hold[uid] = 45;
+  reading = sim.simStep(station, simLibrary, state, 0.1).readings[uid];
+  assert.equal(reading.pd.hex, "07 09");
+});
+
+test("run mode: a part on the belt reaches a sensor mounted on the conveyor", () => {
+  const station = engine.newStation();
+  engine.addItem(station, simLibrary, "conveyor", [0, 0]);
+  engine.addItem(station, simLibrary, "test-master-4", [-4, -3]);
+  const sensor = engine.addItem(station, simLibrary, "ifm-ig6214");
+  assert.deepEqual(sensor.at, [1, 0.9], "added without a spot, the sensor mounts on the conveyor");
+  const state = sim.simCreate();
+  const seen = new Set();
+  for (let i = 0; i < 100; i++) {
+    seen.add(sim.simStep(station, simLibrary, state, 0.1).readings[sensor.uid].on);
+  }
+  assert.deepEqual(Array.from(seen).sort(), [false, true]);
 });

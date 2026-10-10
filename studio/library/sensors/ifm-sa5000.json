@@ -9,7 +9,7 @@
   "in_catalog": true,
   "measures": "flow velocity of water, glycol, oils and air",
   "source_url": "https://www.ickey.cn/static-pf/datasheet/f4/91/2349/f4/033d83dda7b0c444cca1c1602d95b938.pdf",
-  "source": "ifm datasheet SA5000-00 (09.10.2015): liquids measuring range 0.04...3 m/s, setting range 0...6 m/s (relative mode); gases 2...100 m/s, setting 0...200 m/s; IO-Link 1.1, master port A, DeviceID 533 (REL), 540 (LIQU), 547 (GAS); drawing 34 mm diameter, 49.4 mm deep, about 142 mm long incl. 45 mm probe.",
+  "source": "ifm datasheet SA5000-00 (09.10.2015): liquids measuring range 0.04...3 m/s, setting range 0...6 m/s (relative mode); gases 2...100 m/s, setting 0...200 m/s; IO-Link 1.1, master port A, DeviceID 533 (REL), 540 (LIQU), 547 (GAS); drawing 34 mm diameter, 49.4 mm deep, about 142 mm long incl. 45 mm probe. IO-Link setting range from IODD ifm-000215-20161025-IODD1.1.xml: SP1 5–100 %, rP1 0–96 % of the measuring range end; defaults 20 % and 15 %.",
   "job_words": [
     "flow",
     "water flow",
@@ -27,12 +27,25 @@
   ],
   "settings": [
     {
-      "key": "flow_sp",
-      "name": "Flow switch point (liquid)",
-      "unit": "m/s",
+      "key": "flow_sp1",
+      "name": "Flow switch point SP1",
+      "unit": "%",
+      "min": 5,
+      "max": 100,
+      "default": 20,
+      "iodd_index": "583 (SP_FH1_FLOW, % of measuring range end)",
+      "default_source": "IODD factory default"
+    },
+    {
+      "key": "flow_rp1",
+      "name": "Flow reset point rP1",
+      "unit": "%",
       "min": 0,
-      "max": 6,
-      "default": null
+      "max": 96,
+      "default": 15,
+      "below": "flow_sp1",
+      "iodd_index": "584 (rP_FL1_FLOW, %)",
+      "default_source": "IODD factory default"
     }
   ],
   "options": [
@@ -53,5 +66,39 @@
     34,
     142,
     49.4
-  ]
+  ],
+  "iodd": {
+    "file": "ifm-000215-20161025-IODD1.1.xml",
+    "iodd_finder_id": 413,
+    "min_cycle_ms": 3.0,
+    "bitrate": "COM2",
+    "pd_in_bits": 32,
+    "pd_in": [
+      {
+        "name": "Flow",
+        "bit_offset": 16,
+        "bits": 16,
+        "gradient": 1,
+        "unit": "%"
+      },
+      {
+        "name": "Temperature",
+        "bit_offset": 2,
+        "bits": 14,
+        "gradient": 0.1,
+        "unit": "°C"
+      },
+      {
+        "name": "OUT2",
+        "bit_offset": 1,
+        "bits": 1
+      },
+      {
+        "name": "OUT1",
+        "bit_offset": 0,
+        "bits": 1
+      }
+    ],
+    "pd_out_bits": 0
+  }
 }
