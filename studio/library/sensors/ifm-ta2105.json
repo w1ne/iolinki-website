@@ -33,9 +33,27 @@
       "min": -50,
       "max": 145,
       "default": -50,
-      "below": "span_end",
-      "iodd_index": "630 (ASP2, -500–1450 × 0.1 °C)",
-      "default_source": "IODD factory default"
+      "iodd_index": "630 (V_ASP2)",
+      "default_source": "IODD factory default",
+      "scale": {
+        "gradient": 0.1,
+        "offset": 0
+      },
+      "unit_source": "menu",
+      "range_source": "IODD ValueRange",
+      "write": {
+        "index": 630,
+        "subindex": 0,
+        "datatype": "IntegerT",
+        "bitLength": 16,
+        "gradient": 0.1,
+        "offset": 0,
+        "raw_min": -500,
+        "raw_max": 1450
+      },
+      "role": "switch point",
+      "quantity": "temperature",
+      "below": "span_end"
     },
     {
       "key": "span_end",
@@ -44,8 +62,26 @@
       "min": -45,
       "max": 150,
       "default": 150,
-      "iodd_index": "631 (AEP2, -450–1500 × 0.1 °C)",
-      "default_source": "IODD factory default"
+      "iodd_index": "631 (V_AEP2)",
+      "default_source": "IODD factory default",
+      "scale": {
+        "gradient": 0.1,
+        "offset": 0
+      },
+      "unit_source": "menu",
+      "range_source": "IODD ValueRange",
+      "write": {
+        "index": 631,
+        "subindex": 0,
+        "datatype": "IntegerT",
+        "bitLength": 16,
+        "gradient": 0.1,
+        "offset": 0,
+        "raw_min": -450,
+        "raw_max": 1500
+      },
+      "role": "analogue span",
+      "quantity": "temperature"
     }
   ],
   "options": [],
@@ -71,6 +107,17 @@
         "unit": "°C"
       }
     ],
-    "pd_out_bits": 0
+    "pd_out_bits": 0,
+    "pd_out": [],
+    "process_value": {
+      "name": "Temperature",
+      "unit": "°C",
+      "unit_source": "menu"
+    }
+  },
+  "ingest": {
+    "iodd": "tests/iodd/fixtures/station/ifm-000179-20200114-IODD1.1.xml",
+    "converter_version": "2",
+    "overrides": "studio/library/ingest/ifm-ta2105.json"
   }
 }

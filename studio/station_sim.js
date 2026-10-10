@@ -173,14 +173,14 @@ function simProcessData(def, reading) {
     if (field.bits === 1) {
       raw = /OUT1|SSC1|BDC1|\[OUT1\]/i.test(field.name) ? (reading.on ? 1 : 0) : 0;
     } else if (field.gradient && reading.value !== null && (!field.unit || field.unit === reading.unit)) {
-      raw = Math.round(reading.value / field.gradient);
+      raw = Math.round((reading.value - (field.offset || 0)) / field.gradient);
       if (raw < 0) {
         raw += Math.pow(2, field.bits);
       }
       raw = Math.max(0, Math.min(Math.pow(2, field.bits) - 1, raw));
     } else if (field.gradient && field.unit === "°C") {
       // A second channel such as medium temperature: room temperature.
-      raw = Math.round(22 / field.gradient);
+      raw = Math.round((22 - (field.offset || 0)) / field.gradient);
     }
     fields.push({ name: field.name, raw: raw });
     if (raw !== null) {

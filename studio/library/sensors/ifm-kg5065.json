@@ -33,7 +33,10 @@
       "min": 1,
       "max": 15,
       "default": 5,
-      "default_source": "studio default, not a factory setting"
+      "default_source": "studio default, not a factory setting",
+      "source": "ifm KG5065-02 datasheet: hysteresis 1...15 % of sensing range. The IODD hysteresis (61.3, Conf_FC-BDC1) is an unscaled 16-bit value with factory value 18 and no range, so it cannot be mapped to % here.",
+      "write": null,
+      "source_kind": "datasheet"
     }
   ],
   "options": [
@@ -45,7 +48,18 @@
         "normally closed"
       ],
       "default": "normally open",
-      "default_source": "studio default, not a factory setting"
+      "default_source": "IODD gives no default",
+      "iodd_index": "61.1 (V_Conf_FC-BDC1)",
+      "raw": [
+        0,
+        1
+      ],
+      "write": {
+        "index": 61,
+        "subindex": 1,
+        "datatype": "UIntegerT",
+        "bitLength": 8
+      }
     }
   ],
   "port_class": "A",
@@ -65,7 +79,8 @@
       {
         "name": "PDV1",
         "bit_offset": 4,
-        "bits": 12
+        "bits": 12,
+        "gradient": 1
       },
       {
         "name": "BDC1",
@@ -73,6 +88,29 @@
         "bits": 1
       }
     ],
-    "pd_out_bits": 0
+    "pd_out_bits": 0,
+    "pd_out": [],
+    "profile": {
+      "ids": [],
+      "switching_channels": [
+        {
+          "channel": "BDC1",
+          "index": 60,
+          "mode": 1,
+          "logic": null
+        }
+      ],
+      "mdc": []
+    },
+    "process_value": {
+      "name": "PDV1",
+      "unit": "raw",
+      "unit_source": "menu"
+    }
+  },
+  "ingest": {
+    "iodd": "tests/iodd/fixtures/station/ifm-000183-20240612-IODD1.1.xml",
+    "converter_version": "2",
+    "overrides": "studio/library/ingest/ifm-kg5065.json"
   }
 }
