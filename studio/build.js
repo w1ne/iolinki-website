@@ -3,20 +3,51 @@
 
 // Generates the files the studio, the ChatGPT widget, and the MCP server load.
 // Sources: library/*.json, engine.js, station_view.js, widget.js, widget.css.
+//   library/sensors/<id>.json          ingested from the IODD named in
+//                                      library/ingest/<id>.json plus that file's
+//                                      datasheet overrides (see ingest.js)
 //   library/browser_data.js            filed library for the web page
 //   widget.html                        self-contained ChatGPT widget
 //   ../tools/iodd/station.generated.mjs  engine + library + widget for the MCP
 // `node studio/build.js --check` fails when a generated file is stale.
+// `node studio/build.js --report` prints IODD vs library values per ingested part.
 
 const fs = require("node:fs");
 const path = require("node:path");
+const { pathToFileURL } = require("node:url");
+const { applyOverrides, selectionOf } = require("./ingest.js");
 
 const here = __dirname;
+const repo = path.join(here, "..");
 const read = (file) => fs.readFileSync(path.join(here, file), "utf8");
 
-function loadLibrary() {
+// IODD + overrides -> library/sensors/<id>.json, for every library/ingest/<id>.json.
+async function ingested() {
+  const folder = path.join(here, "library/ingest");
+  if (!fs.existsSync(folder)) {
+    return [];
+  }
+  const converter = await import(pathToFileURL(path.join(repo, "tools/iodd/iodd-part.mjs")).href);
+  const out = [];
+  for (const name of fs.readdirSync(folder).filter((file) => file.endsWith(".json")).sort()) {
+    const override = JSON.parse(fs.readFileSync(path.join(folder, name), "utf8"));
+    if (override.id + ".json" !== name) {
+      throw Error("library/ingest/" + name + ": id must match the file name.");
+    }
+    const file = path.join(repo, override.iodd.file);
+    const opts = { vendorId: 0, ioddId: override.iodd.iodd_finder_id, productId: override.iodd.product_id, file: path.basename(file), select: selectionOf(override) };
+    const part = /\.zip$/i.test(file) ? await converter.partFromIoddZip(new Uint8Array(fs.readFileSync(file)), opts) : converter.partFromIoddXml(fs.readFileSync(file, "utf8"), opts);
+    const { def, report } = applyOverrides(part, override);
+    out.push({ id: override.id, def: def, report: report, part: part });
+  }
+  return out;
+}
+
+function loadLibrary(generated) {
   const folder = path.join(here, "library/sensors");
-  const defs = fs.readdirSync(folder).filter((name) => name.endsWith(".json")).sort().map((name) => JSON.parse(fs.readFileSync(path.join(folder, name), "utf8")));
+  const fresh = new Map(generated.map((entry) => [entry.id + ".json", entry.def]));
+  const names = new Set(fs.readdirSync(folder).filter((name) => name.endsWith(".json")).concat(Array.from(fresh.keys())));
+  const defs = Array.from(names).sort().map((name) => (fresh.has(name) ? JSON.parse(JSON.stringify(fresh.get(name))) : JSON.parse(fs.readFileSync(path.join(folder, name), "utf8"))));
   // Datasheet power figures, kept apart so each value carries its own source.
   const powerFile = path.join(here, "library/power.json");
   const power = fs.existsSync(powerFile) ? JSON.parse(fs.readFileSync(powerFile, "utf8")) : {};
@@ -33,8 +64,8 @@ function loadLibrary() {
   };
 }
 
-function outputs() {
-  const library = JSON.stringify(loadLibrary());
+function outputs(generated) {
+  const library = JSON.stringify(loadLibrary(generated));
   const browserData = "window.IOLINKI_LIBRARY = " + library + ";\n";
   // three.js r158 (MIT, vendor/three.LICENSE) is inlined so the widget needs no CDN.
   const scripts = [browserData, read("vendor/three.min.js"), read("engine.js"), read("station_sim.js"), read("station_3d.js"), read("station_tables.js"), read("widget.js")].join("\n").replace(/<\/script/gi, "<\\/script");
@@ -44,16 +75,45 @@ function outputs() {
     "export const engine = module.exports;\n" +
     "export const LIBRARY = " + library + ";\n" +
     "export const WIDGET_HTML = " + JSON.stringify(widget) + ";\n";
-  return {
+  const files = {};
+  generated.forEach((entry) => {
+    files["library/sensors/" + entry.id + ".json"] = JSON.stringify(entry.def, null, 2) + "\n";
+  });
+  return Object.assign(files, {
     "library/browser_data.js": browserData,
     "widget.html": widget,
     "../tools/iodd/station.generated.mjs": module,
-  };
+  });
 }
 
+function show(value) {
+  if (value === null || value === undefined) {
+    return "";
+  }
+  if (typeof value === "string") {
+    return value;
+  }
+  return value.min + "–" + value.max + " " + value.unit + (value.default === undefined ? "" : ", default " + value.default);
+}
+
+function printReport(generated) {
+  generated.forEach((entry) => {
+    console.log("\n" + entry.id + " (IODD " + entry.def.ingest.iodd.split("/").pop() + ")");
+    entry.report.forEach((row) => {
+      console.log("  " + row.field + " " + row.key + ": IODD " + show(row.iodd) + (row.scaled ? " -> scaled " + show(row.scaled) : "") + " | library " + show(row.library) + (row.why ? " | " + row.why : ""));
+    });
+  });
+}
+
+async function main() {
+const generated = await ingested();
+if (process.argv.includes("--report")) {
+  printReport(generated);
+  return;
+}
 const check = process.argv.includes("--check");
 let stale = [];
-Object.entries(outputs()).forEach(([file, text]) => {
+Object.entries(outputs(generated)).forEach(([file, text]) => {
   const target = path.join(here, file);
   const current = fs.existsSync(target) ? fs.readFileSync(target, "utf8") : null;
   if (current === text) {
@@ -70,3 +130,9 @@ if (stale.length) {
   console.error("stale, run node studio/build.js:", stale.join(", "));
   process.exit(1);
 }
+}
+
+main().catch((error) => {
+  console.error(error.message);
+  process.exit(1);
+});

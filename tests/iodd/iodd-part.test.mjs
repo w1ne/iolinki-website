@@ -92,3 +92,96 @@ test("rejects non-IODD input", () => {
   assert.throws(() => partFromIoddXml("<a/>", { vendorId: 1, ioddId: 2 }));
   assert.throws(() => partFromIoddXml("<IODevice/>", {}));
 });
+
+// --- Official unit table, Smart Sensor Profile, write objects, layering ------
+
+import UNITS_MODULE from "../../tools/iodd/iodd-units.mjs";
+import { unitInfo, CONVERTER_VERSION } from "../../tools/iodd/iodd-part.mjs";
+import { SCHEMA_SOURCE } from "../../tools/iodd/schema.mjs";
+import { existsSync } from "node:fs";
+
+const studio = { skip: !existsSync(fileURLToPath(new URL("../../studio/ingest.js", import.meta.url))) && "studio sources are not in this bundle" };
+
+test("unit codes come from the official IO-Link table", () => {
+  const json = JSON.parse(readFileSync(fileURLToPath(new URL("../../tools/iodd/iodd-units.json", import.meta.url)), "utf8"));
+  assert.deepEqual(UNITS_MODULE, json, "iodd-units.mjs is generated from iodd-units.json");
+  assert.equal(json.provenance.archive_sha256, SCHEMA_SOURCE.sha256);
+  assert.equal(json.provenance.source_url, SCHEMA_SOURCE.url);
+  assert.ok(Object.keys(json.units).length > 600);
+  assert.deepEqual([unitInfo(1013).abbr, unitInfo(1013).kind], ["mm", "length"]);
+  assert.deepEqual([unitInfo(1137).abbr, unitInfo(1137).kind], ["bar", "pressure"]);
+  assert.deepEqual([unitInfo(1352).abbr, unitInfo(1352).kind], ["L/min", "flow"]);
+  assert.equal(unitInfo(1001).kind, "temperature");
+  // The old hand table called 1131 kPa; the official table says GPa (kPa is 1133).
+  assert.equal(unitInfo(1131).abbr, "GPa");
+  assert.equal(unitInfo(1133).abbr, "kPa");
+  assert.equal(unitInfo(1997), null, "1997 'none' is dimensionless");
+  assert.equal(typeof CONVERTER_VERSION, "string");
+});
+
+test("Smart Sensor Profile: MDC scale and limits reach the switch points", () => {
+  const def = partFromIoddXml(read("ssp-mdc-synthetic.xml"), { vendorId: 65000, ioddId: 7 });
+  assert.equal(def.category, "optical distance");
+  const [sp1, sp2, hyst, ssc2] = def.settings;
+  assert.deepEqual([sp1.unit, sp1.min, sp1.max, sp1.default, sp1.unit_source, sp1.range_source], ["mm", 0, 500, 250, "mdc", "MDC descriptor limits"]);
+  // Two-point mode (config 61.2 = 3): SP2 is shown and sits below SP1.
+  assert.deepEqual([sp2.iodd_index.split(" ")[0], sp2.default, sp2.below], ["60.2", 240, sp1.key]);
+  assert.deepEqual([hyst.name, hyst.unit, hyst.max], ["SSC1 hysteresis", "mm", 50]);
+  // SSC2 is single point: only its SP1.
+  assert.equal(ssc2.iodd_index.split(" ")[0], "62.1");
+  assert.ok(!def.settings.some((s) => s.iodd_index.startsWith("62.2")));
+  assert.deepEqual(sp1.write, { index: 60, subindex: 1, datatype: "IntegerT", bitLength: 16, gradient: 0.1, offset: 0, raw_min: 0, raw_max: 5000, bit_offset: 16, subindex_access: false, record_bit_length: 32 });
+  const logic = def.options.find((o) => o.iodd_index.startsWith("61.1"));
+  assert.deepEqual([logic.values, logic.default, logic.raw], [["High active", "Low active"], "Low active", [0, 1]]);
+  // The MDC unit item carries a non-IO-Link code (49) and names the unit; the name wins.
+  assert.deepEqual(def.iodd.profile.mdc[0], { index: 16512, lower: 0, upper: 5000, unit: "mm", scale: -1 });
+  assert.deepEqual(def.iodd.profile.ids.map((p) => p.id), ["0x0001", "0x4000", "0x8001"]);
+  assert.deepEqual(def.iodd.pd_in[0], { name: "Distance", bit_offset: 16, bits: 16, gradient: 0.1, unit: "mm" });
+});
+
+test("write objects carry the raw ISDU coordinates", () => {
+  const sp = make("pn7092", "PN7092").settings.find((s) => s.iodd_index.startsWith("583"));
+  assert.deepEqual(sp.write, { index: 583, subindex: 0, datatype: "IntegerT", bitLength: 16, gradient: 0.1, offset: 0, raw_min: 10, raw_max: 1000 });
+  for (const key of Object.keys(files)) {
+    for (const s of make(key).settings) {
+      assert.ok(Number.isInteger(s.write.index) && Number.isInteger(s.write.subindex), key + " " + s.key);
+      // Real value = raw * gradient + offset at both ends of the range.
+      const ends = [s.write.raw_min * s.write.gradient + s.write.offset, s.write.raw_max * s.write.gradient + s.write.offset].sort((a, b) => a - b);
+      assert.ok(Math.abs(ends[0] - s.min) < 1e-6 && Math.abs(ends[1] - s.max) < 1e-6, key + " " + s.key);
+    }
+  }
+});
+
+test("IG6214: the IODD has no scale for SSC1 SP1, the override maps it to the datasheet mm", studio, () => {
+  const { applyOverrides, selectionOf } = require("../../studio/ingest.js");
+  const override = require("../../studio/library/ingest/ifm-ig6214.json");
+  const part = partFromIoddXml(read(files.ig6214), { vendorId: 0, ioddId: 12781, productId: "IG6214", select: selectionOf(override) });
+  assert.equal(part.settings[0].unit, "raw", "nothing in this IODD gives SP1 a unit");
+  const { def } = applyOverrides(part, override);
+  const sp = def.settings[0];
+  assert.deepEqual([sp.key, sp.unit, sp.min, sp.max, sp.default, sp.corrected, sp.unit_source], ["switch_point", "mm", 1.4, 7, 7, true, "override"]);
+  assert.deepEqual([sp.write.index, sp.write.subindex, sp.write.raw_min, sp.write.raw_max], [60, 1, 400, 3800]);
+  // Cross-check stated in the override: the same line puts the process value
+  // range 0..4095 on the datasheet measuring range 0.75..7.5 mm (within 0.02 mm).
+  const at = (raw) => raw * sp.write.gradient + sp.write.offset;
+  assert.ok(Math.abs(at(0) - 0.75) < 0.02 && Math.abs(at(4095) - 7.5) < 0.02);
+  assert.equal(def.iodd.pd_in.find((f) => f.name === "PDV1").unit, "mm");
+  assert.deepEqual(def.options.map((o) => [o.key, o.values, o.raw]), [["output", ["normally open", "normally closed"], [0, 1]], ["polarity", ["PNP", "NPN"], [0, 1]]]);
+});
+
+test("overrides never widen an IODD range and mark their own defaults", studio, () => {
+  const { applyOverrides } = require("../../studio/ingest.js");
+  const part = make("pn7092", "PN7092");
+  const base = { id: "t", iodd: { file: "x" }, datasheet: { part: "PN7092" } };
+  const one = (spec) => applyOverrides(part, Object.assign({}, base, { settings: [Object.assign({ iodd: "583", key: "sp1" }, spec)] })).def.settings[0];
+  assert.deepEqual([one({}).min, one({}).max], [1, 100]);
+  assert.throws(() => one({ max: 120, limit_source: "datasheet" }), /wider than the IODD range/);
+  assert.throws(() => one({ max: 80 }), /limit_source/);
+  assert.deepEqual([one({ max: 80, limit_source: "datasheet 1...80 bar" }).max, one({ max: 80, limit_source: "d" }).limit_source], [80, "d"]);
+  assert.throws(() => one({ default: 50 }), /studio default/);
+  assert.equal(one({ default: 50, default_source: "studio default, not a factory setting" }).default, 50);
+  assert.throws(() => one({ scale: { unit: "mm", raw: [0, 1], real: [0, 1], source: "x" } }), /already scales/);
+  // rP keeps its IODD relation under the studio key.
+  const both = applyOverrides(part, Object.assign({}, base, { settings: [{ iodd: "583", key: "a" }, { iodd: "584", key: "b" }] })).def.settings;
+  assert.equal(both[1].below, "a");
+});

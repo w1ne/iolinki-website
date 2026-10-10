@@ -1,0 +1,60 @@
+{
+  "id": "ifm-pn7092",
+  "iodd": {
+    "file": "tests/iodd/fixtures/station/ifm-000191_V104326821-20140909-IODD1.1.xml",
+    "iodd_finder_id": 97,
+    "product_id": "PN7092"
+  },
+  "datasheet": {
+    "part": "PN7092",
+    "vendor": "ifm electronic",
+    "in_catalog": true,
+    "measures": "liquid pressure (relative), 0 to 100 bar",
+    "source_url": "https://www.tme.com/Document/64ce106eef60d69f10f5f260eb60985e/PN7092-02_EN-GB.pdf",
+    "source": "ifm datasheet PN7092-02: measuring range 0...100 bar; set point SP 1...100 bar, reset point rP 0.5...99.5 bar, steps 0.5 bar (factory mode, DeviceID 401); output NO/NC parameterisable; IO-Link 1.1, master port A; housing diameter 34 mm, length 90.7 mm. Factory defaults not stated in datasheet.",
+    "job_words": [
+      "pressure",
+      "hydraulic",
+      "pump",
+      "line pressure",
+      "liquid pressure"
+    ],
+    "refused": [
+      "temperature",
+      "flow",
+      "level",
+      "distance",
+      "presence"
+    ],
+    "port_class": "A",
+    "connector": "M12",
+    "size_mm": [
+      34,
+      90.7,
+      34
+    ]
+  },
+  "settings": [
+    {
+      "iodd": "583",
+      "key": "sp1",
+      "name": "Set point SP1"
+    },
+    {
+      "iodd": "584",
+      "key": "rp1",
+      "name": "Reset point rP1"
+    }
+  ],
+  "options": [
+    {
+      "iodd": "580",
+      "key": "output",
+      "name": "Output function",
+      "values": {
+        "Hno / Hysteresis fct normally open": "normally open",
+        "Hnc / Hysteresis fct normally closed": "normally closed"
+      }
+    }
+  ]
+}

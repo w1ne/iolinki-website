@@ -44,19 +44,43 @@ function summary(built, library, extra) {
   };
 }
 
-// Devices named iodd-<vendorId>-<ioddId>: read each IODD package through the
-// catalog Worker and add it to the library for this call.
+// The catalog Worker converts and caches the part (/part); when that route
+// fails for any reason but a missing IODD, download the package and convert
+// it here with the same converter.
+async function ioddPart(vendorId, ioddId, catalogFetch) {
+  const query = new URLSearchParams({ vendorId, ioddId });
+  try {
+    const response = await catalogFetch(CATALOG_ORIGIN + "/part?" + query);
+    if (response.status === 404) {
+      throw Object.assign(Error("IODD Finder has no IODD " + ioddId + " for vendor " + vendorId), { final: true });
+    }
+    if (response.ok) {
+      const def = await response.json();
+      if (def && def.id === "iodd-" + vendorId + "-" + ioddId) {
+        return def;
+      }
+    }
+  } catch (error) {
+    if (error.final) {
+      throw error;
+    }
+  }
+  const response = await catalogFetch(CATALOG_ORIGIN + "/download?" + query);
+  if (!response.ok) {
+    throw Error("download answered " + response.status);
+  }
+  return partFromIoddZip(new Uint8Array(await response.arrayBuffer()), { vendorId: Number(vendorId), ioddId: Number(ioddId) });
+}
+
+// Devices named iodd-<vendorId>-<ioddId>: read each IODD through the catalog
+// Worker and add it to the library for this call.
 async function withIoddParts(parts, catalogFetch) {
   const refs = [...new Set(parts.map((part) => part.type).filter((type) => IODD_REF.test(type) && !engine.byId(LIBRARY, type)))].slice(0, MAX_IODD_PARTS);
   const problems = [];
   const extra = (await Promise.all(refs.map(async (ref) => {
     const [, vendorId, ioddId] = ref.match(IODD_REF);
     try {
-      const response = await catalogFetch(CATALOG_ORIGIN + "/download?" + new URLSearchParams({ vendorId, ioddId }));
-      if (!response.ok) {
-        throw Error("download answered " + response.status);
-      }
-      return await partFromIoddZip(new Uint8Array(await response.arrayBuffer()), { vendorId: Number(vendorId), ioddId: Number(ioddId) });
+      return await ioddPart(vendorId, ioddId, catalogFetch);
     } catch (error) {
       problems.push({ uid: null, problem: ref + ": the IODD could not be read (" + error.message + "). Check the ids with iolink_station_parts." });
       return null;

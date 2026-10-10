@@ -113,7 +113,9 @@
             search sends the search text to IODD Finder (io-link.com) through
             the iolinki catalog Worker, and devices named
             <code>iodd-&lt;vendorId&gt;-&lt;ioddId&gt;</code> are downloaded
-            from IODD Finder the same way. The station link encodes the station
+            from IODD Finder the same way. The Worker converts that public IODD
+            into a part and caches the result by vendor ID and IODD ID only; no
+            station data is part of the cache. The station link encodes the station
             in the URL fragment, which browsers do not send to the server.
           </p>
           <p>

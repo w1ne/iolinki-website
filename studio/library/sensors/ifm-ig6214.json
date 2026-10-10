@@ -40,9 +40,29 @@
       "unit": "mm",
       "min": 1.4,
       "max": 7,
-      "default": 4,
-      "corrected": true,
-      "iodd_index": "60.1 (SSC1 SP1; IODD gives raw 400–3800 without scaling, so the mm limits are from the datasheet)"
+      "default": 7,
+      "iodd_index": "60.1 (V_SSC1-Param)",
+      "default_source": "IODD factory default",
+      "scale": {
+        "gradient": 0.001647058824,
+        "offset": 0.7411764706
+      },
+      "unit_source": "override",
+      "range_source": "IODD ValueRange",
+      "write": {
+        "index": 60,
+        "subindex": 1,
+        "datatype": "IntegerT",
+        "bitLength": 16,
+        "gradient": 0.001647058824,
+        "offset": 0.7411764706,
+        "raw_min": 400,
+        "raw_max": 3800,
+        "bit_offset": 16
+      },
+      "role": "switch point",
+      "scale_source": "IODD SSC1 SP1 has no unit or MDC descriptor; its range 400-3800 is mapped linearly onto the datasheet switch point range 1.4-7 mm (IG6214-00 22.09.2022). Cross-check: the same line maps the process value range 0-4095 to 0.74-7.49 mm, the datasheet measuring range 0.75-7.5 mm.",
+      "corrected": true
     }
   ],
   "options": [
@@ -54,6 +74,18 @@
         "normally closed"
       ],
       "default": "normally open",
+      "default_source": "IODD factory default",
+      "iodd_index": "61.1 (V_SSC1-Config)",
+      "raw": [
+        0,
+        1
+      ],
+      "write": {
+        "index": 61,
+        "subindex": 1,
+        "datatype": "UIntegerT",
+        "bitLength": 8
+      },
       "aliases": {
         "normally open": [
           "no"
@@ -70,7 +102,19 @@
         "PNP",
         "NPN"
       ],
-      "default": "PNP"
+      "default": "PNP",
+      "default_source": "IODD factory default",
+      "iodd_index": "500 (V_P-n)",
+      "raw": [
+        0,
+        1
+      ],
+      "write": {
+        "index": 500,
+        "subindex": 0,
+        "datatype": "UIntegerT",
+        "bitLength": 8
+      }
     }
   ],
   "correction": {
@@ -99,7 +143,10 @@
       {
         "name": "PDV1",
         "bit_offset": 16,
-        "bits": 16
+        "bits": 16,
+        "gradient": 0.001647058824,
+        "offset": 0.7411764706,
+        "unit": "mm"
       },
       {
         "name": "Device status",
@@ -127,6 +174,35 @@
         "bits": 1
       }
     ],
-    "pd_out_bits": 0
+    "pd_out_bits": 0,
+    "pd_out": [],
+    "profile": {
+      "ids": [],
+      "switching_channels": [
+        {
+          "channel": "SSC1",
+          "index": 60,
+          "mode": 1,
+          "logic": 0
+        },
+        {
+          "channel": "SSC2",
+          "index": 62,
+          "mode": 1,
+          "logic": 1
+        }
+      ],
+      "mdc": []
+    },
+    "process_value": {
+      "name": "PDV1",
+      "unit": "mm",
+      "unit_source": "override (see switch_point scale_source)"
+    }
+  },
+  "ingest": {
+    "iodd": "tests/iodd/fixtures/station/ifm-000540-20210210-IODD1.1.xml",
+    "converter_version": "2",
+    "overrides": "studio/library/ingest/ifm-ig6214.json"
   }
 }

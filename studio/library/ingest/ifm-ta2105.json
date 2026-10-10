@@ -1,0 +1,51 @@
+{
+  "id": "ifm-ta2105",
+  "iodd": {
+    "file": "tests/iodd/fixtures/station/ifm-000179-20200114-IODD1.1.xml",
+    "iodd_finder_id": 9100,
+    "product_id": "TA2105"
+  },
+  "datasheet": {
+    "part": "TA2105",
+    "vendor": "ifm electronic",
+    "in_catalog": true,
+    "measures": "medium temperature in liquids and gases",
+    "source_url": "https://core.instrumart.com/assets/ifm-efector-ta2-series-temperature-transmitter-datasheets.pdf",
+    "source": "ifm datasheet TA2105-00 (13.04.2023): measuring range -50...150 C, factory setting -50...150 C (no separate setting range given, so measuring range is used); Pt1000, analog 4...20 mA and IO-Link 1.1; DeviceID 377; probe 6 mm, body diameter 18.7 mm, length 88.9 mm. Setting ranges from IODD ifm-000179-20200114-IODD1.1.xml: ASP2 -50.0–145.0 °C, AEP2 -45.0–150.0 °C.",
+    "job_words": [
+      "temperature",
+      "heat",
+      "hot",
+      "cold",
+      "coolant",
+      "thermometer"
+    ],
+    "refused": [
+      "pressure",
+      "flow",
+      "level",
+      "distance",
+      "presence"
+    ],
+    "port_class": "A",
+    "connector": "M12",
+    "size_mm": [
+      18.7,
+      88.9,
+      18.7
+    ]
+  },
+  "settings": [
+    {
+      "iodd": "630",
+      "key": "span_start",
+      "name": "Analogue start point ASP2"
+    },
+    {
+      "iodd": "631",
+      "key": "span_end",
+      "name": "Analogue end point AEP2"
+    }
+  ],
+  "options": []
+}

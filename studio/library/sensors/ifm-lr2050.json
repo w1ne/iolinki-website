@@ -33,8 +33,26 @@
       "min": 15,
       "max": 1970,
       "default": 60,
-      "iodd_index": "583 (SP_FH1, 15–1970 mm)",
-      "default_source": "IODD factory default"
+      "iodd_index": "583 (V_SP_FH1)",
+      "default_source": "IODD factory default",
+      "scale": {
+        "gradient": 1,
+        "offset": 0
+      },
+      "unit_source": "menu",
+      "range_source": "IODD ValueRange",
+      "write": {
+        "index": 583,
+        "subindex": 0,
+        "datatype": "IntegerT",
+        "bitLength": 16,
+        "gradient": 1,
+        "offset": 0,
+        "raw_min": 15,
+        "raw_max": 1970
+      },
+      "role": "switch point",
+      "quantity": "length"
     },
     {
       "key": "rp",
@@ -43,9 +61,27 @@
       "min": 10,
       "max": 1965,
       "default": 55,
-      "below": "sp",
-      "iodd_index": "584 (rP_FL1, 10–1965 mm)",
-      "default_source": "IODD factory default"
+      "iodd_index": "584 (V_rP_FL1)",
+      "default_source": "IODD factory default",
+      "scale": {
+        "gradient": 1,
+        "offset": 0
+      },
+      "unit_source": "menu",
+      "range_source": "IODD ValueRange",
+      "write": {
+        "index": 584,
+        "subindex": 0,
+        "datatype": "IntegerT",
+        "bitLength": 16,
+        "gradient": 1,
+        "offset": 0,
+        "raw_min": 10,
+        "raw_max": 1965
+      },
+      "role": "switch point",
+      "quantity": "length",
+      "below": "sp"
     }
   ],
   "options": [],
@@ -81,6 +117,17 @@
         "bits": 1
       }
     ],
-    "pd_out_bits": 0
+    "pd_out_bits": 0,
+    "pd_out": [],
+    "process_value": {
+      "name": "Level",
+      "unit": "mm",
+      "unit_source": "menu"
+    }
+  },
+  "ingest": {
+    "iodd": "tests/iodd/fixtures/station/ifm-0001DF-20150720-IODD1.1.xml",
+    "converter_version": "2",
+    "overrides": "studio/library/ingest/ifm-lr2050.json"
   }
 }
