@@ -100,7 +100,7 @@ export function registerStationTools(server, { catalogFetch = (url) => fetch(url
       inputSchema: {
         query: z.string().max(80).optional().describe("Product name or number to look up in IODD Finder, e.g. BOS 23K, UM30, PN7092."),
       },
-      annotations: { readOnlyHint: true, openWorldHint: false, destructiveHint: false, idempotentHint: true },
+      annotations: { readOnlyHint: true, openWorldHint: true, destructiveHint: false, idempotentHint: true },
     },
     async ({ query } = {}) => {
       const data = engine.describeLibrary(LIBRARY);
@@ -119,13 +119,13 @@ export function registerStationTools(server, { catalogFetch = (url) => fetch(url
     "iolink_station",
     {
       title: "Build IO-Link station",
-      description: "Place machines, sensors and IO-Link masters on the factory floor and wire each sensor's C/Q to a master port (X1..Xn), then show the station. Every sensor setting is checked against its datasheet or, for an iodd-<vendorId>-<ioddId> device, its IODD; inductive distances are converted with the material correction factor. A sensor with no wire is put on the first free port, and a master is added when all ports are used. Returns notes part by part (they never block the station or the order), the corrected diagram, the order (sensors, masters, sized M12 cables) and a studio link with a buy button. To change the station, call again with the full updated diagram. Nothing is written to a sensor and no payment is taken.",
+      description: "Place machines, sensors and IO-Link masters on the factory floor and wire each sensor's C/Q to a master port (X1..Xn), then show the station. Every sensor setting is checked against its datasheet or, for an iodd-<vendorId>-<ioddId> device, its IODD; inductive distances are converted with the material correction factor. A sensor with no wire is put on the first free port, and a master is added when all ports are used. Returns notes part by part (they never block the station or the order), the corrected diagram, the order (sensors, masters, sized M12 cables) and a studio link with a buy button. To change the station, call again with the full updated diagram. Nothing is written to a sensor and no payment is taken. The result renders as an interactive widget that already shows the 3D station, wiring, port table, notes and order: after calling, answer in one or two sentences (what was built and any note that needs a decision). Do not restate the parts, ports, settings or order as a list or table, and do not draw your own diagram.",
       inputSchema: {
         title: z.string().max(120).optional(),
         parts: z.array(part).min(1).max(60),
         wires: z.array(wire).max(60).optional(),
       },
-      annotations: { readOnlyHint: true, openWorldHint: false, destructiveHint: false, idempotentHint: true },
+      annotations: { readOnlyHint: true, openWorldHint: true, destructiveHint: false, idempotentHint: true },
       _meta: {
         "openai/outputTemplate": STATION_WIDGET_URI,
         "openai/toolInvocation/invoking": "Wiring the station…",
@@ -140,7 +140,7 @@ export function registerStationTools(server, { catalogFetch = (url) => fetch(url
       built.check.ok = built.check.issues.length === 0;
       const data = Object.assign({ title: title || "IO-Link station" }, summary(built, library, extra));
       // The widget shows the station, notes and order; the reply only needs a line or two.
-      const text = "The station is shown in the iolinki widget (3D view, Run, wiring, ports, order, Buy). Keep the reply short and do not repeat the order list. " +
+      const text = "Shown to the user in the iolinki widget (3D view, Run, wiring, ports, order, Buy). Reply in at most two sentences; no tables, lists or diagrams of the station. " +
         (data.ok ? "Every setting is inside its datasheet or IODD." : data.issues.length + " note(s) for the installer: " + data.issues.map((issue) => issue.problem).join(" ")) +
         " Studio link: " + data.studio_link;
       return { content: [{ type: "text", text }], structuredContent: data };
