@@ -1,0 +1,51 @@
+{
+  "id": "ifm-lr2050",
+  "iodd": {
+    "file": "tests/iodd/fixtures/station/ifm-0001DF-20150720-IODD1.1.xml",
+    "iodd_finder_id": 378,
+    "product_id": "LR2050"
+  },
+  "datasheet": {
+    "part": "LR2050",
+    "vendor": "ifm electronic",
+    "in_catalog": true,
+    "measures": "continuous liquid level (guided wave radar)",
+    "source_url": "https://www.instrumart.com/assets/LR2050-01_EN-US.pdf",
+    "source": "ifm datasheet LR2050-01: probe length L 150...2000 mm; set point SP 15...L-30 mm (35...L-30 for oils), reset point rP 10...L-35 mm, steps 1 mm, hysteresis >5 mm; IO-Link 1.1, master port class A, DeviceID 479; head diameter 50 mm, length 119 mm. Max values below assume the longest 2000 mm probe (SP max 1970, rP max 1965); probe length itself is not in size_mm.",
+    "job_words": [
+      "level",
+      "tank",
+      "fill",
+      "liquid level",
+      "full",
+      "empty"
+    ],
+    "refused": [
+      "pressure",
+      "temperature",
+      "flow",
+      "distance",
+      "presence"
+    ],
+    "port_class": "A",
+    "connector": "M12",
+    "size_mm": [
+      50,
+      119,
+      50
+    ]
+  },
+  "settings": [
+    {
+      "iodd": "583",
+      "key": "sp",
+      "name": "Set point SP"
+    },
+    {
+      "iodd": "584",
+      "key": "rp",
+      "name": "Reset point rP"
+    }
+  ],
+  "options": []
+}

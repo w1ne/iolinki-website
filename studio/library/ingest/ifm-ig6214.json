@@ -1,0 +1,103 @@
+{
+  "id": "ifm-ig6214",
+  "iodd": {
+    "file": "tests/iodd/fixtures/station/ifm-000540-20210210-IODD1.1.xml",
+    "iodd_finder_id": 12781,
+    "product_id": "IG6214"
+  },
+  "datasheet": {
+    "part": "IG6214",
+    "vendor": "ifm electronic",
+    "in_catalog": true,
+    "measures": "distance to a metal target",
+    "source_url": "https://www.ifm.com/de/en/product/IG6214",
+    "source": "IG6214-00 datasheet (EN-GB): switch point IO-Link 1.4...7 mm parameterisable; measuring range IO-Link 0.75...7.5 mm; correction factor steel 1 / stainless steel 0.7 / brass 0.5 / aluminium 0.5 / copper 0.4; PNP/NPN and NO/NC parameterisable; COM2; min. cycle 3.2 ms; M18 x 1, L = 60 mm.",
+    "job_words": [
+      "presence",
+      "detect",
+      "proximity",
+      "metal",
+      "steel",
+      "stainless",
+      "brass",
+      "aluminium",
+      "aluminum",
+      "copper",
+      "inductive"
+    ],
+    "refused": [
+      "pressure",
+      "temperature",
+      "flow",
+      "level",
+      "plastic",
+      "wood",
+      "liquid",
+      "glass"
+    ],
+    "correction": {
+      "steel": 1,
+      "stainless": 0.7,
+      "brass": 0.5,
+      "aluminium": 0.5,
+      "aluminum": 0.5,
+      "copper": 0.4,
+      "metal": 1
+    },
+    "port_class": "A",
+    "connector": "M12",
+    "size_mm": [
+      18,
+      60,
+      18
+    ]
+  },
+  "settings": [
+    {
+      "iodd": "60.1",
+      "key": "switch_point",
+      "name": "Switching point",
+      "corrected": true,
+      "scale": {
+        "unit": "mm",
+        "raw": [
+          400,
+          3800
+        ],
+        "real": [
+          1.4,
+          7
+        ],
+        "source": "IODD SSC1 SP1 has no unit or MDC descriptor; its range 400-3800 is mapped linearly onto the datasheet switch point range 1.4-7 mm (IG6214-00 22.09.2022). Cross-check: the same line maps the process value range 0-4095 to 0.74-7.49 mm, the datasheet measuring range 0.75-7.5 mm."
+      }
+    }
+  ],
+  "options": [
+    {
+      "iodd": "61.1",
+      "key": "output",
+      "name": "Output function",
+      "values": {
+        "High active": "normally open",
+        "Low active": "normally closed"
+      },
+      "aliases": {
+        "normally open": [
+          "no"
+        ],
+        "normally closed": [
+          "nc"
+        ]
+      }
+    },
+    {
+      "iodd": "500",
+      "key": "polarity",
+      "name": "Switching output",
+      "values": {
+        "PnP": "PNP",
+        "nPn": "NPN"
+      }
+    }
+  ]
+}

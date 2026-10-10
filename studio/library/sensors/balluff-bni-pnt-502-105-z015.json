@@ -1,0 +1,18 @@
+{
+  "id": "balluff-bni-pnt-502-105-z015",
+  "kind": "master",
+  "part": "BNI PNT-502-105-Z015",
+  "vendor": "Balluff",
+  "ports": 4,
+  "port_class": "A",
+  "fieldbus": "PROFINET",
+  "ip": "IP67",
+  "connector": "M12 A-coded (I/O, 8 sockets), M12 D-coded (PROFINET), 7/8\" 5-pin (power)",
+  "size_mm": [
+    68,
+    224,
+    37.9
+  ],
+  "source_url": "https://assets.balluff.com/WebBinary1/MAN_BNI_PNT_50X_105_Z015_EN_D17_DOK_895082_07_000.pdf",
+  "source": "Balluff user's guide BNI PNT-50X-105-Z015 (order code BNI004U): '502 = IP 67 IO-Link master module, 4 IO-Link ports'; 'ports 0-3 IN / OUT; ports 4-7 IN / OUT / IO-Link' (4 further sockets are plain I/O); 'IP 67 (only in plugged-in and screwed-down state)'; 'Dimensions (W x H x D in mm) 68 x 224 x 37.9'. The guide never states 'class A'; port_class A is read from the pinout '5 n.a.' (no aux supply on pin 2/5 of the IO-Link sockets, pin 2 is I/O). Vendor ID and IO-Link spec version not stated."
+}

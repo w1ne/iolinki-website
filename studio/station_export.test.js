@@ -8,6 +8,19 @@ const exp = require("./station_export.js");
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const pn7092 = clone(require("./library/sensors/ifm-pn7092.json"));
 const ig6214 = clone(require("./library/sensors/ifm-ig6214.json"));
+// The tests below exercise the iodd_index text fallback, so the fixtures carry
+// the pre-ingest text and no structured write objects.
+pn7092.settings[0].iodd_index = "583 (SP_FH1, 10–1000 × 0.1 bar)";
+pn7092.settings[1].iodd_index = "584 (RP_FL1, 5–995 × 0.1 bar)";
+ig6214.settings[0].iodd_index = "60.1 (SSC1 SP1; IODD gives raw 400–3800 without scaling, so the mm limits are from the datasheet)";
+[pn7092, ig6214].forEach((def) => {
+  (def.settings || []).forEach((s) => delete s.write);
+  (def.options || []).forEach((o) => {
+    delete o.write;
+    delete o.raw;
+    delete o.iodd_index;
+  });
+});
 const master = { id: "test-master-4", kind: "master", part: "TM4", vendor: "test", ports: 4, port_class: "A", fieldbus: "PROFINET" };
 const library = { sensors: [pn7092, ig6214], masters: [master], equipment: require("./library/equipment.json"), applications: [] };
 
@@ -154,4 +167,21 @@ test("report is a self-contained A4 document with every section", () => {
   assert.ok(html.includes("<svg id=\"w\">"));
   assert.ok(html.includes("583.0"));
   assert.ok(!/<script/i.test(html));
+});
+
+test("ingested library parts write raw values from their IODD write objects", () => {
+  const real = clone(require("./library/sensors/ifm-pn7092.json"));
+  const lib = { sensors: [real], masters: [master], equipment: [], applications: [] };
+  const station = engine.newStation();
+  const item = engine.addItem(station, lib, "ifm-pn7092", [0, 0]);
+  Object.assign(item.settings, { sp1: 40, rp1: 35 });
+  item.options.output = "normally closed";
+  const file = exp.commissioning(station, lib, { date: DATE });
+  const sp = param(file, 1, "sp1");
+  assert.equal(sp.index, 583);
+  assert.equal(sp.raw, 400);
+  assert.equal(sp.status, "ok");
+  const out = param(file, 1, "output");
+  assert.equal(out.index, 580);
+  assert.equal(out.raw, 4);
 });

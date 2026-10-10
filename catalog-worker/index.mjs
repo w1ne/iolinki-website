@@ -1,4 +1,8 @@
+import { partFromIoddZip, CONVERTER_VERSION } from "../tools/iodd/iodd-part.mjs";
+
 const SOURCE = "https://ioddfinder.io-link.com";
+// Converted parts are immutable for a given IODD and converter version.
+const PART_TTL = 30 * 24 * 3600;
 function cors(request) {
   const origin = request.headers.get("Origin");
   return {
@@ -41,12 +45,99 @@ async function bounded(response, limit) {
   }
   return output;
 }
-export async function handleCatalogRequest(request, fetcher = fetch) {
+function validIds(url) {
+  const vendor = url.searchParams.get("vendorId"),
+    iodd = url.searchParams.get("ioddId");
+  if (
+    !/^\d{1,5}$/.test(vendor || "") ||
+    Number(vendor) < 1 ||
+    Number(vendor) > 65535 ||
+    !/^\d{1,9}$/.test(iodd || "") ||
+    Number(iodd) < 1
+  )
+    return null;
+  return { vendor: Number(vendor), iodd: Number(iodd) };
+}
+function defaultCache() {
+  return typeof caches !== "undefined" && caches.default ? caches.default : null;
+}
+// /part?vendorId&ioddId: the IODD converted to a studio part (tools/iodd/iodd-part.mjs),
+// cached per IODD and converter version.
+async function handlePart(request, url, fetcher, cache) {
+  const ids = validIds(url);
+  if (!ids)
+    return error(request, 400, "A valid vendor ID and IODD ID are required.");
+  const key = new Request(
+    `https://iolinki-iodd-catalog.cache/part/v${CONVERTER_VERSION}/${ids.vendor}/${ids.iodd}`,
+  );
+  const headers = {
+    ...cors(request),
+    "Content-Type": "application/json",
+    "Cache-Control": "public, max-age=86400",
+    "X-Content-Type-Options": "nosniff",
+    "X-Converter-Version": CONVERTER_VERSION,
+  };
+  const cached = cache && (await cache.match(key));
+  if (cached)
+    return new Response(cached.body, {
+      headers: { ...headers, "X-Part-Cache": "hit" },
+    });
+  let body;
+  try {
+    const response = await fetcher(
+      new URL(
+        `/api/vendors/${ids.vendor}/iodds/${ids.iodd}/files/zip/rated`,
+        SOURCE,
+      ),
+      {
+        redirect: "manual",
+        signal: AbortSignal.timeout(20000),
+        headers: { Accept: "application/zip" },
+      },
+    );
+    if (!response.ok)
+      return error(
+        request,
+        response.status === 404 ? 404 : 502,
+        "IODD Finder could not serve this request. Open the official Finder or retry.",
+      );
+    body = await bounded(response, 16 * 1024 * 1024);
+  } catch (e) {
+    return error(request, 502, e.message);
+  }
+  let part;
+  try {
+    part = await partFromIoddZip(body, {
+      vendorId: ids.vendor,
+      ioddId: ids.iodd,
+    });
+  } catch (e) {
+    return error(request, 422, "The IODD could not be converted: " + e.message);
+  }
+  const text = JSON.stringify(part);
+  if (cache)
+    await cache.put(
+      key,
+      new Response(text, {
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": `public, max-age=${PART_TTL}`,
+        },
+      }),
+    );
+  return new Response(text, { headers: { ...headers, "X-Part-Cache": "miss" } });
+}
+export async function handleCatalogRequest(
+  request,
+  fetcher = fetch,
+  cache = defaultCache(),
+) {
   if (request.method === "OPTIONS")
     return new Response(null, { status: 204, headers: cors(request) });
   if (request.method !== "GET")
     return error(request, 405, "Use GET for public catalog reads.");
   const url = new URL(request.url);
+  if (url.pathname === "/part") return handlePart(request, url, fetcher, cache);
   let upstream, limit;
   if (url.pathname === "/search") {
     const query = (url.searchParams.get("q") || "").trim(),
@@ -80,18 +171,11 @@ export async function handleCatalogRequest(request, fetcher = fetch) {
     upstream.searchParams.set("page", page);
     limit = 1024 * 1024;
   } else if (url.pathname === "/download") {
-    const vendor = url.searchParams.get("vendorId"),
-      iodd = url.searchParams.get("ioddId");
-    if (
-      !/^\d{1,5}$/.test(vendor || "") ||
-      Number(vendor) < 1 ||
-      Number(vendor) > 65535 ||
-      !/^\d{1,9}$/.test(iodd || "") ||
-      Number(iodd) < 1
-    )
+    const ids = validIds(url);
+    if (!ids)
       return error(request, 400, "A valid vendor ID and IODD ID are required.");
     upstream = new URL(
-      `/api/vendors/${Number(vendor)}/iodds/${Number(iodd)}/files/zip/rated`,
+      `/api/vendors/${ids.vendor}/iodds/${ids.iodd}/files/zip/rated`,
       SOURCE,
     );
     limit = 16 * 1024 * 1024;

@@ -136,6 +136,44 @@ function removeItem(station, library, uid) {
   assignPorts(station, library);
 }
 
+// Class of one master port. Mixed masters file per-port classes in
+// port_classes; otherwise every port has port_class ("A/B" means unknown).
+function portClassOf(def, port) {
+  if (def && Array.isArray(def.port_classes) && def.port_classes[port - 1]) {
+    return def.port_classes[port - 1];
+  }
+  return def ? def.port_class || null : null;
+}
+
+// Does a port of this master serve a sensor that needs sensorClass?
+// A class B port also carries class A devices; only a class B device needs B.
+function portServes(masterDef, port, sensorClass) {
+  const have = portClassOf(masterDef, port);
+  return sensorClass !== "B" || !have || have === "A/B" || have === "B";
+}
+
+function masterHasClass(masterDef, sensorClass) {
+  for (let port = 1; port <= (masterDef.ports || 0); port++) {
+    if (portServes(masterDef, port, sensorClass)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// Master auto-added when ports run out: the station's own master type when it
+// can serve the sensor, else the library default (default: true), else the
+// first filed master that can.
+function nextMasterDef(station, library, sensorClass) {
+  const all = library.masters || [];
+  const existing = station.items.filter((item) => item.kind === "master").map((item) => byId(library, item.ref));
+  const pick = existing.find((def) => def && masterHasClass(def, sensorClass));
+  if (pick) {
+    return pick;
+  }
+  return all.find((def) => def.default && masterHasClass(def, sensorClass)) || all.find((def) => masterHasClass(def, sensorClass)) || all[0] || null;
+}
+
 function masterPorts(library, master) {
   const def = byId(library, master.ref);
   return def && def.ports ? def.ports : 0;
@@ -162,10 +200,12 @@ function assignPorts(station, library) {
       return;
     }
     let slot = null;
+    const sensorClass = (byId(library, sensor.ref) || {}).port_class;
     station.items.filter((item) => item.kind === "master").some((master) => {
       const ports = used.get(master.uid);
+      const masterDef = byId(library, master.ref);
       for (let port = 1; port <= masterPorts(library, master); port++) {
-        if (!ports.has(port)) {
+        if (!ports.has(port) && portServes(masterDef, port, sensorClass)) {
           slot = { master: master, port: port };
           return true;
         }
@@ -173,7 +213,7 @@ function assignPorts(station, library) {
       return false;
     });
     if (!slot) {
-      const masterDef = (library.masters || [])[0];
+      const masterDef = nextMasterDef(station, library, sensorClass);
       if (!masterDef) {
         return;
       }
@@ -181,7 +221,11 @@ function assignPorts(station, library) {
       const master = { uid: nextUid(station, "master"), kind: "master", ref: masterDef.id, at: clampToFloor(station, [-4 + count * 1.8, -3.4]) };
       station.items.push(master);
       used.set(master.uid, new Set());
-      slot = { master: master, port: 1 };
+      let first = 1;
+      while (first < masterPorts(library, master) && !portServes(masterDef, first, sensorClass)) {
+        first++;
+      }
+      slot = { master: master, port: first };
     }
     used.get(slot.master.uid).add(slot.port);
     sensor.master = slot.master.uid;
@@ -291,8 +335,8 @@ function checkStation(station, library) {
     } else {
       const master = station.items.find((other) => other.uid === item.master);
       const masterDef = master && byId(library, master.ref);
-      if (masterDef && def.port_class && masterDef.port_class && def.port_class !== masterDef.port_class && masterDef.port_class !== "A/B") {
-        issues.push({ uid: item.uid, problem: def.part + " needs a port class " + def.port_class + " port." });
+      if (masterDef && def.port_class && !portServes(masterDef, item.port, def.port_class)) {
+        issues.push({ uid: item.uid, problem: def.part + " needs a port class " + def.port_class + " port; " + masterDef.part + " X" + item.port + " is class " + portClassOf(masterDef, item.port) + "." });
       }
     }
   });
@@ -336,15 +380,23 @@ function powerBudget(station, library) {
       }
     });
     const problems = voltage.slice();
+    // port_supply_a_by_port (amps per port) wins over the uniform port_supply_a
+    // for masters whose ports differ.
+    const portLimitMa = (port) => {
+      const own = Array.isArray(limits.port_supply_a_by_port) ? limits.port_supply_a_by_port[port - 1] : null;
+      const amps = typeof own === "number" ? own : limits.port_supply_a;
+      return amps ? Math.round(amps * 1000) : null;
+    };
     ports.forEach((row) => {
-      if (limits.port_supply_a && row.ma > limits.port_supply_a * 1000) {
-        problems.push(row.part + " on " + master.uid + " X" + row.port + " draws " + row.ma + " mA; the port supplies " + limits.port_supply_a * 1000 + " mA.");
+      row.limit_ma = portLimitMa(row.port);
+      if (row.limit_ma && row.ma > row.limit_ma) {
+        problems.push(row.part + " on " + master.uid + " X" + row.port + " draws " + row.ma + " mA; the port supplies " + row.limit_ma + " mA.");
       }
     });
     if (limits.total_supply_a && total > limits.total_supply_a * 1000) {
       problems.push(master.uid + " sensors draw " + total + " mA; " + def.part + " supplies " + limits.total_supply_a * 1000 + " mA in total.");
     }
-    return { uid: master.uid, part: def.part, total_ma: total, port_limit_ma: limits.port_supply_a ? limits.port_supply_a * 1000 : null, total_limit_ma: limits.total_supply_a ? limits.total_supply_a * 1000 : null, ports: ports, unknown: unknown, problems: problems };
+    return { uid: master.uid, part: def.part, total_ma: total, port_limit_ma: limits.port_supply_a ? limits.port_supply_a * 1000 : (Array.isArray(limits.port_supply_a_by_port) ? Math.max.apply(null, limits.port_supply_a_by_port) * 1000 : null), total_limit_ma: limits.total_supply_a ? limits.total_supply_a * 1000 : null, ports: ports, unknown: unknown, problems: problems };
   });
   return { masters: masters };
 }
@@ -637,7 +689,7 @@ function describeLibrary(library) {
       materials: def.correction ? Object.keys(def.correction) : undefined,
       source_url: def.source_url,
     })),
-    masters: (library.masters || []).map((def) => ({ ref: def.id, part: def.part, vendor: def.vendor, ports: def.ports, port_class: def.port_class })),
+    masters: (library.masters || []).map((def) => ({ ref: def.id, part: def.part, vendor: def.vendor, ports: def.ports, port_class: def.port_class, port_classes: def.port_classes, fieldbus: def.fieldbus })),
     equipment: (library.equipment || []).map((def) => ({ ref: def.id, name: def.name })),
     floor_m: FLOOR,
   };
@@ -833,6 +885,6 @@ if (typeof module !== "undefined") {
     newStation, addItem, removeItem, assignPorts, setPort, checkSensor, checkStation, cables, orderLines,
     buyStation, orderText, orderMail, encodeStation, decodeStation, fromSpec, describeLibrary, planFromText,
     markFiled, fromDiagram, toDiagram, byId, FLOOR, SENSOR_HEIGHT, CATALOG_SEARCH,
-    powerBudget, portTable, orderCsv, portCsv, cableLength, CABLE_STOCK, masterPorts,
+    powerBudget, portClassOf, portTable, orderCsv, portCsv, cableLength, CABLE_STOCK, masterPorts,
   };
 }

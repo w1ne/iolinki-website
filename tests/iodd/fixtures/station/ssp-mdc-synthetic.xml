@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Synthetic Smart Sensor Profile device for converter tests (not a real product).
+     MDC descriptor: 0..5000 x 10^-1 mm; SSC1 in two-point mode, SSC2 single point;
+     process data scaled through ProcessDataRefCollection; MDC unit item also names
+     the unit in a SingleValue (the HART-code case some vendors ship). -->
+<IODevice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.io-link.com/IODD/2010/10">
+  <DocumentInfo version="V1.0" releaseDate="2026-10-10" copyright="iolinki test fixture" />
+  <ProfileBody>
+    <DeviceIdentity vendorId="65000" vendorName="Test Vendor" deviceId="4242">
+      <DeviceName textId="TI_DeviceName" />
+      <DeviceFamily textId="TI_DeviceFamily" />
+      <DeviceVariantCollection>
+        <DeviceVariant productId="TV-DIST-500">
+          <Name textId="TI_VariantName" />
+          <Description textId="TI_VariantDescr" />
+        </DeviceVariant>
+      </DeviceVariantCollection>
+    </DeviceIdentity>
+    <DeviceFunction>
+      <VariableCollection>
+        <Variable id="V_ProfileCharacteristic" index="13" accessRights="ro">
+          <Datatype xsi:type="RecordT" bitLength="48" subindexAccessSupported="false">
+            <RecordItem subindex="1" bitOffset="32"><SimpleDatatype xsi:type="UIntegerT" bitLength="16" /></RecordItem>
+            <RecordItem subindex="2" bitOffset="16"><SimpleDatatype xsi:type="UIntegerT" bitLength="16" /></RecordItem>
+            <RecordItem subindex="3" bitOffset="0"><SimpleDatatype xsi:type="UIntegerT" bitLength="16" /></RecordItem>
+          </Datatype>
+          <RecordItemInfo subindex="1" defaultValue="1" />
+          <RecordItemInfo subindex="2" defaultValue="16384" />
+          <RecordItemInfo subindex="3" defaultValue="32769" />
+          <Name textId="TI_Profile" />
+        </Variable>
+        <Variable id="V_SSC1_Param" index="60" accessRights="rw">
+          <DatatypeRef datatypeId="DT_SSC_Param" />
+          <RecordItemInfo subindex="1" defaultValue="2500" />
+          <RecordItemInfo subindex="2" defaultValue="2400" />
+          <Name textId="TI_SSC1_Param" />
+        </Variable>
+        <Variable id="V_SSC1_Config" index="61" accessRights="rw">
+          <DatatypeRef datatypeId="DT_SSC_Config" />
+          <RecordItemInfo subindex="1" defaultValue="1" />
+          <RecordItemInfo subindex="2" defaultValue="3" />
+          <RecordItemInfo subindex="3" defaultValue="10" />
+          <Name textId="TI_SSC1_Config" />
+        </Variable>
+        <Variable id="V_SSC2_Param" index="62" accessRights="rw">
+          <DatatypeRef datatypeId="DT_SSC_Param" />
+          <RecordItemInfo subindex="1" defaultValue="1000" />
+          <RecordItemInfo subindex="2" defaultValue="900" />
+          <Name textId="TI_SSC2_Param" />
+        </Variable>
+        <Variable id="V_SSC2_Config" index="63" accessRights="rw">
+          <DatatypeRef datatypeId="DT_SSC_Config" />
+          <RecordItemInfo subindex="1" defaultValue="0" />
+          <RecordItemInfo subindex="2" defaultValue="1" />
+          <RecordItemInfo subindex="3" defaultValue="10" />
+          <Name textId="TI_SSC2_Config" />
+        </Variable>
+        <Variable id="V_MDC_Descr" index="16512" accessRights="ro">
+          <Datatype xsi:type="RecordT" bitLength="88" subindexAccessSupported="false">
+            <RecordItem subindex="1" bitOffset="56"><SimpleDatatype xsi:type="IntegerT" bitLength="32" /></RecordItem>
+            <RecordItem subindex="2" bitOffset="24"><SimpleDatatype xsi:type="IntegerT" bitLength="32" /></RecordItem>
+            <RecordItem subindex="3" bitOffset="8">
+              <SimpleDatatype xsi:type="UIntegerT" bitLength="16">
+                <SingleValue value="49"><Name textId="TI_UnitMm" /></SingleValue>
+              </SimpleDatatype>
+            </RecordItem>
+            <RecordItem subindex="4" bitOffset="0"><SimpleDatatype xsi:type="IntegerT" bitLength="8" /></RecordItem>
+          </Datatype>
+          <RecordItemInfo subindex="1" defaultValue="0" />
+          <RecordItemInfo subindex="2" defaultValue="5000" />
+          <RecordItemInfo subindex="3" defaultValue="49" />
+          <RecordItemInfo subindex="4" defaultValue="-1" />
+          <Name textId="TI_MDC" />
+        </Variable>
+      </VariableCollection>
+      <DatatypeCollection>
+        <Datatype id="DT_SSC_Param" xsi:type="RecordT" bitLength="32" subindexAccessSupported="false">
+          <RecordItem subindex="1" bitOffset="16"><SimpleDatatype xsi:type="IntegerT" bitLength="16" /><Name textId="TI_SP1" /></RecordItem>
+          <RecordItem subindex="2" bitOffset="0"><SimpleDatatype xsi:type="IntegerT" bitLength="16" /><Name textId="TI_SP2" /></RecordItem>
+        </Datatype>
+        <Datatype id="DT_SSC_Config" xsi:type="RecordT" bitLength="32" subindexAccessSupported="true">
+          <RecordItem subindex="1" bitOffset="24">
+            <SimpleDatatype xsi:type="UIntegerT" bitLength="8">
+              <SingleValue value="0"><Name textId="TI_High" /></SingleValue>
+              <SingleValue value="1"><Name textId="TI_Low" /></SingleValue>
+            </SimpleDatatype>
+            <Name textId="TI_Logic" />
+          </RecordItem>
+          <RecordItem subindex="2" bitOffset="16">
+            <SimpleDatatype xsi:type="UIntegerT" bitLength="8">
+              <SingleValue value="0"><Name textId="TI_Off" /></SingleValue>
+              <SingleValue value="1"><Name textId="TI_Single" /></SingleValue>
+              <SingleValue value="2"><Name textId="TI_Window" /></SingleValue>
+              <SingleValue value="3"><Name textId="TI_TwoPoint" /></SingleValue>
+            </SimpleDatatype>
+            <Name textId="TI_Mode" />
+          </RecordItem>
+          <RecordItem subindex="3" bitOffset="0">
+            <SimpleDatatype xsi:type="UIntegerT" bitLength="16"><ValueRange lowerValue="0" upperValue="500" /></SimpleDatatype>
+            <Name textId="TI_Hyst" />
+          </RecordItem>
+        </Datatype>
+      </DatatypeCollection>
+      <ProcessDataCollection>
+        <ProcessData id="P_Data">
+          <ProcessDataIn id="PI_Data" bitLength="32">
+            <Datatype xsi:type="RecordT" bitLength="32" subindexAccessSupported="false">
+              <RecordItem subindex="1" bitOffset="16"><SimpleDatatype xsi:type="IntegerT" bitLength="16" /><Name textId="TI_PdDistance" /></RecordItem>
+              <RecordItem subindex="2" bitOffset="0"><SimpleDatatype xsi:type="BooleanT" /><Name textId="TI_PdSsc1" /></RecordItem>
+            </Datatype>
+            <Name textId="TI_Pdi" />
+          </ProcessDataIn>
+        </ProcessData>
+      </ProcessDataCollection>
+      <UserInterface>
+        <ProcessDataRefCollection>
+          <ProcessDataRef processDataId="PI_Data">
+            <ProcessDataRecordItemInfo subindex="1" gradient="0.1" offset="0" unitCode="1013" />
+          </ProcessDataRef>
+        </ProcessDataRefCollection>
+        <MenuCollection>
+          <Menu id="M_Param">
+            <RecordItemRef variableId="V_SSC1_Config" subindex="3" gradient="0.1" unitCode="1013" />
+          </Menu>
+        </MenuCollection>
+      </UserInterface>
+    </DeviceFunction>
+  </ProfileBody>
+  <CommNetworkProfile xsi:type="IOLinkCommNetworkProfileT" iolinkRevision="V1.1">
+    <TransportLayers>
+      <PhysicalLayer bitrate="COM2" minCycleTime="2000" sioSupported="true" mSequenceCapability="1" />
+    </TransportLayers>
+  </CommNetworkProfile>
+  <ExternalTextCollection>
+    <PrimaryLanguage xml:lang="en">
+      <Text id="TI_DeviceName" value="TV-DIST" />
+      <Text id="TI_DeviceFamily" value="Test distance sensors" />
+      <Text id="TI_VariantName" value="TV-DIST-500" />
+      <Text id="TI_VariantDescr" value="Diffuse laser distance sensor, 0...500 mm" />
+      <Text id="TI_Profile" value="Profile Characteristic" />
+      <Text id="TI_SSC1_Param" value="SSC1 Param" />
+      <Text id="TI_SSC1_Config" value="SSC1 Config" />
+      <Text id="TI_SSC2_Param" value="SSC2 Param" />
+      <Text id="TI_SSC2_Config" value="SSC2 Config" />
+      <Text id="TI_MDC" value="MDC Descriptor" />
+      <Text id="TI_UnitMm" value="millimeter" />
+      <Text id="TI_SP1" value="SP1" />
+      <Text id="TI_SP2" value="SP2" />
+      <Text id="TI_Logic" value="Logic" />
+      <Text id="TI_High" value="High active" />
+      <Text id="TI_Low" value="Low active" />
+      <Text id="TI_Mode" value="Mode" />
+      <Text id="TI_Off" value="Deactivated" />
+      <Text id="TI_Single" value="Single point" />
+      <Text id="TI_Window" value="Window" />
+      <Text id="TI_TwoPoint" value="Two point" />
+      <Text id="TI_Hyst" value="Hysteresis" />
+      <Text id="TI_Pdi" value="Process data in" />
+      <Text id="TI_PdDistance" value="Distance" />
+      <Text id="TI_PdSsc1" value="SSC1" />
+    </PrimaryLanguage>
+  </ExternalTextCollection>
+</IODevice>

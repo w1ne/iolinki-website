@@ -1,0 +1,18 @@
+{
+  "id": "phoenix-contact-2701496",
+  "kind": "master",
+  "part": "AXL E EIP IOL8 DI4 M12 6P (2701496)",
+  "vendor": "Phoenix Contact",
+  "ports": 8,
+  "port_class": "A/B",
+  "fieldbus": "EtherNet/IP",
+  "ip": "IP65/IP67",
+  "connector": "M12 A-coded 5-pos (ports), M12 D-coded (Ethernet), M12 T-coded (US/UA)",
+  "size_mm": [
+    60,
+    185,
+    30.5
+  ],
+  "source_url": "https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/1301/2701496.pdf",
+  "source": "Phoenix Contact 2701496 datasheet (EtherNet/IP member of the AXL E IOL8 DI4 family; the PROFINET sheets could not be opened): 'Axioline E EtherNet/IP device in a plastic housing with 8 IO-Link ports and 4 digital inputs'; 'Connection of four IO-Link devices with additional digital input'; 'Connection of four IO-Link actuators with additional power supply'; 'IP65/IP67'; 'Width 60 mm / Height 185 mm / Depth 30.5 mm'. The sheet never says 'class A/B', so which four ports carry UA is not published and port_class is filed as mixed with no per-port split."
+}

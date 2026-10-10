@@ -82,9 +82,20 @@ function linkedIoddRefs(hash) {
   }
 }
 
-// Any device in IODD Finder: download its IODD package through the catalog
-// Worker and turn it into a part with the ranges and defaults the IODD gives.
+// Any device in IODD Finder: the catalog Worker converts its IODD into a part
+// (/part, cached); if that route is unavailable, download the IODD package and
+// convert it here with the same converter.
 const ioddLoads = new Map();
+function convertIoddHere(vendorId, ioddId) {
+  const url = CATALOG_SEARCH.replace(/\/search$/, "/download") + "?" + new URLSearchParams({ vendorId: vendorId, ioddId: ioddId });
+  return Promise.all([fetch(url).then((response) => {
+    if (!response.ok) {
+      throw new Error("IODD download failed (" + response.status + ")");
+    }
+    return response.arrayBuffer();
+  }), import("../tools/iodd/iodd-part.mjs")]).then(([bytes, converter]) => converter.partFromIoddZip(new Uint8Array(bytes), { vendorId: Number(vendorId), ioddId: Number(ioddId) }));
+}
+
 function loadIoddPart(ref) {
   const known = byId(library, ref);
   if (known) {
@@ -92,13 +103,17 @@ function loadIoddPart(ref) {
   }
   if (!ioddLoads.has(ref)) {
     const [, vendorId, ioddId] = ref.match(/^iodd-(\d+)-(\d+)$/);
-    const url = CATALOG_SEARCH.replace(/\/search$/, "/download") + "?" + new URLSearchParams({ vendorId: vendorId, ioddId: ioddId });
-    ioddLoads.set(ref, Promise.all([fetch(url).then((response) => {
-      if (!response.ok) {
-        throw new Error("IODD download failed (" + response.status + ")");
+    const url = CATALOG_SEARCH.replace(/\/search$/, "/part") + "?" + new URLSearchParams({ vendorId: vendorId, ioddId: ioddId });
+    ioddLoads.set(ref, fetch(url).then((response) => {
+      // 404: the IODD is not in the Finder; anything else falls back to converting here.
+      if (response.status === 404) {
+        throw new Error("IODD not found (404)");
       }
-      return response.arrayBuffer();
-    }), import("../tools/iodd/iodd-part.mjs")]).then(([bytes, converter]) => converter.partFromIoddZip(new Uint8Array(bytes), { vendorId: Number(vendorId), ioddId: Number(ioddId) })).then((def) => {
+      return response.ok ? response.json() : convertIoddHere(vendorId, ioddId);
+    }, () => convertIoddHere(vendorId, ioddId)).then((def) => {
+      if (!def || def.id !== ref) {
+        throw new Error("Unexpected part for " + ref);
+      }
       if (!byId(library, def.id)) {
         library.sensors.push(def);
       }

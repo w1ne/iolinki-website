@@ -1,0 +1,18 @@
+{
+  "id": "wago-765-4102-100-000",
+  "kind": "master",
+  "part": "765-4102/100-000",
+  "vendor": "WAGO",
+  "ports": 8,
+  "port_class": "B",
+  "fieldbus": "PROFINET",
+  "ip": "IP67",
+  "connector": "M12 A-coded 5-pin (ports), M12 D-coded (fieldbus), M12 L-coded 5-pin (power)",
+  "size_mm": [
+    60,
+    210,
+    30
+  ],
+  "source_url": "https://docs.rs-online.com/a37a/A700000012937602.pdf",
+  "source": "WAGO 765-4102/100-000 datasheet (06.02.2025, French, RS copy): '8-Port-IO Link Master Class B; Profinet; DC 24 V / 2,0 A; 8xconnexion M12'; 'The device is designed as a Class B master and offers eight IO-Link ports'; 'Classification IO-LINK Maître Classe B ; Spécification V1.1'; 'Indice de protection IP67'; 'Largeur 60 mm / Hauteur 30 mm / Profondeur 210 mm'. Vendor ID and cable length not published."
+}

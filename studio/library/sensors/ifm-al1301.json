@@ -4,6 +4,7 @@
   "part": "AL1301",
   "vendor": "ifm electronic",
   "vendor_id": 310,
+  "default": true,
   "ports": 4,
   "port_class": "A",
   "fieldbus": "PROFINET (CC-C, IRT switch)",

@@ -1,0 +1,18 @@
+{
+  "id": "ifm-al1350",
+  "kind": "master",
+  "part": "AL1350",
+  "vendor": "ifm electronic",
+  "ports": 4,
+  "port_class": "A",
+  "fieldbus": "Ethernet IoT (MQTT JSON, HTTPS); no PROFINET/EtherNet/IP",
+  "ip": "IP65/IP66/IP67",
+  "connector": "M12 A-coded (IO-Link), M12 D-coded (Ethernet), M12 A-coded (power)",
+  "size_mm": [
+    152,
+    59.3,
+    38.4
+  ],
+  "source_url": "https://media.ifm.com/dam/aaf256ab-5a44-4254-9ac9-f84f55bfc80b/Original/AL1350-00_EN-GB.pdf",
+  "source": "ifm AL1350-00 (23.10.2025), 'IO-Link Master DL IoT 4P IP67': 'Number of ports class A 4'; 'IO-Link revision 1.1'; 'Protection IP 65; IP 66; IP 67'; 'Connector: 4 x M12; coding: A; Contacts: 4'; 'Dimensions [mm] 152 x 59.3 x 38.4'; 'Protocol MQTT JSON'. Vendor ID not stated in the datasheet."
+}

@@ -93,3 +93,35 @@ test("datasheet and wiring problems come back part by part", async () => {
   assert.match(text, /must join a master port to a sensor|wired twice/);
   assert.match(text, /taken\. It was moved to m1 X/);
 });
+
+test("iodd-<vendor>-<iodd> parts come from the catalog /part route, with /download as fallback", async () => {
+  const { readFileSync } = await import("node:fs");
+  const { partFromIoddZip } = await import("../../tools/iodd/iodd-part.mjs");
+  const zip = readFileSync(new URL("./fixtures/station/ifm-pn7092-97.zip", import.meta.url));
+  const converted = await partFromIoddZip(new Uint8Array(zip), { vendorId: 310, ioddId: 97 });
+  const run = async (partStatus) => {
+    const asked = [];
+    const catalogFetch = async (url) => {
+      const path = new URL(url).pathname;
+      asked.push(path);
+      if (path === "/part") return partStatus === 200 ? Response.json(converted) : new Response("{}", { status: partStatus });
+      if (path === "/download") return new Response(zip);
+      return new Response("{}", { status: 400 });
+    };
+    const server = createIoddMcpServer({ catalogFetch });
+    const client = new Client({ name: "station-iodd-test", version: "1.0.0" });
+    const [a, b] = InMemoryTransport.createLinkedPair();
+    await Promise.all([server.connect(a), client.connect(b)]);
+    const data = (await client.callTool({ name: "iolink_station", arguments: { parts: [{ id: "m1", type: "ifm-al1301" }, { id: "p", type: "iodd-310-97" }] } })).structuredContent;
+    return { asked, data };
+  };
+  const direct = await run(200);
+  assert.deepEqual(direct.asked, ["/part"]);
+  assert.equal(direct.data.extra_parts[0].id, "iodd-310-97");
+  const fallback = await run(502);
+  assert.deepEqual(fallback.asked, ["/part", "/download"]);
+  assert.deepEqual(fallback.data.extra_parts[0].settings, direct.data.extra_parts[0].settings);
+  const missing = await run(404);
+  assert.deepEqual(missing.asked, ["/part"]);
+  assert.match(missing.data.issues.map((i) => i.problem).join(" "), /iodd-310-97: the IODD could not be read/);
+});

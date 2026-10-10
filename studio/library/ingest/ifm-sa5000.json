@@ -1,0 +1,64 @@
+{
+  "id": "ifm-sa5000",
+  "iodd": {
+    "file": "tests/iodd/fixtures/station/ifm-000215-20161025-IODD1.1.xml",
+    "iodd_finder_id": 413,
+    "product_id": "SA5000"
+  },
+  "datasheet": {
+    "part": "SA5000",
+    "vendor": "ifm electronic",
+    "in_catalog": true,
+    "measures": "flow velocity of water, glycol, oils and air",
+    "source_url": "https://www.ickey.cn/static-pf/datasheet/f4/91/2349/f4/033d83dda7b0c444cca1c1602d95b938.pdf",
+    "source": "ifm datasheet SA5000-00 (09.10.2015): liquids measuring range 0.04...3 m/s, setting range 0...6 m/s (relative mode); gases 2...100 m/s, setting 0...200 m/s; IO-Link 1.1, master port A, DeviceID 533 (REL), 540 (LIQU), 547 (GAS); drawing 34 mm diameter, 49.4 mm deep, about 142 mm long incl. 45 mm probe. IO-Link setting range from IODD ifm-000215-20161025-IODD1.1.xml: SP1 5–100 %, rP1 0–96 % of the measuring range end; defaults 20 % and 15 %.",
+    "job_words": [
+      "flow",
+      "water flow",
+      "coolant flow",
+      "air flow",
+      "velocity",
+      "pump running"
+    ],
+    "refused": [
+      "pressure",
+      "temperature",
+      "level",
+      "distance",
+      "presence"
+    ],
+    "port_class": "A",
+    "connector": "M12",
+    "size_mm": [
+      34,
+      142,
+      49.4
+    ]
+  },
+  "settings": [
+    {
+      "iodd": "583",
+      "key": "flow_sp1",
+      "name": "Flow switch point SP1"
+    },
+    {
+      "iodd": "584",
+      "key": "flow_rp1",
+      "name": "Flow reset point rP1"
+    }
+  ],
+  "options": [
+    {
+      "datasheet": true,
+      "key": "medium",
+      "name": "Operating mode",
+      "values": [
+        "relative",
+        "absolute liquid",
+        "absolute gaseous"
+      ],
+      "default": "relative",
+      "source": "ifm SA5000 datasheet: operating modes REL, LIQU and GAS are separate DeviceIDs (533, 540, 547). In the IODD the mode is read-only (ModE, index 689, factory REL), so it is not a writable parameter."
+    }
+  ]
+}
