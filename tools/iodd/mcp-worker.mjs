@@ -27,6 +27,8 @@ export class IoddMcpSessions extends DurableObject {
       artifactOrigin: env.PUBLIC_ORIGIN,
       artifactStore: this.artifactStore,
       firmwareKit: project => createFirmwareKit(project, {loadAsset: async name => firmwareAssets[name]}),
+      // A Worker cannot fetch another workers.dev Worker on the same account; use the binding.
+      catalogFetch: env.CATALOG ? (url) => env.CATALOG.fetch(url) : undefined,
       loadTemplate: async (name) => (name === "counter" ? counter : switching),
       projectVaultFactory: (sessionId) => ({
         save: async (serialized) => {

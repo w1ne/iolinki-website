@@ -436,6 +436,7 @@ export function createIoddMcpServer({
   publishArtifact,
   projectVault,
   firmwareKit,
+  catalogFetch,
   maxBytes = 64 * 1024 * 1024,
 } = {}) {
   const projects = new Map();
@@ -471,7 +472,7 @@ export function createIoddMcpServer({
     return new Uint8Array(Buffer.from(source, "base64"));
   }
   const instructions =
-    "Author IO-Link device descriptions with session-local projects. Start with iodd_create or import supplied XML; inspect before editing, validate after edits, and export downloadable artifacts. Basic checks do not certify official conformance. Vendor/device IDs must be assigned to the user. Use iodd_save for an explicit recoverable snapshot when available; keep its private token and restore in a new session. For the supported switching sensor, iodd_firmware_source supplies arguments for the LabWired compile and verify tools; record the returned verdict and model gaps. iodd_firmware_kit exports complete source. No device flashing or arbitrary filesystem/network access. For IO-Link stations, call iolink_station_parts, then iolink_station with parts placed on the floor and wires from master ports (X1..) to sensor C/Q; it checks every setting against filed datasheets and shows the station. Product and setup information: https://iolinki.com/llms.txt";
+    "Author IO-Link device descriptions with session-local projects. Start with iodd_create or import supplied XML; inspect before editing, validate after edits, and export downloadable artifacts. Basic checks do not certify official conformance. Vendor/device IDs must be assigned to the user. Use iodd_save for an explicit recoverable snapshot when available; keep its private token and restore in a new session. For the supported switching sensor, iodd_firmware_source supplies arguments for the LabWired compile and verify tools; record the returned verdict and model gaps. iodd_firmware_kit exports complete source. No device flashing or arbitrary filesystem/network access. For IO-Link stations, call iolink_station_parts (pass a query to find any device in IODD Finder), then iolink_station with parts placed on the floor and wires from master ports (X1..) to sensor C/Q; it checks every setting against filed datasheets or the device's IODD and shows the station, which the user can run to watch each sensor switch. Product and setup information: https://iolinki.com/llms.txt";
   const server = new McpServer(
     {
       name: "iolinki-iodd",
@@ -829,6 +830,6 @@ export function createIoddMcpServer({
     ({ content, filename }) =>
       inspectFirmwarePackage(base64(content), filename),
   );
-  registerStationTools(server);
+  registerStationTools(server, catalogFetch ? { catalogFetch } : {});
   return server;
 }

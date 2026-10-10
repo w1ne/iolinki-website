@@ -59,6 +59,35 @@ function freeSpot(station) {
   return [0, 0];
 }
 
+// Where a new part goes when it is added without a spot: a sensor on the
+// machine it measures, a master by the control cabinet.
+const MOUNTS = {
+  pressure: { pipe: [[0.8, 0.45], [-0.8, 0.45], [1.6, 0.45], [-1.6, 0.45]], pump: [[0.8, 0.6]] },
+  flow: { pipe: [[1.2, 0.45], [-1.2, 0.45], [0, 0.45]] },
+  level: { tank: [[1.3, 0], [0, 1.3], [-1.3, 0]] },
+  temperature: { tank: [[1.3, 0.6], [0.6, 1.3], [-1.3, 0.6]], pipe: [[-0.4, 0.45]] },
+  capacitive: { tank: [[-1.1, 0.8]], conveyor: [[-1, 0.9]] },
+  inductive: { stop: [[1.6, 0]], conveyor: [[1, 0.9], [-1, 0.9], [2, 0.9]], press: [[1.3, 0.9]] },
+  "optical distance": { conveyor: [[0, -1.2], [1.5, -1.2], [-1.5, -1.2]], stop: [[0.6, -1.3]] },
+  master: { cabinet: [[1.3, 0.5], [-1.3, 0.5], [1.3, 1.3]] },
+};
+
+function mountSpot(station, def) {
+  const slots = MOUNTS[def.kind === "master" ? "master" : def.category] || {};
+  for (const ref of Object.keys(slots)) {
+    for (const machine of station.items.filter((item) => item.ref === ref)) {
+      for (const offset of slots[ref]) {
+        const at = [machine.at[0] + offset[0], machine.at[1] + offset[1]];
+        const taken = station.items.some((item) => item.kind !== "equipment" && Math.hypot(item.at[0] - at[0], item.at[1] - at[1]) < 0.5);
+        if (!taken) {
+          return at;
+        }
+      }
+    }
+  }
+  return null;
+}
+
 function defaults(def) {
   const settings = {};
   (def.settings || []).forEach((setting) => {
@@ -77,7 +106,7 @@ function addItem(station, library, ref, at, deferPorts) {
     return null;
   }
   const kind = def.kind || "equipment";
-  const item = { uid: nextUid(station, kind === "equipment" ? "eq" : kind), kind: kind, ref: ref, at: clampToFloor(station, at || freeSpot(station)) };
+  const item = { uid: nextUid(station, kind === "equipment" ? "eq" : kind), kind: kind, ref: ref, at: clampToFloor(station, at || (kind !== "equipment" && mountSpot(station, def)) || freeSpot(station)) };
   if (kind === "sensor") {
     const values = defaults(def);
     item.settings = values.settings;
@@ -196,7 +225,7 @@ function checkSensor(def, item) {
     const given = item.settings ? item.settings[setting.key] : undefined;
     const raw = given === undefined ? setting.default : given;
     if (raw === null || raw === undefined || raw === "") {
-      problems.push({ unset: true, text: "Set " + setting.name + " (" + setting.min + "–" + setting.max + " " + setting.unit + "). The datasheet gives no default." });
+      problems.push({ unset: true, text: "Set " + setting.name + " (" + setting.min + "–" + setting.max + " " + setting.unit + "). The " + (def.source_kind === "iodd" ? "IODD" : "datasheet") + " gives no default." });
       return;
     }
     const real = Number(raw);
@@ -706,13 +735,13 @@ function markFiled(library, rows) {
   const seen = new Set();
   const hits = [];
   (rows || []).forEach((row) => {
-    const hit = { vendor: row.vendorName, vendor_id: row.vendorId, device_id: row.deviceId, part: row.productName, revision: row.ioLinkRev };
+    const hit = { vendor: row.vendorName, vendor_id: row.vendorId, device_id: row.deviceId, iodd_id: row.ioddId, part: row.productName, revision: row.ioLinkRev };
     const key = hit.vendor_id + ":" + hit.device_id + ":" + String(hit.part).toLowerCase();
     if (seen.has(key)) {
       return;
     }
     seen.add(key);
-    const filed = (library.sensors || []).find((def) => def.vendor_id === hit.vendor_id && def.device_id === hit.device_id && def.part.toLowerCase() === String(hit.part).toLowerCase());
+    const filed = (library.sensors || []).find((def) => !def.source_kind && def.vendor_id === hit.vendor_id && def.device_id === hit.device_id && def.part.toLowerCase() === String(hit.part).toLowerCase());
     hit.filed = filed ? filed.id : null;
     hits.push(hit);
   });

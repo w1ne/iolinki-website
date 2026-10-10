@@ -336,3 +336,68 @@ test("a sensor whose supply range does not cover the master supply is refused", 
   engine.addItem(station, lib, "ifm-pn7092", [0, 0]);
   assert.match(engine.checkStation(station, lib).issues.map((i) => i.problem).join(" "), /runs on 10–24 V; AL1301 supplies 20–28 V/);
 });
+
+// Run mode ------------------------------------------------------------------
+
+const sim = require("./station_sim.js");
+const pn7092 = require("./library/sensors/ifm-pn7092.json");
+const simLibrary = Object.assign({}, library, { sensors: [ig6214, pn7092] });
+
+function pressureStation(settings, options) {
+  const station = engine.newStation();
+  engine.addItem(station, simLibrary, "test-master-4", [-4, -3]);
+  const sensor = engine.addItem(station, simLibrary, "ifm-pn7092", [0, 0]);
+  Object.assign(sensor.settings, settings);
+  Object.assign(sensor.options, options || {});
+  return { station: station, uid: sensor.uid };
+}
+
+test("run mode switches at SP and holds until rP", () => {
+  const { station, uid } = pressureStation({ sp1: 40, rp1: 30 });
+  const state = sim.simCreate();
+  const at = (value) => {
+    state.hold[uid] = value;
+    return sim.simStep(station, simLibrary, state, 0.1).readings[uid];
+  };
+  assert.equal(at(20).on, false);
+  assert.equal(at(39).on, false);
+  assert.equal(at(41).on, true);
+  assert.equal(at(35).on, true, "between rP and SP the output keeps its state");
+  assert.equal(at(29).on, false);
+  assert.equal(at(35).on, false);
+});
+
+test("run mode inverts the pin for normally closed", () => {
+  const { station, uid } = pressureStation({ sp1: 40, rp1: 30 }, { output: "normally closed" });
+  const state = sim.simCreate();
+  state.hold[uid] = 50;
+  const reading = sim.simStep(station, simLibrary, state, 0.1).readings[uid];
+  assert.equal(reading.on, true);
+  assert.equal(reading.pin, false);
+});
+
+test("run mode packs process data with the IODD layout", () => {
+  const { station, uid } = pressureStation({ sp1: 40, rp1: 30 });
+  const state = sim.simCreate();
+  state.hold[uid] = 33.9;
+  let reading = sim.simStep(station, simLibrary, state, 0.1).readings[uid];
+  // Pressure 339 (x 0.1 bar) at bit 2, OUT1 at bit 0 off: 339 * 4 = 0x054C.
+  assert.equal(reading.pd.hex, "05 4C");
+  state.hold[uid] = 45;
+  reading = sim.simStep(station, simLibrary, state, 0.1).readings[uid];
+  assert.equal(reading.pd.hex, "07 09");
+});
+
+test("run mode: a part on the belt reaches a sensor mounted on the conveyor", () => {
+  const station = engine.newStation();
+  engine.addItem(station, simLibrary, "conveyor", [0, 0]);
+  engine.addItem(station, simLibrary, "test-master-4", [-4, -3]);
+  const sensor = engine.addItem(station, simLibrary, "ifm-ig6214");
+  assert.deepEqual(sensor.at, [1, 0.9], "added without a spot, the sensor mounts on the conveyor");
+  const state = sim.simCreate();
+  const seen = new Set();
+  for (let i = 0; i < 100; i++) {
+    seen.add(sim.simStep(station, simLibrary, state, 0.1).readings[sensor.uid].on);
+  }
+  assert.deepEqual(Array.from(seen).sort(), [false, true]);
+});

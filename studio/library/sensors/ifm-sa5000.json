@@ -77,12 +77,16 @@
       {
         "name": "Flow",
         "bit_offset": 16,
-        "bits": 16
+        "bits": 16,
+        "gradient": 1,
+        "unit": "%"
       },
       {
         "name": "Temperature",
         "bit_offset": 2,
-        "bits": 14
+        "bits": 14,
+        "gradient": 0.1,
+        "unit": "°C"
       },
       {
         "name": "OUT2",

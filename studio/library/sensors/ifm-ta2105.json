@@ -66,7 +66,9 @@
       {
         "name": "Temperature",
         "bit_offset": 0,
-        "bits": 16
+        "bits": 16,
+        "gradient": 0.1,
+        "unit": "°C"
       }
     ],
     "pd_out_bits": 0

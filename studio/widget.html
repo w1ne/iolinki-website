@@ -69,12 +69,20 @@ svg.wiring { font-family: inherit; }
 @media (max-width: 560px) { header { flex-direction: column; } .pane { height: 340px; } .order { columns: 1; } }
 
 [hidden] { display: none !important; }
+nav button.run { color: #1d7a3a; font-weight: 600; margin-right: 4px; }
+nav button.run.on { background: #14171c; color: #fff; }
+.live-line { display: block; font-variant-numeric: tabular-nums; font-weight: 600; margin-top: 2px; }
+.live-line:empty { display: none; }
+.s3d-tag em { display: block; font-style: normal; font-variant-numeric: tabular-nums; font-size: 11px; color: #2b3138; background: #eef1f5; border-radius: 5px; margin: 2px -4px 0; padding: 0 4px; }
+.s3d-tag em.on { background: #ffd23a; color: #3d2c00; }
+.ports-table td.pd code { font: 600 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+.ports-table td.pd .on { background: #ffd23a; border-radius: 4px; padding: 0 4px; }
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script>
-window.IOLINKI_LIBRARY = {"sensors":[{"id":"ifm-ig6214","kind":"sensor","category":"inductive","part":"IG6214","vendor":"ifm electronic","vendor_id":310,"device_id":1344,"in_catalog":true,"measures":"distance to a metal target","source_url":"https://www.ifm.com/de/en/product/IG6214","source":"IG6214-00 datasheet (EN-GB): switch point IO-Link 1.4...7 mm parameterisable; measuring range IO-Link 0.75...7.5 mm; correction factor steel 1 / stainless steel 0.7 / brass 0.5 / aluminium 0.5 / copper 0.4; PNP/NPN and NO/NC parameterisable; COM2; min. cycle 3.2 ms; M18 x 1, L = 60 mm.","job_words":["presence","detect","proximity","metal","steel","stainless","brass","aluminium","aluminum","copper","inductive"],"refused":["pressure","temperature","flow","level","plastic","wood","liquid","glass"],"settings":[{"key":"switch_point","name":"Switching point","unit":"mm","min":1.4,"max":7,"default":4,"corrected":true,"iodd_index":"60.1 (SSC1 SP1; IODD gives raw 400–3800 without scaling, so the mm limits are from the datasheet)"}],"options":[{"key":"output","name":"Output function","values":["normally open","normally closed"],"default":"normally open","aliases":{"normally open":["no"],"normally closed":["nc"]}},{"key":"polarity","name":"Switching output","values":["PNP","NPN"],"default":"PNP"}],"correction":{"steel":1,"stainless":0.7,"brass":0.5,"aluminium":0.5,"aluminum":0.5,"copper":0.4,"metal":1},"port_class":"A","connector":"M12","size_mm":[18,60,18],"iodd":{"file":"ifm-000540-20210210-IODD1.1.xml","iodd_finder_id":12781,"min_cycle_ms":3.2,"bitrate":"COM2","pd_in_bits":32,"pd_in":[{"name":"PDV1","bit_offset":16,"bits":16},{"name":"Device status","bit_offset":4,"bits":4},{"name":"S2CT","bit_offset":3,"bits":1},{"name":"S1CT","bit_offset":2,"bits":1},{"name":"SSC2","bit_offset":1,"bits":1},{"name":"SSC1","bit_offset":0,"bits":1}],"pd_out_bits":0},"power":{"current_ma":15,"current_kind":"max","supply_v":[10,30],"output_ma":100,"source_url":"https://doc.7-el.ru/i/ig6214-00_en-gb.pdf","source":"ifm IG6214-00 (22.09.2022): 'Operating voltage 10...30 DC; Current consumption < 15 mA; Permanent current rating of switching output DC 100 mA'."}},{"id":"ifm-kg5065","kind":"sensor","category":"capacitive","part":"KG5065","vendor":"ifm electronic","vendor_id":310,"device_id":387,"in_catalog":true,"measures":"presence of plastic, liquid or powder through non-metal walls (non-flush M18)","source_url":"https://docs.rs-online.com/f86e/A700000015266399.pdf","source":"ifm datasheet KG5065-02 (French): sensing range 12 mm, hysteresis 1...15 % of sensing range, NO/NC selectable, PNP/NPN, IO-Link 1.1 COM1, DeviceID 387, M18x1 body 87 mm long. No switch point range in mm is given, so only hysteresis is a setting.","job_words":["presence","detect","plastic","liquid","powder","fill","non-metal"],"refused":["pressure","temperature","flow","distance"],"settings":[{"key":"hysteresis","name":"Hysteresis","unit":"% of sensing range","min":1,"max":15,"default":5,"default_source":"studio default, not a factory setting"}],"options":[{"key":"output","name":"Output function","values":["normally open","normally closed"],"default":"normally open","default_source":"studio default, not a factory setting"}],"port_class":"A","connector":"M12","size_mm":[18,87,18],"iodd":{"file":"ifm-000183-20240612-IODD1.1.xml","iodd_finder_id":25552,"min_cycle_ms":100.8,"bitrate":"COM1","pd_in_bits":16,"pd_in":[{"name":"PDV1","bit_offset":4,"bits":12},{"name":"BDC1","bit_offset":0,"bits":1}],"pd_out_bits":0},"power":{"current_ma":20,"current_kind":"max","supply_v":[10,36],"output_ma":200,"source_url":"https://www.tme.com/Document/27d09c2013e1a702c856bb0d11d084eb/KG5065-02_PL-PL.pdf","source":"ifm KG5065-02 (11.04.2024, PL): 'Napiecie zasilania 10...36 DC; Pobor pradu < 20 mA; Prad obciazenia wyjscia przelaczajacego DC 200 mA'."}},{"id":"ifm-lr2050","kind":"sensor","category":"level","part":"LR2050","vendor":"ifm electronic","vendor_id":310,"device_id":479,"in_catalog":true,"measures":"continuous liquid level (guided wave radar)","source_url":"https://www.instrumart.com/assets/LR2050-01_EN-US.pdf","source":"ifm datasheet LR2050-01: probe length L 150...2000 mm; set point SP 15...L-30 mm (35...L-30 for oils), reset point rP 10...L-35 mm, steps 1 mm, hysteresis >5 mm; IO-Link 1.1, master port class A, DeviceID 479; head diameter 50 mm, length 119 mm. Max values below assume the longest 2000 mm probe (SP max 1970, rP max 1965); probe length itself is not in size_mm.","job_words":["level","tank","fill","liquid level","full","empty"],"refused":["pressure","temperature","flow","distance","presence"],"settings":[{"key":"sp","name":"Set point SP","unit":"mm","min":15,"max":1970,"default":60,"iodd_index":"583 (SP_FH1, 15–1970 mm)","default_source":"IODD factory default"},{"key":"rp","name":"Reset point rP","unit":"mm","min":10,"max":1965,"default":55,"below":"sp","iodd_index":"584 (rP_FL1, 10–1965 mm)","default_source":"IODD factory default"}],"options":[],"port_class":"A","connector":"M12","size_mm":[50,119,50],"iodd":{"file":"ifm-0001DF-20150720-IODD1.1.xml","iodd_finder_id":378,"min_cycle_ms":2.3,"bitrate":"COM2","pd_in_bits":16,"pd_in":[{"name":"Level","bit_offset":2,"bits":14},{"name":"OUT2","bit_offset":1,"bits":1},{"name":"OUT1","bit_offset":0,"bits":1}],"pd_out_bits":0},"power":{"current_ma":50,"current_kind":"max","supply_v":[18,30],"output_ma":150,"source_url":"https://assets.sparepartsnow.de/product-assets/media/134/LR2050-01_DE-DE.pdf","source":"ifm LR2050-01 (09.01.2024, DE): 'Betriebsspannung 18...30 DC; Stromaufnahme < 50 mA; Dauerhafte Strombelastbarkeit des Schaltausgangs DC 150 (200 bei bis 60 C) mA'; requires master port class A."}},{"id":"ifm-o5d100","kind":"sensor","category":"optical distance","part":"O5D100","vendor":"ifm electronic","vendor_id":310,"device_id":372,"in_catalog":true,"measures":"distance to an object, laser background suppression","source_url":"https://files.kempstoncontrols.com/files/20084f762550249295eb6c645c93c54c/O5D100.pdf","source":"ifm datasheet O5D100 (O5DLCPKG/US): measuring range 0.03...2 m on 90 % white target, background suppression up to 20 m, 2 complementary switching outputs (NO/NC), IO-Link 1.1 DeviceID 372; no separate setting range is given so the measuring range is used; drawing 18.2 x 70.3 x 46.8 mm. IODD ifm-000174-20210526-IODD1.1.xml sets SP1 as 5–200 cm, so the switch point is 50–2000 mm.","job_words":["distance","presence","detect","object","height","position","box"],"refused":["pressure","temperature","flow","level"],"settings":[{"key":"switch_point","name":"Switching distance","unit":"mm","min":50,"max":2000,"default":500,"iodd_index":"60.1 (BDC1 SP1, 5–200 cm)","default_source":"studio default, not a factory setting"}],"options":[{"key":"output","name":"Output function","values":["normally open","normally closed"],"default":"normally open","default_source":"studio default, not a factory setting"}],"port_class":"A","connector":"M12","size_mm":[18.2,70.3,46.8],"iodd":{"file":"ifm-000174-20210526-IODD1.1.xml","iodd_finder_id":11838,"min_cycle_ms":6.4,"bitrate":"COM2","pd_in_bits":16,"pd_in":[{"name":"Distance","bit_offset":4,"bits":12},{"name":"Switch state [OUT1]","bit_offset":0,"bits":1}],"pd_out_bits":0},"power":{"current_ma":75,"current_kind":"rated at 24 V","supply_v":[10,30],"output_ma":100,"source_url":"https://files.kempstoncontrols.com/files/c7af5a4a7ae01e0f97eb27533bb151d3/O5D100.pdf","source":"ifm O5D100-04 (09.07.2024): 'Operating voltage 10...30 DC; Current consumption 75; (24 V) mA; Max. current load per output 100 mA' (datasheet does not say max or typical)."}},{"id":"ifm-pn7092","kind":"sensor","category":"pressure","part":"PN7092","vendor":"ifm electronic","vendor_id":310,"device_id":401,"in_catalog":true,"measures":"liquid pressure (relative), 0 to 100 bar","source_url":"https://www.tme.com/Document/64ce106eef60d69f10f5f260eb60985e/PN7092-02_EN-GB.pdf","source":"ifm datasheet PN7092-02: measuring range 0...100 bar; set point SP 1...100 bar, reset point rP 0.5...99.5 bar, steps 0.5 bar (factory mode, DeviceID 401); output NO/NC parameterisable; IO-Link 1.1, master port A; housing diameter 34 mm, length 90.7 mm. Factory defaults not stated in datasheet.","job_words":["pressure","hydraulic","pump","line pressure","liquid pressure"],"refused":["temperature","flow","level","distance","presence"],"settings":[{"key":"sp1","name":"Set point SP1","unit":"bar","min":1,"max":100,"default":25,"iodd_index":"583 (SP_FH1, 10–1000 × 0.1 bar)","default_source":"IODD factory default"},{"key":"rp1","name":"Reset point rP1","unit":"bar","min":0.5,"max":99.5,"default":23,"below":"sp1","iodd_index":"584 (RP_FL1, 5–995 × 0.1 bar)","default_source":"IODD factory default"}],"options":[{"key":"output","name":"Output function","values":["normally open","normally closed"],"default":"normally open","default_source":"IODD factory default"}],"port_class":"A","connector":"M12","size_mm":[34,90.7,34],"iodd":{"file":"ifm-000191_V104326821-20140909-IODD1.1.xml","iodd_finder_id":97,"min_cycle_ms":2.3,"bitrate":"COM2","pd_in_bits":16,"pd_in":[{"name":"Pressure","bit_offset":2,"bits":14},{"name":"Switch status [OUT2].","bit_offset":1,"bits":1},{"name":"Switch status [OUT1].","bit_offset":0,"bits":1}],"pd_out_bits":0},"power":{"current_ma":35,"current_kind":"max","supply_v":[18,30],"output_ma":150,"source_url":"https://www.tme.com/Document/64ce106eef60d69f10f5f260eb60985e/PN7092-02_EN-GB.pdf","source":"ifm PN7092-02 (13.04.2023): 'Operating voltage 18...30 DC; Current consumption < 35 mA; Permanent current rating of switching output DC 150; (200 (...60 C) 250 (...40 C)) mA'."}},{"id":"ifm-sa5000","kind":"sensor","category":"flow","part":"SA5000","vendor":"ifm electronic","vendor_id":310,"device_id":533,"in_catalog":true,"measures":"flow velocity of water, glycol, oils and air","source_url":"https://www.ickey.cn/static-pf/datasheet/f4/91/2349/f4/033d83dda7b0c444cca1c1602d95b938.pdf","source":"ifm datasheet SA5000-00 (09.10.2015): liquids measuring range 0.04...3 m/s, setting range 0...6 m/s (relative mode); gases 2...100 m/s, setting 0...200 m/s; IO-Link 1.1, master port A, DeviceID 533 (REL), 540 (LIQU), 547 (GAS); drawing 34 mm diameter, 49.4 mm deep, about 142 mm long incl. 45 mm probe. IO-Link setting range from IODD ifm-000215-20161025-IODD1.1.xml: SP1 5–100 %, rP1 0–96 % of the measuring range end; defaults 20 % and 15 %.","job_words":["flow","water flow","coolant flow","air flow","velocity","pump running"],"refused":["pressure","temperature","level","distance","presence"],"settings":[{"key":"flow_sp1","name":"Flow switch point SP1","unit":"%","min":5,"max":100,"default":20,"iodd_index":"583 (SP_FH1_FLOW, % of measuring range end)","default_source":"IODD factory default"},{"key":"flow_rp1","name":"Flow reset point rP1","unit":"%","min":0,"max":96,"default":15,"below":"flow_sp1","iodd_index":"584 (rP_FL1_FLOW, %)","default_source":"IODD factory default"}],"options":[{"key":"medium","name":"Operating mode","values":["relative","absolute liquid","absolute gaseous"],"default":"relative"}],"port_class":"A","connector":"M12","size_mm":[34,142,49.4],"iodd":{"file":"ifm-000215-20161025-IODD1.1.xml","iodd_finder_id":413,"min_cycle_ms":3,"bitrate":"COM2","pd_in_bits":32,"pd_in":[{"name":"Flow","bit_offset":16,"bits":16},{"name":"Temperature","bit_offset":2,"bits":14},{"name":"OUT2","bit_offset":1,"bits":1},{"name":"OUT1","bit_offset":0,"bits":1}],"pd_out_bits":0},"power":{"current_ma":100,"current_kind":"max","supply_v":[18,30],"output_ma":250,"source_url":"https://aveon.ru/technical_support/ifm/TQTUwMDAtMDETQTUwMDAtMDF.pdf","source":"ifm SA5000-01 (26.04.2021, RU): 'Operating voltage 18...30 DC; Current consumption < 100 mA; Permanent load current of switching output DC 250 mA'."}},{"id":"ifm-ta2105","kind":"sensor","category":"temperature","part":"TA2105","vendor":"ifm electronic","vendor_id":310,"device_id":377,"in_catalog":true,"measures":"medium temperature in liquids and gases","source_url":"https://core.instrumart.com/assets/ifm-efector-ta2-series-temperature-transmitter-datasheets.pdf","source":"ifm datasheet TA2105-00 (13.04.2023): measuring range -50...150 C, factory setting -50...150 C (no separate setting range given, so measuring range is used); Pt1000, analog 4...20 mA and IO-Link 1.1; DeviceID 377; probe 6 mm, body diameter 18.7 mm, length 88.9 mm. Setting ranges from IODD ifm-000179-20200114-IODD1.1.xml: ASP2 -50.0–145.0 °C, AEP2 -45.0–150.0 °C.","job_words":["temperature","heat","hot","cold","coolant","thermometer"],"refused":["pressure","flow","level","distance","presence"],"settings":[{"key":"span_start","name":"Analogue start point ASP2","unit":"°C","min":-50,"max":145,"default":-50,"below":"span_end","iodd_index":"630 (ASP2, -500–1450 × 0.1 °C)","default_source":"IODD factory default"},{"key":"span_end","name":"Analogue end point AEP2","unit":"°C","min":-45,"max":150,"default":150,"iodd_index":"631 (AEP2, -450–1500 × 0.1 °C)","default_source":"IODD factory default"}],"options":[],"port_class":"A","connector":"M12","size_mm":[18.7,88.9,18.7],"iodd":{"file":"ifm-000179-20200114-IODD1.1.xml","iodd_finder_id":9100,"min_cycle_ms":2.3,"bitrate":"COM2","pd_in_bits":16,"pd_in":[{"name":"Temperature","bit_offset":0,"bits":16}],"pd_out_bits":0},"power":{"current_ma":50,"current_kind":"max","supply_v":[18,32],"source_url":"https://core.instrumart.com/assets/ifm-efector-ta2-series-temperature-transmitter-datasheets.pdf","source":"ifm efector TA2105-00 (13.04.2023): 'Operating voltage 18...32 DC; Current consumption < 50 mA' (analog 4...20 mA output, no switching-current rating)."}}],"masters":[{"id":"ifm-al1301","kind":"master","part":"AL1301","vendor":"ifm electronic","vendor_id":310,"ports":4,"port_class":"A","fieldbus":"PROFINET (CC-C, IRT switch)","source_url":"https://docs.rs-online.com/0deb/A700000015314028.pdf","source":"ifm datasheet AL1301 (IO-Link Master DL PN 4P IP69K): number of ports class A 4, IO-Link 1.1, PROFINET interface; dimensions 152 x 59.3 x 38.4 mm.","size_mm":[152,59.3,38.4],"power":{"total_supply_a":3.6,"supply_v":[20,28],"port_class":"A","source_url":"https://docs.rs-online.com/0deb/A700000015314028.pdf","source":"ifm AL1301-00 (27.08.2024): 'Sensor supply US Max. current load total 3.6 A; Operating voltage 20...28 DC; Number of ports class A 4' (no per-port sensor-supply limit or cable length stated)."}}],"equipment":[{"id":"conveyor","kind":"equipment","name":"Belt conveyor","boxes":[{"at":[0,0.45,0],"size":[6,0.15,1.2],"color":"#3a3f48"},{"at":[-2.6,0.2,0],"size":[0.2,0.4,1.2],"color":"#8b909a"},{"at":[2.6,0.2,0],"size":[0.2,0.4,1.2],"color":"#8b909a"}]},{"id":"stop","kind":"equipment","name":"Mechanical stop with part","boxes":[{"at":[0,0.35,0],"size":[3,0.3,1.6],"color":"#8b909a"},{"at":[1.2,0.9,0],"size":[0.3,0.8,1.4],"color":"#5c6570"},{"at":[0.5,0.75,0],"size":[0.8,0.5,0.8],"color":"#d5dbe3"}]},{"id":"tank","kind":"equipment","name":"Process tank","boxes":[{"at":[0,1.2,0],"size":[1.8,2.4,1.8],"color":"#9fb3c8"},{"at":[0,2.5,0],"size":[0.4,0.2,0.4],"color":"#5c6570"}]},{"id":"pipe","kind":"equipment","name":"Pipe run","boxes":[{"at":[0,0.9,0],"size":[5,0.25,0.25],"color":"#b8c2cf"},{"at":[-2,0.45,0],"size":[0.15,0.9,0.15],"color":"#5c6570"},{"at":[2,0.45,0],"size":[0.15,0.9,0.15],"color":"#5c6570"}]},{"id":"pump","kind":"equipment","name":"Pump","boxes":[{"at":[0,0.15,0],"size":[1.4,0.3,0.8],"color":"#5c6570"},{"at":[-0.2,0.6,0],"size":[0.8,0.6,0.6],"color":"#3d7f5a"},{"at":[0.5,0.6,0],"size":[0.4,0.5,0.5],"color":"#2f5f45"}]},{"id":"press","kind":"equipment","name":"Press","boxes":[{"at":[0,0.4,0],"size":[2,0.8,1.6],"color":"#5c6570"},{"at":[-0.8,1.6,0],"size":[0.3,2.4,1.2],"color":"#7d8ba3"},{"at":[0.8,1.6,0],"size":[0.3,2.4,1.2],"color":"#7d8ba3"},{"at":[0,2.9,0],"size":[2,0.4,1.4],"color":"#5c6570"}]},{"id":"robot","kind":"equipment","name":"Robot cell","boxes":[{"at":[0,0.3,0],"size":[1,0.6,1],"color":"#d9a400"},{"at":[0,1.1,0],"size":[0.4,1,0.4],"color":"#d9a400"},{"at":[0.5,1.6,0],"size":[1.2,0.3,0.3],"color":"#d9a400"}]},{"id":"cabinet","kind":"equipment","name":"Control cabinet","boxes":[{"at":[0,1,0],"size":[1.2,2,0.6],"color":"#c7ccd4"}]}],"applications":[{"id":"part-presence","title":"Part presence at a stop","sensor":"ifm-ig6214","items":[{"ref":"conveyor","at":[-1.5,0]},{"ref":"stop","at":[3,0]},{"ref":"ifm-ig6214","at":[4.6,0]},{"ref":"cabinet","at":[-5.5,-3.6]}]},{"id":"box-on-conveyor","title":"Object distance on a conveyor","sensor":"ifm-o5d100","items":[{"ref":"conveyor","at":[0,0]},{"ref":"ifm-o5d100","at":[0,-1.4]},{"ref":"cabinet","at":[-5.5,-3.6]}]},{"id":"pump-pressure","title":"Pump discharge pressure","sensor":"ifm-pn7092","items":[{"ref":"pump","at":[-2,0]},{"ref":"pipe","at":[2,0]},{"ref":"ifm-pn7092","at":[1,0.6]},{"ref":"cabinet","at":[-5.5,-3.6]}]},{"id":"line-flow","title":"Coolant flow in a pipe","sensor":"ifm-sa5000","items":[{"ref":"pump","at":[-2,0]},{"ref":"pipe","at":[2,0]},{"ref":"ifm-sa5000","at":[2.5,0.6]},{"ref":"cabinet","at":[-5.5,-3.6]}]},{"id":"tank-level","title":"Tank level","sensor":"ifm-lr2050","items":[{"ref":"tank","at":[0,0]},{"ref":"ifm-lr2050","at":[1.3,0]},{"ref":"cabinet","at":[-5.5,-3.6]}]},{"id":"tank-temperature","title":"Tank temperature","sensor":"ifm-ta2105","items":[{"ref":"tank","at":[0,0]},{"ref":"ifm-ta2105","at":[1.3,0.6]},{"ref":"cabinet","at":[-5.5,-3.6]}]},{"id":"hopper-fill","title":"Fill detection through a hopper wall","sensor":"ifm-kg5065","items":[{"ref":"tank","at":[0,0]},{"ref":"ifm-kg5065","at":[1.3,-0.4]},{"ref":"cabinet","at":[-5.5,-3.6]}]}]};
+window.IOLINKI_LIBRARY = {"sensors":[{"id":"ifm-ig6214","kind":"sensor","category":"inductive","part":"IG6214","vendor":"ifm electronic","vendor_id":310,"device_id":1344,"in_catalog":true,"measures":"distance to a metal target","source_url":"https://www.ifm.com/de/en/product/IG6214","source":"IG6214-00 datasheet (EN-GB): switch point IO-Link 1.4...7 mm parameterisable; measuring range IO-Link 0.75...7.5 mm; correction factor steel 1 / stainless steel 0.7 / brass 0.5 / aluminium 0.5 / copper 0.4; PNP/NPN and NO/NC parameterisable; COM2; min. cycle 3.2 ms; M18 x 1, L = 60 mm.","job_words":["presence","detect","proximity","metal","steel","stainless","brass","aluminium","aluminum","copper","inductive"],"refused":["pressure","temperature","flow","level","plastic","wood","liquid","glass"],"settings":[{"key":"switch_point","name":"Switching point","unit":"mm","min":1.4,"max":7,"default":4,"corrected":true,"iodd_index":"60.1 (SSC1 SP1; IODD gives raw 400–3800 without scaling, so the mm limits are from the datasheet)"}],"options":[{"key":"output","name":"Output function","values":["normally open","normally closed"],"default":"normally open","aliases":{"normally open":["no"],"normally closed":["nc"]}},{"key":"polarity","name":"Switching output","values":["PNP","NPN"],"default":"PNP"}],"correction":{"steel":1,"stainless":0.7,"brass":0.5,"aluminium":0.5,"aluminum":0.5,"copper":0.4,"metal":1},"port_class":"A","connector":"M12","size_mm":[18,60,18],"iodd":{"file":"ifm-000540-20210210-IODD1.1.xml","iodd_finder_id":12781,"min_cycle_ms":3.2,"bitrate":"COM2","pd_in_bits":32,"pd_in":[{"name":"PDV1","bit_offset":16,"bits":16},{"name":"Device status","bit_offset":4,"bits":4},{"name":"S2CT","bit_offset":3,"bits":1},{"name":"S1CT","bit_offset":2,"bits":1},{"name":"SSC2","bit_offset":1,"bits":1},{"name":"SSC1","bit_offset":0,"bits":1}],"pd_out_bits":0},"power":{"current_ma":15,"current_kind":"max","supply_v":[10,30],"output_ma":100,"source_url":"https://doc.7-el.ru/i/ig6214-00_en-gb.pdf","source":"ifm IG6214-00 (22.09.2022): 'Operating voltage 10...30 DC; Current consumption < 15 mA; Permanent current rating of switching output DC 100 mA'."}},{"id":"ifm-kg5065","kind":"sensor","category":"capacitive","part":"KG5065","vendor":"ifm electronic","vendor_id":310,"device_id":387,"in_catalog":true,"measures":"presence of plastic, liquid or powder through non-metal walls (non-flush M18)","source_url":"https://docs.rs-online.com/f86e/A700000015266399.pdf","source":"ifm datasheet KG5065-02 (French): sensing range 12 mm, hysteresis 1...15 % of sensing range, NO/NC selectable, PNP/NPN, IO-Link 1.1 COM1, DeviceID 387, M18x1 body 87 mm long. No switch point range in mm is given, so only hysteresis is a setting.","job_words":["presence","detect","plastic","liquid","powder","fill","non-metal"],"refused":["pressure","temperature","flow","distance"],"settings":[{"key":"hysteresis","name":"Hysteresis","unit":"% of sensing range","min":1,"max":15,"default":5,"default_source":"studio default, not a factory setting"}],"options":[{"key":"output","name":"Output function","values":["normally open","normally closed"],"default":"normally open","default_source":"studio default, not a factory setting"}],"port_class":"A","connector":"M12","size_mm":[18,87,18],"iodd":{"file":"ifm-000183-20240612-IODD1.1.xml","iodd_finder_id":25552,"min_cycle_ms":100.8,"bitrate":"COM1","pd_in_bits":16,"pd_in":[{"name":"PDV1","bit_offset":4,"bits":12},{"name":"BDC1","bit_offset":0,"bits":1}],"pd_out_bits":0},"power":{"current_ma":20,"current_kind":"max","supply_v":[10,36],"output_ma":200,"source_url":"https://www.tme.com/Document/27d09c2013e1a702c856bb0d11d084eb/KG5065-02_PL-PL.pdf","source":"ifm KG5065-02 (11.04.2024, PL): 'Napiecie zasilania 10...36 DC; Pobor pradu < 20 mA; Prad obciazenia wyjscia przelaczajacego DC 200 mA'."}},{"id":"ifm-lr2050","kind":"sensor","category":"level","part":"LR2050","vendor":"ifm electronic","vendor_id":310,"device_id":479,"in_catalog":true,"measures":"continuous liquid level (guided wave radar)","source_url":"https://www.instrumart.com/assets/LR2050-01_EN-US.pdf","source":"ifm datasheet LR2050-01: probe length L 150...2000 mm; set point SP 15...L-30 mm (35...L-30 for oils), reset point rP 10...L-35 mm, steps 1 mm, hysteresis >5 mm; IO-Link 1.1, master port class A, DeviceID 479; head diameter 50 mm, length 119 mm. Max values below assume the longest 2000 mm probe (SP max 1970, rP max 1965); probe length itself is not in size_mm.","job_words":["level","tank","fill","liquid level","full","empty"],"refused":["pressure","temperature","flow","distance","presence"],"settings":[{"key":"sp","name":"Set point SP","unit":"mm","min":15,"max":1970,"default":60,"iodd_index":"583 (SP_FH1, 15–1970 mm)","default_source":"IODD factory default"},{"key":"rp","name":"Reset point rP","unit":"mm","min":10,"max":1965,"default":55,"below":"sp","iodd_index":"584 (rP_FL1, 10–1965 mm)","default_source":"IODD factory default"}],"options":[],"port_class":"A","connector":"M12","size_mm":[50,119,50],"iodd":{"file":"ifm-0001DF-20150720-IODD1.1.xml","iodd_finder_id":378,"min_cycle_ms":2.3,"bitrate":"COM2","pd_in_bits":16,"pd_in":[{"name":"Level","bit_offset":2,"bits":14,"gradient":1,"unit":"mm"},{"name":"OUT2","bit_offset":1,"bits":1},{"name":"OUT1","bit_offset":0,"bits":1}],"pd_out_bits":0},"power":{"current_ma":50,"current_kind":"max","supply_v":[18,30],"output_ma":150,"source_url":"https://assets.sparepartsnow.de/product-assets/media/134/LR2050-01_DE-DE.pdf","source":"ifm LR2050-01 (09.01.2024, DE): 'Betriebsspannung 18...30 DC; Stromaufnahme < 50 mA; Dauerhafte Strombelastbarkeit des Schaltausgangs DC 150 (200 bei bis 60 C) mA'; requires master port class A."}},{"id":"ifm-o5d100","kind":"sensor","category":"optical distance","part":"O5D100","vendor":"ifm electronic","vendor_id":310,"device_id":372,"in_catalog":true,"measures":"distance to an object, laser background suppression","source_url":"https://files.kempstoncontrols.com/files/20084f762550249295eb6c645c93c54c/O5D100.pdf","source":"ifm datasheet O5D100 (O5DLCPKG/US): measuring range 0.03...2 m on 90 % white target, background suppression up to 20 m, 2 complementary switching outputs (NO/NC), IO-Link 1.1 DeviceID 372; no separate setting range is given so the measuring range is used; drawing 18.2 x 70.3 x 46.8 mm. IODD ifm-000174-20210526-IODD1.1.xml sets SP1 as 5–200 cm, so the switch point is 50–2000 mm.","job_words":["distance","presence","detect","object","height","position","box"],"refused":["pressure","temperature","flow","level"],"settings":[{"key":"switch_point","name":"Switching distance","unit":"mm","min":50,"max":2000,"default":500,"iodd_index":"60.1 (BDC1 SP1, 5–200 cm)","default_source":"studio default, not a factory setting"}],"options":[{"key":"output","name":"Output function","values":["normally open","normally closed"],"default":"normally open","default_source":"studio default, not a factory setting"}],"port_class":"A","connector":"M12","size_mm":[18.2,70.3,46.8],"iodd":{"file":"ifm-000174-20210526-IODD1.1.xml","iodd_finder_id":11838,"min_cycle_ms":6.4,"bitrate":"COM2","pd_in_bits":16,"pd_in":[{"name":"Distance","bit_offset":4,"bits":12},{"name":"Switch state [OUT1]","bit_offset":0,"bits":1}],"pd_out_bits":0},"power":{"current_ma":75,"current_kind":"rated at 24 V","supply_v":[10,30],"output_ma":100,"source_url":"https://files.kempstoncontrols.com/files/c7af5a4a7ae01e0f97eb27533bb151d3/O5D100.pdf","source":"ifm O5D100-04 (09.07.2024): 'Operating voltage 10...30 DC; Current consumption 75; (24 V) mA; Max. current load per output 100 mA' (datasheet does not say max or typical)."}},{"id":"ifm-pn7092","kind":"sensor","category":"pressure","part":"PN7092","vendor":"ifm electronic","vendor_id":310,"device_id":401,"in_catalog":true,"measures":"liquid pressure (relative), 0 to 100 bar","source_url":"https://www.tme.com/Document/64ce106eef60d69f10f5f260eb60985e/PN7092-02_EN-GB.pdf","source":"ifm datasheet PN7092-02: measuring range 0...100 bar; set point SP 1...100 bar, reset point rP 0.5...99.5 bar, steps 0.5 bar (factory mode, DeviceID 401); output NO/NC parameterisable; IO-Link 1.1, master port A; housing diameter 34 mm, length 90.7 mm. Factory defaults not stated in datasheet.","job_words":["pressure","hydraulic","pump","line pressure","liquid pressure"],"refused":["temperature","flow","level","distance","presence"],"settings":[{"key":"sp1","name":"Set point SP1","unit":"bar","min":1,"max":100,"default":25,"iodd_index":"583 (SP_FH1, 10–1000 × 0.1 bar)","default_source":"IODD factory default"},{"key":"rp1","name":"Reset point rP1","unit":"bar","min":0.5,"max":99.5,"default":23,"below":"sp1","iodd_index":"584 (RP_FL1, 5–995 × 0.1 bar)","default_source":"IODD factory default"}],"options":[{"key":"output","name":"Output function","values":["normally open","normally closed"],"default":"normally open","default_source":"IODD factory default"}],"port_class":"A","connector":"M12","size_mm":[34,90.7,34],"iodd":{"file":"ifm-000191_V104326821-20140909-IODD1.1.xml","iodd_finder_id":97,"min_cycle_ms":2.3,"bitrate":"COM2","pd_in_bits":16,"pd_in":[{"name":"Pressure","bit_offset":2,"bits":14,"gradient":0.1,"unit":"bar"},{"name":"Switch status [OUT2].","bit_offset":1,"bits":1},{"name":"Switch status [OUT1].","bit_offset":0,"bits":1}],"pd_out_bits":0},"power":{"current_ma":35,"current_kind":"max","supply_v":[18,30],"output_ma":150,"source_url":"https://www.tme.com/Document/64ce106eef60d69f10f5f260eb60985e/PN7092-02_EN-GB.pdf","source":"ifm PN7092-02 (13.04.2023): 'Operating voltage 18...30 DC; Current consumption < 35 mA; Permanent current rating of switching output DC 150; (200 (...60 C) 250 (...40 C)) mA'."}},{"id":"ifm-sa5000","kind":"sensor","category":"flow","part":"SA5000","vendor":"ifm electronic","vendor_id":310,"device_id":533,"in_catalog":true,"measures":"flow velocity of water, glycol, oils and air","source_url":"https://www.ickey.cn/static-pf/datasheet/f4/91/2349/f4/033d83dda7b0c444cca1c1602d95b938.pdf","source":"ifm datasheet SA5000-00 (09.10.2015): liquids measuring range 0.04...3 m/s, setting range 0...6 m/s (relative mode); gases 2...100 m/s, setting 0...200 m/s; IO-Link 1.1, master port A, DeviceID 533 (REL), 540 (LIQU), 547 (GAS); drawing 34 mm diameter, 49.4 mm deep, about 142 mm long incl. 45 mm probe. IO-Link setting range from IODD ifm-000215-20161025-IODD1.1.xml: SP1 5–100 %, rP1 0–96 % of the measuring range end; defaults 20 % and 15 %.","job_words":["flow","water flow","coolant flow","air flow","velocity","pump running"],"refused":["pressure","temperature","level","distance","presence"],"settings":[{"key":"flow_sp1","name":"Flow switch point SP1","unit":"%","min":5,"max":100,"default":20,"iodd_index":"583 (SP_FH1_FLOW, % of measuring range end)","default_source":"IODD factory default"},{"key":"flow_rp1","name":"Flow reset point rP1","unit":"%","min":0,"max":96,"default":15,"below":"flow_sp1","iodd_index":"584 (rP_FL1_FLOW, %)","default_source":"IODD factory default"}],"options":[{"key":"medium","name":"Operating mode","values":["relative","absolute liquid","absolute gaseous"],"default":"relative"}],"port_class":"A","connector":"M12","size_mm":[34,142,49.4],"iodd":{"file":"ifm-000215-20161025-IODD1.1.xml","iodd_finder_id":413,"min_cycle_ms":3,"bitrate":"COM2","pd_in_bits":32,"pd_in":[{"name":"Flow","bit_offset":16,"bits":16,"gradient":1,"unit":"%"},{"name":"Temperature","bit_offset":2,"bits":14,"gradient":0.1,"unit":"°C"},{"name":"OUT2","bit_offset":1,"bits":1},{"name":"OUT1","bit_offset":0,"bits":1}],"pd_out_bits":0},"power":{"current_ma":100,"current_kind":"max","supply_v":[18,30],"output_ma":250,"source_url":"https://aveon.ru/technical_support/ifm/TQTUwMDAtMDETQTUwMDAtMDF.pdf","source":"ifm SA5000-01 (26.04.2021, RU): 'Operating voltage 18...30 DC; Current consumption < 100 mA; Permanent load current of switching output DC 250 mA'."}},{"id":"ifm-ta2105","kind":"sensor","category":"temperature","part":"TA2105","vendor":"ifm electronic","vendor_id":310,"device_id":377,"in_catalog":true,"measures":"medium temperature in liquids and gases","source_url":"https://core.instrumart.com/assets/ifm-efector-ta2-series-temperature-transmitter-datasheets.pdf","source":"ifm datasheet TA2105-00 (13.04.2023): measuring range -50...150 C, factory setting -50...150 C (no separate setting range given, so measuring range is used); Pt1000, analog 4...20 mA and IO-Link 1.1; DeviceID 377; probe 6 mm, body diameter 18.7 mm, length 88.9 mm. Setting ranges from IODD ifm-000179-20200114-IODD1.1.xml: ASP2 -50.0–145.0 °C, AEP2 -45.0–150.0 °C.","job_words":["temperature","heat","hot","cold","coolant","thermometer"],"refused":["pressure","flow","level","distance","presence"],"settings":[{"key":"span_start","name":"Analogue start point ASP2","unit":"°C","min":-50,"max":145,"default":-50,"below":"span_end","iodd_index":"630 (ASP2, -500–1450 × 0.1 °C)","default_source":"IODD factory default"},{"key":"span_end","name":"Analogue end point AEP2","unit":"°C","min":-45,"max":150,"default":150,"iodd_index":"631 (AEP2, -450–1500 × 0.1 °C)","default_source":"IODD factory default"}],"options":[],"port_class":"A","connector":"M12","size_mm":[18.7,88.9,18.7],"iodd":{"file":"ifm-000179-20200114-IODD1.1.xml","iodd_finder_id":9100,"min_cycle_ms":2.3,"bitrate":"COM2","pd_in_bits":16,"pd_in":[{"name":"Temperature","bit_offset":0,"bits":16,"gradient":0.1,"unit":"°C"}],"pd_out_bits":0},"power":{"current_ma":50,"current_kind":"max","supply_v":[18,32],"source_url":"https://core.instrumart.com/assets/ifm-efector-ta2-series-temperature-transmitter-datasheets.pdf","source":"ifm efector TA2105-00 (13.04.2023): 'Operating voltage 18...32 DC; Current consumption < 50 mA' (analog 4...20 mA output, no switching-current rating)."}}],"masters":[{"id":"ifm-al1301","kind":"master","part":"AL1301","vendor":"ifm electronic","vendor_id":310,"ports":4,"port_class":"A","fieldbus":"PROFINET (CC-C, IRT switch)","source_url":"https://docs.rs-online.com/0deb/A700000015314028.pdf","source":"ifm datasheet AL1301 (IO-Link Master DL PN 4P IP69K): number of ports class A 4, IO-Link 1.1, PROFINET interface; dimensions 152 x 59.3 x 38.4 mm.","size_mm":[152,59.3,38.4],"power":{"total_supply_a":3.6,"supply_v":[20,28],"port_class":"A","source_url":"https://docs.rs-online.com/0deb/A700000015314028.pdf","source":"ifm AL1301-00 (27.08.2024): 'Sensor supply US Max. current load total 3.6 A; Operating voltage 20...28 DC; Number of ports class A 4' (no per-port sensor-supply limit or cable length stated)."}}],"equipment":[{"id":"conveyor","kind":"equipment","name":"Belt conveyor","boxes":[{"at":[0,0.45,0],"size":[6,0.15,1.2],"color":"#3a3f48"},{"at":[-2.6,0.2,0],"size":[0.2,0.4,1.2],"color":"#8b909a"},{"at":[2.6,0.2,0],"size":[0.2,0.4,1.2],"color":"#8b909a"}]},{"id":"stop","kind":"equipment","name":"Mechanical stop with part","boxes":[{"at":[0,0.35,0],"size":[3,0.3,1.6],"color":"#8b909a"},{"at":[1.2,0.9,0],"size":[0.3,0.8,1.4],"color":"#5c6570"},{"at":[0.5,0.75,0],"size":[0.8,0.5,0.8],"color":"#d5dbe3"}]},{"id":"tank","kind":"equipment","name":"Process tank","boxes":[{"at":[0,1.2,0],"size":[1.8,2.4,1.8],"color":"#9fb3c8"},{"at":[0,2.5,0],"size":[0.4,0.2,0.4],"color":"#5c6570"}]},{"id":"pipe","kind":"equipment","name":"Pipe run","boxes":[{"at":[0,0.9,0],"size":[5,0.25,0.25],"color":"#b8c2cf"},{"at":[-2,0.45,0],"size":[0.15,0.9,0.15],"color":"#5c6570"},{"at":[2,0.45,0],"size":[0.15,0.9,0.15],"color":"#5c6570"}]},{"id":"pump","kind":"equipment","name":"Pump","boxes":[{"at":[0,0.15,0],"size":[1.4,0.3,0.8],"color":"#5c6570"},{"at":[-0.2,0.6,0],"size":[0.8,0.6,0.6],"color":"#3d7f5a"},{"at":[0.5,0.6,0],"size":[0.4,0.5,0.5],"color":"#2f5f45"}]},{"id":"press","kind":"equipment","name":"Press","boxes":[{"at":[0,0.4,0],"size":[2,0.8,1.6],"color":"#5c6570"},{"at":[-0.8,1.6,0],"size":[0.3,2.4,1.2],"color":"#7d8ba3"},{"at":[0.8,1.6,0],"size":[0.3,2.4,1.2],"color":"#7d8ba3"},{"at":[0,2.9,0],"size":[2,0.4,1.4],"color":"#5c6570"}]},{"id":"robot","kind":"equipment","name":"Robot cell","boxes":[{"at":[0,0.3,0],"size":[1,0.6,1],"color":"#d9a400"},{"at":[0,1.1,0],"size":[0.4,1,0.4],"color":"#d9a400"},{"at":[0.5,1.6,0],"size":[1.2,0.3,0.3],"color":"#d9a400"}]},{"id":"cabinet","kind":"equipment","name":"Control cabinet","boxes":[{"at":[0,1,0],"size":[1.2,2,0.6],"color":"#c7ccd4"}]}],"applications":[{"id":"part-presence","title":"Part presence at a stop","sensor":"ifm-ig6214","items":[{"ref":"conveyor","at":[-1.5,0]},{"ref":"stop","at":[3,0]},{"ref":"ifm-ig6214","at":[4.6,0]},{"ref":"cabinet","at":[-5.5,-3.6]}]},{"id":"box-on-conveyor","title":"Object distance on a conveyor","sensor":"ifm-o5d100","items":[{"ref":"conveyor","at":[0,0]},{"ref":"ifm-o5d100","at":[0,-1.4]},{"ref":"cabinet","at":[-5.5,-3.6]}]},{"id":"pump-pressure","title":"Pump discharge pressure","sensor":"ifm-pn7092","items":[{"ref":"pump","at":[-2,0]},{"ref":"pipe","at":[2,0]},{"ref":"ifm-pn7092","at":[1,0.6]},{"ref":"cabinet","at":[-5.5,-3.6]}]},{"id":"line-flow","title":"Coolant flow in a pipe","sensor":"ifm-sa5000","items":[{"ref":"pump","at":[-2,0]},{"ref":"pipe","at":[2,0]},{"ref":"ifm-sa5000","at":[2.5,0.6]},{"ref":"cabinet","at":[-5.5,-3.6]}]},{"id":"tank-level","title":"Tank level","sensor":"ifm-lr2050","items":[{"ref":"tank","at":[0,0]},{"ref":"ifm-lr2050","at":[1.3,0]},{"ref":"cabinet","at":[-5.5,-3.6]}]},{"id":"tank-temperature","title":"Tank temperature","sensor":"ifm-ta2105","items":[{"ref":"tank","at":[0,0]},{"ref":"ifm-ta2105","at":[1.3,0.6]},{"ref":"cabinet","at":[-5.5,-3.6]}]},{"id":"hopper-fill","title":"Fill detection through a hopper wall","sensor":"ifm-kg5065","items":[{"ref":"tank","at":[0,0]},{"ref":"ifm-kg5065","at":[1.3,-0.4]},{"ref":"cabinet","at":[-5.5,-3.6]}]}]};
 
 void 0,
 /**
@@ -145,6 +153,35 @@ function freeSpot(station) {
   return [0, 0];
 }
 
+// Where a new part goes when it is added without a spot: a sensor on the
+// machine it measures, a master by the control cabinet.
+const MOUNTS = {
+  pressure: { pipe: [[0.8, 0.45], [-0.8, 0.45], [1.6, 0.45], [-1.6, 0.45]], pump: [[0.8, 0.6]] },
+  flow: { pipe: [[1.2, 0.45], [-1.2, 0.45], [0, 0.45]] },
+  level: { tank: [[1.3, 0], [0, 1.3], [-1.3, 0]] },
+  temperature: { tank: [[1.3, 0.6], [0.6, 1.3], [-1.3, 0.6]], pipe: [[-0.4, 0.45]] },
+  capacitive: { tank: [[-1.1, 0.8]], conveyor: [[-1, 0.9]] },
+  inductive: { stop: [[1.6, 0]], conveyor: [[1, 0.9], [-1, 0.9], [2, 0.9]], press: [[1.3, 0.9]] },
+  "optical distance": { conveyor: [[0, -1.2], [1.5, -1.2], [-1.5, -1.2]], stop: [[0.6, -1.3]] },
+  master: { cabinet: [[1.3, 0.5], [-1.3, 0.5], [1.3, 1.3]] },
+};
+
+function mountSpot(station, def) {
+  const slots = MOUNTS[def.kind === "master" ? "master" : def.category] || {};
+  for (const ref of Object.keys(slots)) {
+    for (const machine of station.items.filter((item) => item.ref === ref)) {
+      for (const offset of slots[ref]) {
+        const at = [machine.at[0] + offset[0], machine.at[1] + offset[1]];
+        const taken = station.items.some((item) => item.kind !== "equipment" && Math.hypot(item.at[0] - at[0], item.at[1] - at[1]) < 0.5);
+        if (!taken) {
+          return at;
+        }
+      }
+    }
+  }
+  return null;
+}
+
 function defaults(def) {
   const settings = {};
   (def.settings || []).forEach((setting) => {
@@ -163,7 +200,7 @@ function addItem(station, library, ref, at, deferPorts) {
     return null;
   }
   const kind = def.kind || "equipment";
-  const item = { uid: nextUid(station, kind === "equipment" ? "eq" : kind), kind: kind, ref: ref, at: clampToFloor(station, at || freeSpot(station)) };
+  const item = { uid: nextUid(station, kind === "equipment" ? "eq" : kind), kind: kind, ref: ref, at: clampToFloor(station, at || (kind !== "equipment" && mountSpot(station, def)) || freeSpot(station)) };
   if (kind === "sensor") {
     const values = defaults(def);
     item.settings = values.settings;
@@ -282,7 +319,7 @@ function checkSensor(def, item) {
     const given = item.settings ? item.settings[setting.key] : undefined;
     const raw = given === undefined ? setting.default : given;
     if (raw === null || raw === undefined || raw === "") {
-      problems.push({ unset: true, text: "Set " + setting.name + " (" + setting.min + "–" + setting.max + " " + setting.unit + "). The datasheet gives no default." });
+      problems.push({ unset: true, text: "Set " + setting.name + " (" + setting.min + "–" + setting.max + " " + setting.unit + "). The " + (def.source_kind === "iodd" ? "IODD" : "datasheet") + " gives no default." });
       return;
     }
     const real = Number(raw);
@@ -792,13 +829,13 @@ function markFiled(library, rows) {
   const seen = new Set();
   const hits = [];
   (rows || []).forEach((row) => {
-    const hit = { vendor: row.vendorName, vendor_id: row.vendorId, device_id: row.deviceId, part: row.productName, revision: row.ioLinkRev };
+    const hit = { vendor: row.vendorName, vendor_id: row.vendorId, device_id: row.deviceId, iodd_id: row.ioddId, part: row.productName, revision: row.ioLinkRev };
     const key = hit.vendor_id + ":" + hit.device_id + ":" + String(hit.part).toLowerCase();
     if (seen.has(key)) {
       return;
     }
     seen.add(key);
-    const filed = (library.sensors || []).find((def) => def.vendor_id === hit.vendor_id && def.device_id === hit.device_id && def.part.toLowerCase() === String(hit.part).toLowerCase());
+    const filed = (library.sensors || []).find((def) => !def.source_kind && def.vendor_id === hit.vendor_id && def.device_id === hit.device_id && def.part.toLowerCase() === String(hit.part).toLowerCase());
     hit.filed = filed ? filed.id : null;
     hits.push(hit);
   });
@@ -896,6 +933,241 @@ if (typeof module !== "undefined") {
 
 "use strict";
 
+// Run mode: a simple process model per machine drives every sensor, and the
+// sensor's own settings decide its output (set point, reset point, NO/NC).
+// Process data in is packed with the bit layout from the device's IODD. This
+// shows what the configured station does; it is not the sensor firmware.
+
+if (typeof require !== "undefined" && typeof byId === "undefined") {
+  // Node: pull the engine into scope the way the browser has it as globals.
+  var { byId } = require("./engine.js");
+}
+
+const SIM_PERIOD_S = 14;
+const SIM_TRACE_S = 24;
+const SIM_SAMPLE_S = 0.1;
+const PRESENCE = ["inductive", "capacitive", "optical distance"];
+const BELT_SPEED = 0.7;
+const BELT_PITCH = 3;
+const BELT_HALF = 3;
+
+function simCreate() {
+  return { t: 0, last: -1, out: {}, hold: {}, trace: {} };
+}
+
+// Phase offset per sensor so the process curves do not move in lockstep.
+function simPhase(uid) {
+  let h = 0;
+  for (let i = 0; i < uid.length; i++) {
+    h = (h * 31 + uid.charCodeAt(i)) % 997;
+  }
+  return h / 997;
+}
+
+// Rise, hold high, fall, hold low; smooth at the corners.
+function simShape(phase) {
+  const p = ((phase % 1) + 1) % 1;
+  const ease = (x) => 0.5 - 0.5 * Math.cos(Math.PI * x);
+  if (p < 0.35) {
+    return ease(p / 0.35);
+  }
+  if (p < 0.5) {
+    return 1;
+  }
+  if (p < 0.85) {
+    return 1 - ease((p - 0.5) / 0.35);
+  }
+  return 0;
+}
+
+// Positions of the parts riding each conveyor, in station metres.
+function simBelt(station, t) {
+  const out = [];
+  station.items.filter((item) => item.ref === "conveyor").forEach((belt) => {
+    for (let k = 0; k < (2 * BELT_HALF) / BELT_PITCH; k++) {
+      const x = (((t * BELT_SPEED + k * BELT_PITCH) % (2 * BELT_HALF)) + 2 * BELT_HALF) % (2 * BELT_HALF) - BELT_HALF;
+      out.push({ belt: belt.uid, local: x, at: [belt.at[0] + x, belt.at[1]] });
+    }
+  });
+  return out;
+}
+
+function simNearest(station, item, refs, reach) {
+  let best = null;
+  station.items.filter((other) => refs.indexOf(other.ref) !== -1).forEach((other) => {
+    const d = Math.hypot(other.at[0] - item.at[0], other.at[1] - item.at[1]);
+    if (d <= reach && (!best || d < best.d)) {
+      best = { item: other, d: d };
+    }
+  });
+  return best && best.item;
+}
+
+// Whether a target is in front of a presence sensor at time t: a part on the
+// nearest conveyor passing the sensor, the part held at a stop, or a timed
+// pulse when the sensor stands alone.
+function simPresent(station, item, t, boxes) {
+  const belt = simNearest(station, item, ["conveyor"], 2.5);
+  if (belt) {
+    return boxes.some((box) => box.belt === belt.uid && Math.abs(box.at[0] - item.at[0]) < 0.45);
+  }
+  const phase = t / 6 + simPhase(item.uid);
+  return (phase % 1) < (simNearest(station, item, ["stop"], 3) ? 0.6 : 0.35);
+}
+
+function simSwitchPoints(def, item) {
+  const settings = def.settings || [];
+  const sp = settings.find((s) => !s.below && settings.some((other) => other.below === s.key)) || settings[0];
+  const rp = sp && settings.find((s) => s.below === sp.key);
+  const value = (setting) => {
+    if (!setting) {
+      return null;
+    }
+    const v = item.settings && item.settings[setting.key];
+    return v === null || v === undefined || v === "" ? setting.default : Number(v);
+  };
+  return { sp: sp, rp: rp, spValue: value(sp), rpValue: value(rp) };
+}
+
+function simAnalogue(def) {
+  return (def.settings || []).some((s) => /start point|ASP/i.test(s.name));
+}
+
+function simReading(station, library, sim, item, boxes) {
+  const def = byId(library, item.ref) || {};
+  const category = def.category || "device";
+  const reading = { uid: item.uid, part: def.part, category: category, unit: "", value: null, on: false, pin: null, ma: null, present: null, pd: null, held: sim.hold[item.uid] !== undefined };
+  const options = item.options || {};
+  const nc = /closed/i.test(options.output || "");
+  const points = simSwitchPoints(def, item);
+  const phase = sim.t / SIM_PERIOD_S + simPhase(item.uid);
+
+  if (PRESENCE.indexOf(category) !== -1) {
+    const present = reading.held ? Boolean(sim.hold[item.uid]) : simPresent(station, item, sim.t, boxes);
+    reading.present = present;
+    reading.on = present;
+    if (points.sp && points.spValue !== null && category !== "capacitive") {
+      // A target sits well inside the switching distance; the background is far beyond it.
+      reading.unit = points.sp.unit;
+      reading.value = present ? Math.round(points.spValue * 0.7 * 10) / 10 : null;
+    }
+  } else if (simAnalogue(def)) {
+    const start = points.rpValue !== null && points.rp && /start/i.test(points.rp.name) ? points.rpValue : (def.settings[0] && Number(item.settings[def.settings[0].key]));
+    const endSetting = (def.settings || []).find((s) => /end point|AEP/i.test(s.name));
+    const end = endSetting ? Number(item.settings[endSetting.key]) : start + 100;
+    // A process that warms from about room temperature, inside the span.
+    const lo = Math.max(start, 15);
+    const hi = Math.min(end, 85);
+    const value = reading.held ? Number(sim.hold[item.uid]) : (hi > lo ? lo + 0.15 * (hi - lo) + 0.7 * (hi - lo) * simShape(phase) : lo);
+    reading.unit = (endSetting || {}).unit || "";
+    reading.value = Math.round(value * 10) / 10;
+    reading.ma = end > start ? Math.max(3.8, Math.min(20.5, 4 + (16 * (value - start)) / (end - start))) : null;
+    reading.ma = reading.ma === null ? null : Math.round(reading.ma * 100) / 100;
+  } else if (points.sp && points.spValue !== null) {
+    const span = points.sp.max - points.sp.min;
+    const sp = points.spValue;
+    const rp = points.rpValue !== null ? points.rpValue : sp - 0.02 * span;
+    const swing = Math.max(sp - rp, 0.04 * span);
+    const floor = points.rp ? Math.min(points.rp.min, points.sp.min) : points.sp.min;
+    const lo = Math.max(floor, rp - 1.5 * swing - 0.05 * span);
+    const hi = Math.min(points.sp.max, sp + swing + 0.05 * span);
+    const value = reading.held ? Number(sim.hold[item.uid]) : lo + (hi - lo) * simShape(phase);
+    const was = Boolean(sim.out[item.uid]);
+    const on = value >= sp ? true : value <= rp ? false : was;
+    reading.unit = points.sp.unit;
+    reading.value = Math.round(value * 100) / 100;
+    reading.on = on;
+    reading.range = [lo, hi];
+    reading.sp = sp;
+    reading.rp = rp;
+  } else {
+    reading.on = false;
+  }
+  sim.out[item.uid] = reading.on;
+  if (!simAnalogue(def) && reading.category !== "device" && reading.category !== "actuator") {
+    reading.pin = nc ? !reading.on : reading.on;
+  }
+  reading.pd = simProcessData(def, reading);
+  return reading;
+}
+
+// Pack process data in the way the master sees it: field at bit_offset with
+// bit 0 the least significant bit of the last octet.
+function simProcessData(def, reading) {
+  const iodd = def.iodd || {};
+  const bits = Number(iodd.pd_in_bits) || 0;
+  if (!bits || !iodd.pd_in) {
+    return null;
+  }
+  let total = 0;
+  const fields = [];
+  iodd.pd_in.forEach((field) => {
+    let raw = null;
+    if (field.bits === 1) {
+      raw = /OUT1|SSC1|BDC1|\[OUT1\]/i.test(field.name) ? (reading.on ? 1 : 0) : 0;
+    } else if (field.gradient && reading.value !== null && (!field.unit || field.unit === reading.unit)) {
+      raw = Math.round(reading.value / field.gradient);
+      if (raw < 0) {
+        raw += Math.pow(2, field.bits);
+      }
+      raw = Math.max(0, Math.min(Math.pow(2, field.bits) - 1, raw));
+    } else if (field.gradient && field.unit === "°C") {
+      // A second channel such as medium temperature: room temperature.
+      raw = Math.round(22 / field.gradient);
+    }
+    fields.push({ name: field.name, raw: raw });
+    if (raw !== null) {
+      total += raw * Math.pow(2, field.bit_offset);
+    }
+  });
+  const hex = total.toString(16).toUpperCase().padStart(Math.ceil(bits / 4), "0");
+  return { bits: bits, hex: hex.replace(/(..)(?=.)/g, "$1 "), fields: fields };
+}
+
+function simStep(station, library, sim, dt) {
+  sim.t += dt;
+  const boxes = simBelt(station, sim.t);
+  const readings = {};
+  const sample = sim.t - sim.last >= SIM_SAMPLE_S;
+  station.items.filter((item) => item.kind === "sensor").forEach((item) => {
+    const reading = simReading(station, library, sim, item, boxes);
+    readings[item.uid] = reading;
+    if (sample) {
+      const trace = sim.trace[item.uid] || (sim.trace[item.uid] = []);
+      trace.push([sim.t, reading.value, reading.on]);
+      while (trace.length && trace[0][0] < sim.t - SIM_TRACE_S) {
+        trace.shift();
+      }
+    }
+  });
+  if (sample) {
+    sim.last = sim.t;
+  }
+  return { t: sim.t, boxes: boxes, readings: readings, tanks: simTanks(station, readings) };
+}
+
+// Fill fraction for each tank: from a level sensor on it, else a slow cycle.
+function simTanks(station, readings) {
+  const out = {};
+  station.items.filter((item) => item.ref === "tank").forEach((tank) => {
+    const level = Object.values(readings).find((r) => r.category === "level" && r.range && simNearestUid(station, r.uid, tank.uid));
+    out[tank.uid] = level ? Math.max(0.05, Math.min(0.95, (level.value - level.range[0]) / (level.range[1] - level.range[0]) * 0.6 + 0.2)) : 0.55;
+  });
+  return out;
+}
+
+function simNearestUid(station, sensorUid, tankUid) {
+  const sensor = station.items.find((item) => item.uid === sensorUid);
+  const tank = simNearest(station, sensor, ["tank"], 3);
+  return tank && tank.uid === tankUid;
+}
+
+if (typeof module !== "undefined") {
+  module.exports = { simCreate, simStep, simBelt, simShape, simProcessData, SIM_TRACE_S };
+}
+
+"use strict";
+
 // WebGL view of a station (three.js r158, global THREE). Machines, sensors and
 // masters are modelled from primitives so they read as what they are; cables
 // are tubes from the master's M12 sockets to each sensor.
@@ -914,6 +1186,11 @@ const S3D = {
   lens: { color: 0xd8262b, metalness: 0.1, roughness: 0.2, emissive: 0x5a0000 },
   ledOk: { color: 0x34d058, emissive: 0x1d8a33, roughness: 0.3 },
   ledWarn: { color: 0xffb020, emissive: 0x9a6200, roughness: 0.3 },
+  ledOn: { color: 0xffd23a, emissive: 0xffb000, emissiveIntensity: 1.6, roughness: 0.3 },
+  ledIdle: { color: 0x2f7d45, emissive: 0x0d3a1c, roughness: 0.3 },
+  carton: { color: 0xc8955c, metalness: 0, roughness: 0.85 },
+  glass: { color: 0xe8f1fa, metalness: 0, roughness: 0.1, transparent: true, opacity: 0.35 },
+  water: { color: 0x2f8fe0, metalness: 0, roughness: 0.25, emissive: 0x0a3a66 },
 };
 
 function s3dMaterial(name) {
@@ -1044,6 +1321,7 @@ function s3dSensor(g, def, warn) {
   }
   const led = s3dCyl(g, 0.072, 0.025, [0, face + 0.01, 0], warn ? "ledWarn" : "ledOk");
   led.castShadow = false;
+  g.userData.led = led;
   s3dCyl(g, 0.045, 0.12, [0, face + 0.08, 0], "black", null, 16);
   return [0, face + 0.14, 0];
 }
@@ -1096,6 +1374,9 @@ function mountStation3d(container, view) {
   let anchors = [];
   let hovered = null;
   let framed = false;
+  let live = null;
+  const moving = { leds: new Map(), belts: new Map(), tanks: new Map(), shafts: [] };
+  const ledMats = { on: s3dMaterial("ledOn"), idle: s3dMaterial("ledIdle") };
 
   // Aim at the placed parts, not the empty floor.
   function frame() {
@@ -1124,6 +1405,10 @@ function mountStation3d(container, view) {
     world.clear();
     pickables = [];
     anchors = [];
+    moving.leds.clear();
+    moving.belts.clear();
+    moving.tanks.clear();
+    moving.shafts = [];
     const station = view.station;
     const fx = station.floor[0];
     const fz = station.floor[1];
@@ -1160,6 +1445,7 @@ function mountStation3d(container, view) {
         const make = S3D_MACHINES[item.ref];
         if (make) {
           make(g);
+          s3dMoving(item, g, moving);
         } else {
           ((def && def.boxes) || []).forEach((box) => s3dBox(g, box.size, box.at, box.color));
         }
@@ -1168,6 +1454,7 @@ function mountStation3d(container, view) {
       } else if (item.kind === "sensor") {
         top = s3dSensor(g, def, issues.has(item.uid));
         tops.set(item.uid, top);
+        moving.leds.set(item.uid, { mesh: g.userData.led, rest: g.userData.led.material });
       } else if (item.kind === "master") {
         const ports = (def && def.ports) || 4;
         sockets.set(item.uid, s3dMaster(g, ports));
@@ -1213,12 +1500,45 @@ function mountStation3d(container, view) {
       frame();
       framed = true;
     }
+    if (live) {
+      animate(live);
+    }
     render();
   }
 
+  // Run mode: move the parts on the belts, fill the tanks, light the LEDs.
+  function animate(state) {
+    moving.belts.forEach((meshes, uid) => {
+      const boxes = state ? state.boxes.filter((box) => box.belt === uid) : [];
+      meshes.forEach((mesh, i) => {
+        mesh.visible = !state || i < boxes.length;
+        if (boxes[i]) {
+          mesh.position.x = boxes[i].local;
+        }
+      });
+    });
+    moving.tanks.forEach((tank, uid) => {
+      const fill = state && state.tanks[uid] !== undefined ? state.tanks[uid] : 0.55;
+      tank.mesh.scale.y = Math.max(0.02, fill);
+      tank.mesh.position.y = tank.base + (tank.height * Math.max(0.02, fill)) / 2;
+    });
+    moving.shafts.forEach((shaft) => {
+      shaft.rotation.x = state ? state.t * 9 : 0;
+    });
+    moving.leds.forEach((led, uid) => {
+      const reading = state && state.readings[uid];
+      led.mesh.material = reading ? (reading.on ? ledMats.on : ledMats.idle) : led.rest;
+    });
+  }
+
+  let size = "";
   function resize() {
     const width = container.clientWidth || 640;
     const height = container.clientHeight || 400;
+    if (size === width + "x" + height) {
+      return;
+    }
+    size = width + "x" + height;
     renderer.setSize(width, height, false);
     renderer.domElement.style.width = width + "px";
     renderer.domElement.style.height = height + "px";
@@ -1251,6 +1571,10 @@ function mountStation3d(container, view) {
       let cls = "s3d-tag " + anchor.item.kind;
       if (anchor.item.kind === "sensor") {
         text = "<b>" + s3dEsc(def.part || anchor.item.ref) + "</b>" + (anchor.item.port ? "<i>" + s3dEsc(anchor.item.master) + " · X" + anchor.item.port + "</i>" : "");
+        const reading = live && live.readings[anchor.item.uid];
+        if (reading) {
+          text += "<em class=\"" + (reading.on ? "on" : "") + "\">" + s3dEsc(s3dReading(reading)) + "</em>";
+        }
       } else if (anchor.item.kind === "master") {
         text = "<b>" + s3dEsc(def.part || "") + "</b><i>" + s3dEsc(anchor.item.uid) + "</i>";
       } else {
@@ -1262,13 +1586,19 @@ function mountStation3d(container, view) {
       if (view.selected === anchor.item.uid) {
         cls += " selected";
       }
-      const w = anchor.item.kind === "equipment" ? 90 : 120;
-      for (let i = 0; i < 6 && placed.some((o) => Math.abs(o[0] - x) < (w + o[2]) / 2 && Math.abs(o[1] - y) < 24); i++) {
-        y -= 24;
-      }
-      y = Math.max(34, y);
+      // Tags hang above their anchor; push a tag up until it clears the ones placed before it.
+      const w = anchor.item.kind === "equipment" ? 100 : 124;
+      const h = anchor.item.kind === "equipment" ? 22 : live && anchor.item.kind === "sensor" ? 52 : 36;
       x = Math.max(w / 2 + 4, Math.min(width - w / 2 - 4, x));
-      placed.push([x, y, w]);
+      const clash = () => placed.find((o) => Math.abs(o[0] - x) < (w + o[2]) / 2 && y > o[1] - o[3] && y - h < o[1]);
+      for (let i = 0, o = clash(); i < 8 && o; i++, o = clash()) {
+        y = o[1] - o[3] - 2;
+      }
+      y = Math.max(h + 4, y);
+      if (anchor.item.kind === "equipment" && clash()) {
+        return;
+      }
+      placed.push([x, y, w, h]);
       html.push("<div class=\"" + cls + "\" style=\"left:" + Math.round(x) + "px;top:" + Math.round(y) + "px\">" + text + "</div>");
     });
     labels.innerHTML = html.join("");
@@ -1367,6 +1697,11 @@ function mountStation3d(container, view) {
     orbit: orbit,
     render: render,
     scene: scene,
+    live: (state) => {
+      live = state;
+      animate(state);
+      render();
+    },
     fit: () => {
       frame();
       render();
@@ -1384,6 +1719,37 @@ function mountStation3d(container, view) {
     },
   };
   return build;
+}
+
+// Parts that move in run mode: cartons on a belt, the water in a tank's sight
+// glass, the pump shaft.
+function s3dMoving(item, g, moving) {
+  if (item.ref === "conveyor") {
+    const meshes = [0, 1].map((i) => {
+      const box = s3dBox(g, [0.5, 0.36, 0.5], [-1.5 + i * 3, 1.05, 0], "carton");
+      box.userData.decor = true;
+      return box;
+    });
+    moving.belts.set(item.uid, meshes);
+  } else if (item.ref === "tank") {
+    s3dCyl(g, 0.07, 1.8, [-0.98, 1.35, 0.2], "glass", null, 16);
+    const fill = s3dCyl(g, 0.05, 1.7, [-0.98, 1.35, 0.2], "water", null, 16);
+    fill.castShadow = false;
+    moving.tanks.set(item.uid, { mesh: fill, base: 0.5, height: 1.7 });
+  } else if (item.ref === "pump") {
+    const fan = s3dBox(g, [0.06, 0.5, 0.08], [-0.86, 0.48, 0], "dark");
+    moving.shafts.push(fan);
+  }
+}
+
+function s3dReading(reading) {
+  if (reading.ma !== null && reading.ma !== undefined) {
+    return reading.value + " " + reading.unit + " · " + reading.ma.toFixed(1) + " mA";
+  }
+  if (reading.value === null || reading.value === undefined) {
+    return reading.present === null ? (reading.on ? "ON" : "off") : reading.present ? "target · ON" : "no target";
+  }
+  return (Math.abs(reading.value) >= 100 ? Math.round(reading.value) : reading.value.toFixed(1)) + " " + reading.unit + (reading.on ? " · ON" : "");
 }
 
 // Straight runs joined by small bends, so a cable never dips below the floor
@@ -1420,14 +1786,25 @@ function tableText(value) {
   return String(value === undefined || value === null ? "" : value).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]));
 }
 
-function portsHtml(station, library) {
+// With readings (run mode) the table shows what the master sees on each port.
+function portsHtml(station, library, readings) {
   const rows = portTable(station, library);
   if (!rows.length) {
     return "<p class=\"small\">No sensor is wired yet.</p>";
   }
-  return "<div class=\"scroll\"><table class=\"ports-table\"><thead><tr><th>Port</th><th>Device</th><th>Process data in</th><th>Cycle</th><th>Settings</th></tr></thead><tbody>" +
-    rows.map((row) => "<tr><td>" + tableText(row.master) + " X" + row.port + "</td><td><b>" + tableText(row.part) + "</b><br><span class=\"small\">" + tableText(row.uid) + " · " + row.vendor_id + "/" + row.device_id + "</span></td><td>" +
-      (row.pd_in_bits ? row.pd_in_bits + " bit: " + row.pd_in.map((item) => tableText(item.name) + " <span class=\"small\">@" + item.bit_offset + "·" + item.bits + "</span>").join(", ") : "<span class=\"small\">no IODD filed</span>") +
+  const live = (row) => {
+    const reading = readings && readings[row.uid];
+    if (!reading) {
+      return "";
+    }
+    const value = reading.value === null || reading.value === undefined ? (reading.present === null ? "online" : reading.present ? "target" : "no target") : reading.value + " " + reading.unit;
+    return "<td class=\"pd\"><b>" + tableText(value) + "</b>" + (reading.ma !== null && reading.ma !== undefined ? " · " + reading.ma.toFixed(2) + " mA" : "") + "<br>" +
+      (reading.pin === null ? "" : "<span class=\"" + (reading.on ? "on" : "") + "\">OUT1 " + (reading.on ? "on" : "off") + "</span> ") +
+      (reading.pd ? "<code>" + tableText(reading.pd.hex) + "</code>" : "") + "</td>";
+  };
+  return "<div class=\"scroll\"><table class=\"ports-table\"><thead><tr><th>Port</th><th>Device</th>" + (readings ? "<th>Live</th>" : "") + "<th>Process data in</th><th>Cycle</th><th>Settings</th></tr></thead><tbody>" +
+    rows.map((row) => "<tr><td>" + tableText(row.master) + " X" + row.port + "</td><td><b>" + tableText(row.part) + "</b><br><span class=\"small\">" + tableText(row.uid) + " · " + row.vendor_id + "/" + row.device_id + "</span></td>" + live(row) + "<td>" +
+      (row.pd_in_bits ? row.pd_in_bits + " bit: " + row.pd_in.map((item) => tableText(item.name) + " <span class=\"small\">@" + item.bit_offset + "·" + item.bits + (item.gradient ? " ×" + item.gradient + " " + tableText(item.unit || "") : "") + "</span>").join(", ") : "<span class=\"small\">no IODD filed</span>") +
       "</td><td>" + (row.min_cycle_ms ? row.min_cycle_ms + " ms" : "") + "</td><td>" + row.parameters.map((p) => tableText(p.name) + " " + tableText(p.value)).join("<br>") + "</td></tr>").join("") +
     "</tbody></table></div>";
 }
@@ -1516,6 +1893,7 @@ const root = document.getElementById("root");
 const library = window.IOLINKI_LIBRARY;
 let last = null;
 let tab = "3d";
+const run = { on: false, sim: null, state: null, frame: 0, at: 0, painted: 0 };
 
 function esc(value) {
   return String(value === undefined || value === null ? "" : value).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]));
@@ -1543,7 +1921,7 @@ function partCard(station, uid) {
     return "<div class=\"card\"><b>" + esc(def.vendor + " " + def.part) + "</b><span class=\"muted\">" + esc(def.ports + " class " + def.port_class + " ports · " + used + " used · " + (def.fieldbus || "")) + "</span></div>";
   }
   const check = checkSensor(def, item);
-  return "<div class=\"card\"><b>" + esc(def.vendor + " " + def.part) + "</b><span class=\"muted\">" + esc(def.measures) + " · " + esc(item.master + " X" + item.port) + "</span>" +
+  return "<div class=\"card\"><b>" + esc(def.vendor + " " + def.part) + "</b><span class=\"muted\">" + esc(def.measures) + " · " + esc(item.master + " X" + item.port) + "</span><span class=\"live-line\"></span>" +
     "<div class=\"params\">" + check.parameters.map((p) => "<span><i>" + esc(p.name) + "</i>" + esc(p.value) + "</span>").join("") + "</div>" +
     "<a href=\"#\" data-open=\"" + esc(def.source_url) + "\">Datasheet</a></div>";
 }
@@ -1567,6 +1945,12 @@ function draw() {
     return;
   }
   last = out;
+  // Devices read from IODD Finder for this call travel with the result.
+  (out.extra_parts || []).forEach((def) => {
+    if (def && def.id && !byId(library, def.id)) {
+      library.sensors.push(def);
+    }
+  });
   const built = fromDiagram(out.diagram, library);
   const station = built.station;
   const issues = built.check.issues;
@@ -1576,7 +1960,7 @@ function draw() {
   const link = encodeStation(station);
   root.innerHTML =
     "<header><div><h1>" + esc(out.title || "IO-Link station") + "</h1><div class=\"chips\"><span>" + sensors + " sensor" + (sensors === 1 ? "" : "s") + "</span><span>" + masters + " master" + (masters === 1 ? "" : "s") + "</span>" + (power ? "<span>" + esc(power) + "</span>" : "") + "</div></div>" +
-    "<nav><button data-tab=\"3d\">3D</button><button data-tab=\"wiring\">Wiring</button><button data-tab=\"ports\">Ports</button></nav></header>" +
+    "<nav><button type=\"button\" class=\"run\" id=\"run\">▶ Run</button><button data-tab=\"3d\">3D</button><button data-tab=\"wiring\">Wiring</button><button data-tab=\"ports\">Ports</button></nav></header>" +
     "<div class=\"stage\"><div id=\"view3d\" class=\"pane\"></div><div id=\"wiring\" class=\"pane\">" + wiringSvg(station, library) + "</div><div id=\"ports\" class=\"pane\">" + portsHtml(station, library) + "</div></div>" +
     "<div id=\"detail\"></div>" +
     (issues.length ? "<details class=\"notes\"><summary>" + issues.length + " note" + (issues.length === 1 ? "" : "s") + " for the installer</summary><ul>" + issues.map((issue) => "<li>" + esc(issue.problem) + "</li>").join("") + "</ul></details>" : "<p class=\"ok\">Every sensor is inside its datasheet and wired to a master port.</p>") +
@@ -1588,14 +1972,57 @@ function draw() {
   };
   mountStation3d(root.querySelector("#view3d"), view);
   view.onSelect(null);
+  // Run: the machines move and each sensor switches on its own settings.
+  const runButton = root.querySelector("#run");
+  const live = () => {
+    const s3d = root.querySelector("#view3d").s3d;
+    if (s3d && tab === "3d") {
+      s3d.live(run.state);
+    }
+    if (tab === "ports") {
+      root.querySelector("#ports").innerHTML = portsHtml(station, library, run.state && run.state.readings);
+    }
+    const reading = run.state && view.selected && run.state.readings[view.selected];
+    const slot = root.querySelector("#detail .live-line");
+    if (slot) {
+      slot.textContent = reading ? s3dReading(reading) + (reading.pd ? "  ·  PD " + reading.pd.hex : "") : "";
+    }
+  };
+  const tick = (now) => {
+    if (!run.on) {
+      return;
+    }
+    run.state = simStep(station, library, run.sim, Math.min(0.1, (now - run.at) / 1000));
+    run.at = now;
+    live();
+    run.frame = requestAnimationFrame(tick);
+  };
+  cancelAnimationFrame(run.frame);
+  run.on = false;
+  runButton.addEventListener("click", () => {
+    run.on = !run.on;
+    runButton.textContent = run.on ? "❚❚ Stop" : "▶ Run";
+    runButton.classList.toggle("on", run.on);
+    if (run.on) {
+      run.sim = simCreate();
+      run.at = performance.now();
+      run.frame = requestAnimationFrame(tick);
+    } else {
+      run.state = null;
+      live();
+    }
+  });
   const show = (name) => {
     tab = name;
-    root.querySelectorAll("nav button").forEach((b) => b.classList.toggle("on", b.dataset.tab === name));
+    root.querySelectorAll("nav button[data-tab]").forEach((b) => b.classList.toggle("on", b.dataset.tab === name));
     root.querySelector("#view3d").hidden = name !== "3d";
     root.querySelector("#wiring").hidden = name !== "wiring";
     root.querySelector("#ports").hidden = name !== "ports";
+    if (run.on) {
+      live();
+    }
   };
-  root.querySelectorAll("nav button").forEach((b) => b.addEventListener("click", () => show(b.dataset.tab)));
+  root.querySelectorAll("nav button[data-tab]").forEach((b) => b.addEventListener("click", () => show(b.dataset.tab)));
   show(tab);
   root.querySelector("#studio").addEventListener("click", () => open(link));
   root.querySelector("#buy").addEventListener("click", () => open(link.replace("#s=", "?buy=1#s=")));

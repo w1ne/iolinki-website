@@ -6,14 +6,25 @@ function tableText(value) {
   return String(value === undefined || value === null ? "" : value).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]));
 }
 
-function portsHtml(station, library) {
+// With readings (run mode) the table shows what the master sees on each port.
+function portsHtml(station, library, readings) {
   const rows = portTable(station, library);
   if (!rows.length) {
     return "<p class=\"small\">No sensor is wired yet.</p>";
   }
-  return "<div class=\"scroll\"><table class=\"ports-table\"><thead><tr><th>Port</th><th>Device</th><th>Process data in</th><th>Cycle</th><th>Settings</th></tr></thead><tbody>" +
-    rows.map((row) => "<tr><td>" + tableText(row.master) + " X" + row.port + "</td><td><b>" + tableText(row.part) + "</b><br><span class=\"small\">" + tableText(row.uid) + " · " + row.vendor_id + "/" + row.device_id + "</span></td><td>" +
-      (row.pd_in_bits ? row.pd_in_bits + " bit: " + row.pd_in.map((item) => tableText(item.name) + " <span class=\"small\">@" + item.bit_offset + "·" + item.bits + "</span>").join(", ") : "<span class=\"small\">no IODD filed</span>") +
+  const live = (row) => {
+    const reading = readings && readings[row.uid];
+    if (!reading) {
+      return "";
+    }
+    const value = reading.value === null || reading.value === undefined ? (reading.present === null ? "online" : reading.present ? "target" : "no target") : reading.value + " " + reading.unit;
+    return "<td class=\"pd\"><b>" + tableText(value) + "</b>" + (reading.ma !== null && reading.ma !== undefined ? " · " + reading.ma.toFixed(2) + " mA" : "") + "<br>" +
+      (reading.pin === null ? "" : "<span class=\"" + (reading.on ? "on" : "") + "\">OUT1 " + (reading.on ? "on" : "off") + "</span> ") +
+      (reading.pd ? "<code>" + tableText(reading.pd.hex) + "</code>" : "") + "</td>";
+  };
+  return "<div class=\"scroll\"><table class=\"ports-table\"><thead><tr><th>Port</th><th>Device</th>" + (readings ? "<th>Live</th>" : "") + "<th>Process data in</th><th>Cycle</th><th>Settings</th></tr></thead><tbody>" +
+    rows.map((row) => "<tr><td>" + tableText(row.master) + " X" + row.port + "</td><td><b>" + tableText(row.part) + "</b><br><span class=\"small\">" + tableText(row.uid) + " · " + row.vendor_id + "/" + row.device_id + "</span></td>" + live(row) + "<td>" +
+      (row.pd_in_bits ? row.pd_in_bits + " bit: " + row.pd_in.map((item) => tableText(item.name) + " <span class=\"small\">@" + item.bit_offset + "·" + item.bits + (item.gradient ? " ×" + item.gradient + " " + tableText(item.unit || "") : "") + "</span>").join(", ") : "<span class=\"small\">no IODD filed</span>") +
       "</td><td>" + (row.min_cycle_ms ? row.min_cycle_ms + " ms" : "") + "</td><td>" + row.parameters.map((p) => tableText(p.name) + " " + tableText(p.value)).join("<br>") + "</td></tr>").join("") +
     "</tbody></table></div>";
 }

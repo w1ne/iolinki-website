@@ -62,3 +62,11 @@ svg.wiring { font-family: inherit; }
 @media (max-width: 560px) { header { flex-direction: column; } .pane { height: 340px; } .order { columns: 1; } }
 
 [hidden] { display: none !important; }
+nav button.run { color: #1d7a3a; font-weight: 600; margin-right: 4px; }
+nav button.run.on { background: #14171c; color: #fff; }
+.live-line { display: block; font-variant-numeric: tabular-nums; font-weight: 600; margin-top: 2px; }
+.live-line:empty { display: none; }
+.s3d-tag em { display: block; font-style: normal; font-variant-numeric: tabular-nums; font-size: 11px; color: #2b3138; background: #eef1f5; border-radius: 5px; margin: 2px -4px 0; padding: 0 4px; }
+.s3d-tag em.on { background: #ffd23a; color: #3d2c00; }
+.ports-table td.pd code { font: 600 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+.ports-table td.pd .on { background: #ffd23a; border-radius: 4px; padding: 0 4px; }

@@ -76,7 +76,9 @@
       {
         "name": "Pressure",
         "bit_offset": 2,
-        "bits": 14
+        "bits": 14,
+        "gradient": 0.1,
+        "unit": "bar"
       },
       {
         "name": "Switch status [OUT2].",

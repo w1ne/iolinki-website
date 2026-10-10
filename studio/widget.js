@@ -8,6 +8,7 @@ const root = document.getElementById("root");
 const library = window.IOLINKI_LIBRARY;
 let last = null;
 let tab = "3d";
+const run = { on: false, sim: null, state: null, frame: 0, at: 0, painted: 0 };
 
 function esc(value) {
   return String(value === undefined || value === null ? "" : value).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]));
@@ -35,7 +36,7 @@ function partCard(station, uid) {
     return "<div class=\"card\"><b>" + esc(def.vendor + " " + def.part) + "</b><span class=\"muted\">" + esc(def.ports + " class " + def.port_class + " ports · " + used + " used · " + (def.fieldbus || "")) + "</span></div>";
   }
   const check = checkSensor(def, item);
-  return "<div class=\"card\"><b>" + esc(def.vendor + " " + def.part) + "</b><span class=\"muted\">" + esc(def.measures) + " · " + esc(item.master + " X" + item.port) + "</span>" +
+  return "<div class=\"card\"><b>" + esc(def.vendor + " " + def.part) + "</b><span class=\"muted\">" + esc(def.measures) + " · " + esc(item.master + " X" + item.port) + "</span><span class=\"live-line\"></span>" +
     "<div class=\"params\">" + check.parameters.map((p) => "<span><i>" + esc(p.name) + "</i>" + esc(p.value) + "</span>").join("") + "</div>" +
     "<a href=\"#\" data-open=\"" + esc(def.source_url) + "\">Datasheet</a></div>";
 }
@@ -59,6 +60,12 @@ function draw() {
     return;
   }
   last = out;
+  // Devices read from IODD Finder for this call travel with the result.
+  (out.extra_parts || []).forEach((def) => {
+    if (def && def.id && !byId(library, def.id)) {
+      library.sensors.push(def);
+    }
+  });
   const built = fromDiagram(out.diagram, library);
   const station = built.station;
   const issues = built.check.issues;
@@ -68,7 +75,7 @@ function draw() {
   const link = encodeStation(station);
   root.innerHTML =
     "<header><div><h1>" + esc(out.title || "IO-Link station") + "</h1><div class=\"chips\"><span>" + sensors + " sensor" + (sensors === 1 ? "" : "s") + "</span><span>" + masters + " master" + (masters === 1 ? "" : "s") + "</span>" + (power ? "<span>" + esc(power) + "</span>" : "") + "</div></div>" +
-    "<nav><button data-tab=\"3d\">3D</button><button data-tab=\"wiring\">Wiring</button><button data-tab=\"ports\">Ports</button></nav></header>" +
+    "<nav><button type=\"button\" class=\"run\" id=\"run\">▶ Run</button><button data-tab=\"3d\">3D</button><button data-tab=\"wiring\">Wiring</button><button data-tab=\"ports\">Ports</button></nav></header>" +
     "<div class=\"stage\"><div id=\"view3d\" class=\"pane\"></div><div id=\"wiring\" class=\"pane\">" + wiringSvg(station, library) + "</div><div id=\"ports\" class=\"pane\">" + portsHtml(station, library) + "</div></div>" +
     "<div id=\"detail\"></div>" +
     (issues.length ? "<details class=\"notes\"><summary>" + issues.length + " note" + (issues.length === 1 ? "" : "s") + " for the installer</summary><ul>" + issues.map((issue) => "<li>" + esc(issue.problem) + "</li>").join("") + "</ul></details>" : "<p class=\"ok\">Every sensor is inside its datasheet and wired to a master port.</p>") +
@@ -80,14 +87,57 @@ function draw() {
   };
   mountStation3d(root.querySelector("#view3d"), view);
   view.onSelect(null);
+  // Run: the machines move and each sensor switches on its own settings.
+  const runButton = root.querySelector("#run");
+  const live = () => {
+    const s3d = root.querySelector("#view3d").s3d;
+    if (s3d && tab === "3d") {
+      s3d.live(run.state);
+    }
+    if (tab === "ports") {
+      root.querySelector("#ports").innerHTML = portsHtml(station, library, run.state && run.state.readings);
+    }
+    const reading = run.state && view.selected && run.state.readings[view.selected];
+    const slot = root.querySelector("#detail .live-line");
+    if (slot) {
+      slot.textContent = reading ? s3dReading(reading) + (reading.pd ? "  ·  PD " + reading.pd.hex : "") : "";
+    }
+  };
+  const tick = (now) => {
+    if (!run.on) {
+      return;
+    }
+    run.state = simStep(station, library, run.sim, Math.min(0.1, (now - run.at) / 1000));
+    run.at = now;
+    live();
+    run.frame = requestAnimationFrame(tick);
+  };
+  cancelAnimationFrame(run.frame);
+  run.on = false;
+  runButton.addEventListener("click", () => {
+    run.on = !run.on;
+    runButton.textContent = run.on ? "❚❚ Stop" : "▶ Run";
+    runButton.classList.toggle("on", run.on);
+    if (run.on) {
+      run.sim = simCreate();
+      run.at = performance.now();
+      run.frame = requestAnimationFrame(tick);
+    } else {
+      run.state = null;
+      live();
+    }
+  });
   const show = (name) => {
     tab = name;
-    root.querySelectorAll("nav button").forEach((b) => b.classList.toggle("on", b.dataset.tab === name));
+    root.querySelectorAll("nav button[data-tab]").forEach((b) => b.classList.toggle("on", b.dataset.tab === name));
     root.querySelector("#view3d").hidden = name !== "3d";
     root.querySelector("#wiring").hidden = name !== "wiring";
     root.querySelector("#ports").hidden = name !== "ports";
+    if (run.on) {
+      live();
+    }
   };
-  root.querySelectorAll("nav button").forEach((b) => b.addEventListener("click", () => show(b.dataset.tab)));
+  root.querySelectorAll("nav button[data-tab]").forEach((b) => b.addEventListener("click", () => show(b.dataset.tab)));
   show(tab);
   root.querySelector("#studio").addEventListener("click", () => open(link));
   root.querySelector("#buy").addEventListener("click", () => open(link.replace("#s=", "?buy=1#s=")));

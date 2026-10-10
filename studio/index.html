@@ -66,6 +66,7 @@
           <button type="button" data-view="wiring">Wiring</button>
           <button type="button" data-view="ports">Ports</button>
         </div>
+        <button type="button" class="run" id="run" title="Run the station: the machines move and every sensor switches on its own settings"><span class="run-icon" aria-hidden="true"></span><span id="run-label">Run</span></button>
         <div class="view-tools" id="view-tools">
           <button type="button" data-cam="fit" title="Fit the station">Fit</button>
           <button type="button" data-cam="iso" title="3D view">3D</button>
@@ -88,7 +89,7 @@
         </div>
       </div>
       <div class="stage-foot">
-        <span class="muted">Drag parts to move · drag the floor to orbit · scroll to zoom</span>
+        <span class="muted" id="stage-hint">Drag parts to move · drag the floor to orbit · scroll to zoom · Del removes · Ctrl+Z undoes · Space runs</span>
         <button type="button" class="notes-pill" id="notes-pill" hidden></button>
       </div>
       <div class="notes-list" id="notes-list" hidden></div>
@@ -100,6 +101,7 @@
   <script src="library/browser_data.js"></script>
   <script src="vendor/three.min.js"></script>
   <script src="engine.js"></script>
+  <script src="station_sim.js"></script>
   <script src="station_3d.js"></script>
   <script src="station_tables.js"></script>
   <script src="page.js"></script>

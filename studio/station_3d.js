@@ -18,6 +18,11 @@ const S3D = {
   lens: { color: 0xd8262b, metalness: 0.1, roughness: 0.2, emissive: 0x5a0000 },
   ledOk: { color: 0x34d058, emissive: 0x1d8a33, roughness: 0.3 },
   ledWarn: { color: 0xffb020, emissive: 0x9a6200, roughness: 0.3 },
+  ledOn: { color: 0xffd23a, emissive: 0xffb000, emissiveIntensity: 1.6, roughness: 0.3 },
+  ledIdle: { color: 0x2f7d45, emissive: 0x0d3a1c, roughness: 0.3 },
+  carton: { color: 0xc8955c, metalness: 0, roughness: 0.85 },
+  glass: { color: 0xe8f1fa, metalness: 0, roughness: 0.1, transparent: true, opacity: 0.35 },
+  water: { color: 0x2f8fe0, metalness: 0, roughness: 0.25, emissive: 0x0a3a66 },
 };
 
 function s3dMaterial(name) {
@@ -148,6 +153,7 @@ function s3dSensor(g, def, warn) {
   }
   const led = s3dCyl(g, 0.072, 0.025, [0, face + 0.01, 0], warn ? "ledWarn" : "ledOk");
   led.castShadow = false;
+  g.userData.led = led;
   s3dCyl(g, 0.045, 0.12, [0, face + 0.08, 0], "black", null, 16);
   return [0, face + 0.14, 0];
 }
@@ -200,6 +206,9 @@ function mountStation3d(container, view) {
   let anchors = [];
   let hovered = null;
   let framed = false;
+  let live = null;
+  const moving = { leds: new Map(), belts: new Map(), tanks: new Map(), shafts: [] };
+  const ledMats = { on: s3dMaterial("ledOn"), idle: s3dMaterial("ledIdle") };
 
   // Aim at the placed parts, not the empty floor.
   function frame() {
@@ -228,6 +237,10 @@ function mountStation3d(container, view) {
     world.clear();
     pickables = [];
     anchors = [];
+    moving.leds.clear();
+    moving.belts.clear();
+    moving.tanks.clear();
+    moving.shafts = [];
     const station = view.station;
     const fx = station.floor[0];
     const fz = station.floor[1];
@@ -264,6 +277,7 @@ function mountStation3d(container, view) {
         const make = S3D_MACHINES[item.ref];
         if (make) {
           make(g);
+          s3dMoving(item, g, moving);
         } else {
           ((def && def.boxes) || []).forEach((box) => s3dBox(g, box.size, box.at, box.color));
         }
@@ -272,6 +286,7 @@ function mountStation3d(container, view) {
       } else if (item.kind === "sensor") {
         top = s3dSensor(g, def, issues.has(item.uid));
         tops.set(item.uid, top);
+        moving.leds.set(item.uid, { mesh: g.userData.led, rest: g.userData.led.material });
       } else if (item.kind === "master") {
         const ports = (def && def.ports) || 4;
         sockets.set(item.uid, s3dMaster(g, ports));
@@ -317,12 +332,45 @@ function mountStation3d(container, view) {
       frame();
       framed = true;
     }
+    if (live) {
+      animate(live);
+    }
     render();
   }
 
+  // Run mode: move the parts on the belts, fill the tanks, light the LEDs.
+  function animate(state) {
+    moving.belts.forEach((meshes, uid) => {
+      const boxes = state ? state.boxes.filter((box) => box.belt === uid) : [];
+      meshes.forEach((mesh, i) => {
+        mesh.visible = !state || i < boxes.length;
+        if (boxes[i]) {
+          mesh.position.x = boxes[i].local;
+        }
+      });
+    });
+    moving.tanks.forEach((tank, uid) => {
+      const fill = state && state.tanks[uid] !== undefined ? state.tanks[uid] : 0.55;
+      tank.mesh.scale.y = Math.max(0.02, fill);
+      tank.mesh.position.y = tank.base + (tank.height * Math.max(0.02, fill)) / 2;
+    });
+    moving.shafts.forEach((shaft) => {
+      shaft.rotation.x = state ? state.t * 9 : 0;
+    });
+    moving.leds.forEach((led, uid) => {
+      const reading = state && state.readings[uid];
+      led.mesh.material = reading ? (reading.on ? ledMats.on : ledMats.idle) : led.rest;
+    });
+  }
+
+  let size = "";
   function resize() {
     const width = container.clientWidth || 640;
     const height = container.clientHeight || 400;
+    if (size === width + "x" + height) {
+      return;
+    }
+    size = width + "x" + height;
     renderer.setSize(width, height, false);
     renderer.domElement.style.width = width + "px";
     renderer.domElement.style.height = height + "px";
@@ -355,6 +403,10 @@ function mountStation3d(container, view) {
       let cls = "s3d-tag " + anchor.item.kind;
       if (anchor.item.kind === "sensor") {
         text = "<b>" + s3dEsc(def.part || anchor.item.ref) + "</b>" + (anchor.item.port ? "<i>" + s3dEsc(anchor.item.master) + " · X" + anchor.item.port + "</i>" : "");
+        const reading = live && live.readings[anchor.item.uid];
+        if (reading) {
+          text += "<em class=\"" + (reading.on ? "on" : "") + "\">" + s3dEsc(s3dReading(reading)) + "</em>";
+        }
       } else if (anchor.item.kind === "master") {
         text = "<b>" + s3dEsc(def.part || "") + "</b><i>" + s3dEsc(anchor.item.uid) + "</i>";
       } else {
@@ -366,13 +418,19 @@ function mountStation3d(container, view) {
       if (view.selected === anchor.item.uid) {
         cls += " selected";
       }
-      const w = anchor.item.kind === "equipment" ? 90 : 120;
-      for (let i = 0; i < 6 && placed.some((o) => Math.abs(o[0] - x) < (w + o[2]) / 2 && Math.abs(o[1] - y) < 24); i++) {
-        y -= 24;
-      }
-      y = Math.max(34, y);
+      // Tags hang above their anchor; push a tag up until it clears the ones placed before it.
+      const w = anchor.item.kind === "equipment" ? 100 : 124;
+      const h = anchor.item.kind === "equipment" ? 22 : live && anchor.item.kind === "sensor" ? 52 : 36;
       x = Math.max(w / 2 + 4, Math.min(width - w / 2 - 4, x));
-      placed.push([x, y, w]);
+      const clash = () => placed.find((o) => Math.abs(o[0] - x) < (w + o[2]) / 2 && y > o[1] - o[3] && y - h < o[1]);
+      for (let i = 0, o = clash(); i < 8 && o; i++, o = clash()) {
+        y = o[1] - o[3] - 2;
+      }
+      y = Math.max(h + 4, y);
+      if (anchor.item.kind === "equipment" && clash()) {
+        return;
+      }
+      placed.push([x, y, w, h]);
       html.push("<div class=\"" + cls + "\" style=\"left:" + Math.round(x) + "px;top:" + Math.round(y) + "px\">" + text + "</div>");
     });
     labels.innerHTML = html.join("");
@@ -471,6 +529,11 @@ function mountStation3d(container, view) {
     orbit: orbit,
     render: render,
     scene: scene,
+    live: (state) => {
+      live = state;
+      animate(state);
+      render();
+    },
     fit: () => {
       frame();
       render();
@@ -488,6 +551,37 @@ function mountStation3d(container, view) {
     },
   };
   return build;
+}
+
+// Parts that move in run mode: cartons on a belt, the water in a tank's sight
+// glass, the pump shaft.
+function s3dMoving(item, g, moving) {
+  if (item.ref === "conveyor") {
+    const meshes = [0, 1].map((i) => {
+      const box = s3dBox(g, [0.5, 0.36, 0.5], [-1.5 + i * 3, 1.05, 0], "carton");
+      box.userData.decor = true;
+      return box;
+    });
+    moving.belts.set(item.uid, meshes);
+  } else if (item.ref === "tank") {
+    s3dCyl(g, 0.07, 1.8, [-0.98, 1.35, 0.2], "glass", null, 16);
+    const fill = s3dCyl(g, 0.05, 1.7, [-0.98, 1.35, 0.2], "water", null, 16);
+    fill.castShadow = false;
+    moving.tanks.set(item.uid, { mesh: fill, base: 0.5, height: 1.7 });
+  } else if (item.ref === "pump") {
+    const fan = s3dBox(g, [0.06, 0.5, 0.08], [-0.86, 0.48, 0], "dark");
+    moving.shafts.push(fan);
+  }
+}
+
+function s3dReading(reading) {
+  if (reading.ma !== null && reading.ma !== undefined) {
+    return reading.value + " " + reading.unit + " · " + reading.ma.toFixed(1) + " mA";
+  }
+  if (reading.value === null || reading.value === undefined) {
+    return reading.present === null ? (reading.on ? "ON" : "off") : reading.present ? "target · ON" : "no target";
+  }
+  return (Math.abs(reading.value) >= 100 ? Math.round(reading.value) : reading.value.toFixed(1)) + " " + reading.unit + (reading.on ? " · ON" : "");
 }
 
 // Straight runs joined by small bends, so a cable never dips below the floor
