@@ -1,11 +1,17 @@
 ---
 name: iolinki
-description: Use when authoring or recovering IO-Link IODDs, preparing a switching-sensor firmware proof, or integrating the iolinki device or master stack.
+description: Use when planning an IO-Link station (sensors, masters, wiring, order), authoring or recovering IO-Link IODDs, preparing a switching-sensor firmware proof, or integrating the iolinki device or master stack.
 ---
 
 # iolinki
 
 Use https://iolinki.com/llms.txt to discover the current released documentation and connection instructions. Prefer the user's existing stack version; use the release pages for a new integration. Device and master are separate stacks and need the corresponding PHY and port contract.
+
+## IO-Link stations
+
+For a station, machine or line ("pressure switch at 40 bar on the pump", "detect boxes on the conveyor"), call `iolink_station_parts` first; pass `query` to find devices beyond the filed parts in IODD Finder (any vendor, typed `iodd-<vendorId>-<ioddId>`). Then call `iolink_station` with every part placed on the floor (x, z in metres) and a wire from a master port pin `X1..Xn` to each sensor's `C/Q`, with settings in the units at the machine. Inductive distances are for the named target material. To change the station, call it again with the full updated diagram.
+
+The widget already shows the 3D station, run mode, wiring, port table, installer notes and the order with Buy. Reply in one or two sentences: what was built and any note that needs the user's decision. Do not restate the parts, settings or order as a table, and do not draw a diagram. Nothing is written to a sensor and no payment is taken.
 
 ## IODD workflow
 

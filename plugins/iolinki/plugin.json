@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "iolinki",
-  "version": "1.1.2",
-  "description": "Create IO-Link IODDs and integrate the iolinki firmware stacks.",
+  "version": "1.2.0",
+  "description": "Build IO-Link stations, create IO-Link IODDs and integrate the iolinki firmware stacks.",
   "author": {
     "name": "Andrii Shylenko",
     "url": "https://iolinki.com"
@@ -14,31 +14,34 @@
     "io-link",
     "iodd",
     "embedded",
-    "firmware"
+    "firmware",
+    "factory automation"
   ],
   "extensions": {
     "com.openai": {
       "interface": {
         "displayName": "iolinki",
-        "shortDescription": "Create and check IO-Link IODDs",
+        "shortDescription": "Build IO-Link stations and IODDs",
         "developerName": "Andrii Shylenko",
         "category": "Developer Tools",
         "websiteURL": "https://iolinki.com/iodd-mcp.html",
         "defaultPrompt": [
-          "Create a switching-sensor IODD, validate it and give me the XML and ZIP.",
-          "Set a switching sensor threshold to 6400, validate it and export a C mapping header.",
-          "Create a counter IODD and explain its parameter and process-data mapping."
+          "Build an IO-Link station for a pump skid: pressure switch at 40 bar, tank level at 800 mm, one master, wire everything.",
+          "Find a Balluff BOS 23K photoelectric sensor in IODD Finder and put it at the end of my conveyor station.",
+          "Create a switching-sensor IODD, validate it and give me the XML and ZIP."
         ],
-        "longDescription": "Create, import, inspect and edit IO-Link device descriptions. Check their model, CRC and structure against the pinned official October 2025 IODD XML schemas, then download XML, ZIP packages, editable project JSON or C mapping headers. Explicitly saved hosted snapshots are recoverable for up to 24 hours with a private bearer token; export links expire after 10 minutes. The hosted service does not run the separately installed official IODD Checker or certify devices. Compatible switching-sensor projects can export application source and compile/verify arguments for LabWired, if that separate plugin is connected. Physical IO-Link communication, device flashing, power-cycle retention and official conformity are outside this plugin.",
+        "longDescription": "Plan IO-Link stations in chat: place machines, sensors and IO-Link masters on a factory floor, wire each sensor to a master port and see the result as an interactive 3D widget. Every setting is checked against the sensor's filed datasheet or, for any device found in IODD Finder, its IODD; notes go to the installer instead of blocking the plan. Run the station to watch each sensor switch on its own set and reset points with process data packed from the IODD, open the wiring and port table, and take the order (sensors, masters, sized M12 cables) to iolinki.com to request installation. The plugin also creates, imports and edits IO-Link device descriptions, checks them against the pinned official October 2025 IODD XML schemas, and exports XML, ZIP packages, project JSON or C mapping headers; explicitly saved snapshots are recoverable for up to 24 hours with a private token. Nothing is written to a physical sensor, no payment is taken in ChatGPT, and the service does not certify devices or run the official IODD Checker.",
         "supportURL": "https://iolinki.com/legal.html#support",
         "privacyPolicyURL": "https://iolinki.com/legal.html#mcp-privacy",
         "termsOfServiceURL": "https://iolinki.com/legal.html#mcp-terms",
         "capabilities": [
+          "Plan IO-Link stations",
+          "Run station simulation",
+          "Find devices in IODD Finder",
           "Author IODDs",
           "Validate IODD XML",
           "Export device packages",
-          "Recover saved projects",
-          "Prepare sensor application source"
+          "Recover saved projects"
         ],
         "logo": "./assets/icon.svg",
         "composerIcon": "./assets/icon.svg"
@@ -47,6 +50,12 @@
       "review": {
         "test_cases": {
           "positive": [
+            {
+              "description": "Build and show an IO-Link station",
+              "prompt": "Build an IO-Link station for a coolant skid: a pump and pipe with a pressure switch at 40 bar, a tank level sensor that trips at 800 mm and a part sensor on the conveyor that detects stainless brackets at 3 mm. Use one master and wire everything.",
+              "tools_triggered": "iolink_station_parts, iolink_station",
+              "expected_behavior": "Shows the station widget with the machines, the sensors on master ports X1..X3 and the cables. Settings are inside each datasheet (the stainless distance is converted with the correction factor). The reply is one or two sentences; nothing is written to a sensor and no payment is taken."
+            },
             {
               "description": "Create and validate a switching-sensor IODD",
               "prompt": "Create an example switching-sensor IODD, validate it and export XML and ZIP.",
@@ -58,12 +67,6 @@
               "prompt": "Create a switching-sensor example, inspect it, set the threshold default to 6400, validate it and export a C header.",
               "tools_triggered": "iodd_create, iodd_inspect, iodd_edit, iodd_validate, iodd_header",
               "expected_behavior": "Inspect the variable ID, apply an atomic edit, show threshold 6400 and return a downloadable header after validation."
-            },
-            {
-              "description": "Reimport authored XML",
-              "prompt": "Create a counter example and export its XML, then import that XML into a new project and inspect it.",
-              "tools_triggered": "iodd_create, iodd_export, iodd_import, iodd_inspect",
-              "expected_behavior": "Import XML supplied in tool context or downloaded by the client. Preserve its device identity, parameters and process-data mapping; the import tool itself does not fetch URLs."
             },
             {
               "description": "Explicitly save, restore and revoke recovery",
@@ -80,16 +83,16 @@
           ],
           "negative": [
             {
-              "description": "Reject malformed XML",
-              "prompt": "Import this as an IODD: <not-an-iodd>",
-              "tools_triggered": "iodd_import",
-              "expected_behavior": "Reject the malformed input; do not report a valid IODD or silently invent replacement content."
+              "description": "Flag a setting outside the datasheet",
+              "prompt": "Build a station with an ifm PN7092 pressure sensor set to switch at 150 bar.",
+              "tools_triggered": "iolink_station_parts, iolink_station",
+              "expected_behavior": "The tool returns a note that the PN7092 set point must be 1–100 bar; the assistant reports it and does not claim the 150 bar setting is valid."
             },
             {
               "description": "Reject an invalid vendor ID",
               "prompt": "Create a counter IODD with vendor ID 0.",
               "tools_triggered": "iodd_create",
-              "expected_behavior": "Explain that vendor ID must be within 1\u201365535 and assigned to the vendor; ask for a valid assigned ID. A direct invalid tool request must be rejected."
+              "expected_behavior": "Explain that vendor ID must be within 1–65535 and assigned to the vendor; ask for a valid assigned ID. A direct invalid tool request must be rejected."
             },
             {
               "description": "Reject unavailable recovery token",
@@ -100,11 +103,11 @@
           ]
         },
         "commerce": false,
-        "commerce_description": "This plugin does not process purchases or payments. Firmware licensing is documented separately.",
+        "commerce_description": "No purchases or payments happen in ChatGPT. The station widget's Buy and install button opens iolinki.com, where the user can send an installation request by email; any quote is agreed outside the plugin.",
         "demo_recording_url": "https://iolinki.com/review/iodd/walkthrough.mp4"
       },
       "publication": {
-        "release_notes": "Initial public submission package with the hosted 1.1.2 MCP, IODD authoring and official-XSD validation, private expiring snapshots, downloads and sensor application kits. Package metadata version 1.1.2; no physical-device certification."
+        "release_notes": "1.2.0 adds IO-Link stations: iolink_station_parts (filed parts plus IODD Finder search) and iolink_station (place, wire and check parts) with an interactive 3D widget that follows the ChatGPT theme, a run mode with live switching and process data, wiring and port views, and the order. New iolinki icon. IODD authoring tools unchanged."
       }
     }
   }
