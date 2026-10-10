@@ -10,7 +10,7 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 export const output = join(root, "downloads/iodd-mcp-1.1.2.tgz");
 const source = join(root, "tools/iodd/package");
 const runtimeFiles = [
-  "tools/iodd/mcp.mjs", "tools/iodd/mcp-factory.mjs", "tools/iodd/station-tools.mjs", "tools/iodd/station.generated.mjs", "tools/iodd/iodd-part.mjs", "tools/iodd/cli.mjs", "tools/iodd/node-runtime.mjs", "tools/iodd/checker.mjs", "tools/iodd/project-vault.mjs", "tools/iodd/firmware-kit.mjs", "tools/iodd/LICENSE",
+  "tools/iodd/mcp.mjs", "tools/iodd/mcp-factory.mjs", "tools/iodd/station-tools.mjs", "tools/iodd/station.generated.mjs", "tools/iodd/iodd-part.mjs", "tools/iodd/iodd-units.mjs", "tools/iodd/iodd-units.json", "tools/iodd/cli.mjs", "tools/iodd/node-runtime.mjs", "tools/iodd/checker.mjs", "tools/iodd/project-vault.mjs", "tools/iodd/firmware-kit.mjs", "tools/iodd/LICENSE",
   ...["project.js", "document.js", "package.js", "extensions.js", "validation-pattern.js", "firmware-package.js"].map(name => "assets/js/iodd/" + name),
 ];
 async function filesIn(relative) {
