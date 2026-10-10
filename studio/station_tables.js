@@ -46,7 +46,7 @@ function wiringSvg(station, library) {
     return "<p class=\"small\">No master on the floor yet.</p>";
   }
   const rowH = 56;
-  const cardW = 230;
+  const cardW = 262;
   const gap = 150;
   const blocks = [];
   let y = 12;
@@ -57,7 +57,7 @@ function wiringSvg(station, library) {
     const top = y;
     let svg = "<rect x=\"12\" y=\"" + top + "\" width=\"" + 170 + "\" height=\"" + h + "\" rx=\"10\" class=\"w-master\"/>" +
       "<text x=\"26\" y=\"" + (top + 24) + "\" class=\"w-title\">" + tableText(def.part) + "</text>" +
-      "<text x=\"26\" y=\"" + (top + 40) + "\" class=\"w-sub\">" + tableText(master.uid + " · " + (def.fieldbus || "IO-Link master")) + "</text>";
+      "<text x=\"26\" y=\"" + (top + 40) + "\" class=\"w-sub\">" + tableText(master.uid + " · " + String(def.fieldbus || "IO-Link master").split(" (")[0]) + "</text>";
     for (let port = 1; port <= ports; port++) {
       const py = top + 46 + (port - 1) * rowH + rowH / 2;
       const sensor = station.items.find((item) => item.kind === "sensor" && item.master === master.uid && item.port === port);

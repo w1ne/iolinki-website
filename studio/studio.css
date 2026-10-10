@@ -27,7 +27,7 @@ button.primary:hover { filter: brightness(1.05); }
 button.ghost { background: var(--panel); border: 1px solid var(--line); }
 button.ghost:hover { background: var(--soft); }
 .menu { position: relative; }
-.menu-list { position: absolute; right: 0; top: calc(100% + 6px); z-index: 20; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 8px 24px rgba(20,23,28,.12); padding: 4px; min-width: 180px; }
+.menu-list { position: absolute; right: 0; top: calc(100% + 6px); z-index: 20; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 8px 24px rgba(20,23,28,.12); padding: 4px; min-width: 240px; }
 .menu-list button { display: block; width: 100%; text-align: left; border: 0; background: none; padding: 7px 10px; border-radius: 7px; cursor: pointer; }
 .menu-list button:hover { background: var(--soft); }
 
@@ -205,3 +205,5 @@ svg.wiring { font-family: inherit; }
 .live-list li b { font-variant-numeric: tabular-nums; font-weight: 600; }
 .ports-table td.pd code { font: 600 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
 .ports-table td.pd .on { background: #ffd23a; border-radius: 4px; padding: 0 4px; }
+
+.menu-list button { white-space: nowrap; }

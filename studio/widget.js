@@ -144,6 +144,7 @@ function draw() {
   const facts = [plural(sensors, "sensor"), plural(masters, "master")].concat(power ? [power] : []).concat([plural(items, "item") + " to order"]);
   // Two actions only, as the Apps SDK asks: Buy first, studio second.
   const actions = "<footer><button class=\"primary\" id=\"buy\">Buy and install</button><button id=\"studio\">Open in studio</button><span class=\"fine\">No payment in ChatGPT · nothing is written to a sensor</span></footer>";
+  const reportLink = big ? "<p class=\"fine report\"><a href=\"#\" id=\"report\">Station report (PDF)</a> · commissioning data, wiring, BOM</p>" : "";
   const stage = "<div class=\"stage\">" +
     "<div id=\"view3d\" class=\"pane\"></div>" +
     (big ? "<div id=\"wiring\" class=\"pane doc\" hidden>" + wiringSvg(station, library) + "</div><div id=\"ports\" class=\"pane doc\" hidden>" + portsHtml(station, library) + "</div>" : "") +
@@ -153,7 +154,7 @@ function draw() {
   root.innerHTML =
     "<header><span class=\"mark\">" + ICON + "</span><div class=\"head\"><h1>" + esc(out.title || "IO-Link station") + "</h1><p class=\"sub\">" + facts.map(esc).join(" · ") + "</p></div>" +
     "<button class=\"icon\" id=\"expand\" title=\"" + (big ? "Exit full screen" : "Full screen") + "\" aria-label=\"" + (big ? "Exit full screen" : "Full screen") + "\">" + (big ? CLOSE : EXPAND) + "</button></header>" +
-    (big ? "<div class=\"body\">" + stage + "<div class=\"rail\">" + actions + "<aside id=\"side\"></aside></div></div>" : stage + status(current.issues, sensors) + actions);
+    (big ? "<div class=\"body\">" + stage + "<div class=\"rail\">" + actions + reportLink + "<aside id=\"side\"></aside></div></div>" : stage + status(current.issues, sensors) + actions);
 
   const wasRunning = run.on;
   stopRun();
@@ -177,6 +178,13 @@ function draw() {
   root.querySelector("#expand").addEventListener("click", () => setMode(big ? "inline" : "fullscreen"));
   root.querySelectorAll("[data-expand]").forEach((b) => b.addEventListener("click", () => setMode("fullscreen")));
   root.querySelector("#studio").addEventListener("click", () => open(current.link));
+  const report = root.querySelector("#report");
+  if (report) {
+    report.addEventListener("click", (event) => {
+      event.preventDefault();
+      open(current.link.replace("#s=", "?report=1#s="));
+    });
+  }
   root.querySelector("#buy").addEventListener("click", () => open(current.link.replace("#s=", "?buy=1#s=")));
 }
 

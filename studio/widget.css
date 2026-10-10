@@ -142,3 +142,4 @@ svg.wiring { font-family: inherit; }
   footer .fine { margin-left: 0; width: 100%; }
 }
 @media (max-width: 480px) { .stage { height: 280px; } }
+.rail .report { margin: 0; } .rail .report a { color: var(--accent); font-weight: 500; }

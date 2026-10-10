@@ -243,7 +243,7 @@ function checkSensor(def, item) {
       return;
     }
     values[setting.key] = scaled;
-    const entry = { name: setting.name, value: formatValue(scaled, setting.unit) };
+    const entry = { key: setting.key, kind: "setting", name: setting.name, unit: setting.unit, number: scaled, value: formatValue(scaled, setting.unit) };
     if (setting.corrected && factor && factor !== 1) {
       entry.note = formatValue(real, setting.unit) + " on " + item.target + " × 1/" + factor;
     }
@@ -266,7 +266,7 @@ function checkSensor(def, item) {
       problems.push({ text: option.name + " must be one of: " + option.values.join(", ") + "." });
       return;
     }
-    parameters.push({ name: option.name, value: value });
+    parameters.push({ key: option.key, kind: "option", name: option.name, value: value });
   });
   const texts = problems.map((problem) => problem.text);
   return { ok: problems.length === 0, problems: texts, unset: problems.filter((problem) => problem.unset).map((problem) => problem.text), limits: problems.filter((problem) => !problem.unset).map((problem) => problem.text), parameters: parameters };
@@ -833,6 +833,6 @@ if (typeof module !== "undefined") {
     newStation, addItem, removeItem, assignPorts, setPort, checkSensor, checkStation, cables, orderLines,
     buyStation, orderText, orderMail, encodeStation, decodeStation, fromSpec, describeLibrary, planFromText,
     markFiled, fromDiagram, toDiagram, byId, FLOOR, SENSOR_HEIGHT, CATALOG_SEARCH,
-    powerBudget, portTable, orderCsv, portCsv, cableLength,
+    powerBudget, portTable, orderCsv, portCsv, cableLength, CABLE_STOCK, masterPorts,
   };
 }
