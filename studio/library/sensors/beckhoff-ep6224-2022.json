@@ -1,0 +1,18 @@
+{
+  "id": "beckhoff-ep6224-2022",
+  "kind": "master",
+  "part": "EP6224-2022",
+  "vendor": "Beckhoff",
+  "ports": 4,
+  "port_class": "A",
+  "fieldbus": "EtherCAT",
+  "ip": "IP65/IP66/IP67",
+  "connector": "M12 5-pin A-coded (ports), M8 4-pin (power)",
+  "size_mm": [
+    60,
+    126,
+    26.5
+  ],
+  "source_url": "https://www.beckhoff.com/en-us/products/i-o/ethercat-box/epxxxx-industrial-housing/ep6xxx-communication/ep6224-2022.html",
+  "source": "Beckhoff EP6224-2022 product page: 'EtherCAT Box, 4-channel communication interface, IO-Link, master, Class A, M12'; 'Specification version IO-Link V1.1, Class A'; 'M12 socket, 5-pin, a-coded'; 'IP65/66/67'; 'Dimensions (W x H x D) 60 mm x 126 mm x 26.5 mm'; 'IO-Link extra power P24 –'. Vendor ID and cable length not published."
+}

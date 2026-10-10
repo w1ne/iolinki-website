@@ -337,6 +337,98 @@ test("a sensor whose supply range does not cover the master supply is refused", 
   assert.match(engine.checkStation(station, lib).issues.map((i) => i.problem).join(" "), /runs on 10–24 V; AL1301 supplies 20–28 V/);
 });
 
+// Multiple masters ----------------------------------------------------------
+
+const eightPort = { id: "test-master-8", kind: "master", part: "TM8", vendor: "test", ports: 8, port_class: "A" };
+const mixed = { id: "test-master-ab", kind: "master", part: "TMAB", vendor: "test", ports: 4, port_class: "A/B", port_classes: ["A", "A", "B", "B"], default: true };
+const classB = Object.assign({}, ig6214, { id: "test-sensor-b", part: "SB", port_class: "B" });
+const multi = { sensors: [ig6214, classB], masters: [fourPort, eightPort, mixed], equipment: library.equipment, applications: library.applications };
+
+test("running out of ports adds another master of the station's own type", () => {
+  const station = engine.newStation();
+  engine.addItem(station, multi, "test-master-8", [-4, -3]);
+  for (let i = 0; i < 9; i++) {
+    engine.addItem(station, multi, "ifm-ig6214", [i, 0]);
+  }
+  const refs = station.items.filter((item) => item.kind === "master").map((item) => item.ref);
+  assert.deepEqual(refs, ["test-master-8", "test-master-8"]);
+});
+
+test("an empty station adds the library default master, not the first filed", () => {
+  const station = engine.newStation();
+  engine.addItem(station, multi, "ifm-ig6214", [0, 0]);
+  assert.equal(station.items.find((item) => item.kind === "master").ref, "test-master-ab");
+});
+
+test("a class B sensor takes a class B port, and a master that has one", () => {
+  const station = engine.newStation();
+  engine.addItem(station, multi, "test-master-4", [-4, -3]);
+  const sensor = engine.addItem(station, multi, "test-sensor-b", [0, 0]);
+  const masters = station.items.filter((item) => item.kind === "master");
+  assert.equal(masters.length, 2);
+  assert.equal(masters[1].ref, "test-master-ab");
+  assert.equal(sensor.master, masters[1].uid);
+  assert.equal(sensor.port, 3);
+  assert.equal(engine.checkStation(station, multi).ok, true);
+});
+
+test("a class A sensor may sit on a class B port", () => {
+  assert.equal(engine.portClassOf(mixed, 3), "B");
+  const station = engine.newStation();
+  engine.addItem(station, multi, "test-master-ab", [-4, -3]);
+  const sensor = engine.addItem(station, multi, "ifm-ig6214", [0, 0]);
+  engine.setPort(station, multi, sensor.uid, station.items[0].uid, 4);
+  assert.equal(engine.checkStation(station, multi).ok, true);
+});
+
+test("a class B sensor forced onto a class A port of a mixed master is refused", () => {
+  const station = engine.newStation();
+  engine.addItem(station, multi, "test-master-ab", [-4, -3]);
+  const sensor = engine.addItem(station, multi, "test-sensor-b", [0, 0]);
+  sensor.port = 1;
+  const issues = engine.checkStation(station, multi).issues.map((i) => i.problem).join(" ");
+  assert.match(issues, /needs a port class B port; TMAB X1 is class A/);
+});
+
+test("per-port supply limits apply to the port the sensor is on", () => {
+  const lib = JSON.parse(JSON.stringify(multi));
+  lib.masters[2].power = { port_supply_a_by_port: [1.6, 0.5, 0.5, 0.5] };
+  lib.sensors.forEach((def) => { def.power = { current_ma: 800 }; });
+  const station = engine.newStation();
+  engine.addItem(station, lib, "test-master-ab", [-4, -3]);
+  engine.addItem(station, lib, "ifm-ig6214", [0, 0]);
+  engine.addItem(station, lib, "ifm-ig6214", [1, 0]);
+  const budget = engine.powerBudget(station, lib).masters[0];
+  assert.equal(budget.ports[0].limit_ma, 1600);
+  assert.equal(budget.ports[1].limit_ma, 500);
+  assert.equal(budget.port_limit_ma, 1600);
+  const issues = engine.checkStation(station, lib).issues.map((i) => i.problem).join(" ");
+  assert.match(issues, /on master1 X2 draws 800 mA; the port supplies 500 mA/);
+  assert.doesNotMatch(issues, /X1 draws/);
+});
+
+test("every filed master has a unique id, sourced quotes, and consistent port classes", () => {
+  const dir = path.join(__dirname, "library/sensors");
+  const power = require("./library/power.json");
+  const masters = fs.readdirSync(dir).map((name) => JSON.parse(fs.readFileSync(path.join(dir, name), "utf8"))).filter((def) => def.kind === "master");
+  assert.ok(masters.length >= 12);
+  assert.equal(new Set(masters.map((def) => def.id)).size, masters.length);
+  assert.equal(masters.filter((def) => def.default).length, 1);
+  masters.forEach((def) => {
+    assert.match(def.source_url, /^https:\/\//, def.id);
+    assert.ok(/\d/.test(def.source) && def.source.length > 80, def.id + " quotes its datasheet");
+    assert.ok(power[def.id] && power[def.id].source_url && power[def.id].source, def.id + " has filed power figures");
+    if (def.port_classes) {
+      assert.equal(def.port_classes.length, def.ports, def.id);
+      assert.equal(def.port_class, "A/B", def.id);
+    }
+    const byPort = power[def.id].port_supply_a_by_port;
+    if (byPort) {
+      assert.equal(byPort.length, def.ports, def.id);
+    }
+  });
+});
+
 // Run mode ------------------------------------------------------------------
 
 const sim = require("./station_sim.js");

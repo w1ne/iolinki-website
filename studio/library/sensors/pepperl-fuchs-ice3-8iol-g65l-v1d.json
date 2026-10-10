@@ -1,0 +1,18 @@
+{
+  "id": "pepperl-fuchs-ice3-8iol-g65l-v1d",
+  "kind": "master",
+  "part": "ICE3-8IOL-G65L-V1D",
+  "vendor": "Pepperl+Fuchs",
+  "ports": 8,
+  "port_class": "A",
+  "fieldbus": "PROFINET IO (MRP), Modbus TCP, OPC UA, MQTT",
+  "ip": "IP67",
+  "connector": "M12 A-coded (ports), M12 D-coded (fieldbus), M12 L-coded (power)",
+  "size_mm": [
+    65,
+    212,
+    29.8
+  ],
+  "source_url": "https://files.pepperl-fuchs.com/webcat/navi/productInfo/pds/70104876_eng.pdf",
+  "source": "Pepperl+Fuchs ICE3-8IOL-G65L-V1D (70104876) datasheet 2025-07-11: '8 type A IO-Link master ports according to IO-Link standard V1.1'; '8 x IO-Link Class A (X1 - X8)'; 'Degree of protection IP67'; 'Height 212 mm / Width 65 mm / Length 29.8 mm'. Vendor ID and cable length not published."
+}

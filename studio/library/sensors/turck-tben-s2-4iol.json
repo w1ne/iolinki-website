@@ -1,0 +1,18 @@
+{
+  "id": "turck-tben-s2-4iol",
+  "kind": "master",
+  "part": "TBEN-S2-4IOL",
+  "vendor": "Turck",
+  "ports": 4,
+  "port_class": "A",
+  "fieldbus": "PROFINET, EtherNet/IP, Modbus TCP, CC-Link IE field basic",
+  "ip": "IP65/IP67/IP69K",
+  "connector": "M12 5-pin A-coded (ports), M8 4-pin (Ethernet and supply)",
+  "size_mm": [
+    32,
+    144,
+    32
+  ],
+  "source_url": "https://www.turck.us/datasheet/_us/edb_6814024_eng_us.pdf",
+  "source": "Turck TBEN-S2-4IOL (ID 6814024) datasheet 2025-08-19: '4 IO-Link Master Channels'; 'IO-Link port type Class A'; 'IO-Link specification V 1.1'; 'Protection class IP65 / IP67 / IP69K'; 'Dimensions (W x L x H) 32 x 144 x 32 mm'. IO-Link vendor ID not published in the files read."
+}

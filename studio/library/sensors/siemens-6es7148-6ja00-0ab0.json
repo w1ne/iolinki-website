@@ -1,0 +1,19 @@
+{
+  "id": "siemens-6es7148-6ja00-0ab0",
+  "kind": "master",
+  "part": "SIMATIC ET 200eco PN 4 IO-Link (6ES7148-6JA00-0AB0)",
+  "vendor": "Siemens",
+  "vendor_id": 42,
+  "ports": 4,
+  "port_class": "A",
+  "fieldbus": "PROFINET IO (IRT, integrated switch)",
+  "ip": "IP65/IP67",
+  "connector": "M12 (8 sockets)",
+  "size_mm": [
+    60,
+    175,
+    49
+  ],
+  "source_url": "https://adegis.com/media/asset/7e6c10436a3e23b8670e7a164cf33b80b2e943346bf632ffd80e8a389dd4641b.pdf",
+  "source": "Siemens data sheet 6ES7148-6JA00-0AB0 (03/15/2017): 'Vendor identification (VendorID) 002AH' (= 42); 'Number of ports 4'; 'Port type A Yes'; 'IP degree of protection IP65/67'; 'Width 60 mm / Height 175 mm / Depth 49 mm'; 'IO-Link protocol 1.0 Yes'; 'Cable length unshielded, max. 20 m'. Siemens lists the module as phase-out (successor 6ES7148-6JE00-0BB0; unverified)."
+}

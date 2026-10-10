@@ -1,0 +1,13 @@
+{
+  "id": "ifm-al1102",
+  "kind": "master",
+  "part": "AL1102",
+  "vendor": "ifm electronic",
+  "ports": 8,
+  "port_class": "A",
+  "fieldbus": "PROFINET IO",
+  "ip": "IP65/IP66/IP67",
+  "connector": "M12",
+  "source_url": "https://static.chipdip.ru/lib/037/DOC034037071.pdf",
+  "source": "ifm AL1102-00 (24.03.2017, distributor copy; the current ifm sheet could not be opened), 'IO-Link Master SL PN 8P IP67': 'Number of ports class A 8'; 'IO-Link revision 1.1'; 'Protocol PROFINET IO'; 'Protection IP 65; IP 66; IP 67'; 'Connector: M12'. Dimensions and vendor ID not published in this revision."
+}

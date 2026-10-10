@@ -1,0 +1,28 @@
+{
+  "id": "turck-tben-l5-8iol",
+  "kind": "master",
+  "part": "TBEN-L5-8IOL",
+  "vendor": "Turck",
+  "ports": 8,
+  "port_class": "A/B",
+  "port_classes": [
+    "A",
+    "A",
+    "A",
+    "A",
+    "B",
+    "B",
+    "B",
+    "B"
+  ],
+  "fieldbus": "PROFINET, EtherNet/IP, Modbus TCP, CC-Link IE field basic",
+  "ip": "IP65/IP67/IP69K",
+  "connector": "M12 5-pin (ports), M12 D-coded (Ethernet), 7/8\" 5-pin (power)",
+  "size_mm": [
+    60.4,
+    230.5,
+    38.8
+  ],
+  "source_url": "https://www.turck.us/datasheet/_us/edb_6814017_eng_us.pdf",
+  "source": "Turck TBEN-L5-8IOL (ID 6814017) datasheet 2025-08-19: '8 IO-Link Master Channels'; 'IO-Link port type Class A and Class B'; 'C0…C3: IO-Link master class A'; 'C4…C7: IO-Link master class B'; 'IO-Link specification V 1.1'; 'Protection class IP65 / IP67 / IP69K'; 'Dimensions (W x L x H) 60.4 x 230.5 x 38.8 mm'. Vendor ID and cable length not published."
+}
