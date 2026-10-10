@@ -155,8 +155,9 @@ function draw() {
     "<button class=\"icon\" id=\"expand\" title=\"" + (big ? "Exit full screen" : "Full screen") + "\" aria-label=\"" + (big ? "Exit full screen" : "Full screen") + "\">" + (big ? CLOSE : EXPAND) + "</button></header>" +
     (big ? "<div class=\"body\">" + stage + "<div class=\"rail\">" + actions + "<aside id=\"side\"></aside></div></div>" : stage + status(current.issues, sensors) + actions);
 
+  const wasRunning = run.on;
   stopRun();
-  const view = { station: station, library: library, selected: ui.selected, readOnly: true, theme: theme() === "dark" ? "dark" : "card", machineLabels: big, compactTags: !big, tightFit: !big };
+  const view = { station: station, library: library, selected: ui.selected, readOnly: true, theme: theme() === "dark" ? "dark" : "card", machineLabels: big && window.innerWidth >= 700, compactTags: !big || window.innerWidth < 700, tightFit: !big };
   view.onSelect = (uid) => {
     ui.selected = uid;
     view.selected = uid;
@@ -170,6 +171,9 @@ function draw() {
     showTab(ui.tab);
   }
   root.querySelector("#run").addEventListener("click", () => (run.on ? stopRun() : startRun()));
+  if (wasRunning) {
+    startRun();
+  }
   root.querySelector("#expand").addEventListener("click", () => setMode(big ? "inline" : "fullscreen"));
   root.querySelectorAll("[data-expand]").forEach((b) => b.addEventListener("click", () => setMode("fullscreen")));
   root.querySelector("#studio").addEventListener("click", () => open(current.link));
