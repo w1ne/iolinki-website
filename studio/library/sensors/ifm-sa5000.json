@@ -33,8 +33,26 @@
       "min": 5,
       "max": 100,
       "default": 20,
-      "iodd_index": "583 (SP_FH1_FLOW, % of measuring range end)",
-      "default_source": "IODD factory default"
+      "iodd_index": "583 (V_SP_FH1_FLOW)",
+      "default_source": "IODD factory default",
+      "scale": {
+        "gradient": 1,
+        "offset": 0
+      },
+      "unit_source": "menu",
+      "range_source": "IODD ValueRange",
+      "write": {
+        "index": 583,
+        "subindex": 0,
+        "datatype": "IntegerT",
+        "bitLength": 16,
+        "gradient": 1,
+        "offset": 0,
+        "raw_min": 5,
+        "raw_max": 100
+      },
+      "role": "switch point",
+      "quantity": "percent"
     },
     {
       "key": "flow_rp1",
@@ -43,9 +61,27 @@
       "min": 0,
       "max": 96,
       "default": 15,
-      "below": "flow_sp1",
-      "iodd_index": "584 (rP_FL1_FLOW, %)",
-      "default_source": "IODD factory default"
+      "iodd_index": "584 (V_rP_FL1_FLOW)",
+      "default_source": "IODD factory default",
+      "scale": {
+        "gradient": 1,
+        "offset": 0
+      },
+      "unit_source": "menu",
+      "range_source": "IODD ValueRange",
+      "write": {
+        "index": 584,
+        "subindex": 0,
+        "datatype": "IntegerT",
+        "bitLength": 16,
+        "gradient": 1,
+        "offset": 0,
+        "raw_min": 0,
+        "raw_max": 96
+      },
+      "role": "switch point",
+      "quantity": "percent",
+      "below": "flow_sp1"
     }
   ],
   "options": [
@@ -57,7 +93,10 @@
         "absolute liquid",
         "absolute gaseous"
       ],
-      "default": "relative"
+      "default": "relative",
+      "source": "ifm SA5000 datasheet: operating modes REL, LIQU and GAS are separate DeviceIDs (533, 540, 547). In the IODD the mode is read-only (ModE, index 689, factory REL), so it is not a writable parameter.",
+      "write": null,
+      "source_kind": "datasheet"
     }
   ],
   "port_class": "A",
@@ -70,7 +109,7 @@
   "iodd": {
     "file": "ifm-000215-20161025-IODD1.1.xml",
     "iodd_finder_id": 413,
-    "min_cycle_ms": 3.0,
+    "min_cycle_ms": 3,
     "bitrate": "COM2",
     "pd_in_bits": 32,
     "pd_in": [
@@ -99,6 +138,17 @@
         "bits": 1
       }
     ],
-    "pd_out_bits": 0
+    "pd_out_bits": 0,
+    "pd_out": [],
+    "process_value": {
+      "name": "Flow",
+      "unit": "%",
+      "unit_source": "menu"
+    }
+  },
+  "ingest": {
+    "iodd": "tests/iodd/fixtures/station/ifm-000215-20161025-IODD1.1.xml",
+    "converter_version": "2",
+    "overrides": "studio/library/ingest/ifm-sa5000.json"
   }
 }

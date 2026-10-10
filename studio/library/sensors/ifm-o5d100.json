@@ -32,9 +32,28 @@
       "unit": "mm",
       "min": 50,
       "max": 2000,
-      "default": 500,
-      "iodd_index": "60.1 (BDC1 SP1, 5–200 cm)",
-      "default_source": "studio default, not a factory setting"
+      "default": 1000,
+      "iodd_index": "60.1 (V_BDC1_SP)",
+      "default_source": "IODD factory default",
+      "scale": {
+        "gradient": 10,
+        "offset": 0
+      },
+      "unit_source": "menu",
+      "range_source": "IODD ValueRange",
+      "write": {
+        "index": 60,
+        "subindex": 1,
+        "datatype": "UIntegerT",
+        "bitLength": 16,
+        "gradient": 10,
+        "offset": 0,
+        "raw_min": 5,
+        "raw_max": 200,
+        "bit_offset": 16
+      },
+      "role": "switch point",
+      "quantity": "length"
     }
   ],
   "options": [
@@ -46,7 +65,18 @@
         "normally closed"
       ],
       "default": "normally open",
-      "default_source": "studio default, not a factory setting"
+      "default_source": "IODD factory default",
+      "iodd_index": "61.1 (V_BDC1_Config)",
+      "raw": [
+        0,
+        1
+      ],
+      "write": {
+        "index": 61,
+        "subindex": 1,
+        "datatype": "UIntegerT",
+        "bitLength": 8
+      }
     }
   ],
   "port_class": "A",
@@ -66,7 +96,9 @@
       {
         "name": "Distance",
         "bit_offset": 4,
-        "bits": 12
+        "bits": 12,
+        "gradient": 1,
+        "unit": "cm"
       },
       {
         "name": "Switch state [OUT1]",
@@ -74,6 +106,29 @@
         "bits": 1
       }
     ],
-    "pd_out_bits": 0
+    "pd_out_bits": 0,
+    "pd_out": [],
+    "profile": {
+      "ids": [],
+      "switching_channels": [
+        {
+          "channel": "BDC1",
+          "index": 60,
+          "mode": 1,
+          "logic": 0
+        }
+      ],
+      "mdc": []
+    },
+    "process_value": {
+      "name": "Distance",
+      "unit": "cm",
+      "unit_source": "menu"
+    }
+  },
+  "ingest": {
+    "iodd": "tests/iodd/fixtures/station/ifm-000174-20210526-IODD1.1.xml",
+    "converter_version": "2",
+    "overrides": "studio/library/ingest/ifm-o5d100.json"
   }
 }

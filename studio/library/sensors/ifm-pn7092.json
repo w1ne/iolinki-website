@@ -32,8 +32,26 @@
       "min": 1,
       "max": 100,
       "default": 25,
-      "iodd_index": "583 (SP_FH1, 10–1000 × 0.1 bar)",
-      "default_source": "IODD factory default"
+      "iodd_index": "583 (V_SP1)",
+      "default_source": "IODD factory default",
+      "scale": {
+        "gradient": 0.1,
+        "offset": 0
+      },
+      "unit_source": "menu",
+      "range_source": "IODD ValueRange",
+      "write": {
+        "index": 583,
+        "subindex": 0,
+        "datatype": "IntegerT",
+        "bitLength": 16,
+        "gradient": 0.1,
+        "offset": 0,
+        "raw_min": 10,
+        "raw_max": 1000
+      },
+      "role": "switch point",
+      "quantity": "pressure"
     },
     {
       "key": "rp1",
@@ -42,9 +60,27 @@
       "min": 0.5,
       "max": 99.5,
       "default": 23,
-      "below": "sp1",
-      "iodd_index": "584 (RP_FL1, 5–995 × 0.1 bar)",
-      "default_source": "IODD factory default"
+      "iodd_index": "584 (V_rP1)",
+      "default_source": "IODD factory default",
+      "scale": {
+        "gradient": 0.1,
+        "offset": 0
+      },
+      "unit_source": "menu",
+      "range_source": "IODD ValueRange",
+      "write": {
+        "index": 584,
+        "subindex": 0,
+        "datatype": "IntegerT",
+        "bitLength": 16,
+        "gradient": 0.1,
+        "offset": 0,
+        "raw_min": 5,
+        "raw_max": 995
+      },
+      "role": "switch point",
+      "quantity": "pressure",
+      "below": "sp1"
     }
   ],
   "options": [
@@ -56,7 +92,18 @@
         "normally closed"
       ],
       "default": "normally open",
-      "default_source": "IODD factory default"
+      "default_source": "IODD factory default",
+      "iodd_index": "580 (V_ou1)",
+      "raw": [
+        3,
+        4
+      ],
+      "write": {
+        "index": 580,
+        "subindex": 0,
+        "datatype": "UIntegerT",
+        "bitLength": 8
+      }
     }
   ],
   "port_class": "A",
@@ -91,6 +138,17 @@
         "bits": 1
       }
     ],
-    "pd_out_bits": 0
+    "pd_out_bits": 0,
+    "pd_out": [],
+    "process_value": {
+      "name": "Pressure",
+      "unit": "bar",
+      "unit_source": "menu"
+    }
+  },
+  "ingest": {
+    "iodd": "tests/iodd/fixtures/station/ifm-000191_V104326821-20140909-IODD1.1.xml",
+    "converter_version": "2",
+    "overrides": "studio/library/ingest/ifm-pn7092.json"
   }
 }
