@@ -37,6 +37,9 @@
       <div class="menu">
         <button type="button" class="ghost" id="export-toggle" aria-haspopup="true" aria-expanded="false">Export</button>
         <div class="menu-list" id="export-menu" hidden>
+          <button type="button" id="export-commissioning-json">Commissioning file (JSON)</button>
+          <button type="button" id="export-commissioning-csv">Commissioning file (CSV)</button>
+          <button type="button" id="export-report">Station report (PDF)</button>
           <button type="button" id="csv-order">Order list (CSV)</button>
           <button type="button" id="csv-ports">Port table (CSV)</button>
         </div>
@@ -104,6 +107,7 @@
   <script src="station_sim.js"></script>
   <script src="station_3d.js"></script>
   <script src="station_tables.js"></script>
+  <script src="station_export.js"></script>
   <script src="page.js"></script>
   <script src="/assets/js/analytics.js" defer></script>
 </body>

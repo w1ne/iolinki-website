@@ -63,6 +63,9 @@ function start() {
     if (new URLSearchParams(location.search).get("buy") === "1") {
       openBuy();
     }
+    if (new URLSearchParams(location.search).get("report") === "1") {
+      showReport(true);
+    }
   });
 }
 
@@ -723,9 +726,50 @@ function setTab(name) {
   }
 }
 
-function download(name, text) {
+// The canvas keeps its drawing buffer, so it can be read back as the report picture.
+function sceneSnapshot() {
+  const back = ui.tab;
+  if (back !== "3d") {
+    setTab("3d");
+  }
+  redraw();
+  const canvas = $("#scene").querySelector("canvas");
+  let url = "";
+  try {
+    url = canvas && canvas.width > 0 ? canvas.toDataURL("image/png") : "";
+  } catch (error) {
+    url = "";
+  }
+  if (back !== "3d") {
+    setTab(back);
+  }
+  return url;
+}
+
+function exportOptions() {
+  const link = location.origin + location.pathname + "#s=" + encodeStation(view.station).split("#s=")[1];
+  return { title: "IO-Link station", date: new Date().toISOString(), link: link, wiringSvg: wiringSvg };
+}
+
+// inPlace replaces this page with the report (a shared ?report=1 link); the
+// menu opens it in a new tab.
+function showReport(inPlace) {
+  const options = exportOptions();
+  options.snapshot = sceneSnapshot();
+  const html = reportHtml(view.station, library, options);
+  if (!inPlace) {
+    const tab = window.open(URL.createObjectURL(new Blob([html], { type: "text/html" })), "_blank");
+    if (tab) {
+      return;
+    }
+  }
+  const next = new DOMParser().parseFromString(html, "text/html");
+  document.replaceChild(document.importNode(next.documentElement, true), document.documentElement);
+}
+
+function download(name, text, type) {
   const link = document.createElement("a");
-  link.href = URL.createObjectURL(new Blob([text], { type: "text/csv" }));
+  link.href = URL.createObjectURL(new Blob([text], { type: type || "text/csv" }));
   link.download = name;
   document.body.appendChild(link);
   link.click();
@@ -796,6 +840,9 @@ document.addEventListener("click", (event) => {
     $("#export-menu").hidden = true;
   }
 });
+$("#export-commissioning-json").addEventListener("click", () => download("iolink-station-commissioning.json", commissioningJson(view.station, library, exportOptions()), "application/json"));
+$("#export-commissioning-csv").addEventListener("click", () => download("iolink-station-commissioning.csv", commissioningCsv(view.station, library, exportOptions())));
+$("#export-report").addEventListener("click", () => showReport(false));
 $("#csv-order").addEventListener("click", () => download("iolink-station-order.csv", orderCsv(view.station, library)));
 $("#csv-ports").addEventListener("click", () => download("iolink-station-ports.csv", portCsv(view.station, library)));
 $("#buy-open").addEventListener("click", openBuy);

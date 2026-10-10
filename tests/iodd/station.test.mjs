@@ -40,7 +40,7 @@ test("generated station module is up to date with studio sources", studio, () =>
 });
 
 test("studio engine tests pass", studio, () => {
-  const run = spawnSync(process.execPath, ["--test", "studio/engine.test.js"], { cwd: root, encoding: "utf8", env: Object.fromEntries(Object.entries(process.env).filter(([key]) => key !== "NODE_TEST_CONTEXT")) });
+  const run = spawnSync(process.execPath, ["--test", "studio/engine.test.js", "studio/station_export.test.js"], { cwd: root, encoding: "utf8", env: Object.fromEntries(Object.entries(process.env).filter(([key]) => key !== "NODE_TEST_CONTEXT")) });
   assert.equal(run.status, 0, run.stdout.slice(-2000));
 });
 

@@ -149,6 +149,7 @@ svg.wiring { font-family: inherit; }
   footer .fine { margin-left: 0; width: 100%; }
 }
 @media (max-width: 480px) { .stage { height: 280px; } }
+.rail .report { margin: 0; } .rail .report a { color: var(--accent); font-weight: 500; }
 </style>
 </head>
 <body>
@@ -453,7 +454,7 @@ function checkSensor(def, item) {
       return;
     }
     values[setting.key] = scaled;
-    const entry = { name: setting.name, value: formatValue(scaled, setting.unit) };
+    const entry = { key: setting.key, kind: "setting", name: setting.name, unit: setting.unit, number: scaled, value: formatValue(scaled, setting.unit) };
     if (setting.corrected && factor && factor !== 1) {
       entry.note = formatValue(real, setting.unit) + " on " + item.target + " × 1/" + factor;
     }
@@ -476,7 +477,7 @@ function checkSensor(def, item) {
       problems.push({ text: option.name + " must be one of: " + option.values.join(", ") + "." });
       return;
     }
-    parameters.push({ name: option.name, value: value });
+    parameters.push({ key: option.key, kind: "option", name: option.name, value: value });
   });
   const texts = problems.map((problem) => problem.text);
   return { ok: problems.length === 0, problems: texts, unset: problems.filter((problem) => problem.unset).map((problem) => problem.text), limits: problems.filter((problem) => !problem.unset).map((problem) => problem.text), parameters: parameters };
@@ -1051,7 +1052,7 @@ if (typeof module !== "undefined") {
     newStation, addItem, removeItem, assignPorts, setPort, checkSensor, checkStation, cables, orderLines,
     buyStation, orderText, orderMail, encodeStation, decodeStation, fromSpec, describeLibrary, planFromText,
     markFiled, fromDiagram, toDiagram, byId, FLOOR, SENSOR_HEIGHT, CATALOG_SEARCH,
-    powerBudget, portClassOf, portTable, orderCsv, portCsv, cableLength,
+    powerBudget, portClassOf, portTable, orderCsv, portCsv, cableLength, CABLE_STOCK, masterPorts,
   };
 }
 
@@ -1972,7 +1973,7 @@ function wiringSvg(station, library) {
     return "<p class=\"small\">No master on the floor yet.</p>";
   }
   const rowH = 56;
-  const cardW = 230;
+  const cardW = 262;
   const gap = 150;
   const blocks = [];
   let y = 12;
@@ -1983,7 +1984,7 @@ function wiringSvg(station, library) {
     const top = y;
     let svg = "<rect x=\"12\" y=\"" + top + "\" width=\"" + 170 + "\" height=\"" + h + "\" rx=\"10\" class=\"w-master\"/>" +
       "<text x=\"26\" y=\"" + (top + 24) + "\" class=\"w-title\">" + tableText(def.part) + "</text>" +
-      "<text x=\"26\" y=\"" + (top + 40) + "\" class=\"w-sub\">" + tableText(master.uid + " · " + (def.fieldbus || "IO-Link master")) + "</text>";
+      "<text x=\"26\" y=\"" + (top + 40) + "\" class=\"w-sub\">" + tableText(master.uid + " · " + String(def.fieldbus || "IO-Link master").split(" (")[0]) + "</text>";
     for (let port = 1; port <= ports; port++) {
       const py = top + 46 + (port - 1) * rowH + rowH / 2;
       const sensor = station.items.find((item) => item.kind === "sensor" && item.master === master.uid && item.port === port);
@@ -2175,6 +2176,7 @@ function draw() {
   const facts = [plural(sensors, "sensor"), plural(masters, "master")].concat(power ? [power] : []).concat([plural(items, "item") + " to order"]);
   // Two actions only, as the Apps SDK asks: Buy first, studio second.
   const actions = "<footer><button class=\"primary\" id=\"buy\">Buy and install</button><button id=\"studio\">Open in studio</button><span class=\"fine\">No payment in ChatGPT · nothing is written to a sensor</span></footer>";
+  const reportLink = big ? "<p class=\"fine report\"><a href=\"#\" id=\"report\">Station report (PDF)</a> · commissioning data, wiring, BOM</p>" : "";
   const stage = "<div class=\"stage\">" +
     "<div id=\"view3d\" class=\"pane\"></div>" +
     (big ? "<div id=\"wiring\" class=\"pane doc\" hidden>" + wiringSvg(station, library) + "</div><div id=\"ports\" class=\"pane doc\" hidden>" + portsHtml(station, library) + "</div>" : "") +
@@ -2184,7 +2186,7 @@ function draw() {
   root.innerHTML =
     "<header><span class=\"mark\">" + ICON + "</span><div class=\"head\"><h1>" + esc(out.title || "IO-Link station") + "</h1><p class=\"sub\">" + facts.map(esc).join(" · ") + "</p></div>" +
     "<button class=\"icon\" id=\"expand\" title=\"" + (big ? "Exit full screen" : "Full screen") + "\" aria-label=\"" + (big ? "Exit full screen" : "Full screen") + "\">" + (big ? CLOSE : EXPAND) + "</button></header>" +
-    (big ? "<div class=\"body\">" + stage + "<div class=\"rail\">" + actions + "<aside id=\"side\"></aside></div></div>" : stage + status(current.issues, sensors) + actions);
+    (big ? "<div class=\"body\">" + stage + "<div class=\"rail\">" + actions + reportLink + "<aside id=\"side\"></aside></div></div>" : stage + status(current.issues, sensors) + actions);
 
   const wasRunning = run.on;
   stopRun();
@@ -2208,6 +2210,13 @@ function draw() {
   root.querySelector("#expand").addEventListener("click", () => setMode(big ? "inline" : "fullscreen"));
   root.querySelectorAll("[data-expand]").forEach((b) => b.addEventListener("click", () => setMode("fullscreen")));
   root.querySelector("#studio").addEventListener("click", () => open(current.link));
+  const report = root.querySelector("#report");
+  if (report) {
+    report.addEventListener("click", (event) => {
+      event.preventDefault();
+      open(current.link.replace("#s=", "?report=1#s="));
+    });
+  }
   root.querySelector("#buy").addEventListener("click", () => open(current.link.replace("#s=", "?buy=1#s=")));
 }
 
