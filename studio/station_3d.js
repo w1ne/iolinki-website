@@ -171,6 +171,14 @@ function s3dMaster(g, ports) {
   return sockets;
 }
 
+// Scene colours. The studio page uses "light"; the ChatGPT widget follows the
+// host theme and drops the back wall so the scene sits on the card.
+const S3D_THEMES = {
+  light: { bg: 0xeef1f5, floor: 0xd9dde3, grid: 0xc3c9d2, wall: 0xf4f6f8, cable: 0x2a2e35, hemi: [0xffffff, 0xb9c2cf, 0.9], sun: 1.6 },
+  card: { bg: 0xf3f3f3, floor: 0xe4e6ea, grid: 0xcdcfd4, wall: null, cable: 0x414141, hemi: [0xffffff, 0xb9c2cf, 0.95], sun: 1.5 },
+  dark: { bg: 0x131313, floor: 0x1f2124, grid: 0x34373c, wall: null, cable: 0xb5bac2, hemi: [0xc8d2e0, 0x202428, 0.75], sun: 1.35 },
+};
+
 function mountStation3d(container, view) {
   container.classList.add("s3d");
   container.innerHTML = "";
@@ -187,10 +195,12 @@ function mountStation3d(container, view) {
   container.appendChild(labels);
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xeef1f5);
-  scene.fog = new THREE.Fog(0xeef1f5, 30, 60);
-  scene.add(new THREE.HemisphereLight(0xffffff, 0xb9c2cf, 0.9));
-  const sun = new THREE.DirectionalLight(0xffffff, 1.6);
+  let theme = S3D_THEMES[view.theme] || S3D_THEMES.light;
+  scene.background = new THREE.Color(theme.bg);
+  scene.fog = new THREE.Fog(theme.bg, 30, 60);
+  const hemi = new THREE.HemisphereLight(theme.hemi[0], theme.hemi[1], theme.hemi[2]);
+  scene.add(hemi);
+  const sun = new THREE.DirectionalLight(0xffffff, theme.sun);
   sun.position.set(-6, 14, 9);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
@@ -220,7 +230,7 @@ function mountStation3d(container, view) {
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
     orbit.target.set(center.x, Math.min(center.y, 0.8), center.z);
-    orbit.radius = Math.max(7, Math.min(26, Math.hypot(size.x, size.z) * 1.1 + 2.5));
+    orbit.radius = Math.max(7, Math.min(26, Math.hypot(size.x, size.z) * (view.tightFit ? 0.92 : 1.1) + (view.tightFit ? 1.5 : 2.5)));
   }
 
   function place() {
@@ -244,11 +254,18 @@ function mountStation3d(container, view) {
     const station = view.station;
     const fx = station.floor[0];
     const fz = station.floor[1];
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(fx, fz), new THREE.MeshStandardMaterial({ color: 0xd9dde3, roughness: 0.9 }));
+    theme = S3D_THEMES[view.theme] || S3D_THEMES.light;
+    scene.background.setHex(theme.bg);
+    scene.fog.color.setHex(theme.bg);
+    hemi.color.setHex(theme.hemi[0]);
+    hemi.groundColor.setHex(theme.hemi[1]);
+    hemi.intensity = theme.hemi[2];
+    sun.intensity = theme.sun;
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(fx, fz), new THREE.MeshStandardMaterial({ color: theme.floor, roughness: 0.9 }));
     floor.rotation.x = -Math.PI / 2;
     floor.receiveShadow = true;
     world.add(floor);
-    const grid = new THREE.GridHelper(Math.max(fx, fz), Math.max(fx, fz), 0xc3c9d2, 0xc3c9d2);
+    const grid = new THREE.GridHelper(Math.max(fx, fz), Math.max(fx, fz), theme.grid, theme.grid);
     grid.position.y = 0.002;
     grid.scale.set(fx / Math.max(fx, fz), 1, fz / Math.max(fx, fz));
     world.add(grid);
@@ -259,10 +276,12 @@ function mountStation3d(container, view) {
       m.position.set(l[0], 0.004, l[1]);
       world.add(m);
     });
-    const wall = new THREE.Mesh(new THREE.BoxGeometry(fx, 3.2, 0.15), new THREE.MeshStandardMaterial({ color: 0xf4f6f8, roughness: 0.95 }));
-    wall.position.set(0, 1.6, -fz / 2 - 0.08);
-    wall.receiveShadow = true;
-    world.add(wall);
+    if (theme.wall !== null) {
+      const wall = new THREE.Mesh(new THREE.BoxGeometry(fx, 3.2, 0.15), new THREE.MeshStandardMaterial({ color: theme.wall, roughness: 0.95 }));
+      wall.position.set(0, 1.6, -fz / 2 - 0.08);
+      wall.receiveShadow = true;
+      world.add(wall);
+    }
 
     const issues = new Set(checkStation(station, view.library).issues.map((issue) => issue.uid));
     const sockets = new Map();
@@ -323,7 +342,7 @@ function mountStation3d(container, view) {
       ];
       const curve = s3dRoundedPath(pts, 0.18);
       const selected = view.selected && (view.selected === cable.to || view.selected === cable.from);
-      const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 140, 0.045, 10, false), new THREE.MeshStandardMaterial({ color: selected ? 0xff7a1a : 0x2a2e35, roughness: 0.45, metalness: 0.1 }));
+      const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 140, 0.045, 10, false), new THREE.MeshStandardMaterial({ color: selected ? 0x1f6feb : theme.cable, roughness: 0.45, metalness: 0.1 }));
       tube.castShadow = true;
       tube.userData.uid = cable.to;
       world.add(tube);
@@ -402,13 +421,13 @@ function mountStation3d(container, view) {
       let text;
       let cls = "s3d-tag " + anchor.item.kind;
       if (anchor.item.kind === "sensor") {
-        text = "<b>" + s3dEsc(def.part || anchor.item.ref) + "</b>" + (anchor.item.port ? "<i>" + s3dEsc(anchor.item.master) + " · X" + anchor.item.port + "</i>" : "");
+        text = "<b>" + s3dEsc(def.part || anchor.item.ref) + "</b>" + (anchor.item.port && !view.compactTags ? "<i>" + s3dEsc(anchor.item.master) + " · X" + anchor.item.port + "</i>" : "");
         const reading = live && live.readings[anchor.item.uid];
         if (reading) {
           text += "<em class=\"" + (reading.on ? "on" : "") + "\">" + s3dEsc(s3dReading(reading)) + "</em>";
         }
       } else if (anchor.item.kind === "master") {
-        text = "<b>" + s3dEsc(def.part || "") + "</b><i>" + s3dEsc(anchor.item.uid) + "</i>";
+        text = "<b>" + s3dEsc(def.part || "") + "</b>" + (view.compactTags ? "" : "<i>" + s3dEsc(anchor.item.uid) + "</i>");
       } else {
         text = s3dEsc(def.name || anchor.item.ref);
       }
@@ -420,14 +439,14 @@ function mountStation3d(container, view) {
       }
       // Tags hang above their anchor; push a tag up until it clears the ones placed before it.
       const w = anchor.item.kind === "equipment" ? 100 : 124;
-      const h = anchor.item.kind === "equipment" ? 22 : live && anchor.item.kind === "sensor" ? 52 : 36;
+      const h = anchor.item.kind === "equipment" ? 22 : (view.compactTags ? 24 : 36) + (live && anchor.item.kind === "sensor" ? 16 : 0);
       x = Math.max(w / 2 + 4, Math.min(width - w / 2 - 4, x));
       const clash = () => placed.find((o) => Math.abs(o[0] - x) < (w + o[2]) / 2 && y > o[1] - o[3] && y - h < o[1]);
       for (let i = 0, o = clash(); i < 8 && o; i++, o = clash()) {
         y = o[1] - o[3] - 2;
       }
       y = Math.max(h + 4, y);
-      if (anchor.item.kind === "equipment" && clash()) {
+      if (anchor.item.kind === "equipment" && (clash() || (view.machineLabels === false && view.selected !== anchor.item.uid))) {
         return;
       }
       placed.push([x, y, w, h]);

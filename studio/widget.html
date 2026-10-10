@@ -5,78 +5,150 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>iolinki station</title>
 <style>
-:root { --bg: #ffffff; --fg: #14171c; --muted: #66707d; --line: #e3e7ec; --soft: #f4f6f8; --accent: #1f6feb; --warn: #9a6200; --warnbg: #fff6e0; --ok: #1d7a3a; }
-@media (prefers-color-scheme: dark) { :root { --bg: #1d2026; --fg: #eef1f5; --muted: #9aa3b2; --line: #30353e; --soft: #262a31; --warn: #ffd479; --warnbg: #3a3220; --ok: #8fe0a6; } }
+/* Colours are the Apps SDK UI tokens (@openai/apps-sdk-ui) so the card sits
+   in ChatGPT like a native one; the brand blue is kept for the primary action,
+   selection and links only. */
+:root, [data-theme="light"] {
+  --surface: #ffffff; --surface-2: #f9f9f9; --surface-3: #f3f3f3; --elevated: #ffffff;
+  --text: #0d0d0d; --text-2: #5d5d5d; --text-3: #8f8f8f;
+  --border: rgba(13,13,13,.10); --border-subtle: rgba(13,13,13,.05);
+  --accent: #1f6feb; --accent-text: #0169cc; --ok: #00692a; --warn: #923b0f; --warn-bg: #fff4e5; --on: #ffc300; --on-text: #3d2c00;
+  --shadow: 0 1px 2px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.06);
+  --w-master: #eef4fe; --w-master-line: #9dbdf5; --w-sensor: #fff6ec; --w-sensor-line: #f3b07a; --w-cable: #414141;
+}
+[data-theme="dark"] {
+  --surface: #212121; --surface-2: #181818; --surface-3: #131313; --elevated: #303030;
+  --text: #ffffff; --text-2: #afafaf; --text-3: #8f8f8f;
+  --border: rgba(255,255,255,.12); --border-subtle: rgba(255,255,255,.06);
+  --accent: #2f7bf5; --accent-text: #66b5ff; --ok: #04b84c; --warn: #fb8a4a; --warn-bg: #2f2117; --on: #ffc300; --on-text: #2b2000;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 12px rgba(0,0,0,.25);
+  --w-master: #1d2a3f; --w-master-line: #3d6bb3; --w-sensor: #33261b; --w-sensor-line: #9c6232; --w-cable: #b5bac2;
+}
 * { box-sizing: border-box; }
-body { margin: 0; font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--fg); }
-#root { padding: 14px; }
-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
-h1 { font-size: 16px; margin: 0 0 4px; }
-.chips span { display: inline-block; font-size: 12px; color: var(--muted); background: var(--soft); border: 1px solid var(--line); border-radius: 999px; padding: 1px 9px; margin: 0 4px 4px 0; }
-nav { display: flex; background: var(--soft); border: 1px solid var(--line); border-radius: 10px; padding: 3px; }
-nav button { font: inherit; font-size: 13px; border: 0; background: none; color: var(--muted); padding: 5px 12px; border-radius: 7px; cursor: pointer; }
-nav button.on { background: var(--bg); color: var(--fg); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
-.stage { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #eef1f5; }
-.pane { height: 420px; overflow: auto; }
-#wiring, #ports { background: var(--bg); padding: 8px; }
+html, body { margin: 0; background: transparent; }
+body { font: 14px/20px ui-sans-serif, -apple-system, system-ui, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif; color: var(--text); -webkit-font-smoothing: antialiased; }
+#root { padding: 4px 2px 6px; }
+button { font: inherit; color: inherit; }
+svg { display: block; }
+[hidden] { display: none !important; }
+
+header { display: flex; align-items: center; gap: 10px; margin: 0 2px 10px; }
+.mark { width: 28px; height: 28px; flex: none; }
+.mark svg { width: 100%; height: 100%; }
+.head { flex: 1; min-width: 0; }
+h1 { font-size: 16px; line-height: 22px; font-weight: 600; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sub { margin: 0; color: var(--text-2); font-size: 12px; line-height: 18px; }
+button.icon { width: 32px; height: 32px; flex: none; display: grid; place-items: center; border: 1px solid var(--border); background: var(--surface); border-radius: 999px; cursor: pointer; color: var(--text-2); }
+button.icon:hover { background: var(--surface-3); color: var(--text); }
+button.icon svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+.stage { position: relative; height: 340px; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-subtle); background: var(--surface-3); }
+.pane { position: absolute; inset: 0; }
+.pane.doc { background: var(--surface); overflow: auto; padding: 56px 12px 12px; }
+.overlay { position: absolute; left: 10px; right: 10px; top: 10px; display: flex; justify-content: space-between; align-items: center; pointer-events: none; z-index: 3; }
+.overlay > * { pointer-events: auto; }
+.seg { display: flex; padding: 3px; border-radius: 999px; background: var(--elevated); border: 1px solid var(--border); box-shadow: var(--shadow); }
+.seg button { border: 0; background: none; padding: 4px 12px; border-radius: 999px; font-size: 13px; color: var(--text-2); cursor: pointer; }
+.seg button.on { background: var(--text); color: var(--surface); }
+.run { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 14px 0 11px; border-radius: 999px; border: 1px solid var(--border); background: var(--elevated); box-shadow: var(--shadow); cursor: pointer; font-size: 13px; font-weight: 600; }
+.run svg { width: 14px; height: 14px; fill: var(--ok); }
+.run.on { background: var(--text); color: var(--surface); border-color: var(--text); }
+.run.on svg { fill: var(--on); }
+.chip-live { position: absolute; left: 10px; bottom: 10px; z-index: 3; font-size: 12px; font-variant-numeric: tabular-nums; padding: 3px 10px; border-radius: 999px; background: var(--elevated); border: 1px solid var(--border); color: var(--text-2); box-shadow: var(--shadow); }
+
 .s3d { position: relative; }
+.pane.s3d { position: absolute; }
 .s3d canvas { display: block; cursor: grab; }
 .s3d-labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-.s3d-tag { position: absolute; transform: translate(-50%, -100%); white-space: nowrap; font-size: 11.5px; line-height: 1.25; padding: 3px 8px; border-radius: 8px; background: rgba(255,255,255,.92); color: #14171c; border: 1px solid #d8dde4; box-shadow: 0 1px 3px rgba(20,23,28,.12); text-align: center; }
-.s3d-tag b { font-weight: 650; }
-.s3d-tag i { display: block; font-style: normal; color: #66707d; font-size: 10.5px; }
-.s3d-tag.sensor { border-color: #ffb27a; }
-.s3d-tag.master { border-color: #8db4f5; }
-.s3d-tag.equipment { background: rgba(255,255,255,.7); color: #4b5560; border-color: transparent; box-shadow: none; font-size: 11px; }
-.s3d-tag.warn { border-color: #ffb020; background: #fff6e0; }
-.s3d-tag.selected { outline: 2px solid #ff7a1a; }
-.hint { color: var(--muted); font-size: 12px; margin: 8px 2px; }
-.card { margin: 10px 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--soft); display: grid; gap: 4px; }
-.muted { color: var(--muted); font-size: 12.5px; }
-.params { display: flex; flex-wrap: wrap; gap: 6px; }
-.params span { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 3px 8px; font-size: 12.5px; }
-.params i { font-style: normal; color: var(--muted); margin-right: 6px; }
-a { color: var(--accent); font-size: 12.5px; }
-.notes { background: var(--warnbg); color: var(--warn); border-radius: 10px; padding: 8px 12px; margin: 10px 0; font-size: 13px; }
-.notes summary { cursor: pointer; font-weight: 600; }
-.notes ul { margin: 6px 0 0; padding-left: 18px; }
-.ok { color: var(--ok); font-size: 13px; margin: 10px 2px; }
-footer { display: flex; justify-content: space-between; align-items: flex-end; gap: 14px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 10px; margin-top: 6px; }
-.order { list-style: none; margin: 0; padding: 0; font-size: 13px; columns: 2; column-gap: 24px; }
-.order li { break-inside: avoid; padding: 1px 0; }
-.order span { color: var(--muted); display: inline-block; min-width: 26px; }
-.actions { display: flex; gap: 8px; }
-.actions button { font: inherit; font-size: 13.5px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); padding: 8px 14px; border-radius: 9px; cursor: pointer; }
-.actions button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
-.fine { color: var(--muted); font-size: 11.5px; margin: 8px 2px 0; }
-.scroll { overflow-x: auto; }
-.ports-table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
-.ports-table th, .ports-table td { text-align: left; vertical-align: top; padding: 6px 8px; border-bottom: 1px solid var(--line); }
-.ports-table th { color: var(--muted); font-weight: 600; }
-.small { color: var(--muted); font-size: 11.5px; }
-svg.wiring { font-family: inherit; }
-.w-master { fill: #eaf1fd; stroke: #8db4f5; }
-.w-sensor { fill: #fff3ea; stroke: #ffb27a; }
-.w-sensor.warn { fill: #fff6e0; stroke: #ffb020; }
-.w-title { font-size: 13px; font-weight: 650; fill: #14171c; }
-.w-sub { font-size: 11px; font-weight: 400; fill: #66707d; }
-.w-portname { font-size: 12px; font-weight: 600; fill: #3b4450; }
-.w-port { fill: #fff; stroke: #9aa3b2; stroke-width: 1.5; }
-.w-port.used { fill: #23262b; stroke: #23262b; }
-.w-free { font-size: 11px; fill: #9aa3b2; }
-.w-cable { fill: none; stroke: #23262b; stroke-width: 3; }
-.w-wires { font-size: 10px; fill: #66707d; }
-@media (max-width: 560px) { header { flex-direction: column; } .pane { height: 340px; } .order { columns: 1; } }
+.s3d-tag { position: absolute; transform: translate(-50%, -100%); white-space: nowrap; font-size: 12px; line-height: 16px; padding: 3px 8px; border-radius: 8px; background: var(--elevated); color: var(--text); border: 1px solid var(--border); box-shadow: var(--shadow); text-align: center; }
+.s3d-tag b { font-weight: 600; }
+.s3d-tag i { display: block; font-style: normal; color: var(--text-2); font-size: 11px; }
+.s3d-tag.master b::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin: 0 5px 1px 0; }
+.s3d-tag.sensor b::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #ff7a1a; margin: 0 5px 1px 0; }
+.s3d-tag.equipment { background: transparent; border-color: transparent; box-shadow: none; color: var(--text-3); font-size: 11px; }
+.s3d-tag.warn { border-color: var(--warn); }
+.s3d-tag.selected { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+.s3d-tag em { display: block; font-style: normal; font-variant-numeric: tabular-nums; font-size: 11px; color: var(--text-2); background: var(--surface-3); border-radius: 5px; margin: 2px -4px 0; padding: 0 4px; }
+.s3d-tag em.on { background: var(--on); color: var(--on-text); }
 
-[hidden] { display: none !important; }
-nav button.run { color: #1d7a3a; font-weight: 600; margin-right: 4px; }
-nav button.run.on { background: #14171c; color: #fff; }
-.live-line { display: block; font-variant-numeric: tabular-nums; font-weight: 600; margin-top: 2px; }
-.live-line:empty { display: none; }
-.s3d-tag em { display: block; font-style: normal; font-variant-numeric: tabular-nums; font-size: 11px; color: #2b3138; background: #eef1f5; border-radius: 5px; margin: 2px -4px 0; padding: 0 4px; }
-.s3d-tag em.on { background: #ffd23a; color: #3d2c00; }
+.status { display: block; width: 100%; text-align: left; margin: 10px 2px 0; padding: 0; border: 0; background: none; font-size: 13px; }
+.status.ok { color: var(--ok); }
+.status.ok::before { content: "✓ "; }
+.status.warn { color: var(--warn); cursor: pointer; }
+.status.warn::before { content: "● "; }
+
+footer { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 12px 2px 0; }
+footer button { height: 36px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; font-size: 14px; font-weight: 500; }
+footer button:hover { background: var(--surface-3); }
+footer button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+footer button.primary:hover { filter: brightness(1.08); }
+.fine { color: var(--text-3); font-size: 12px; line-height: 18px; }
+footer .fine { margin-left: auto; }
+.waiting { display: flex; align-items: center; gap: 10px; color: var(--text-2); padding: 8px 2px; }
+.waiting .mark { animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .45; } }
+
+/* Fullscreen: stage beside a side panel. */
+body.full #root { padding: 12px 16px 16px; max-width: 1400px; margin: 0 auto; }
+body.full .body { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 14px; }
+/* ChatGPT keeps its composer over the bottom of a fullscreen app: leave room. */
+body.full .stage { height: calc(100vh - 200px); min-height: 380px; }
+.rail { display: flex; flex-direction: column; gap: 10px; min-height: 0; max-height: calc(100vh - 200px); }
+.rail footer { margin: 0; }
+.rail footer button { flex: 1; }
+.rail footer .fine { margin: 0; width: 100%; }
+aside { border: 1px solid var(--border); border-radius: 16px; background: var(--surface); padding: 14px 16px; overflow: auto; flex: 1; min-height: 0; }
+aside h2 { font-size: 16px; line-height: 22px; margin: 0; }
+aside h3 { font-size: 12px; line-height: 18px; color: var(--text-2); font-weight: 600; margin: 16px 0 6px; }
+.back { border: 0; background: none; color: var(--accent-text); padding: 0; margin-bottom: 8px; cursor: pointer; font-size: 13px; }
+.facts { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.facts span { font-size: 12px; color: var(--text-2); background: var(--surface-3); border-radius: 6px; padding: 1px 7px; }
+.params { display: grid; gap: 2px; background: var(--surface-2); border-radius: 10px; padding: 8px 10px; font-size: 13px; }
+.params div { display: flex; justify-content: space-between; gap: 10px; }
+.params span { color: var(--text-2); }
+.live { margin-top: 12px; padding: 10px 12px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--border-subtle); }
+.live > div { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.lv-value { font-size: 20px; line-height: 28px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.lv-out { font-size: 12px; font-weight: 600; padding: 1px 9px; border-radius: 999px; background: var(--surface-3); color: var(--text-2); }
+.lv-out.on { background: var(--on); color: var(--on-text); }
+.live code { font: 600 12px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text-2); }
+.notes { background: var(--warn-bg); color: var(--warn); border-radius: 10px; padding: 8px 12px; margin: 12px 0; font-size: 13px; }
+.notes ul { margin: 4px 0 0; padding-left: 18px; }
+.ok { color: var(--ok); font-size: 13px; }
+.order { list-style: none; margin: 0; padding: 0; font-size: 13px; }
+.order li { display: flex; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--border-subtle); }
+.order span { color: var(--text-2); min-width: 24px; }
+.stat { display: flex; justify-content: space-between; margin-top: 12px; font-size: 13px; }
+.stat span { color: var(--text-2); }
+a { color: var(--accent-text); font-size: 13px; }
+
+.scroll { overflow-x: auto; }
+.ports-table { border-collapse: collapse; width: 100%; font-size: 13px; }
+.ports-table th, .ports-table td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--border-subtle); }
+.ports-table th { color: var(--text-2); font-weight: 600; font-size: 12px; }
 .ports-table td.pd code { font: 600 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
-.ports-table td.pd .on { background: #ffd23a; border-radius: 4px; padding: 0 4px; }
+.ports-table td.pd .on { background: var(--on); color: var(--on-text); border-radius: 4px; padding: 0 4px; }
+.small { color: var(--text-2); font-size: 12px; }
+svg.wiring { font-family: inherit; }
+.w-master { fill: var(--w-master); stroke: var(--w-master-line); }
+.w-sensor { fill: var(--w-sensor); stroke: var(--w-sensor-line); }
+.w-sensor.warn { stroke: var(--warn); }
+.w-title { font-size: 13px; font-weight: 600; fill: var(--text); }
+.w-sub { font-size: 11px; font-weight: 400; fill: var(--text-2); }
+.w-portname { font-size: 12px; font-weight: 600; fill: var(--text-2); }
+.w-port { fill: var(--surface); stroke: var(--text-3); stroke-width: 1.5; }
+.w-port.used { fill: var(--text); stroke: var(--text); }
+.w-free { font-size: 11px; fill: var(--text-3); }
+.w-cable { fill: none; stroke: var(--w-cable); stroke-width: 3; }
+.w-wires { font-size: 10px; fill: var(--text-2); }
+
+@media (max-width: 720px) {
+  body.full .body { grid-template-columns: 1fr; }
+  body.full .stage { height: 56vh; }
+  .rail { max-height: none; }
+  footer .fine { margin-left: 0; width: 100%; }
+}
+@media (max-width: 480px) { .stage { height: 280px; } }
 </style>
 </head>
 <body>
@@ -1339,6 +1411,14 @@ function s3dMaster(g, ports) {
   return sockets;
 }
 
+// Scene colours. The studio page uses "light"; the ChatGPT widget follows the
+// host theme and drops the back wall so the scene sits on the card.
+const S3D_THEMES = {
+  light: { bg: 0xeef1f5, floor: 0xd9dde3, grid: 0xc3c9d2, wall: 0xf4f6f8, cable: 0x2a2e35, hemi: [0xffffff, 0xb9c2cf, 0.9], sun: 1.6 },
+  card: { bg: 0xf3f3f3, floor: 0xe4e6ea, grid: 0xcdcfd4, wall: null, cable: 0x414141, hemi: [0xffffff, 0xb9c2cf, 0.95], sun: 1.5 },
+  dark: { bg: 0x131313, floor: 0x1f2124, grid: 0x34373c, wall: null, cable: 0xb5bac2, hemi: [0xc8d2e0, 0x202428, 0.75], sun: 1.35 },
+};
+
 function mountStation3d(container, view) {
   container.classList.add("s3d");
   container.innerHTML = "";
@@ -1355,10 +1435,12 @@ function mountStation3d(container, view) {
   container.appendChild(labels);
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xeef1f5);
-  scene.fog = new THREE.Fog(0xeef1f5, 30, 60);
-  scene.add(new THREE.HemisphereLight(0xffffff, 0xb9c2cf, 0.9));
-  const sun = new THREE.DirectionalLight(0xffffff, 1.6);
+  let theme = S3D_THEMES[view.theme] || S3D_THEMES.light;
+  scene.background = new THREE.Color(theme.bg);
+  scene.fog = new THREE.Fog(theme.bg, 30, 60);
+  const hemi = new THREE.HemisphereLight(theme.hemi[0], theme.hemi[1], theme.hemi[2]);
+  scene.add(hemi);
+  const sun = new THREE.DirectionalLight(0xffffff, theme.sun);
   sun.position.set(-6, 14, 9);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
@@ -1388,7 +1470,7 @@ function mountStation3d(container, view) {
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
     orbit.target.set(center.x, Math.min(center.y, 0.8), center.z);
-    orbit.radius = Math.max(7, Math.min(26, Math.hypot(size.x, size.z) * 1.1 + 2.5));
+    orbit.radius = Math.max(7, Math.min(26, Math.hypot(size.x, size.z) * (view.tightFit ? 0.92 : 1.1) + (view.tightFit ? 1.5 : 2.5)));
   }
 
   function place() {
@@ -1412,11 +1494,18 @@ function mountStation3d(container, view) {
     const station = view.station;
     const fx = station.floor[0];
     const fz = station.floor[1];
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(fx, fz), new THREE.MeshStandardMaterial({ color: 0xd9dde3, roughness: 0.9 }));
+    theme = S3D_THEMES[view.theme] || S3D_THEMES.light;
+    scene.background.setHex(theme.bg);
+    scene.fog.color.setHex(theme.bg);
+    hemi.color.setHex(theme.hemi[0]);
+    hemi.groundColor.setHex(theme.hemi[1]);
+    hemi.intensity = theme.hemi[2];
+    sun.intensity = theme.sun;
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(fx, fz), new THREE.MeshStandardMaterial({ color: theme.floor, roughness: 0.9 }));
     floor.rotation.x = -Math.PI / 2;
     floor.receiveShadow = true;
     world.add(floor);
-    const grid = new THREE.GridHelper(Math.max(fx, fz), Math.max(fx, fz), 0xc3c9d2, 0xc3c9d2);
+    const grid = new THREE.GridHelper(Math.max(fx, fz), Math.max(fx, fz), theme.grid, theme.grid);
     grid.position.y = 0.002;
     grid.scale.set(fx / Math.max(fx, fz), 1, fz / Math.max(fx, fz));
     world.add(grid);
@@ -1427,10 +1516,12 @@ function mountStation3d(container, view) {
       m.position.set(l[0], 0.004, l[1]);
       world.add(m);
     });
-    const wall = new THREE.Mesh(new THREE.BoxGeometry(fx, 3.2, 0.15), new THREE.MeshStandardMaterial({ color: 0xf4f6f8, roughness: 0.95 }));
-    wall.position.set(0, 1.6, -fz / 2 - 0.08);
-    wall.receiveShadow = true;
-    world.add(wall);
+    if (theme.wall !== null) {
+      const wall = new THREE.Mesh(new THREE.BoxGeometry(fx, 3.2, 0.15), new THREE.MeshStandardMaterial({ color: theme.wall, roughness: 0.95 }));
+      wall.position.set(0, 1.6, -fz / 2 - 0.08);
+      wall.receiveShadow = true;
+      world.add(wall);
+    }
 
     const issues = new Set(checkStation(station, view.library).issues.map((issue) => issue.uid));
     const sockets = new Map();
@@ -1491,7 +1582,7 @@ function mountStation3d(container, view) {
       ];
       const curve = s3dRoundedPath(pts, 0.18);
       const selected = view.selected && (view.selected === cable.to || view.selected === cable.from);
-      const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 140, 0.045, 10, false), new THREE.MeshStandardMaterial({ color: selected ? 0xff7a1a : 0x2a2e35, roughness: 0.45, metalness: 0.1 }));
+      const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 140, 0.045, 10, false), new THREE.MeshStandardMaterial({ color: selected ? 0x1f6feb : theme.cable, roughness: 0.45, metalness: 0.1 }));
       tube.castShadow = true;
       tube.userData.uid = cable.to;
       world.add(tube);
@@ -1570,13 +1661,13 @@ function mountStation3d(container, view) {
       let text;
       let cls = "s3d-tag " + anchor.item.kind;
       if (anchor.item.kind === "sensor") {
-        text = "<b>" + s3dEsc(def.part || anchor.item.ref) + "</b>" + (anchor.item.port ? "<i>" + s3dEsc(anchor.item.master) + " · X" + anchor.item.port + "</i>" : "");
+        text = "<b>" + s3dEsc(def.part || anchor.item.ref) + "</b>" + (anchor.item.port && !view.compactTags ? "<i>" + s3dEsc(anchor.item.master) + " · X" + anchor.item.port + "</i>" : "");
         const reading = live && live.readings[anchor.item.uid];
         if (reading) {
           text += "<em class=\"" + (reading.on ? "on" : "") + "\">" + s3dEsc(s3dReading(reading)) + "</em>";
         }
       } else if (anchor.item.kind === "master") {
-        text = "<b>" + s3dEsc(def.part || "") + "</b><i>" + s3dEsc(anchor.item.uid) + "</i>";
+        text = "<b>" + s3dEsc(def.part || "") + "</b>" + (view.compactTags ? "" : "<i>" + s3dEsc(anchor.item.uid) + "</i>");
       } else {
         text = s3dEsc(def.name || anchor.item.ref);
       }
@@ -1588,14 +1679,14 @@ function mountStation3d(container, view) {
       }
       // Tags hang above their anchor; push a tag up until it clears the ones placed before it.
       const w = anchor.item.kind === "equipment" ? 100 : 124;
-      const h = anchor.item.kind === "equipment" ? 22 : live && anchor.item.kind === "sensor" ? 52 : 36;
+      const h = anchor.item.kind === "equipment" ? 22 : (view.compactTags ? 24 : 36) + (live && anchor.item.kind === "sensor" ? 16 : 0);
       x = Math.max(w / 2 + 4, Math.min(width - w / 2 - 4, x));
       const clash = () => placed.find((o) => Math.abs(o[0] - x) < (w + o[2]) / 2 && y > o[1] - o[3] && y - h < o[1]);
       for (let i = 0, o = clash(); i < 8 && o; i++, o = clash()) {
         y = o[1] - o[3] - 2;
       }
       y = Math.max(h + 4, y);
-      if (anchor.item.kind === "equipment" && clash()) {
+      if (anchor.item.kind === "equipment" && (clash() || (view.machineLabels === false && view.selected !== anchor.item.uid))) {
         return;
       }
       placed.push([x, y, w, h]);
@@ -1885,66 +1976,132 @@ function partIcon(category) {
 
 "use strict";
 
-// ChatGPT widget for the iolink_station tool. ChatGPT places and wires the
-// parts through the MCP; this shows the result in three views (3D, wiring,
-// ports), the datasheet notes, the order, and the way to buy it.
+// ChatGPT widget for the iolink_station tool, laid out the way the Apps SDK
+// guidelines ask: inline it is one card (the 3D station, one status line, two
+// actions); Expand opens fullscreen with the wiring, the port table, the part
+// panel with live values in run mode, the notes and the order. Colours follow
+// the host theme with the Apps SDK UI tokens.
 
 const root = document.getElementById("root");
 const library = window.IOLINKI_LIBRARY;
-let last = null;
-let tab = "3d";
+const ui = { tab: "3d", selected: null, key: null };
 const run = { on: false, sim: null, state: null, frame: 0, at: 0, painted: 0 };
+let current = null;
+let view3d = null;
+let scene = null;
+
+const ICON = "<svg viewBox=\"0 0 256 256\" aria-hidden=\"true\"><rect width=\"256\" height=\"256\" rx=\"58\" fill=\"#1f6feb\"/><rect x=\"44\" y=\"104\" width=\"30\" height=\"96\" rx=\"15\" fill=\"#fff\"/><circle cx=\"59\" cy=\"70\" r=\"17\" fill=\"#ffc83d\"/><circle cx=\"160\" cy=\"152\" r=\"54\" fill=\"none\" stroke=\"#fff\" stroke-width=\"20\"/><g fill=\"#fff\"><circle cx=\"141\" cy=\"133\" r=\"11\"/><circle cx=\"179\" cy=\"133\" r=\"11\"/><circle cx=\"141\" cy=\"171\" r=\"11\"/><circle cx=\"179\" cy=\"171\" r=\"11\"/></g></svg>";
+const EXPAND = "<svg viewBox=\"0 0 20 20\" aria-hidden=\"true\"><path d=\"M12 3h5v5M8 17H3v-5M17 3l-6 6M3 17l6-6\"/></svg>";
+const CLOSE = "<svg viewBox=\"0 0 20 20\" aria-hidden=\"true\"><path d=\"M8 3v5H3M12 17v-5h5M3 3l5 5M17 17l-5-5\"/></svg>";
+const PLAY = "<svg viewBox=\"0 0 20 20\" aria-hidden=\"true\"><path d=\"M6 4l10 6-10 6z\"/></svg>";
+const PAUSE = "<svg viewBox=\"0 0 20 20\" aria-hidden=\"true\"><path d=\"M6 4h3v12H6zM11 4h3v12h-3z\"/></svg>";
 
 function esc(value) {
   return String(value === undefined || value === null ? "" : value).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]));
 }
 
+function host() {
+  return window.openai || {};
+}
+
+function theme() {
+  const given = host().theme;
+  if (given === "dark" || given === "light") {
+    return given;
+  }
+  return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function fullscreen() {
+  return host().displayMode === "fullscreen";
+}
+
 function open(href) {
-  if (window.openai && typeof window.openai.openExternal === "function") {
-    window.openai.openExternal({ href: href });
+  if (typeof host().openExternal === "function") {
+    host().openExternal({ href: href });
   } else {
     window.open(href, "_blank", "noopener");
   }
 }
 
-function partCard(station, uid) {
+function plural(n, word) {
+  return n + " " + word + (n === 1 ? "" : "s");
+}
+
+function orderRows(station) {
+  const rows = new Map();
+  orderLines(station, library).forEach((line) => {
+    const key = line.kind === "cable" ? line.part : line.vendor + " " + line.part;
+    rows.set(key, (rows.get(key) || 0) + 1);
+  });
+  return Array.from(rows.entries());
+}
+
+function liveText(reading) {
+  if (!reading) {
+    return "";
+  }
+  if (reading.value === null || reading.value === undefined) {
+    return reading.present === null ? (reading.on ? "on" : "off") : reading.present ? "target" : "no target";
+  }
+  const value = Math.abs(reading.value) >= 100 ? Math.round(reading.value) : reading.value.toFixed(1);
+  return value + " " + reading.unit + (reading.ma !== null && reading.ma !== undefined ? " · " + reading.ma.toFixed(1) + " mA" : "");
+}
+
+// Side panel in fullscreen: the selected part, or the station.
+function partPanel(station, uid) {
   const item = station.items.find((other) => other.uid === uid);
   if (!item) {
-    return "<p class=\"hint\">Click a part to see it · drag to turn · scroll to zoom</p>";
+    const issues = current.issues;
+    return "<h2>Station</h2>" +
+      (issues.length ? "<div class=\"notes\"><b>" + plural(issues.length, "note") + " for the installer</b><ul>" + issues.map((issue) => "<li>" + esc(issue.problem) + "</li>").join("") + "</ul></div>" : "<p class=\"ok\">Every sensor is inside its datasheet and wired to a master port.</p>") +
+      "<h3>Order</h3><ul class=\"order\">" + orderRows(station).map(([name, qty]) => "<li><span>" + qty + "×</span>" + esc(name) + "</li>").join("") + "</ul>" +
+      "<p class=\"fine\">Click a part in the scene to see its settings. Press Run to watch every sensor switch.</p>";
   }
   const def = byId(library, item.ref) || {};
   if (item.kind === "equipment") {
-    return "<div class=\"card\"><b>" + esc(def.name) + "</b><span class=\"muted\">Generic machine for layout. Not ordered.</span></div>";
+    return "<button class=\"back\" data-back>← Station</button><h2>" + esc(def.name) + "</h2><p class=\"fine\">Generic machine, placed for the layout and cable lengths. Not ordered.</p>";
   }
   if (item.kind === "master") {
     const used = station.items.filter((other) => other.master === item.uid).length;
-    return "<div class=\"card\"><b>" + esc(def.vendor + " " + def.part) + "</b><span class=\"muted\">" + esc(def.ports + " class " + def.port_class + " ports · " + used + " used · " + (def.fieldbus || "")) + "</span></div>";
+    const budget = powerBudget(station, library).masters.find((m) => m.uid === item.uid) || {};
+    return "<button class=\"back\" data-back>← Station</button><h2>" + esc(def.part) + "</h2><p class=\"sub\">" + esc(def.vendor) + "</p>" +
+      "<div class=\"facts\"><span>" + def.ports + " class " + esc(def.port_class) + " ports</span><span>" + used + " used</span><span>" + esc(def.fieldbus || "") + "</span></div>" +
+      "<div class=\"stat\"><span>Sensors draw</span><b>" + (budget.total_ma || 0) + (budget.total_limit_ma ? " / " + budget.total_limit_ma : "") + " mA</b></div>";
   }
   const check = checkSensor(def, item);
-  return "<div class=\"card\"><b>" + esc(def.vendor + " " + def.part) + "</b><span class=\"muted\">" + esc(def.measures) + " · " + esc(item.master + " X" + item.port) + "</span><span class=\"live-line\"></span>" +
-    "<div class=\"params\">" + check.parameters.map((p) => "<span><i>" + esc(p.name) + "</i>" + esc(p.value) + "</span>").join("") + "</div>" +
-    "<a href=\"#\" data-open=\"" + esc(def.source_url) + "\">Datasheet</a></div>";
+  const issues = current.issues.filter((issue) => issue.uid === item.uid);
+  const facts = [def.category, item.master ? item.master + " · X" + item.port : "no port", "device " + def.device_id];
+  if (def.iodd && def.iodd.min_cycle_ms) {
+    facts.push(def.iodd.min_cycle_ms + " ms cycle");
+  }
+  return "<button class=\"back\" data-back>← Station</button><h2>" + esc(def.part) + "</h2><p class=\"sub\">" + esc(def.vendor + " · " + (def.measures || "")) + "</p>" +
+    "<div class=\"facts\">" + facts.map((f) => "<span>" + esc(f) + "</span>").join("") + "</div>" +
+    "<div class=\"live\" data-live" + (run.on ? "" : " hidden") + "><div><span class=\"lv-value\" data-lv=\"value\"></span><span class=\"lv-out\" data-lv=\"out\"></span></div><code data-lv=\"pd\"></code></div>" +
+    "<h3>Written to the sensor</h3><div class=\"params\">" + check.parameters.map((p) => "<div><span>" + esc(p.name) + "</span><b>" + esc(p.value) + "</b></div>").join("") + "</div>" +
+    (issues.length ? "<div class=\"notes\"><ul>" + issues.map((issue) => "<li>" + esc(issue.problem) + "</li>").join("") + "</ul></div>" : "") +
+    (def.source_url ? "<p><a href=\"#\" data-open=\"" + esc(def.source_url) + "\">Datasheet</a>" + (def.iodd && def.iodd.file ? " <span class=\"fine\">· IODD " + esc(def.iodd.file) + "</span>" : "") + "</p>" : "");
 }
 
-function orderSummary(station) {
-  const rows = new Map();
-  orderLines(station, library).forEach((line) => {
-    const key = line.kind === "cable" ? line.part : (line.vendor + " " + line.part);
-    rows.set(key, (rows.get(key) || 0) + 1);
-  });
-  return "<ul class=\"order\">" + Array.from(rows.entries()).map(([name, qty]) => "<li><span>" + qty + "×</span>" + esc(name) + "</li>").join("") + "</ul>";
+function status(issues, sensors) {
+  if (issues.length) {
+    return "<button class=\"status warn\" data-expand>" + plural(issues.length, "note") + " for the installer · view</button>";
+  }
+  return "<p class=\"status ok\">" + (sensors ? "All " + plural(sensors, "sensor") + " inside their datasheets and wired" : "Station placed") + "</p>";
 }
 
 function draw() {
-  const out = window.openai && window.openai.toolOutput;
+  const out = host().toolOutput;
+  document.documentElement.dataset.theme = theme();
   if (!out || !out.diagram) {
-    root.innerHTML = "<p class=\"hint\">Waiting for the station…</p>";
+    root.innerHTML = "<div class=\"waiting\"><span class=\"mark\">" + ICON + "</span>Placing the station…</div>";
     return;
   }
-  if (out === last) {
+  const key = JSON.stringify(out.diagram) + "|" + fullscreen() + "|" + theme();
+  if (key === ui.key) {
     return;
   }
-  last = out;
+  ui.key = key;
   // Devices read from IODD Finder for this call travel with the result.
   (out.extra_parts || []).forEach((def) => {
     if (def && def.id && !byId(library, def.id)) {
@@ -1953,89 +2110,170 @@ function draw() {
   });
   const built = fromDiagram(out.diagram, library);
   const station = built.station;
-  const issues = built.check.issues;
+  current = { station: station, issues: built.check.issues, link: encodeStation(station) };
   const sensors = station.items.filter((i) => i.kind === "sensor").length;
   const masters = station.items.filter((i) => i.kind === "master").length;
-  const power = powerBudget(station, library).masters.map((m) => m.total_ma + (m.total_limit_ma ? "/" + m.total_limit_ma : "") + " mA").join(", ");
-  const link = encodeStation(station);
+  const power = powerBudget(station, library).masters.map((m) => m.total_ma + (m.total_limit_ma ? " / " + m.total_limit_ma : "") + " mA").join(", ");
+  const items = orderRows(station).reduce((sum, row) => sum + row[1], 0);
+  const big = fullscreen();
+  document.body.classList.toggle("full", big);
+  const facts = [plural(sensors, "sensor"), plural(masters, "master")].concat(power ? [power] : []).concat([plural(items, "item") + " to order"]);
+  // Two actions only, as the Apps SDK asks: Buy first, studio second.
+  const actions = "<footer><button class=\"primary\" id=\"buy\">Buy and install</button><button id=\"studio\">Open in studio</button><span class=\"fine\">No payment in ChatGPT · nothing is written to a sensor</span></footer>";
+  const stage = "<div class=\"stage\">" +
+    "<div id=\"view3d\" class=\"pane\"></div>" +
+    (big ? "<div id=\"wiring\" class=\"pane doc\" hidden>" + wiringSvg(station, library) + "</div><div id=\"ports\" class=\"pane doc\" hidden>" + portsHtml(station, library) + "</div>" : "") +
+    "<div class=\"overlay\">" + (big ? "<div class=\"seg\" role=\"tablist\"><button data-tab=\"3d\">3D</button><button data-tab=\"wiring\">Wiring</button><button data-tab=\"ports\">Ports</button></div>" : "<span></span>") +
+    "<button class=\"run\" id=\"run\" title=\"Run: machines move and each sensor switches on its own settings\">" + PLAY + "<span>Run</span></button></div>" +
+    "<div class=\"chip-live\" id=\"clock\" hidden></div></div>";
   root.innerHTML =
-    "<header><div><h1>" + esc(out.title || "IO-Link station") + "</h1><div class=\"chips\"><span>" + sensors + " sensor" + (sensors === 1 ? "" : "s") + "</span><span>" + masters + " master" + (masters === 1 ? "" : "s") + "</span>" + (power ? "<span>" + esc(power) + "</span>" : "") + "</div></div>" +
-    "<nav><button type=\"button\" class=\"run\" id=\"run\">▶ Run</button><button data-tab=\"3d\">3D</button><button data-tab=\"wiring\">Wiring</button><button data-tab=\"ports\">Ports</button></nav></header>" +
-    "<div class=\"stage\"><div id=\"view3d\" class=\"pane\"></div><div id=\"wiring\" class=\"pane\">" + wiringSvg(station, library) + "</div><div id=\"ports\" class=\"pane\">" + portsHtml(station, library) + "</div></div>" +
-    "<div id=\"detail\"></div>" +
-    (issues.length ? "<details class=\"notes\"><summary>" + issues.length + " note" + (issues.length === 1 ? "" : "s") + " for the installer</summary><ul>" + issues.map((issue) => "<li>" + esc(issue.problem) + "</li>").join("") + "</ul></details>" : "<p class=\"ok\">Every sensor is inside its datasheet and wired to a master port.</p>") +
-    "<footer>" + orderSummary(station) + "<div class=\"actions\"><button type=\"button\" class=\"primary\" id=\"buy\">Buy and install</button><button type=\"button\" id=\"studio\">Open in studio</button></div></footer>" +
-    "<p class=\"fine\">No payment is taken in ChatGPT. Settings have not been written to a sensor.</p>";
-  const view = { station: station, library: library, selected: null, readOnly: true };
+    "<header><span class=\"mark\">" + ICON + "</span><div class=\"head\"><h1>" + esc(out.title || "IO-Link station") + "</h1><p class=\"sub\">" + facts.map(esc).join(" · ") + "</p></div>" +
+    "<button class=\"icon\" id=\"expand\" title=\"" + (big ? "Exit full screen" : "Full screen") + "\" aria-label=\"" + (big ? "Exit full screen" : "Full screen") + "\">" + (big ? CLOSE : EXPAND) + "</button></header>" +
+    (big ? "<div class=\"body\">" + stage + "<div class=\"rail\">" + actions + "<aside id=\"side\"></aside></div></div>" : stage + status(current.issues, sensors) + actions);
+
+  stopRun();
+  const view = { station: station, library: library, selected: ui.selected, readOnly: true, theme: theme() === "dark" ? "dark" : "card", machineLabels: big, compactTags: !big, tightFit: !big };
   view.onSelect = (uid) => {
-    root.querySelector("#detail").innerHTML = partCard(station, uid);
+    ui.selected = uid;
+    view.selected = uid;
+    drawSide();
   };
-  mountStation3d(root.querySelector("#view3d"), view);
-  view.onSelect(null);
-  // Run: the machines move and each sensor switches on its own settings.
-  const runButton = root.querySelector("#run");
-  const live = () => {
-    const s3d = root.querySelector("#view3d").s3d;
-    if (s3d && tab === "3d") {
-      s3d.live(run.state);
-    }
-    if (tab === "ports") {
-      root.querySelector("#ports").innerHTML = portsHtml(station, library, run.state && run.state.readings);
-    }
-    const reading = run.state && view.selected && run.state.readings[view.selected];
-    const slot = root.querySelector("#detail .live-line");
-    if (slot) {
-      slot.textContent = reading ? s3dReading(reading) + (reading.pd ? "  ·  PD " + reading.pd.hex : "") : "";
-    }
-  };
-  const tick = (now) => {
-    if (!run.on) {
-      return;
-    }
-    run.state = simStep(station, library, run.sim, Math.min(0.1, (now - run.at) / 1000));
-    run.at = now;
-    live();
-    run.frame = requestAnimationFrame(tick);
-  };
-  cancelAnimationFrame(run.frame);
-  run.on = false;
-  runButton.addEventListener("click", () => {
-    run.on = !run.on;
-    runButton.textContent = run.on ? "❚❚ Stop" : "▶ Run";
-    runButton.classList.toggle("on", run.on);
-    if (run.on) {
-      run.sim = simCreate();
-      run.at = performance.now();
-      run.frame = requestAnimationFrame(tick);
-    } else {
-      run.state = null;
-      live();
-    }
-  });
-  const show = (name) => {
-    tab = name;
-    root.querySelectorAll("nav button[data-tab]").forEach((b) => b.classList.toggle("on", b.dataset.tab === name));
-    root.querySelector("#view3d").hidden = name !== "3d";
-    root.querySelector("#wiring").hidden = name !== "wiring";
-    root.querySelector("#ports").hidden = name !== "ports";
-    if (run.on) {
-      live();
-    }
-  };
-  root.querySelectorAll("nav button[data-tab]").forEach((b) => b.addEventListener("click", () => show(b.dataset.tab)));
-  show(tab);
-  root.querySelector("#studio").addEventListener("click", () => open(link));
-  root.querySelector("#buy").addEventListener("click", () => open(link.replace("#s=", "?buy=1#s=")));
-  root.addEventListener("click", (event) => {
-    const target = event.target.closest("[data-open]");
-    if (target) {
-      event.preventDefault();
-      open(target.dataset.open);
-    }
-  });
+  view3d = root.querySelector("#view3d");
+  scene = { view: view, rebuild: mountStation3d(view3d, view) };
+  drawSide();
+  if (big) {
+    root.querySelectorAll("[data-tab]").forEach((b) => b.addEventListener("click", () => showTab(b.dataset.tab)));
+    showTab(ui.tab);
+  }
+  root.querySelector("#run").addEventListener("click", () => (run.on ? stopRun() : startRun()));
+  root.querySelector("#expand").addEventListener("click", () => setMode(big ? "inline" : "fullscreen"));
+  root.querySelectorAll("[data-expand]").forEach((b) => b.addEventListener("click", () => setMode("fullscreen")));
+  root.querySelector("#studio").addEventListener("click", () => open(current.link));
+  root.querySelector("#buy").addEventListener("click", () => open(current.link.replace("#s=", "?buy=1#s=")));
 }
 
+function drawSide() {
+  const side = root.querySelector("#side");
+  if (!side) {
+    return;
+  }
+  side.innerHTML = partPanel(current.station, ui.selected);
+  side.querySelectorAll("[data-back]").forEach((b) => b.addEventListener("click", () => {
+    ui.selected = null;
+    scene.view.selected = null;
+    scene.rebuild();
+    drawSide();
+  }));
+  paintLive();
+}
+
+function showTab(name) {
+  ui.tab = name;
+  root.querySelectorAll("[data-tab]").forEach((b) => b.classList.toggle("on", b.dataset.tab === name));
+  ["3d", "wiring", "ports"].forEach((tab) => {
+    const pane = root.querySelector(tab === "3d" ? "#view3d" : "#" + tab);
+    if (pane) {
+      pane.hidden = tab !== name;
+    }
+  });
+  if (run.on) {
+    paintLive();
+  }
+}
+
+function setMode(mode) {
+  if (typeof host().requestDisplayMode === "function") {
+    host().requestDisplayMode({ mode: mode });
+  }
+}
+
+function startRun() {
+  run.on = true;
+  run.sim = simCreate();
+  run.at = performance.now();
+  const button = root.querySelector("#run");
+  button.classList.add("on");
+  button.innerHTML = PAUSE + "<span>Stop</span>";
+  root.querySelector("#clock").hidden = false;
+  const live = root.querySelector("[data-live]");
+  if (live) {
+    live.hidden = false;
+  }
+  run.frame = requestAnimationFrame(tick);
+}
+
+function stopRun() {
+  run.on = false;
+  cancelAnimationFrame(run.frame);
+  run.state = null;
+  if (view3d && view3d.s3d) {
+    view3d.s3d.live(null);
+  }
+  const button = root.querySelector("#run");
+  if (button) {
+    button.classList.remove("on");
+    button.innerHTML = PLAY + "<span>Run</span>";
+  }
+  const clock = root.querySelector("#clock");
+  if (clock) {
+    clock.hidden = true;
+  }
+}
+
+function tick(now) {
+  if (!run.on) {
+    return;
+  }
+  run.state = simStep(current.station, library, run.sim, Math.min(0.1, (now - run.at) / 1000));
+  run.at = now;
+  if (view3d.s3d && ui.tab === "3d") {
+    view3d.s3d.live(run.state);
+  }
+  if (now - run.painted > 200) {
+    run.painted = now;
+    paintLive();
+  }
+  run.frame = requestAnimationFrame(tick);
+}
+
+function paintLive() {
+  if (!run.on || !run.state) {
+    return;
+  }
+  const clock = root.querySelector("#clock");
+  const switched = Object.values(run.state.readings).filter((r) => r.on).length;
+  clock.textContent = run.state.t.toFixed(0) + " s · " + switched + " switched";
+  const live = root.querySelector("[data-live]");
+  const reading = ui.selected && run.state.readings[ui.selected];
+  if (live && reading) {
+    live.querySelector("[data-lv=value]").textContent = liveText(reading);
+    const out = live.querySelector("[data-lv=out]");
+    out.textContent = reading.ma !== null ? "analogue" : reading.on ? "OUT1 on" : "OUT1 off";
+    out.classList.toggle("on", Boolean(reading.on));
+    live.querySelector("[data-lv=pd]").textContent = reading.pd ? "PD in " + reading.pd.hex : "";
+  }
+  if (ui.tab === "ports") {
+    const ports = root.querySelector("#ports");
+    if (ports) {
+      ports.innerHTML = portsHtml(current.station, library, run.state.readings);
+    }
+  }
+}
+
+root.addEventListener("click", (event) => {
+  const target = event.target.closest("[data-open]");
+  if (target) {
+    event.preventDefault();
+    open(target.dataset.open);
+  }
+});
 window.addEventListener("openai:set_globals", draw, { passive: true });
+if (window.matchMedia) {
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+    ui.key = null;
+    draw();
+  });
+}
 draw();
 </script>
 </body>

@@ -12,7 +12,7 @@ a { color: var(--accent); }
 .muted { color: var(--muted); font-size: 12.5px; }
 
 .topbar { display: flex; align-items: center; gap: 14px; padding: 10px 18px; background: var(--panel); border-bottom: 1px solid var(--line); }
-.brand { font-weight: 700; font-size: 18px; color: var(--fg); text-decoration: none; letter-spacing: -0.01em; }
+.brand { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 18px; color: var(--fg); text-decoration: none; letter-spacing: -0.01em; }
 .brand .logo { color: var(--accent); }
 .divider { width: 1px; height: 26px; background: var(--line); }
 .title { flex: 1; min-width: 0; }

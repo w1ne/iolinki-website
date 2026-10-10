@@ -478,6 +478,10 @@ export function createIoddMcpServer({
       name: "iolinki-iodd",
       version: "1.1.2",
       websiteUrl: "https://iolinki.com/iodd-mcp.html",
+      icons: [
+        { src: "https://iolinki.com/assets/images/iolinki-icon-256.png", mimeType: "image/png", sizes: ["256x256"] },
+        { src: "https://iolinki.com/assets/images/iolinki-icon.svg", mimeType: "image/svg+xml", sizes: ["any"] },
+      ],
     },
     { instructions },
   );
