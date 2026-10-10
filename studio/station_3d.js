@@ -5,7 +5,7 @@
 // are tubes from the master's M12 sockets to each sensor.
 
 const S3D = {
-  steel: { color: 0xc9d0d8, metalness: 0.65, roughness: 0.32 },
+  steel: { color: 0xc9d0d8, metalness: 0.6, roughness: 0.45 },
   alu: { color: 0xb7bfc9, metalness: 0.55, roughness: 0.4 },
   dark: { color: 0x2b2f36, metalness: 0.1, roughness: 0.75 },
   black: { color: 0x17191d, metalness: 0.2, roughness: 0.6 },
@@ -176,7 +176,7 @@ function s3dMaster(g, ports) {
 const S3D_THEMES = {
   light: { bg: 0xeef1f5, floor: 0xd9dde3, grid: 0xc3c9d2, wall: 0xf4f6f8, cable: 0x2a2e35, hemi: [0xffffff, 0xb9c2cf, 0.9], sun: 1.6 },
   card: { bg: 0xf3f3f3, floor: 0xe4e6ea, grid: 0xcdcfd4, wall: null, cable: 0x414141, hemi: [0xffffff, 0xb9c2cf, 0.95], sun: 1.5 },
-  dark: { bg: 0x131313, floor: 0x1f2124, grid: 0x34373c, wall: null, cable: 0xb5bac2, hemi: [0xc8d2e0, 0x202428, 0.75], sun: 1.35 },
+  dark: { bg: 0x131313, floor: 0x1f2124, grid: 0x34373c, wall: null, cable: 0xb5bac2, hemi: [0xc8d2e0, 0x202428, 0.85], sun: 1.0 },
 };
 
 function mountStation3d(container, view) {
@@ -230,7 +230,10 @@ function mountStation3d(container, view) {
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
     orbit.target.set(center.x, Math.min(center.y, 0.8), center.z);
-    orbit.radius = Math.max(7, Math.min(26, Math.hypot(size.x, size.z) * (view.tightFit ? 0.92 : 1.1) + (view.tightFit ? 1.5 : 2.5)));
+    // A tall, narrow view (ChatGPT's side panel, a phone) needs the camera further back.
+    const aspect = (container.clientWidth || 640) / (container.clientHeight || 400);
+    const narrow = Math.max(1, 1.5 / Math.max(0.4, aspect));
+    orbit.radius = Math.max(7, Math.min(34, (Math.hypot(size.x, size.z) * (view.tightFit ? 0.92 : 1.1) + (view.tightFit ? 1.5 : 2.5)) * narrow));
   }
 
   function place() {
