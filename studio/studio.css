@@ -208,3 +208,48 @@ svg.wiring { font-family: inherit; }
 .ports-table td.pd .on { background: #ffd23a; border-radius: 4px; padding: 0 4px; }
 
 .menu-list button { white-space: nowrap; }
+
+/* Design with AI */
+.ai-open { display: inline-flex; align-items: center; gap: 6px; border-radius: 9px; padding: 7px 14px; cursor: pointer; font-size: 13.5px; font-weight: 600; color: var(--accent); background: var(--accent-soft); border: 1px solid #c4d7fb; }
+.ai-open:hover, .ai-open.on { background: #dbe8fd; }
+.ai { position: absolute; left: 12px; bottom: 12px; z-index: 6; width: min(420px, calc(100% - 24px)); max-height: min(560px, calc(100% - 24px)); display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 12px 36px rgba(20,23,28,.18); overflow: hidden; }
+.ai-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 8px 10px 14px; border-bottom: 1px solid var(--line); font-size: 14px; }
+.ai-x { border: 0; background: none; font-size: 22px; line-height: 1; color: var(--muted); cursor: pointer; border-radius: 8px; width: 32px; height: 32px; }
+.ai-x:hover { background: var(--soft); color: var(--fg); }
+.ai-body { flex: 1; min-height: 120px; overflow: auto; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.ai-gate h3 { margin: 0 0 6px; font-size: 16px; }
+.ai-gate p { margin: 0 0 10px; }
+.ai-gate p.muted { margin-top: 10px; }
+.ai-gsi { min-height: 44px; display: flex; align-items: center; }
+.ai-hello p { margin: 0 0 10px; color: var(--muted); }
+.ai-samples { display: grid; gap: 6px; }
+.ai-samples button { text-align: left; border: 1px solid var(--line); background: var(--panel); border-radius: 10px; padding: 8px 12px; cursor: pointer; font-size: 13px; line-height: 1.35; }
+.ai-samples button:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.ai-msg { max-width: 92%; padding: 8px 12px; border-radius: 14px; font-size: 13.5px; line-height: 1.45; overflow-wrap: anywhere; }
+.ai-msg.user { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+.ai-msg.bot { align-self: flex-start; background: var(--soft); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+.ai-msg.err { background: #fdecea; border-color: #f4c2bd; color: #8c1d14; }
+.ai-steps { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.ai-steps span { font-size: 11.5px; color: var(--muted); background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 0 8px; }
+.ai-steps span.bad { color: var(--warn); border-color: #f5d68a; background: var(--warnbg); }
+.ai-applied { margin-top: 6px; font-size: 11.5px; color: var(--ok); }
+.ai-msg.working { color: var(--muted); }
+.dots { display: inline-flex; gap: 3px; margin-right: 4px; vertical-align: middle; }
+.dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); animation: ai-blink 1.2s infinite ease-in-out; }
+.dots i:nth-child(2) { animation-delay: .2s; }
+.dots i:nth-child(3) { animation-delay: .4s; }
+@keyframes ai-blink { 0%, 80%, 100% { opacity: .25; } 40% { opacity: 1; } }
+.ai-form { display: flex; gap: 8px; align-items: flex-end; padding: 10px 12px; border-top: 1px solid var(--line); }
+.ai-form textarea { flex: 1; resize: none; min-height: 38px; max-height: 120px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--soft); outline: none; font: inherit; line-height: 1.35; overflow: hidden; }
+.ai-form textarea:focus { border-color: var(--accent); background: var(--panel); }
+.ai-form button:disabled { opacity: .55; cursor: progress; }
+.ai-foot { display: flex; justify-content: space-between; gap: 8px; padding: 6px 14px 10px; font-size: 11.5px; color: var(--muted); }
+.ai-foot span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ai-foot button { border: 0; background: none; color: var(--accent); cursor: pointer; padding: 0; font-size: 11.5px; }
+@media (max-width: 760px) {
+  .top-actions { flex-wrap: wrap; }
+  .ai-open { flex: 1 1 100%; justify-content: center; }
+  .ai { position: fixed; left: 0; right: 0; bottom: 0; width: auto; max-height: 54vh; border-radius: 16px 16px 0 0; z-index: 30; }
+  .ai-form textarea { font-size: 16px; }
+}
+.stage.ai-on .empty { display: none; }

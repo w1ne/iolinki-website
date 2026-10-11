@@ -33,6 +33,7 @@
       <div class="chips" id="summary"></div>
     </div>
     <div class="top-actions">
+      <button type="button" class="ai-open" id="ai-open" aria-expanded="false" aria-controls="ai-panel" title="Describe the station and let the assistant build it"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M8 2l1.5 4.3L14 8l-4.5 1.7L8 14l-1.5-4.3L2 8l4.5-1.7z M15 11l.8 2.2L18 14l-2.2.8L15 17l-.8-2.2L12 14l2.2-.8z" fill="currentColor"/></svg><span>Design with AI</span></button>
       <button type="button" class="ghost" id="share" title="Copy a link that opens this station">Share</button>
       <div class="menu">
         <button type="button" class="ghost" id="export-toggle" aria-haspopup="true" aria-expanded="false">Export</button>
@@ -81,8 +82,9 @@
         <div id="wiring" class="pane doc" hidden></div>
         <div id="ports" class="pane doc" hidden></div>
         <div id="empty" class="empty" hidden>
-          <h2>Ask ChatGPT for a station</h2>
-          <p>With the <a href="../iodd-mcp.html">iolinki connector</a>, ChatGPT picks the sensors, places them and wires each one to a master port. The station opens here.</p>
+          <h2>Describe a station</h2>
+          <p>The assistant picks the sensors, places them and wires each one to a master port. You can also ask ChatGPT with the <a href="../iodd-mcp.html">iolinki connector</a>; the station opens here.</p>
+          <p><button type="button" class="primary" data-open-ai>Design with AI</button></p>
           <form id="ask" class="ask">
             <input id="use-case" type="text" placeholder="Or describe one job, e.g. detect stainless at 3 mm" />
             <button type="submit" class="primary">Start</button>
@@ -90,6 +92,18 @@
           <div class="examples" id="examples"></div>
           <p class="muted" id="ask-note"></p>
         </div>
+        <section class="ai" id="ai-panel" aria-label="Design with AI" hidden>
+          <header class="ai-head">
+            <b>Design with AI</b>
+            <button type="button" class="ai-x" id="ai-close" aria-label="Close the assistant">&times;</button>
+          </header>
+          <div class="ai-body" id="ai-body" aria-live="polite"></div>
+          <form class="ai-form" id="ai-form" hidden>
+            <textarea id="ai-input" rows="1" maxlength="1500" placeholder="Describe or change the station" aria-label="Message to the assistant"></textarea>
+            <button type="submit" class="primary" id="ai-send">Send</button>
+          </form>
+          <div class="ai-foot" id="ai-foot" hidden></div>
+        </section>
       </div>
       <div class="stage-foot">
         <span class="muted" id="stage-hint">Drag parts to move · drag the floor to orbit · scroll to zoom · Del removes · Ctrl+Z undoes · Space runs</span>
@@ -109,6 +123,8 @@
   <script src="station_tables.js"></script>
   <script src="station_export.js"></script>
   <script src="page.js"></script>
+  <script src="agent-config.js"></script>
+  <script src="agent.js"></script>
   <script src="/assets/js/analytics.js" defer></script>
 </body>
 </html>

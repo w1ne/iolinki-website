@@ -1,0 +1,22 @@
+{
+  // Studio design agent: Google sign-in, per-user quota, DeepSeek Flash on DeepInfra.
+  "name": "iolinki-studio-agent",
+  "main": "index.mjs",
+  "account_id": "53f45abe9550f62856af4475880e0a77",
+  "compatibility_date": "2026-10-02",
+  "workers_dev": true,
+  "preview_urls": false,
+  "vars": {
+    // OAuth 2.0 Web client ID from Google Cloud Console (not a secret). Keep in step with studio/agent-config.js.
+    "GOOGLE_CLIENT_ID": "",
+    "MODEL": "deepseek-ai/DeepSeek-V4.1-Flash",
+    "DAILY_USER_LIMIT": "30",
+    "DAILY_GLOBAL_LIMIT": "1500"
+  },
+  // users and daily counters. Secrets: DEEPINFRA_API_KEY, SESSION_SECRET.
+  "d1_databases": [{ "binding": "DB", "database_name": "iolinki-studio-agent", "database_id": "1794a792-af24-45af-bd55-ee20212f2d68", "migrations_dir": "migrations" }],
+  // Daily cleanup of old counters and idle accounts (see legal.html).
+  "triggers": { "crons": ["17 3 * * *"] },
+  // The agent reads IODD Finder through the catalog Worker.
+  "services": [{ "binding": "CATALOG", "service": "iolinki-iodd-catalog" }]
+}

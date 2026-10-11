@@ -15,7 +15,8 @@
     "check:analytics": "node scripts/check-analytics.mjs"
   },
   "devDependencies": {
-    "playwright": "1.60.0"
+    "playwright": "1.60.0",
+    "zod-to-json-schema": "3.25.2"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.31.0",

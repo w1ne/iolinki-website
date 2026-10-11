@@ -659,7 +659,7 @@ function bindPartPanel(box, item) {
 function stationPanel() {
   const c = counts();
   if (!view.station.items.length) {
-    return "<h2>Station</h2><p class=\"muted\">Empty. Add parts from the library, or let ChatGPT build the station.</p>";
+    return "<h2>Station</h2><p class=\"muted\">Empty. Add parts from the library, or describe it to the assistant (Design with AI) or ChatGPT.</p>";
   }
   const rows = new Map();
   orderLines(view.station, library).forEach((line) => {
