@@ -480,6 +480,22 @@ test("run mode packs process data with the IODD layout", () => {
   assert.equal(reading.pd.hex, "07 09");
 });
 
+test("run mode packs a distance in the IODD unit when the setting uses another", () => {
+  const o5d100 = require("./library/sensors/ifm-o5d100.json");
+  const lib = Object.assign({}, library, { sensors: [o5d100] });
+  const station = engine.newStation();
+  engine.addItem(station, lib, "test-master-4", [-4, -3]);
+  const sensor = engine.addItem(station, lib, "ifm-o5d100", [0, 0]);
+  sensor.settings.switch_point = 500;
+  const state = sim.simCreate();
+  state.hold[sensor.uid] = true;
+  const reading = sim.simStep(station, lib, state, 0.1).readings[sensor.uid];
+  assert.equal(reading.unit, "mm");
+  assert.equal(reading.value, 350);
+  // 350 mm is 35 cm: distance 35 at bit 4, OUT1 at bit 0 on: 35 * 16 + 1 = 0x0231.
+  assert.equal(reading.pd.hex, "02 31");
+});
+
 test("run mode: a part on the belt reaches a sensor mounted on the conveyor", () => {
   const station = engine.newStation();
   engine.addItem(station, simLibrary, "conveyor", [0, 0]);
