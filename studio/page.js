@@ -672,7 +672,7 @@ function stationPanel() {
     (run.on ? "<h3>Live</h3><ul class=\"live-list\" data-live-list>" + liveList() + "</ul>" : "") +
     (power ? "<h3>Power</h3>" + power : "") +
     "<h3>Order</h3><ul class=\"order\">" + Array.from(rows.entries()).map(([name, qty]) => "<li><span>" + qty + "×</span>" + escapeText(name) + "</li>").join("") + "</ul>" +
-    "<h3>Buy and install</h3><form class=\"buy\" id=\"buy-form\"><input id=\"buyer-email\" type=\"email\" placeholder=\"Email\" autocomplete=\"email\" value=\"" + escapeText(done ? done.email : "") + "\" /><input id=\"buyer-plant\" type=\"text\" placeholder=\"Plant and line\" autocomplete=\"organization\" value=\"" + escapeText(done ? done.plant : "") + "\" /><button type=\"submit\" class=\"primary\">Buy and install</button><div class=\"result\" id=\"order-note\"></div></form>" +
+    "<h3>Buy and install</h3><form class=\"buy\" id=\"buy-form\"><input id=\"buyer-email\" type=\"email\" placeholder=\"Email\" autocomplete=\"email\" value=\"" + escapeText(done ? done.email : "") + "\" /><input id=\"buyer-plant\" type=\"text\" placeholder=\"Plant and line\" autocomplete=\"organization\" value=\"" + escapeText(done ? done.plant : "") + "\" /><button type=\"submit\" class=\"primary\">Buy and install</button><div class=\"result\" id=\"order-note\">" + (ui.orderNote || "") + "</div></form>" +
     "<p class=\"muted\">iolinki buys the parts and installs the station. No payment is taken here, and no settings have been written to a sensor.</p>";
 }
 
@@ -700,8 +700,36 @@ function bindStationPanel(box) {
       return;
     }
     ui.order = order;
-    note.innerHTML = "<p>Ready: " + escapeText(order.plant) + "." + (order.notes.length ? " " + order.notes.length + " note" + (order.notes.length === 1 ? "" : "s") + " go to the installer." : "") + "</p><p><a id=\"send-order\" href=\"" + escapeText(orderMail(order)) + "\">Send this order</a></p>";
+    const button = form.querySelector("button[type=submit]");
+    button.disabled = true;
+    note.innerHTML = "<p>Sending…</p>";
+    sendOrder(order).then((sent) => {
+      ui.orderNote = "<p class=\"ok\"><strong>Request sent.</strong> We reply to " + escapeText(order.email) + " with the price and an install date. Reference " + escapeText(sent.id) + ".</p>";
+      button.disabled = false;
+      const live = $("#order-note");
+      if (live) {
+        live.innerHTML = ui.orderNote;
+      }
+    }).catch((problem) => {
+      button.disabled = false;
+      note.innerHTML = "<p class=\"no\">" + escapeText(problem.message || "The request did not go through.") + "</p><p><a id=\"send-order\" href=\"" + escapeText(orderMail(order)) + "\">Send it by email instead</a></p>";
+    });
   });
+}
+
+// The installation request goes to iolinki; mail stays as the fallback.
+function sendOrder(order) {
+  const url = CATALOG_SEARCH.replace(/\/search$/, "/order");
+  return fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: order.email, plant: order.plant, text: orderText(order), link: order.link }),
+  }).then((response) => response.json().catch(() => ({})).then((body) => {
+    if (!response.ok || !body.ok) {
+      throw new Error(body.error || "The request did not go through.");
+    }
+    return body;
+  }));
 }
 
 function openBuy() {
