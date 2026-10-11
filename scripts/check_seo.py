@@ -9,7 +9,7 @@ import xml.etree.ElementTree as ET
 ROOT = Path(__file__).resolve().parents[1]
 ORIGIN = 'https://iolinki.com'
 CALLBACKS = ['purchase-success.html', 'purchase-cancelled.html', 'elements.html', 'generic.html']
-PUBLIC = ['index.html','getting-started.html','hardware.html','validation.html','faq.html','purchase.html','legal.html','iodd-editor.html','iodd-mcp.html']
+PUBLIC = ['index.html','getting-started.html','hardware.html','validation.html','faq.html','purchase.html','legal.html','iodd-editor.html','iodd-mcp.html','blog/index.html','blog/stainless-part-at-conveyor-stop.html','blog/pump-discharge-pressure-switch.html','blog/tank-level-guided-wave-radar.html','blog/machine-tool-coolant-flow.html','blog/box-detection-on-conveyor.html']
 
 class Page(HTMLParser):
     def __init__(self, text):
@@ -37,7 +37,7 @@ for name in CALLBACKS:
     assert 'noindex' in pages[name].meta.get('robots',''), 'Checkout callbacks/templates must be noindex: '+name
     assert ORIGIN+'/'+name not in urls, 'Nonindexable URL in sitemap: '+name
 for name in PUBLIC:
-    p=pages[name]; canonical=ORIGIN+('/' if name=='index.html' else '/'+name)
+    p=pages[name]; canonical=ORIGIN+('/' if name=='index.html' else '/'+name[:-len('index.html')] if name.endswith('/index.html') else '/'+name)
     assert p.canonical==[canonical], 'One exact canonical per landing page: '+name
     assert canonical in urls, 'Landing page omitted from sitemap: '+name
     assert 20<=len(p.title)<=80, 'Useful search title: '+name

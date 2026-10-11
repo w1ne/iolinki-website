@@ -1236,6 +1236,13 @@ function simReading(station, library, sim, item, boxes) {
   return reading;
 }
 
+// A setting and its process value can use different length units, such as a
+// switch point in mm and a distance reported in cm.
+const LENGTH_MM = { mm: 1, cm: 10, m: 1000 };
+function inUnit(value, from, to) {
+  return LENGTH_MM[from] && LENGTH_MM[to] ? (value * LENGTH_MM[from]) / LENGTH_MM[to] : null;
+}
+
 // Pack process data in the way the master sees it: field at bit_offset with
 // bit 0 the least significant bit of the last octet.
 function simProcessData(def, reading) {
@@ -1250,8 +1257,9 @@ function simProcessData(def, reading) {
     let raw = null;
     if (field.bits === 1) {
       raw = /OUT1|SSC1|BDC1|\[OUT1\]/i.test(field.name) ? (reading.on ? 1 : 0) : 0;
-    } else if (field.gradient && reading.value !== null && (!field.unit || field.unit === reading.unit)) {
-      raw = Math.round((reading.value - (field.offset || 0)) / field.gradient);
+    } else if (field.gradient && reading.value !== null && (!field.unit || field.unit === reading.unit || inUnit(reading.value, reading.unit, field.unit) !== null)) {
+      const value = field.unit && field.unit !== reading.unit ? inUnit(reading.value, reading.unit, field.unit) : reading.value;
+      raw = Math.round((value - (field.offset || 0)) / field.gradient);
       if (raw < 0) {
         raw += Math.pow(2, field.bits);
       }

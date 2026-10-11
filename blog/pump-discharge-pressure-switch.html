@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Pump discharge pressure switch with SP and rP | iolinki</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Monitoring pump discharge pressure with an ifm PN7092: set point and reset point checked against the datasheet, a Siemens ET 200eco PN master, Run mode and the ISDU writes." />
+    <link rel="canonical" href="https://iolinki.com/blog/pump-discharge-pressure-switch.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <link rel="stylesheet" href="/assets/css/site.css" />
+    <script src="/assets/js/site.js" defer></script>
+
+    <!-- BEGIN GENERATED SEO -->
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="iolinki" />
+    <meta property="og:title" content="Pump discharge pressure switch with SP and rP | iolinki" />
+    <meta property="og:description" content="Monitoring pump discharge pressure with an ifm PN7092: set point and reset point checked against the datasheet, a Siemens ET 200eco PN master, Run mode and the ISDU writes." />
+    <meta property="og:url" content="https://iolinki.com/blog/pump-discharge-pressure-switch.html" />
+    <meta property="og:image" content="https://iolinki.com/assets/images/og-card.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="iolinki: IO-Link C stacks, IODD editor and MCP tools" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Pump discharge pressure switch with SP and rP | iolinki" />
+    <meta name="twitter:description" content="Monitoring pump discharge pressure with an ifm PN7092: set point and reset point checked against the datasheet, a Siemens ET 200eco PN master, Run mode and the ISDU writes." />
+    <meta name="twitter:image" content="https://iolinki.com/assets/images/og-card.png" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://iolinki.com/#organization","name":"iolinki","url":"https://iolinki.com/","logo":"https://iolinki.com/favicon.svg","sameAs":["https://github.com/w1ne/iolinki","https://github.com/w1ne/iolinki-master","https://github.com/w1ne/iolinki-website"]},{"@type":"WebSite","@id":"https://iolinki.com/#website","name":"iolinki","url":"https://iolinki.com/","inLanguage":"en","publisher":{"@id":"https://iolinki.com/#organization"}},{"@type":"WebPage","@id":"https://iolinki.com/blog/pump-discharge-pressure-switch.html#webpage","url":"https://iolinki.com/blog/pump-discharge-pressure-switch.html","name":"Pump discharge pressure switch with SP and rP | iolinki","description":"Monitoring pump discharge pressure with an ifm PN7092: set point and reset point checked against the datasheet, a Siemens ET 200eco PN master, Run mode and the ISDU writes.","inLanguage":"en","isPartOf":{"@id":"https://iolinki.com/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"iolinki","item":"https://iolinki.com/"},{"@type":"ListItem","position":2,"name":"Pump discharge pressure switch with SP and rP","item":"https://iolinki.com/blog/pump-discharge-pressure-switch.html"}]},{"@type":"BlogPosting","@id":"https://iolinki.com/blog/pump-discharge-pressure-switch.html#article","headline":"Pump discharge pressure: a switch point, a reset point and nothing that chatters","description":"Monitoring pump discharge pressure with an ifm PN7092: set point and reset point checked against the datasheet, a Siemens ET 200eco PN master, Run mode and the ISDU writes.","datePublished":"2026-10-11","dateModified":"2026-10-11","image":"https://iolinki.com/assets/images/blog/pump-pressure-3d.webp","url":"https://iolinki.com/blog/pump-discharge-pressure-switch.html","mainEntityOfPage":{"@id":"https://iolinki.com/blog/pump-discharge-pressure-switch.html#webpage"},"inLanguage":"en","author":{"@type":"Person","name":"Andrii Shylenko"},"publisher":{"@id":"https://iolinki.com/#organization"}}]}</script>
+    <!-- END GENERATED SEO -->
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header" id="header">
+      <div class="header-inner">
+        <a class="brand" href="/index.html" aria-label="iolinki home"
+          >io<span>linki</span><span class="brand-dot" aria-hidden="true"></span
+        ></a>
+        <button
+          class="menu-button"
+          type="button"
+          aria-expanded="false"
+          aria-controls="primary-navigation"
+          hidden
+        >
+          Menu
+        </button>
+        <nav id="primary-navigation" aria-label="Primary navigation">
+          <a href="/index.html#two">Stacks</a
+          ><a href="/getting-started.html">Guides</a
+          ><a href="/hardware.html">Hardware</a
+          ><a href="/validation.html">Validation</a><a href="/faq.html">FAQ</a
+          ><a href="https://iolinki.com/docs/">Docs</a><a href="/iodd-editor.html">IODD editor</a><a href="/studio/">Station studio</a><a href="/blog/">Blog</a><a href="/purchase.html">Licensing</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="document" tabindex="-1">
+      <header>
+        <p class="eyebrow"><a href="/blog/">Blog</a> · Application</p>
+        <h1>Pump discharge pressure: a switch point, a reset point and nothing that chatters</h1>
+        <p>The PLC needs one clean signal: the pump has built pressure. With a set point and a reset point the signal does not chatter when the pressure ripples around the limit.</p>
+        <p class="post-meta"><time datetime="2026-10-11">11 October 2026</time> · Andrii Shylenko</p>
+      </header>
+      <section class="wrapper style5">
+        <div class="inner guide-content">
+          <h2>The job</h2>
+          <p>A pump feeds a liquid line. The control has to know that the pump really delivers, not only that the motor contactor is closed. A dry-running pump, a closed valve upstream or a broken coupling all show up as missing discharge pressure. A pressure sensor on the discharge side gives that signal and the pressure value in one device.</p>
+          <p>In this example the pump runs at a little under 50 bar in normal operation. That is our plant's number; take yours from the pump curve or a gauge. We want “pressure OK” at 40 bar and above, and we want it to drop when the pressure falls to 37 bar.</p>
+
+          <h2>The sensor</h2>
+          <p>We used the ifm PN7092. The datasheet: measuring range 0 to 100 bar relative, liquids, medium temperature −25 to 80 °C, pressure rating 300 bar, minimum bursting pressure 650 bar, G 1/4 internal thread, response time under 3 ms. In the factory operating mode the set point SP is 1 to 100 bar, the reset point rP 0.5 to 99.5 bar, in steps of 0.5 bar, and SP and rP must be at least 0.5 bar apart.</p>
+          <p>Why two points? With one threshold, a pump that pulses around 40 bar makes the output flicker and the PLC logs a fault for every flicker. In hysteresis mode the output switches on at SP and only switches off at rP. The 3 bar gap is our choice. It has to be larger than the pressure ripple you see at the sensor.</p>
+
+          <h2>The setting, checked</h2>
+          <p>SP1 40 bar and rP1 37 bar are inside the datasheet ranges, on the 0.5 bar grid, and 3 bar apart. The studio checks the ranges and that rP sits below SP. It does not yet check the 0.5 bar minimum gap, so we checked that one against the datasheet by hand. Type 120 bar and the studio refuses: “Set point SP1 must be 1–100 bar on PN7092. 120 bar is outside.”</p>
+          <p>Output function normally open: the pin is 24 V while the pressure is OK. If your safety logic wants a wire break to look like a fault, choose normally closed and invert the logic in the PLC.</p>
+          <figure class="shot">
+            <img src="/assets/images/blog/pump-pressure-3d.webp" width="1360" height="850" loading="lazy" alt="3D station: pump, pipe run with the PN7092 on the discharge side, Siemens ET 200eco PN master and the SP1 and rP1 settings" />
+            <figcaption>The PN7092 on the discharge pipe. The panel lists exactly what is written to the sensor: SP1 40 bar, rP1 37 bar, normally open.</figcaption>
+          </figure>
+
+          <h2>Master, port and cable</h2>
+          <p>Port X1 of a Siemens SIMATIC ET 200eco PN 4 IO-Link (6ES7148-6JA00-0AB0). The PN7092 needs a class A port, and the Siemens datasheet gives a maximum unshielded cable length of 20 m for IO-Link. The master sits on the pump skid. The route in the model is 5.8 m; with 20 % slack the order has a 10 m M12 cable. The sensor draws less than 35 mA.</p>
+
+          <figure class="shot">
+            <img src="/assets/images/blog/pump-pressure-ports.webp" width="706" height="188" loading="lazy" alt="Ports tab of the station with the live process data of port X1" />
+            <figcaption>The Ports tab: 16-bit process data layout, 2.3 ms cycle and the settings on port X1.</figcaption>
+          </figure>
+
+          <h2>Run mode</h2>
+          <p>In Run mode the pressure rises, holds, falls and rises again. The output switches on when the value crosses 40 bar and stays on until it drops to 37 bar. You can also drag the value yourself and stop between the two points to see that the output keeps its last state.</p>
+          <p>The process data is 16 bits. Pressure sits in bits 2 to 15 at 0.1 bar per count, the two switching outputs in bits 1 and 0. In the screenshot the master reads <code>07 A5</code>: 0x07A5 shifted right by two is 489, that is 48.9 bar, and bit 0 is set because OUT1 is on.</p>
+          <figure class="shot">
+            <img src="/assets/images/blog/pump-pressure-run.webp" width="1360" height="850" loading="lazy" alt="Run mode: PN7092 at 48.9 bar with OUT1 switched and process data 07 A5" />
+            <figcaption>Run mode. 48.9 bar, OUT1 switched, process data 07 A5. The trace shows the output following SP and rP.</figcaption>
+          </figure>
+
+          <h2>Commissioning file</h2>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Parameter</th><th>Value</th><th>Index.sub</th><th>Raw</th><th>Type</th></tr></thead>
+              <tbody>
+                <tr><td>Set point SP1</td><td>40 bar</td><td><code>583.0</code></td><td><code>400</code> (<code>01 90</code>)</td><td>IntegerT 16</td></tr>
+                <tr><td>Reset point rP1</td><td>37 bar</td><td><code>584.0</code></td><td><code>370</code> (<code>01 72</code>)</td><td>IntegerT 16</td></tr>
+                <tr><td>Output function</td><td>normally open</td><td><code>580.0</code></td><td><code>3</code></td><td>UIntegerT 8</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>The raw values come from the IODD scaling of 0.1 bar per count. Validation is vendor 310 and device 401, the device ID of the factory operating mode. The recommended cycle time is 2.3 ms, the device minimum. Write the three values with the master's ISDU function block or import the file, then read them back.</p>
+          <p>We did not set the switch-on and switch-off delays. The datasheet allows 0 to 50 s for dS and dr. If the PLC sees “pressure OK” missing for a moment during every pump start, mask the start in the PLC or add a delay on the sensor. The studio does not set the delays yet.</p>
+          <figure class="shot">
+            <img src="/assets/images/blog/pump-pressure-writes.webp" width="718" height="266" loading="lazy" alt="Station report section Parameter writes for the PN7092: 583.0 raw 400, 584.0 raw 370, 580.0 raw 3" />
+            <figcaption>The same writes in the station report.</figcaption>
+          </figure>
+
+          <h2>Buy and install</h2>
+          <p>The order is one ET 200eco PN master, one PN7092 and one 10 m cable. The station report adds the wiring, port table, power budget and an installer checklist for the commissioning engineer. Buy and install sends the request to us; we answer with a price and a date. Nothing is paid in the studio.</p>
+          <div class="station-link">
+            <p><strong>Open the station.</strong> PN7092 with SP1 40 bar and rP1 37 bar on port X1 of a Siemens ET 200eco PN. Press Run and watch the hysteresis.</p>
+            <p><a class="button primary" href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJzaWVtZW5zLTZlczcxNDgtNmphMDAtMGFiMCIsImF0IjpbLTAuNSwtMS44XX0seyJ1aWQiOiJlcTEiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoicHVtcCIsImF0IjpbLTIsMF19LHsidWlkIjoiZXEyIiwia2luZCI6ImVxdWlwbWVudCIsInJlZiI6InBpcGUiLCJhdCI6WzIsMF19LHsidWlkIjoiZXEzIiwia2luZCI6ImVxdWlwbWVudCIsInJlZiI6ImNhYmluZXQiLCJhdCI6Wy01LjUsLTMuNl19LHsidWlkIjoiUDEiLCJraW5kIjoic2Vuc29yIiwicmVmIjoiaWZtLXBuNzA5MiIsImF0IjpbMSwwLjZdLCJzZXR0aW5ncyI6eyJzcDEiOjQwLCJycDEiOjM3fSwib3B0aW9ucyI6eyJvdXRwdXQiOiJub3JtYWxseSBvcGVuIn0sIm1hc3RlciI6Im1hc3RlcjEiLCJwb3J0IjoxfV19">Open this station in the studio</a></p>
+          </div>
+
+          <p>You can also ask ChatGPT for it. With the iolinki connector (<code>https://mcp.iolinki.com/mcp</code>, setup on the <a href="/iodd-mcp.html">MCP page</a>), ChatGPT calls the same engine, shows the station in the chat and gives you the same studio link with the Buy button.</p>
+
+          <h2>Sources</h2>
+          <ul class="sources">
+            <li><a href="https://www.tme.com/Document/64ce106eef60d69f10f5f260eb60985e/PN7092-02_EN-GB.pdf">ifm PN7092-02 datasheet (EN-GB, 13.04.2023)</a></li>
+            <li><a href="https://adegis.com/media/asset/7e6c10436a3e23b8670e7a164cf33b80b2e943346bf632ffd80e8a389dd4641b.pdf">Siemens 6ES7148-6JA00-0AB0 data sheet</a></li>
+          </ul>
+          <p><a href="/blog/">More applications</a></p>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer" id="footer">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="/index.html" aria-label="iolinki home"
+            >io<span>linki</span></a
+          >
+          <p>IO-Link software for the firmware you build.</p>
+          <p class="seller">
+            Andrii Shylenko e.v. · Hungarian sole trader<br /><a href="mailto:andrii@shylenko.com"
+              >andrii@shylenko.com</a
+            >
+          </p>
+        </div>
+        <div>
+          <h2>Developer resources</h2>
+          <a href="https://github.com/w1ne/iolinki">Device source</a
+          ><a href="https://github.com/w1ne/iolinki-master">Master source</a
+          ><a href="/getting-started.html">Evaluation guide</a
+          ><a href="/validation.html">Validation evidence</a>
+        </div>
+        <div>
+          <h2>Licensing &amp; company</h2>
+          <a href="/purchase.html">Commercial licensing</a
+          ><a href="/terms/purchase-terms.html">Purchase terms status</a
+          ><a href="/legal.html">Seller &amp; privacy information</a
+          ><a href="https://shylenko.com">shylenko.com</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© iolinki · Engineering software</span
+        ><span
+          >Related projects: <a href="https://labwired.com">LabWired</a> ·
+          <a href="https://kernelcad.com">kernelCAD</a> ·
+          <a href="https://komatachi.com">komatachi</a></span
+        >
+      </div>
+    </footer>
+  <script src="/assets/js/analytics.js" defer></script>
+  </body>
+</html>
