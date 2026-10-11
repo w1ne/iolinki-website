@@ -82,6 +82,11 @@
           <h2>Master, port and cable</h2>
           <p>Port X1 of a SICK SIG200, a 4-port IO-Link master with EtherNet/IP. The SICK datasheet gives up to 500 mA on pin 1 per port and 3 A for all outputs together. The LR2050 draws less than 50 mA and needs a class A port. The route in the model is 3.9 m, so the order has a 5 m M12 cable.</p>
 
+          <figure class="shot">
+            <img src="/assets/images/blog/tank-level-ports.webp" width="706" height="150" loading="lazy" alt="Ports tab of the station with the live process data of port X1" />
+            <figcaption>The Ports tab: level in bits 2 to 15, OUT2 and OUT1 in bits 1 and 0.</figcaption>
+          </figure>
+
           <h2>Run mode</h2>
           <p>In Run mode the tank fills and drains. The output switches on at 800 mm and stays on until the level falls to 780 mm. In the screenshot the level is 791 mm on the way down and OUT1 is still on. That is the hysteresis doing its job.</p>
           <p>The process data is 16 bits: level in bits 2 to 15 at 1 mm per count, OUT2 in bit 1 and OUT1 in bit 0. The master reads <code>0C 5D</code>: 0x0C5D shifted right by two is 791 mm, and bit 0 is set.</p>

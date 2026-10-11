@@ -81,6 +81,11 @@
           <h2>Master, port and cable</h2>
           <p>Port X1 of a Siemens SIMATIC ET 200eco PN 4 IO-Link (6ES7148-6JA00-0AB0). The PN7092 needs a class A port, and the Siemens datasheet gives a maximum unshielded cable length of 20 m for IO-Link. The master sits on the pump skid. The route in the model is 5.8 m; with 20 % slack the order has a 10 m M12 cable. The sensor draws less than 35 mA.</p>
 
+          <figure class="shot">
+            <img src="/assets/images/blog/pump-pressure-ports.webp" width="706" height="188" loading="lazy" alt="Ports tab of the station with the live process data of port X1" />
+            <figcaption>The Ports tab: 16-bit process data layout, 2.3 ms cycle and the settings on port X1.</figcaption>
+          </figure>
+
           <h2>Run mode</h2>
           <p>In Run mode the pressure rises, holds, falls and rises again. The output switches on when the value crosses 40 bar and stays on until it drops to 37 bar. You can also drag the value yourself and stop between the two points to see that the output keeps its last state.</p>
           <p>The process data is 16 bits. Pressure sits in bits 2 to 15 at 0.1 bar per count, the two switching outputs in bits 1 and 0. In the screenshot the master reads <code>07 A5</code>: 0x07A5 shifted right by two is 489, that is 48.9 bar, and bit 0 is set because OUT1 is on.</p>

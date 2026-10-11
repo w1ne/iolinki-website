@@ -81,6 +81,11 @@
           <p>This machine's control runs EtherCAT, so we used a Beckhoff EP6224-2022, a 4-port IO-Link box. Beckhoff gives 1.4 A sensor supply per port and 4 A for all four. The SA5000 draws less than 100 mA and needs a class A port. The route is 6.3 m, so the order has a 10 m M12 cable.</p>
           <p>The datasheet accuracy figure assumes 1.5 m of straight pipe before the sensor in a DN25 line. In relative mode you teach in place, so the exact number matters less, but keep the sensor away from bends and valves where you can.</p>
 
+          <figure class="shot">
+            <img src="/assets/images/blog/coolant-flow-ports.webp" width="706" height="188" loading="lazy" alt="Ports tab of the station with the live process data of port X1" />
+            <figcaption>The Ports tab: flow, temperature and both outputs in 32 bits of process data.</figcaption>
+          </figure>
+
           <h2>Run mode</h2>
           <p>Run mode varies the flow. OUT1 switches on above 60 % and drops at 50 %. The 32-bit process data carries the flow in bits 16 to 31 in %, the temperature in bits 2 to 15 at 0.1 °C per count, and OUT2 and OUT1 in bits 1 and 0. In the screenshot the master reads <code>00 4B 03 71</code>: flow 0x004B = 75 %, temperature 0x0371 shifted right by two = 220, that is 22.0 °C, and OUT1 on. The simulated temperature is a fixed room value; on the machine you see your coolant.</p>
           <figure class="shot">

@@ -80,6 +80,11 @@
           <h2>Master, port and cable</h2>
           <p>Port X1 of a Turck TBEN-S2-4IOL, a compact 4-port master that speaks PROFINET, EtherNet/IP and Modbus TCP. The Turck datasheet gives max. 4 A for the supply of ports C0 to C3 together and notes that this supply is not short-circuit proof, so protect the V2 supply in the cabinet. The O5D100 draws under 75 mA. The route is 4.7 m; the order has a 10 m cable.</p>
 
+          <figure class="shot">
+            <img src="/assets/images/blog/box-conveyor-ports.webp" width="706" height="150" loading="lazy" alt="Ports tab of the station with the live process data of port X1" />
+            <figcaption>The Ports tab: distance in centimetres from bit 4, OUT1 in bit 0, 6.4 ms cycle.</figcaption>
+          </figure>
+
           <h2>Run mode</h2>
           <p>In Run mode the boxes move along the belt. The output switches each time a box passes the sensor, and the trace shows one pulse per box. The process data is 16 bits: distance in bits 4 to 15 in centimetres and OUT1 in bit 0. In the screenshot the master reads <code>02 31</code>: 0x231 shifted right by four is 35 cm, and bit 0 is set.</p>
           <p>That distance is the useful part. A PLC can tell a box near the rail from a box in the middle, or see that a box is lying across the belt.</p>

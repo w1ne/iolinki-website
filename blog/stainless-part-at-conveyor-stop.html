@@ -83,6 +83,11 @@
           <p>The sensor goes to port X1 of an ifm AL1100, a 4-port PROFINET master with class A ports. It is mounted on the machine frame next to the stop, so only the fieldbus cable runs back to the cabinet. The AL1100 datasheet gives 3.6 A total sensor supply. The IG6214 draws less than 15 mA.</p>
           <p>The cable route in the 3D model is 5.7 m. The studio adds 20 % slack and rounds up to a stock length, so the order has one 10 m M12 A-coded cable. IO-Link allows 20 m per port, and the report checks that too.</p>
 
+          <figure class="shot">
+            <img src="/assets/images/blog/stop-stainless-ports.webp" width="706" height="207" loading="lazy" alt="Ports tab of the station with the live process data of port X1" />
+            <figcaption>The Ports tab while running: port X1, live value, process data layout, cycle time and settings.</figcaption>
+          </figure>
+
           <h2>Run mode</h2>
           <p>Press Run and the conveyor moves. Parts slide onto the stop, wait there and leave. The IG6214 switches each time a part is held. The panel shows the output pin, 24 V while the part is there, and the 32-bit process data the master receives. Bit 0 is SSC1, the switching signal for our switch point, and the upper 16 bits carry the distance value.</p>
           <figure class="shot">
