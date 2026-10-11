@@ -118,6 +118,37 @@
             station data is part of the cache. The station link encodes the station
             in the URL fragment, which browsers do not send to the server.
           </p>
+          <p id="studio-assistant">
+            <strong>Design with AI in the station studio.</strong> The assistant
+            in iolinki.com/studio needs a Google sign-in because it runs on paid
+            model credits. Reading the studio and editing a station by hand need
+            no account. When you open the assistant signed out, your browser
+            loads Google's sign-in script from accounts.google.com (Google
+            processes that under its own privacy policy). After you sign in,
+            Google gives the page an ID token that the iolinki agent Worker on
+            Cloudflare checks and exchanges for its own session, kept in your
+            browser's local storage for 14 days; “Sign out” removes it.
+            <em>What we store</em> (Cloudflare D1): your Google account ID,
+            email address and name, the first and last time you signed in, and
+            per-day counts of messages and model tokens for your account and for
+            all users together, used for the daily limit. We do not store the
+            text of your messages, the replies or your stations. Counters are
+            deleted after 35 days, and an account not used for 12 months is
+            deleted. <em>What is sent to the model:</em> each message you send,
+            up to the last 12 messages of that chat, and the station currently
+            open in the studio (part types, positions, settings and wires) go
+            through the Worker to DeepInfra Inc., which runs the DeepSeek
+            V4.1 Flash model and processes them under
+            <a href="https://deepinfra.com/privacy">its own privacy policy</a>.
+            The model's tools run in the Worker; a product search inside a chat
+            sends the search text to IODD Finder as described above. Your name
+            and email address are not sent to the model. Do not put credentials
+            or personal data in a message. Purpose: running the assistant and
+            limiting its cost and abuse. Recipients: Cloudflare as host, Google
+            for sign-in and DeepInfra for the model. Controls: ask for access
+            or deletion of your record at the address below; accounts that
+            misuse the assistant can be blocked.
+          </p>
           <p>
             <strong>Installation requests.</strong> If you choose Buy and
             install and send the form, iolinki.com sends the station, your email
@@ -178,7 +209,9 @@
           <h2 id="website-analytics">Privacy on this site</h2>
           <p>
             This is a static information website. It does not require an account
-            or an email registration to read the guides or access source links.
+            or an email registration to read the guides or access source links;
+            only the optional AI assistant in the station studio asks you to sign
+            in with Google (see above).
             Optional Google Analytics cookies help us understand website visits,
             public download clicks, IODD editor usage and assistant setup actions.
             Analytics loads only after you choose “Accept analytics”. You can

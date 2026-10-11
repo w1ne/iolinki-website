@@ -31,6 +31,18 @@ const wire = z.object({
   to: end.describe("Sensor part id and pin C/Q."),
 });
 
+// Input shapes shared by the MCP tools and the studio's own agent.
+export const stationPartsShape = {
+  query: z.string().max(80).optional().describe("Product name or number to look up in IODD Finder, e.g. BOS 23K, UM30, PN7092."),
+};
+export const stationShape = {
+  title: z.string().max(120).optional(),
+  parts: z.array(part).min(1).max(60),
+  wires: z.array(wire).max(60).optional(),
+};
+export const STATION_PARTS_DESCRIPTION = "List what can be placed on an IO-Link station: sensors with filed datasheet limits (setting keys, ranges, units, options, materials), IO-Link masters (port count and class) and generic machines. With a query, also search every device in IODD Finder (any vendor); each hit has a type such as iodd-888-878 that iolink_station accepts, with ranges, defaults and process data read from its IODD. Call this before iolink_station.";
+export const STATION_DESCRIPTION = "Place machines, sensors and IO-Link masters on the factory floor and wire each sensor's C/Q to a master port (X1..Xn), then show the station. Every sensor setting is checked against its datasheet or, for an iodd-<vendorId>-<ioddId> device, its IODD; inductive distances are converted with the material correction factor. A sensor with no wire is put on the first free port, and a master is added when all ports are used. Returns notes part by part (they never block the station or the order), the corrected diagram, the order (sensors, masters, sized M12 cables) and a studio link with a buy button. To change the station, call again with the full updated diagram. Nothing is written to a sensor and no payment is taken.";
+
 function summary(built, library, extra) {
   const station = built.station;
   return {
@@ -108,6 +120,27 @@ async function searchCatalog(query, catalogFetch) {
   };
 }
 
+// The tool bodies, callable without MCP (the studio agent runs these).
+export async function runStationParts({ query } = {}, catalogFetch = (url) => fetch(url)) {
+  const data = engine.describeLibrary(LIBRARY);
+  if (query && query.trim().length >= 2) {
+    try {
+      data.iodd_finder = await searchCatalog(query.trim(), catalogFetch);
+    } catch (error) {
+      data.iodd_finder = { error: error.message };
+    }
+  }
+  return data;
+}
+
+export async function runStation({ title, parts, wires = [] }, catalogFetch = (url) => fetch(url)) {
+  const { library, extra, problems } = await withIoddParts(parts, catalogFetch);
+  const built = engine.fromDiagram({ parts, wires }, library);
+  built.check.issues = problems.concat(built.check.issues);
+  built.check.ok = built.check.issues.length === 0;
+  return Object.assign({ title: title || "IO-Link station" }, summary(built, library, extra));
+}
+
 export function registerStationTools(server, { catalogFetch = (url) => fetch(url) } = {}) {
   server.registerResource(
     "iolink-station-widget",
@@ -120,21 +153,12 @@ export function registerStationTools(server, { catalogFetch = (url) => fetch(url
     "iolink_station_parts",
     {
       title: "IO-Link station parts",
-      description: "List what can be placed on an IO-Link station: sensors with filed datasheet limits (setting keys, ranges, units, options, materials), IO-Link masters (port count and class) and generic machines. With a query, also search every device in IODD Finder (any vendor); each hit has a type such as iodd-888-878 that iolink_station accepts, with ranges, defaults and process data read from its IODD. Call this before iolink_station.",
-      inputSchema: {
-        query: z.string().max(80).optional().describe("Product name or number to look up in IODD Finder, e.g. BOS 23K, UM30, PN7092."),
-      },
+      description: STATION_PARTS_DESCRIPTION,
+      inputSchema: stationPartsShape,
       annotations: { readOnlyHint: true, openWorldHint: true, destructiveHint: false, idempotentHint: true },
     },
     async ({ query } = {}) => {
-      const data = engine.describeLibrary(LIBRARY);
-      if (query && query.trim().length >= 2) {
-        try {
-          data.iodd_finder = await searchCatalog(query.trim(), catalogFetch);
-        } catch (error) {
-          data.iodd_finder = { error: error.message };
-        }
-      }
+      const data = await runStationParts({ query }, catalogFetch);
       return { content: [{ type: "text", text: JSON.stringify(data) }], structuredContent: data };
     },
   );
@@ -143,12 +167,8 @@ export function registerStationTools(server, { catalogFetch = (url) => fetch(url
     "iolink_station",
     {
       title: "Build IO-Link station",
-      description: "Place machines, sensors and IO-Link masters on the factory floor and wire each sensor's C/Q to a master port (X1..Xn), then show the station. Every sensor setting is checked against its datasheet or, for an iodd-<vendorId>-<ioddId> device, its IODD; inductive distances are converted with the material correction factor. A sensor with no wire is put on the first free port, and a master is added when all ports are used. Returns notes part by part (they never block the station or the order), the corrected diagram, the order (sensors, masters, sized M12 cables) and a studio link with a buy button. To change the station, call again with the full updated diagram. Nothing is written to a sensor and no payment is taken. The result renders as an interactive widget that already shows the 3D station, wiring, port table, notes and order: after calling, answer in one or two sentences (what was built and any note that needs a decision). Do not restate the parts, ports, settings or order as a list or table, and do not draw your own diagram.",
-      inputSchema: {
-        title: z.string().max(120).optional(),
-        parts: z.array(part).min(1).max(60),
-        wires: z.array(wire).max(60).optional(),
-      },
+      description: STATION_DESCRIPTION + " The result renders as an interactive widget that already shows the 3D station, wiring, port table, notes and order: after calling, answer in one or two sentences (what was built and any note that needs a decision). Do not restate the parts, ports, settings or order as a list or table, and do not draw your own diagram.",
+      inputSchema: stationShape,
       annotations: { readOnlyHint: true, openWorldHint: true, destructiveHint: false, idempotentHint: true },
       _meta: {
         "openai/outputTemplate": STATION_WIDGET_URI,
@@ -158,11 +178,7 @@ export function registerStationTools(server, { catalogFetch = (url) => fetch(url
       },
     },
     async ({ title, parts, wires = [] }) => {
-      const { library, extra, problems } = await withIoddParts(parts, catalogFetch);
-      const built = engine.fromDiagram({ parts, wires }, library);
-      built.check.issues = problems.concat(built.check.issues);
-      built.check.ok = built.check.issues.length === 0;
-      const data = Object.assign({ title: title || "IO-Link station" }, summary(built, library, extra));
+      const data = await runStation({ title, parts, wires }, catalogFetch);
       // The widget shows the station, notes and order; the reply only needs a line or two.
       const text = "Shown to the user in the iolinki widget (3D view, Run, wiring, ports, order, Buy). Reply in at most two sentences; no tables, lists or diagrams of the station. " +
         (data.ok ? "Every setting is inside its datasheet or IODD." : data.issues.length + " note(s) for the installer: " + data.issues.map((issue) => issue.problem).join(" ")) +
