@@ -1031,3 +1031,67 @@ img {
     scroll-behavior: auto;
   }
 }
+/* Blog: application write-ups built in the station studio. */
+.post-meta {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 14px 0 0;
+}
+.post-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 22px;
+}
+.post-list li {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--white);
+  padding: 26px 28px;
+  margin: 0;
+}
+.post-list h2 {
+  font-size: 1.35rem;
+  margin: 0 0 8px;
+}
+.post-list h2 a {
+  text-decoration: none;
+}
+.post-list p {
+  margin: 0 0 8px;
+}
+.post-list .post-meta {
+  margin: 0;
+}
+.shot {
+  margin: 28px 0 34px;
+}
+.shot img {
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--white);
+}
+.shot figcaption {
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 10px;
+  max-width: 950px;
+}
+.station-link {
+  border-left: 3px solid var(--teal);
+  border-radius: 0 8px 8px 0;
+  background: var(--soft);
+  padding: 22px 26px;
+  margin: 30px 0;
+}
+.station-link p {
+  margin: 0 0 14px;
+}
+.station-link p:last-child {
+  margin: 0;
+}
+.sources li {
+  font-size: 14px;
+}

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>IO-Link application examples, step by step | iolinki</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Real IO-Link applications built in the iolinki station studio: sensor choice, settings checked against the datasheet, master port, Run mode, commissioning file and install." />
+    <link rel="canonical" href="https://iolinki.com/blog/" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <link rel="stylesheet" href="/assets/css/site.css" />
+    <script src="/assets/js/site.js" defer></script>
+
+    <!-- BEGIN GENERATED SEO -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="iolinki" />
+    <meta property="og:title" content="IO-Link application examples, step by step | iolinki" />
+    <meta property="og:description" content="Real IO-Link applications built in the iolinki station studio: sensor choice, settings checked against the datasheet, master port, Run mode, commissioning file and install." />
+    <meta property="og:url" content="https://iolinki.com/blog/" />
+    <meta property="og:image" content="https://iolinki.com/assets/images/og-card.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="iolinki: IO-Link C stacks, IODD editor and MCP tools" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="IO-Link application examples, step by step | iolinki" />
+    <meta name="twitter:description" content="Real IO-Link applications built in the iolinki station studio: sensor choice, settings checked against the datasheet, master port, Run mode, commissioning file and install." />
+    <meta name="twitter:image" content="https://iolinki.com/assets/images/og-card.png" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://iolinki.com/#organization","name":"iolinki","url":"https://iolinki.com/","logo":"https://iolinki.com/favicon.svg","sameAs":["https://github.com/w1ne/iolinki","https://github.com/w1ne/iolinki-master","https://github.com/w1ne/iolinki-website"]},{"@type":"WebSite","@id":"https://iolinki.com/#website","name":"iolinki","url":"https://iolinki.com/","inLanguage":"en","publisher":{"@id":"https://iolinki.com/#organization"}},{"@type":"WebPage","@id":"https://iolinki.com/blog/#webpage","url":"https://iolinki.com/blog/","name":"IO-Link application examples, step by step | iolinki","description":"Real IO-Link applications built in the iolinki station studio: sensor choice, settings checked against the datasheet, master port, Run mode, commissioning file and install.","inLanguage":"en","isPartOf":{"@id":"https://iolinki.com/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"iolinki","item":"https://iolinki.com/"},{"@type":"ListItem","position":2,"name":"IO-Link application examples, step by step","item":"https://iolinki.com/blog/"}]}]}</script>
+    <!-- END GENERATED SEO -->
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header" id="header">
+      <div class="header-inner">
+        <a class="brand" href="/index.html" aria-label="iolinki home"
+          >io<span>linki</span><span class="brand-dot" aria-hidden="true"></span
+        ></a>
+        <button
+          class="menu-button"
+          type="button"
+          aria-expanded="false"
+          aria-controls="primary-navigation"
+          hidden
+        >
+          Menu
+        </button>
+        <nav id="primary-navigation" aria-label="Primary navigation">
+          <a href="/index.html#two">Stacks</a
+          ><a href="/getting-started.html">Guides</a
+          ><a href="/hardware.html">Hardware</a
+          ><a href="/validation.html">Validation</a><a href="/faq.html">FAQ</a
+          ><a href="https://iolinki.com/docs/">Docs</a><a href="/iodd-editor.html">IODD editor</a><a href="/studio/">Station studio</a><a href="/blog/">Blog</a><a href="/purchase.html">Licensing</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="document" tabindex="-1">
+      <header>
+        <h1>Blog</h1>
+        <p>IO-Link applications from real plants, built step by step in the <a href="/studio/">station studio</a>. Every post links to the station it describes.</p>
+      </header>
+      <section class="wrapper style5">
+        <div class="inner guide-content">
+          <ul class="post-list">
+            <li>
+              <h2><a href="/blog/stainless-part-at-conveyor-stop.html">A stainless part at a conveyor stop, detected with an IO-Link inductive sensor</a></h2>
+              <p>The station only clamps or picks when the part is really sitting on the stop. Here the parts are stainless, and that changes the setting.</p>
+              <p class="post-meta"><time datetime="2026-10-11">11 October 2026</time> · <a href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJpZm0tYWwxMTAwIiwiYXQiOlsyLjYsLTEuOF19LHsidWlkIjoiZXExIiwia2luZCI6ImVxdWlwbWVudCIsInJlZiI6ImNvbnZleW9yIiwiYXQiOlstMS41LDBdfSx7InVpZCI6ImVxMiIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJzdG9wIiwiYXQiOlszLDBdfSx7InVpZCI6ImVxMyIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJjYWJpbmV0IiwiYXQiOlstNS41LC0zLjZdfSx7InVpZCI6IkIxIiwia2luZCI6InNlbnNvciIsInJlZiI6ImlmbS1pZzYyMTQiLCJhdCI6WzQuNiwwXSwic2V0dGluZ3MiOnsic3dpdGNoX3BvaW50IjozfSwib3B0aW9ucyI6eyJvdXRwdXQiOiJub3JtYWxseSBvcGVuIiwicG9sYXJpdHkiOiJQTlAifSwidGFyZ2V0Ijoic3RhaW5sZXNzIiwibWFzdGVyIjoibWFzdGVyMSIsInBvcnQiOjF9XX0">Open the station</a></p>
+            </li>
+            <li>
+              <h2><a href="/blog/pump-discharge-pressure-switch.html">Pump discharge pressure: a switch point, a reset point and nothing that chatters</a></h2>
+              <p>The PLC needs one clean signal: the pump has built pressure. With a set point and a reset point the signal does not chatter when the pressure ripples around the limit.</p>
+              <p class="post-meta"><time datetime="2026-10-11">11 October 2026</time> · <a href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJzaWVtZW5zLTZlczcxNDgtNmphMDAtMGFiMCIsImF0IjpbLTAuNSwtMS44XX0seyJ1aWQiOiJlcTEiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoicHVtcCIsImF0IjpbLTIsMF19LHsidWlkIjoiZXEyIiwia2luZCI6ImVxdWlwbWVudCIsInJlZiI6InBpcGUiLCJhdCI6WzIsMF19LHsidWlkIjoiZXEzIiwia2luZCI6ImVxdWlwbWVudCIsInJlZiI6ImNhYmluZXQiLCJhdCI6Wy01LjUsLTMuNl19LHsidWlkIjoiUDEiLCJraW5kIjoic2Vuc29yIiwicmVmIjoiaWZtLXBuNzA5MiIsImF0IjpbMSwwLjZdLCJzZXR0aW5ncyI6eyJzcDEiOjQwLCJycDEiOjM3fSwib3B0aW9ucyI6eyJvdXRwdXQiOiJub3JtYWxseSBvcGVuIn0sIm1hc3RlciI6Im1hc3RlcjEiLCJwb3J0IjoxfV19">Open the station</a></p>
+            </li>
+            <li>
+              <h2><a href="/blog/tank-level-guided-wave-radar.html">Tank level and overfill with one guided wave radar sensor</a></h2>
+              <p>One sensor in the tank lid gives the PLC the level in millimetres and a hard “full” switch that does not depend on the PLC program.</p>
+              <p class="post-meta"><time datetime="2026-10-11">11 October 2026</time> · <a href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJzaWNrLXNpZzIwMC0wYTA1MTIyMDAiLCJhdCI6WzIuNSwtMS44XX0seyJ1aWQiOiJlcTEiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoidGFuayIsImF0IjpbMCwwXX0seyJ1aWQiOiJlcTIiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoiY2FiaW5ldCIsImF0IjpbLTUuNSwtMy42XX0seyJ1aWQiOiJMMSIsImtpbmQiOiJzZW5zb3IiLCJyZWYiOiJpZm0tbHIyMDUwIiwiYXQiOlsxLjMsMF0sInNldHRpbmdzIjp7InNwIjo4MDAsInJwIjo3ODB9LCJvcHRpb25zIjp7fSwibWFzdGVyIjoibWFzdGVyMSIsInBvcnQiOjF9XX0">Open the station</a></p>
+            </li>
+            <li>
+              <h2><a href="/blog/machine-tool-coolant-flow.html">Coolant flow on a machine tool: teach the normal flow, switch on a percentage</a></h2>
+              <p>If the coolant stops, the tool and the part pay for it within seconds. A flow sensor in the coolant line stops the cycle before that happens and reports the coolant temperature too.</p>
+              <p class="post-meta"><time datetime="2026-10-11">11 October 2026</time> · <a href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJiZWNraG9mZi1lcDYyMjQtMjAyMiIsImF0IjpbMC41LC0xLjhdfSx7InVpZCI6ImVxMSIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJwdW1wIiwiYXQiOlstMiwwXX0seyJ1aWQiOiJlcTIiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoicGlwZSIsImF0IjpbMiwwXX0seyJ1aWQiOiJlcTMiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoiY2FiaW5ldCIsImF0IjpbLTUuNSwtMy42XX0seyJ1aWQiOiJGMSIsImtpbmQiOiJzZW5zb3IiLCJyZWYiOiJpZm0tc2E1MDAwIiwiYXQiOlsyLjUsMC42XSwic2V0dGluZ3MiOnsiZmxvd19zcDEiOjYwLCJmbG93X3JwMSI6NTB9LCJvcHRpb25zIjp7Im1lZGl1bSI6InJlbGF0aXZlIn0sIm1hc3RlciI6Im1hc3RlcjEiLCJwb3J0IjoxfV19">Open the station</a></p>
+            </li>
+            <li>
+              <h2><a href="/blog/box-detection-on-conveyor.html">Box detection on a conveyor with a laser distance sensor</a></h2>
+              <p>A distance sensor across the belt sees the boxes and ignores the guard rail behind them. Over IO-Link it also tells you how far away each box was.</p>
+              <p class="post-meta"><time datetime="2026-10-11">11 October 2026</time> · <a href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJ0dXJjay10YmVuLXMyLTRpb2wiLCJhdCI6Wy0xLjYsLTIuNl19LHsidWlkIjoiZXExIiwia2luZCI6ImVxdWlwbWVudCIsInJlZiI6ImNvbnZleW9yIiwiYXQiOlswLDBdfSx7InVpZCI6ImVxMiIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJjYWJpbmV0IiwiYXQiOlstNS41LC0zLjZdfSx7InVpZCI6IkIxIiwia2luZCI6InNlbnNvciIsInJlZiI6ImlmbS1vNWQxMDAiLCJhdCI6WzAsLTEuNF0sInNldHRpbmdzIjp7InN3aXRjaF9wb2ludCI6NTAwfSwib3B0aW9ucyI6eyJvdXRwdXQiOiJub3JtYWxseSBvcGVuIn0sIm1hc3RlciI6Im1hc3RlcjEiLCJwb3J0IjoxfV19">Open the station</a></p>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer" id="footer">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="/index.html" aria-label="iolinki home"
+            >io<span>linki</span></a
+          >
+          <p>IO-Link software for the firmware you build.</p>
+          <p class="seller">
+            Andrii Shylenko e.v. · Hungarian sole trader<br /><a href="mailto:andrii@shylenko.com"
+              >andrii@shylenko.com</a
+            >
+          </p>
+        </div>
+        <div>
+          <h2>Developer resources</h2>
+          <a href="https://github.com/w1ne/iolinki">Device source</a
+          ><a href="https://github.com/w1ne/iolinki-master">Master source</a
+          ><a href="/getting-started.html">Evaluation guide</a
+          ><a href="/validation.html">Validation evidence</a>
+        </div>
+        <div>
+          <h2>Licensing &amp; company</h2>
+          <a href="/purchase.html">Commercial licensing</a
+          ><a href="/terms/purchase-terms.html">Purchase terms status</a
+          ><a href="/legal.html">Seller &amp; privacy information</a
+          ><a href="https://shylenko.com">shylenko.com</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© iolinki · Engineering software</span
+        ><span
+          >Related projects: <a href="https://labwired.com">LabWired</a> ·
+          <a href="https://kernelcad.com">kernelCAD</a> ·
+          <a href="https://komatachi.com">komatachi</a></span
+        >
+      </div>
+    </footer>
+  <script src="/assets/js/analytics.js" defer></script>
+  </body>
+</html>

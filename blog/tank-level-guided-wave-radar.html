@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Tank level and overfill with guided wave radar | iolinki</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Continuous level and a full signal on a water-based tank with an ifm LR2050: probe length limits, set and reset points, a SICK SIG200 master, Run mode and the ISDU writes." />
+    <link rel="canonical" href="https://iolinki.com/blog/tank-level-guided-wave-radar.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <link rel="stylesheet" href="/assets/css/site.css" />
+    <script src="/assets/js/site.js" defer></script>
+
+    <!-- BEGIN GENERATED SEO -->
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="iolinki" />
+    <meta property="og:title" content="Tank level and overfill with guided wave radar | iolinki" />
+    <meta property="og:description" content="Continuous level and a full signal on a water-based tank with an ifm LR2050: probe length limits, set and reset points, a SICK SIG200 master, Run mode and the ISDU writes." />
+    <meta property="og:url" content="https://iolinki.com/blog/tank-level-guided-wave-radar.html" />
+    <meta property="og:image" content="https://iolinki.com/assets/images/og-card.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="iolinki: IO-Link C stacks, IODD editor and MCP tools" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Tank level and overfill with guided wave radar | iolinki" />
+    <meta name="twitter:description" content="Continuous level and a full signal on a water-based tank with an ifm LR2050: probe length limits, set and reset points, a SICK SIG200 master, Run mode and the ISDU writes." />
+    <meta name="twitter:image" content="https://iolinki.com/assets/images/og-card.png" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://iolinki.com/#organization","name":"iolinki","url":"https://iolinki.com/","logo":"https://iolinki.com/favicon.svg","sameAs":["https://github.com/w1ne/iolinki","https://github.com/w1ne/iolinki-master","https://github.com/w1ne/iolinki-website"]},{"@type":"WebSite","@id":"https://iolinki.com/#website","name":"iolinki","url":"https://iolinki.com/","inLanguage":"en","publisher":{"@id":"https://iolinki.com/#organization"}},{"@type":"WebPage","@id":"https://iolinki.com/blog/tank-level-guided-wave-radar.html#webpage","url":"https://iolinki.com/blog/tank-level-guided-wave-radar.html","name":"Tank level and overfill with guided wave radar | iolinki","description":"Continuous level and a full signal on a water-based tank with an ifm LR2050: probe length limits, set and reset points, a SICK SIG200 master, Run mode and the ISDU writes.","inLanguage":"en","isPartOf":{"@id":"https://iolinki.com/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"iolinki","item":"https://iolinki.com/"},{"@type":"ListItem","position":2,"name":"Tank level and overfill with guided wave radar","item":"https://iolinki.com/blog/tank-level-guided-wave-radar.html"}]},{"@type":"BlogPosting","@id":"https://iolinki.com/blog/tank-level-guided-wave-radar.html#article","headline":"Tank level and overfill with one guided wave radar sensor","description":"Continuous level and a full signal on a water-based tank with an ifm LR2050: probe length limits, set and reset points, a SICK SIG200 master, Run mode and the ISDU writes.","datePublished":"2026-10-11","dateModified":"2026-10-11","image":"https://iolinki.com/assets/images/blog/tank-level-3d.webp","url":"https://iolinki.com/blog/tank-level-guided-wave-radar.html","mainEntityOfPage":{"@id":"https://iolinki.com/blog/tank-level-guided-wave-radar.html#webpage"},"inLanguage":"en","author":{"@type":"Person","name":"Andrii Shylenko"},"publisher":{"@id":"https://iolinki.com/#organization"}}]}</script>
+    <!-- END GENERATED SEO -->
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header" id="header">
+      <div class="header-inner">
+        <a class="brand" href="/index.html" aria-label="iolinki home"
+          >io<span>linki</span><span class="brand-dot" aria-hidden="true"></span
+        ></a>
+        <button
+          class="menu-button"
+          type="button"
+          aria-expanded="false"
+          aria-controls="primary-navigation"
+          hidden
+        >
+          Menu
+        </button>
+        <nav id="primary-navigation" aria-label="Primary navigation">
+          <a href="/index.html#two">Stacks</a
+          ><a href="/getting-started.html">Guides</a
+          ><a href="/hardware.html">Hardware</a
+          ><a href="/validation.html">Validation</a><a href="/faq.html">FAQ</a
+          ><a href="https://iolinki.com/docs/">Docs</a><a href="/iodd-editor.html">IODD editor</a><a href="/studio/">Station studio</a><a href="/blog/">Blog</a><a href="/purchase.html">Licensing</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="document" tabindex="-1">
+      <header>
+        <p class="eyebrow"><a href="/blog/">Blog</a> · Application</p>
+        <h1>Tank level and overfill with one guided wave radar sensor</h1>
+        <p>One sensor in the tank lid gives the PLC the level in millimetres and a hard “full” switch that does not depend on the PLC program.</p>
+        <p class="post-meta"><time datetime="2026-10-11">11 October 2026</time> · Andrii Shylenko</p>
+      </header>
+      <section class="wrapper style5">
+        <div class="inner guide-content">
+          <h2>The job</h2>
+          <p>A metal tank holds a water-based medium, for example the rinse tank of a parts washer or a coolant reservoir. The PLC refills it and must never overfill it. Many plants use two float switches for this. A continuous level sensor replaces both and shows the level, so the operator sees the tank emptying long before the low alarm.</p>
+          <p>We use OUT1 as the overfill switch at 800 mm. The low alarm comes from the level value in the PLC.</p>
+
+          <h2>The sensor</h2>
+          <p>We used the ifm LR2050, a guided wave radar sensor. From the datasheet: probe length L 150 to 2000 mm, G 3/4 process connection, process temperature −20 to 100 °C, pressure rating 16 bar, measuring error ±7 mm, resolution 1 mm, sampling rate 4 Hz. Recommended media are water, water-based media, oils and oil-based media. Media with a dielectric constant of 1.8 to 5, such as oils, need a coaxial pipe.</p>
+          <p>Two limits depend on the probe you order. The set point SP is 15 to L−30 mm and the reset point rP is 10 to L−35 mm, in 1 mm steps, with a hysteresis of more than 5 mm. There is also an inactive range of 30 mm at the top and 10 mm at the bottom of the probe.</p>
+
+          <h2>The setting, checked</h2>
+          <p>We planned a 1000 mm probe. That makes SP at most 970 mm and rP at most 965 mm. SP 800 mm and rP 780 mm fit, and the 20 mm hysteresis is above the 5 mm minimum. The low alarm must sit above the bottom inactive range, so the PLC alarm at 150 mm is safe.</p>
+          <p>Be careful here. The studio does not know your probe length yet. It checks SP and rP against the longest probe, 2000 mm, so it shows 15–1970 mm. With a short probe you must check L−30 yourself. The studio does check that rP is below SP: set both to 800 and it answers “Reset point rP must be below Set point SP.”</p>
+          <p>The datasheet also has an EMC note: the emission limits are met in a closed metal tank. In a plastic or open tank a different EMC class applies. Check that before you mount it on a plastic tank.</p>
+          <figure class="shot">
+            <img src="/assets/images/blog/tank-level-3d.webp" width="1360" height="850" loading="lazy" alt="3D station: process tank with the LR2050 in the lid, SICK SIG200 master and SP 800 mm and rP 780 mm settings" />
+            <figcaption>The LR2050 on the tank, wired to port X1 of a SICK SIG200.</figcaption>
+          </figure>
+
+          <h2>Master, port and cable</h2>
+          <p>Port X1 of a SICK SIG200, a 4-port IO-Link master with EtherNet/IP. The SICK datasheet gives up to 500 mA on pin 1 per port and 3 A for all outputs together. The LR2050 draws less than 50 mA and needs a class A port. The route in the model is 3.9 m, so the order has a 5 m M12 cable.</p>
+
+          <h2>Run mode</h2>
+          <p>In Run mode the tank fills and drains. The output switches on at 800 mm and stays on until the level falls to 780 mm. In the screenshot the level is 791 mm on the way down and OUT1 is still on. That is the hysteresis doing its job.</p>
+          <p>The process data is 16 bits: level in bits 2 to 15 at 1 mm per count, OUT2 in bit 1 and OUT1 in bit 0. The master reads <code>0C 5D</code>: 0x0C5D shifted right by two is 791 mm, and bit 0 is set.</p>
+          <figure class="shot">
+            <img src="/assets/images/blog/tank-level-run.webp" width="1360" height="850" loading="lazy" alt="Run mode: LR2050 reads 791 mm while falling, OUT1 still switched, process data 0C 5D" />
+            <figcaption>Run mode on the way down: 791 mm, OUT1 still on between rP and SP.</figcaption>
+          </figure>
+
+          <h2>Commissioning file</h2>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Parameter</th><th>Value</th><th>Index.sub</th><th>Raw</th><th>Type</th></tr></thead>
+              <tbody>
+                <tr><td>Set point SP</td><td>800 mm</td><td><code>583.0</code></td><td><code>800</code> (<code>03 20</code>)</td><td>IntegerT 16</td></tr>
+                <tr><td>Reset point rP</td><td>780 mm</td><td><code>584.0</code></td><td><code>780</code> (<code>03 0C</code>)</td><td>IntegerT 16</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Validation is vendor 310, device 479. Cycle time 2.3 ms. Data storage is set to backup and restore, so a replacement sensor gets the switch points from the master. Write the probe length and medium on the sensor at commissioning; the studio does not export those two yet.</p>
+          <figure class="shot">
+            <img src="/assets/images/blog/tank-level-writes.webp" width="718" height="223" loading="lazy" alt="Station report section Parameter writes for the LR2050: 583.0 raw 800 and 584.0 raw 780" />
+            <figcaption>The parameter writes in the station report.</figcaption>
+          </figure>
+
+          <h2>Buy and install</h2>
+          <p>The order list has the SIG200, the LR2050 and a 5 m cable. The probe rod is a separate ifm accessory and is not in the studio's order list. Write the probe length you want in the install request. Buy and install sends the request to us, and we reply with a price and an install date. No payment is taken in the studio.</p>
+          <div class="station-link">
+            <p><strong>Open the station.</strong> LR2050 with SP 800 mm and rP 780 mm on port X1 of a SICK SIG200. Press Run and watch the tank fill.</p>
+            <p><a class="button primary" href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJzaWNrLXNpZzIwMC0wYTA1MTIyMDAiLCJhdCI6WzIuNSwtMS44XX0seyJ1aWQiOiJlcTEiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoidGFuayIsImF0IjpbMCwwXX0seyJ1aWQiOiJlcTIiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoiY2FiaW5ldCIsImF0IjpbLTUuNSwtMy42XX0seyJ1aWQiOiJMMSIsImtpbmQiOiJzZW5zb3IiLCJyZWYiOiJpZm0tbHIyMDUwIiwiYXQiOlsxLjMsMF0sInNldHRpbmdzIjp7InNwIjo4MDAsInJwIjo3ODB9LCJvcHRpb25zIjp7fSwibWFzdGVyIjoibWFzdGVyMSIsInBvcnQiOjF9XX0">Open this station in the studio</a></p>
+          </div>
+
+          <p>You can also ask ChatGPT for it. With the iolinki connector (<code>https://mcp.iolinki.com/mcp</code>, setup on the <a href="/iodd-mcp.html">MCP page</a>), ChatGPT calls the same engine, shows the station in the chat and gives you the same studio link with the Buy button.</p>
+
+          <h2>Sources</h2>
+          <ul class="sources">
+            <li><a href="https://www.instrumart.com/assets/LR2050-01_EN-US.pdf">ifm LR2050-01 datasheet (EN-US, 09.01.2024)</a></li>
+            <li><a href="https://www.sick.com/media/pdf/5/45/945/dataSheet_SIG200-0A0512200_1089796_en.pdf">SICK SIG200-0A0512200 datasheet</a></li>
+          </ul>
+          <p><a href="/blog/">More applications</a></p>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer" id="footer">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="/index.html" aria-label="iolinki home"
+            >io<span>linki</span></a
+          >
+          <p>IO-Link software for the firmware you build.</p>
+          <p class="seller">
+            Andrii Shylenko e.v. · Hungarian sole trader<br /><a href="mailto:andrii@shylenko.com"
+              >andrii@shylenko.com</a
+            >
+          </p>
+        </div>
+        <div>
+          <h2>Developer resources</h2>
+          <a href="https://github.com/w1ne/iolinki">Device source</a
+          ><a href="https://github.com/w1ne/iolinki-master">Master source</a
+          ><a href="/getting-started.html">Evaluation guide</a
+          ><a href="/validation.html">Validation evidence</a>
+        </div>
+        <div>
+          <h2>Licensing &amp; company</h2>
+          <a href="/purchase.html">Commercial licensing</a
+          ><a href="/terms/purchase-terms.html">Purchase terms status</a
+          ><a href="/legal.html">Seller &amp; privacy information</a
+          ><a href="https://shylenko.com">shylenko.com</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© iolinki · Engineering software</span
+        ><span
+          >Related projects: <a href="https://labwired.com">LabWired</a> ·
+          <a href="https://kernelcad.com">kernelCAD</a> ·
+          <a href="https://komatachi.com">komatachi</a></span
+        >
+      </div>
+    </footer>
+  <script src="/assets/js/analytics.js" defer></script>
+  </body>
+</html>

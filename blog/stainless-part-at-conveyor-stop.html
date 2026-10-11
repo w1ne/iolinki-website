@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Stainless part at a conveyor stop: IO-Link inductive | iolinki</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Part presence at a mechanical stop with an ifm IG6214: material correction for stainless steel, the IO-Link switch point, master port, Run mode and the parameter writes." />
+    <link rel="canonical" href="https://iolinki.com/blog/stainless-part-at-conveyor-stop.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <link rel="stylesheet" href="/assets/css/site.css" />
+    <script src="/assets/js/site.js" defer></script>
+
+    <!-- BEGIN GENERATED SEO -->
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="iolinki" />
+    <meta property="og:title" content="Stainless part at a conveyor stop: IO-Link inductive | iolinki" />
+    <meta property="og:description" content="Part presence at a mechanical stop with an ifm IG6214: material correction for stainless steel, the IO-Link switch point, master port, Run mode and the parameter writes." />
+    <meta property="og:url" content="https://iolinki.com/blog/stainless-part-at-conveyor-stop.html" />
+    <meta property="og:image" content="https://iolinki.com/assets/images/og-card.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="iolinki: IO-Link C stacks, IODD editor and MCP tools" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Stainless part at a conveyor stop: IO-Link inductive | iolinki" />
+    <meta name="twitter:description" content="Part presence at a mechanical stop with an ifm IG6214: material correction for stainless steel, the IO-Link switch point, master port, Run mode and the parameter writes." />
+    <meta name="twitter:image" content="https://iolinki.com/assets/images/og-card.png" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://iolinki.com/#organization","name":"iolinki","url":"https://iolinki.com/","logo":"https://iolinki.com/favicon.svg","sameAs":["https://github.com/w1ne/iolinki","https://github.com/w1ne/iolinki-master","https://github.com/w1ne/iolinki-website"]},{"@type":"WebSite","@id":"https://iolinki.com/#website","name":"iolinki","url":"https://iolinki.com/","inLanguage":"en","publisher":{"@id":"https://iolinki.com/#organization"}},{"@type":"WebPage","@id":"https://iolinki.com/blog/stainless-part-at-conveyor-stop.html#webpage","url":"https://iolinki.com/blog/stainless-part-at-conveyor-stop.html","name":"Stainless part at a conveyor stop: IO-Link inductive | iolinki","description":"Part presence at a mechanical stop with an ifm IG6214: material correction for stainless steel, the IO-Link switch point, master port, Run mode and the parameter writes.","inLanguage":"en","isPartOf":{"@id":"https://iolinki.com/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"iolinki","item":"https://iolinki.com/"},{"@type":"ListItem","position":2,"name":"Stainless part at a conveyor stop: IO-Link inductive","item":"https://iolinki.com/blog/stainless-part-at-conveyor-stop.html"}]},{"@type":"BlogPosting","@id":"https://iolinki.com/blog/stainless-part-at-conveyor-stop.html#article","headline":"A stainless part at a conveyor stop, detected with an IO-Link inductive sensor","description":"Part presence at a mechanical stop with an ifm IG6214: material correction for stainless steel, the IO-Link switch point, master port, Run mode and the parameter writes.","datePublished":"2026-10-11","dateModified":"2026-10-11","image":"https://iolinki.com/assets/images/blog/stop-stainless-3d.webp","url":"https://iolinki.com/blog/stainless-part-at-conveyor-stop.html","mainEntityOfPage":{"@id":"https://iolinki.com/blog/stainless-part-at-conveyor-stop.html#webpage"},"inLanguage":"en","author":{"@type":"Person","name":"Andrii Shylenko"},"publisher":{"@id":"https://iolinki.com/#organization"}}]}</script>
+    <!-- END GENERATED SEO -->
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header" id="header">
+      <div class="header-inner">
+        <a class="brand" href="/index.html" aria-label="iolinki home"
+          >io<span>linki</span><span class="brand-dot" aria-hidden="true"></span
+        ></a>
+        <button
+          class="menu-button"
+          type="button"
+          aria-expanded="false"
+          aria-controls="primary-navigation"
+          hidden
+        >
+          Menu
+        </button>
+        <nav id="primary-navigation" aria-label="Primary navigation">
+          <a href="/index.html#two">Stacks</a
+          ><a href="/getting-started.html">Guides</a
+          ><a href="/hardware.html">Hardware</a
+          ><a href="/validation.html">Validation</a><a href="/faq.html">FAQ</a
+          ><a href="https://iolinki.com/docs/">Docs</a><a href="/iodd-editor.html">IODD editor</a><a href="/studio/">Station studio</a><a href="/blog/">Blog</a><a href="/purchase.html">Licensing</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="document" tabindex="-1">
+      <header>
+        <p class="eyebrow"><a href="/blog/">Blog</a> · Application</p>
+        <h1>A stainless part at a conveyor stop, detected with an IO-Link inductive sensor</h1>
+        <p>The station only clamps or picks when the part is really sitting on the stop. Here the parts are stainless, and that changes the setting.</p>
+        <p class="post-meta"><time datetime="2026-10-11">11 October 2026</time> · Andrii Shylenko</p>
+      </header>
+      <section class="wrapper style5">
+        <div class="inner guide-content">
+          <h2>The job</h2>
+          <p>A belt conveyor brings parts to a mechanical stop. A clamp, a robot or a press acts only when a part sits against the stop. One inductive sensor next to the stop tells the PLC that the part has arrived. This is one of the most common IO-Link applications in assembly lines.</p>
+          <p>Our parts are stainless steel, and the stop leaves a small gap between the part face and the sensor face. We want the output to switch when the part is within 3 mm of the sensor.</p>
+
+          <h2>The sensor</h2>
+          <p>We used the ifm IG6214, an M18 inductive sensor with IO-Link. The datasheet gives an IO-Link switch point of 1.4 to 7 mm, a measuring range of 0.75 to 7.5 mm over IO-Link, a hysteresis of 3 to 15 % of Sr and port class A. Over IO-Link it reports the distance as a process value, not only a switching bit.</p>
+          <p>The number that matters here is the correction factor. The datasheet lists steel 1, stainless steel 0.7, brass 0.5, aluminium 0.5 and copper 0.4. The switch point is set in steel terms. A stainless part has to come closer before the sensor sees the same signal.</p>
+
+          <h2>The setting, checked</h2>
+          <p>In the studio we picked <em>stainless</em> as the target material and typed 3 mm, the real distance we want at the machine. The studio divides by 0.7 and writes 4.29 mm steel-equivalent to the sensor. That is inside 1.4 to 7 mm, so the station opens with no notes.</p>
+          <p>If you ask for something the sensor cannot do, it says so. With 6 mm on stainless the studio answers: “Switching point 6 mm on stainless needs 8.57 mm steel-equivalent. IG6214 allows 1.4–7 mm, so stainless is reachable at 0.98–4.9 mm.” You find that out on the screen, not at the machine.</p>
+          <p>Output function normally open, PNP. Both are factory defaults in the IODD and both go into the commissioning file anyway, so a replaced sensor gets the same state.</p>
+          <figure class="shot">
+            <img src="/assets/images/blog/stop-stainless-3d.webp" width="1360" height="850" loading="lazy" alt="3D station: belt conveyor, mechanical stop with the IG6214 beside it, ifm AL1100 master and the settings panel with stainless selected" />
+            <figcaption>The station in 3D. The settings panel shows the material choice, the 3 mm entry and the 4.29 mm value that is written to the sensor.</figcaption>
+          </figure>
+
+          <h2>Master, port and cable</h2>
+          <p>The sensor goes to port X1 of an ifm AL1100, a 4-port PROFINET master with class A ports. It is mounted on the machine frame next to the stop, so only the fieldbus cable runs back to the cabinet. The AL1100 datasheet gives 3.6 A total sensor supply. The IG6214 draws less than 15 mA.</p>
+          <p>The cable route in the 3D model is 5.7 m. The studio adds 20 % slack and rounds up to a stock length, so the order has one 10 m M12 A-coded cable. IO-Link allows 20 m per port, and the report checks that too.</p>
+
+          <h2>Run mode</h2>
+          <p>Press Run and the conveyor moves. Parts slide onto the stop, wait there and leave. The IG6214 switches each time a part is held. The panel shows the output pin, 24 V while the part is there, and the 32-bit process data the master receives. Bit 0 is SSC1, the switching signal for our switch point, and the upper 16 bits carry the distance value.</p>
+          <figure class="shot">
+            <img src="/assets/images/blog/stop-stainless-run.webp" width="1360" height="850" loading="lazy" alt="Run mode: the IG6214 shows OUT1 switched, output pin 24 V and process data 03 39 00 01 while a part is held at the stop" />
+            <figcaption>Run mode with a part at the stop. OUT1 is switched and the last process data byte ends in 01: SSC1 is set.</figcaption>
+          </figure>
+
+          <h2>Commissioning file and report</h2>
+          <p>Export gives a commissioning file in JSON or CSV. Each port gets the device identity for validation (vendor 310, device 1344), the recommended cycle time (3.2 ms, the device minimum), data storage set to backup and restore, and the parameter writes as ISDU index, subindex and raw value:</p>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Parameter</th><th>Value</th><th>Index.sub</th><th>Raw</th><th>Type</th></tr></thead>
+              <tbody>
+                <tr><td>Switching point</td><td>4.29 mm (3 mm on stainless)</td><td><code>60.1</code></td><td><code>2152</code> (<code>08 68</code>)</td><td>IntegerT 16</td></tr>
+                <tr><td>Output function</td><td>normally open</td><td><code>61.1</code></td><td><code>0</code></td><td>UIntegerT 8</td></tr>
+                <tr><td>Switching output</td><td>PNP</td><td><code>500.0</code></td><td><code>0</code></td><td>UIntegerT 8</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>One thing to know: the IODD gives the switch point as a raw range of 400 to 3800 with no unit. The studio maps that range linearly onto the datasheet's 1.4 to 7 mm. The same line maps the process value range onto 0.74 to 7.49 mm, which matches the datasheet measuring range of 0.75 to 7.5 mm. Read the value back once at commissioning.</p>
+          <p>The station report has the same data on paper: 3D picture, wiring, cables, ports and process data layout, power budget, parameter writes, bill of materials and an installer checklist. Print it or save it as PDF.</p>
+          <figure class="shot">
+            <img src="/assets/images/blog/stop-stainless-writes.webp" width="718" height="266" loading="lazy" alt="Station report section Parameter writes for the IG6214 with index 60.1 raw 2152" />
+            <figcaption>The parameter writes in the station report.</figcaption>
+          </figure>
+
+          <h2>Why IO-Link here</h2>
+          <p>If the line also runs brass or aluminium parts, the PLC can write a new switch point to index 60.1 on a product change. With data storage on, a replacement sensor gets the setting from the master. And the distance value tells you when a stop wears or a part sits crooked, before the switching signal starts to flicker.</p>
+
+          <h2>Buy and install</h2>
+          <p>The order list is one AL1100, one IG6214 and one 10 m cable. Press Buy and install, enter your email and the plant and line, and the request comes to us. We reply with a price and an install date. No payment is taken in the studio, and nothing is written to a sensor until we commission it on site.</p>
+          <div class="station-link">
+            <p><strong>Open the station.</strong> IG6214 on stainless at 3 mm, on port X1 of an ifm AL1100. Press Run to see it switch.</p>
+            <p><a class="button primary" href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJpZm0tYWwxMTAwIiwiYXQiOlsyLjYsLTEuOF19LHsidWlkIjoiZXExIiwia2luZCI6ImVxdWlwbWVudCIsInJlZiI6ImNvbnZleW9yIiwiYXQiOlstMS41LDBdfSx7InVpZCI6ImVxMiIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJzdG9wIiwiYXQiOlszLDBdfSx7InVpZCI6ImVxMyIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJjYWJpbmV0IiwiYXQiOlstNS41LC0zLjZdfSx7InVpZCI6IkIxIiwia2luZCI6InNlbnNvciIsInJlZiI6ImlmbS1pZzYyMTQiLCJhdCI6WzQuNiwwXSwic2V0dGluZ3MiOnsic3dpdGNoX3BvaW50IjozfSwib3B0aW9ucyI6eyJvdXRwdXQiOiJub3JtYWxseSBvcGVuIiwicG9sYXJpdHkiOiJQTlAifSwidGFyZ2V0Ijoic3RhaW5sZXNzIiwibWFzdGVyIjoibWFzdGVyMSIsInBvcnQiOjF9XX0">Open this station in the studio</a></p>
+          </div>
+
+          <p>You can also ask ChatGPT for it. With the iolinki connector (<code>https://mcp.iolinki.com/mcp</code>, setup on the <a href="/iodd-mcp.html">MCP page</a>), ChatGPT calls the same engine, shows the station in the chat and gives you the same studio link with the Buy button.</p>
+
+          <h2>Sources</h2>
+          <ul class="sources">
+            <li><a href="https://doc.7-el.ru/i/ig6214-00_en-gb.pdf">ifm IG6214-00 datasheet (EN-GB, 22.09.2022)</a></li>
+            <li><a href="https://www.ifm.com/de/en/product/IG6214">ifm IG6214 product page</a></li>
+            <li><a href="https://media.ifm.com/dam/8eabb332-e850-4c1a-9579-739b7b521e54/Original/AL1100-01_EN-GB.pdf">ifm AL1100-01 datasheet</a></li>
+          </ul>
+          <p><a href="/blog/">More applications</a></p>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer" id="footer">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="/index.html" aria-label="iolinki home"
+            >io<span>linki</span></a
+          >
+          <p>IO-Link software for the firmware you build.</p>
+          <p class="seller">
+            Andrii Shylenko e.v. · Hungarian sole trader<br /><a href="mailto:andrii@shylenko.com"
+              >andrii@shylenko.com</a
+            >
+          </p>
+        </div>
+        <div>
+          <h2>Developer resources</h2>
+          <a href="https://github.com/w1ne/iolinki">Device source</a
+          ><a href="https://github.com/w1ne/iolinki-master">Master source</a
+          ><a href="/getting-started.html">Evaluation guide</a
+          ><a href="/validation.html">Validation evidence</a>
+        </div>
+        <div>
+          <h2>Licensing &amp; company</h2>
+          <a href="/purchase.html">Commercial licensing</a
+          ><a href="/terms/purchase-terms.html">Purchase terms status</a
+          ><a href="/legal.html">Seller &amp; privacy information</a
+          ><a href="https://shylenko.com">shylenko.com</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© iolinki · Engineering software</span
+        ><span
+          >Related projects: <a href="https://labwired.com">LabWired</a> ·
+          <a href="https://kernelcad.com">kernelCAD</a> ·
+          <a href="https://komatachi.com">komatachi</a></span
+        >
+      </div>
+    </footer>
+  <script src="/assets/js/analytics.js" defer></script>
+  </body>
+</html>

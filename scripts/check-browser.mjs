@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.jpg': 'image/jpeg', '.png': 'image/png' };
+const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.jpg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp' };
 const server = process.env.SITE_URL ? null : createServer(async (request, response) => {
   try {
     const pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
@@ -25,7 +25,7 @@ const origin = process.env.SITE_URL || `http://127.0.0.1:${server.address().port
 const artifactDir = resolve(root, 'artifacts/browser');
 await mkdir(artifactDir, { recursive: true });
 const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN || undefined, args: ['--no-sandbox'] });
-const routes = ['', 'getting-started.html', 'hardware.html', 'validation.html', 'faq.html', 'purchase.html', 'purchase-success.html', 'purchase-cancelled.html', 'terms/purchase-terms.html', 'legal.html', 'iodd-mcp.html'];
+const routes = ['', 'getting-started.html', 'hardware.html', 'validation.html', 'faq.html', 'purchase.html', 'purchase-success.html', 'purchase-cancelled.html', 'terms/purchase-terms.html', 'legal.html', 'iodd-mcp.html', 'blog/', 'blog/stainless-part-at-conveyor-stop.html', 'blog/pump-discharge-pressure-switch.html', 'blog/tank-level-guided-wave-radar.html', 'blog/machine-tool-coolant-flow.html', 'blog/box-detection-on-conveyor.html'];
 let checked = 0;
 try {
   for (const width of [1440, 390, 320]) {
@@ -80,7 +80,7 @@ try {
         assert.equal(await page.locator('#quote-reference').getAttribute('required'), '', label + ': approved quote is required');
 
       }
-      if (!route || route === 'purchase.html' || route === 'hardware.html') await page.screenshot({ path: resolve(artifactDir, `${width}-${route || 'home'}.png`), fullPage: true });
+      if (!route || route === 'purchase.html' || route === 'hardware.html' || route.startsWith('blog/')) await page.screenshot({ path: resolve(artifactDir, `${width}-${(route || 'home').replace(/\/$/, '/index').replace(/\//g, '-')}.png`), fullPage: true });
       assert.deepEqual(failures, [], `${label}: browser/asset errors`);
       checked++;
       console.log(`PASS ${label}`);
