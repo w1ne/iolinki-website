@@ -70,7 +70,6 @@ const S3D_MACHINES = {
     s3dBox(g, [3, 0.08, 1.4], [0, 0.82, 0], "alu");
     [-1.3, 1.3].forEach((x) => [-0.6, 0.6].forEach((z) => s3dBox(g, [0.07, 0.78, 0.07], [x, 0.39, z], "alu")));
     s3dBox(g, [0.22, 0.45, 1.2], [1.2, 1.08, 0], "yellow");
-    s3dBox(g, [0.7, 0.35, 0.7], [0.65, 1.04, 0], "part");
   },
   tank(g) {
     s3dCyl(g, 0.9, 2.0, [0, 1.35, 0], "steel", null, 40);
@@ -217,7 +216,7 @@ function mountStation3d(container, view) {
   let hovered = null;
   let framed = false;
   let live = null;
-  const moving = { leds: new Map(), belts: new Map(), tanks: new Map(), shafts: [] };
+  const moving = { leds: new Map(), belts: new Map(), tanks: new Map(), stops: new Map(), shafts: [] };
   const ledMats = { on: s3dMaterial("ledOn"), idle: s3dMaterial("ledIdle") };
 
   // Aim at the placed parts, not the empty floor.
@@ -253,6 +252,7 @@ function mountStation3d(container, view) {
     moving.leds.clear();
     moving.belts.clear();
     moving.tanks.clear();
+    moving.stops.clear();
     moving.shafts = [];
     const station = view.station;
     const fx = station.floor[0];
@@ -375,6 +375,12 @@ function mountStation3d(container, view) {
       const fill = state && state.tanks[uid] !== undefined ? state.tanks[uid] : 0.55;
       tank.mesh.scale.y = Math.max(0.02, fill);
       tank.mesh.position.y = tank.base + (tank.height * Math.max(0.02, fill)) / 2;
+    });
+    // A part rides in, waits at the stop, then is released downstream.
+    moving.stops.forEach((part, uid) => {
+      const stop = state && state.stops && state.stops[uid];
+      part.visible = !state || Boolean(stop && stop.held) || Boolean(stop && stop.slide > -1.6 && stop.slide < 0.45);
+      part.position.x = !state || !stop ? 0.65 : stop.held ? 0.65 : 0.65 + stop.slide;
     });
     moving.shafts.forEach((shaft) => {
       shaft.rotation.x = state ? state.t * 9 : 0;
@@ -576,7 +582,7 @@ function mountStation3d(container, view) {
 }
 
 // Parts that move in run mode: cartons on a belt, the water in a tank's sight
-// glass, the pump shaft.
+// glass, the part held at a stop, the pump shaft.
 function s3dMoving(item, g, moving) {
   if (item.ref === "conveyor") {
     const meshes = [0, 1].map((i) => {
@@ -590,6 +596,8 @@ function s3dMoving(item, g, moving) {
     const fill = s3dCyl(g, 0.05, 1.7, [-0.98, 1.35, 0.2], "water", null, 16);
     fill.castShadow = false;
     moving.tanks.set(item.uid, { mesh: fill, base: 0.5, height: 1.7 });
+  } else if (item.ref === "stop") {
+    moving.stops.set(item.uid, s3dBox(g, [0.7, 0.35, 0.7], [0.65, 1.04, 0], "part"));
   } else if (item.ref === "pump") {
     const fan = s3dBox(g, [0.06, 0.5, 0.08], [-0.86, 0.48, 0], "dark");
     moving.shafts.push(fan);

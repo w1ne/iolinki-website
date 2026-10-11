@@ -1,7 +1,8 @@
 // Installation requests from the station studio: keep each request, then
 // mail it to the owner. No payment is taken here.
 
-const OWNER = "andrii@shylenko.com";
+// Straight to the inbox: the shylenko.com forwarder dropped these.
+const OWNER = "shylenkoa@gmail.com";
 const FROM = "orders@kernelcad.com";
 const STUDIO = "https://iolinki.com/studio/#s=";
 const PER_HOUR = 10;
@@ -29,7 +30,7 @@ export function orderMessage(order, id) {
     "To: " + OWNER,
     "Reply-To: " + order.email,
     "Subject: " + subject,
-    "Message-ID: <" + id + "@iolinki.com>",
+    "Message-ID: <" + id + "@kernelcad.com>",
     "Date: " + new Date().toUTCString(),
     "MIME-Version: 1.0",
     "Content-Type: text/plain; charset=utf-8",

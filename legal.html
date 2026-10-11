@@ -120,16 +120,19 @@
           </p>
           <p>
             <strong>Installation requests.</strong> If you choose Buy and
-            install, iolinki.com opens an email in your own mail client with the
-            station, your email address and the plant name you entered. Personal
-            data: that email address, the plant name and anything you add.
-            Purpose: answering the request and preparing a quote and
+            install and send the form, iolinki.com sends the station, your email
+            address and the plant name you entered to the iolinki catalog service
+            on Cloudflare Workers. It stores the request and emails it to the
+            operator; if that fails, you can send it from your own mail client
+            instead. Personal data: that email address, the plant name and
+            anything you add, plus the IP address, kept for one hour to limit
+            abuse. Purpose: answering the request and preparing a quote and
             installation. Recipient: the iolinki operator
-            (andrii@shylenko.com) and the mail providers that carry the email.
-            Retention: kept while the request is handled and afterwards only as
-            long as accounting law requires. Your controls: nothing is sent
-            unless you send the email; ask for access or deletion at the address
-            below.
+            (andrii@shylenko.com), Cloudflare as host and mail carrier, and the
+            mail providers that carry the email. Retention: kept while the
+            request is handled and afterwards only as long as accounting law
+            requires. Your controls: nothing is sent until you press the button;
+            ask for access or deletion at the address below.
           </p>
           <p>
             Hosting and transport providers process request information,
