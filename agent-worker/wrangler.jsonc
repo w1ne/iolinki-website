@@ -8,7 +8,7 @@
   "preview_urls": false,
   "vars": {
     // OAuth 2.0 Web client ID from Google Cloud Console (not a secret). Keep in step with studio/agent-config.js.
-    "GOOGLE_CLIENT_ID": "",
+    "GOOGLE_CLIENT_ID": "441662829801-qshqb8l9ak0iej238v277cot55io0jvu.apps.googleusercontent.com",
     "MODEL": "deepseek-ai/DeepSeek-V4.1-Flash",
     "DAILY_USER_LIMIT": "30",
     "DAILY_GLOBAL_LIMIT": "1500"
