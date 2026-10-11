@@ -8,6 +8,7 @@
   "scripts": {
     "check:browser": "node scripts/check-browser.mjs",
     "check:docs-browser": "node scripts/check-docs-browser.mjs",
+    "check:embed": "node scripts/check-studio-embed.mjs",
     "check:iodd": "node scripts/check-iodd-editor.mjs",
     "test:iodd": "node --test tests/iodd/*.test.mjs",
     "iodd": "node tools/iodd/cli.mjs",

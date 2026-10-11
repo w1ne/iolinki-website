@@ -208,3 +208,17 @@ svg.wiring { font-family: inherit; }
 .ports-table td.pd .on { background: #ffd23a; border-radius: 4px; padding: 0 4px; }
 
 .menu-list button { white-space: nowrap; }
+
+/* ?embed=1: one station inside another page. */
+body.embed { display: flex; flex-direction: column; height: 100%; background: var(--panel); }
+body.embed .topbar, body.embed .library, body.embed .inspector, body.embed .notes-list, body.embed #empty { display: none !important; }
+body.embed .app { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; padding: 8px; min-height: 0; }
+body.embed .stage-wrap { order: 0; }
+body.embed .stage { min-height: 0; }
+body.embed .stage-foot { gap: 10px; }
+body.embed .open-full { margin-left: auto; font-size: 12.5px; font-weight: 600; white-space: nowrap; text-decoration: none; }
+body.embed .open-full::after { content: " ↗"; }
+@media (max-width: 760px) {
+  body.embed .view-tools { display: flex; }
+  body.embed #stage-hint { display: none; }
+}

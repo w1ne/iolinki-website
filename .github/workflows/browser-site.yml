@@ -22,6 +22,8 @@ jobs:
         run: npm run check:browser
       - name: Check rendered docs, version navigation and local search
         run: npm run check:docs-browser
+      - name: Check the studio embed mode and the blog embeds
+        run: npm run check:embed
       - name: Upload browser screenshots
         if: always()
         uses: actions/upload-artifact@v4

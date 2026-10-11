@@ -36,6 +36,9 @@ function start() {
     return;
   }
   const link = location.hash;
+  if (EMBED) {
+    startEmbed();
+  }
   view.station = newStation();
   view.onSelect = () => drawInspector();
   view.onMove = () => changed();
@@ -67,6 +70,31 @@ function start() {
       showReport(true);
     }
   });
+}
+
+// ?embed=1 shows one station inside another page (a blog post, a README):
+// the 3D view, wiring, ports and Run, without the library, the inspector or
+// editing. Ctrl+scroll zooms so the host page still scrolls.
+const EMBED = new URLSearchParams(location.search).get("embed") === "1";
+
+function startEmbed() {
+  document.body.classList.add("embed");
+  view.readOnly = true;
+  view.theme = "card";
+  view.wheelNeedsModifier = true;
+  $("#stage-hint").textContent = "Drag to orbit · Ctrl+scroll to zoom · Run shows every sensor switching";
+  const open = document.createElement("a");
+  open.className = "open-full";
+  open.id = "open-full";
+  open.target = "_blank";
+  open.rel = "noopener";
+  open.textContent = "Open in the studio";
+  const sync = () => {
+    open.href = location.pathname + location.hash;
+  };
+  sync();
+  window.addEventListener("hashchange", sync);
+  $("#stage-hint").after(open);
 }
 
 function linkedIoddRefs(hash) {
@@ -570,7 +598,9 @@ function setRun(on) {
   run.on = on;
   $("#run").classList.toggle("on", on);
   $("#run-label").textContent = on ? "Stop" : "Run";
-  $("#stage-hint").textContent = on ? "Running: the machines move and each sensor switches on its own settings. Click a sensor to drive it." : "Drag parts to move · drag the floor to orbit · scroll to zoom · Del removes · Ctrl+Z undoes · Space runs";
+  $("#stage-hint").textContent = EMBED
+    ? (on ? "Running: each sensor switches on its own settings. Ports shows the live process data." : "Drag to orbit · Ctrl+scroll to zoom · Run shows every sensor switching")
+    : on ? "Running: the machines move and each sensor switches on its own settings. Click a sensor to drive it." : "Drag parts to move · drag the floor to orbit · scroll to zoom · Del removes · Ctrl+Z undoes · Space runs";
   const s3d = $("#scene").s3d;
   if (on) {
     run.sim = simCreate();
@@ -886,6 +916,9 @@ function stepHistory(from, to) {
 }
 
 document.addEventListener("keydown", (event) => {
+  if (EMBED && event.key !== " ") {
+    return;
+  }
   const typing = /^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement && document.activeElement.tagName);
   const mod = event.ctrlKey || event.metaKey;
   if (mod && event.key.toLowerCase() === "z" && !typing) {

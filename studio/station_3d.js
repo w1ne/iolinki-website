@@ -533,6 +533,10 @@ function mountStation3d(container, view) {
     drag = null;
   });
   el.addEventListener("wheel", (event) => {
+    // Embedded in a page, plain scrolling must scroll the page.
+    if (view.wheelNeedsModifier && !event.ctrlKey && !event.metaKey) {
+      return;
+    }
     event.preventDefault();
     orbit.radius = Math.max(6, Math.min(32, orbit.radius * (1 + Math.sign(event.deltaY) * 0.08)));
     render();
