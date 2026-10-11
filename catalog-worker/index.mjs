@@ -1,4 +1,5 @@
 import { partFromIoddZip, CONVERTER_VERSION } from "../tools/iodd/iodd-part.mjs";
+import { handleOrder } from "./order.mjs";
 
 const SOURCE = "https://ioddfinder.io-link.com";
 // Converted parts are immutable for a given IODD and converter version.
@@ -12,7 +13,8 @@ function cors(request) {
         ? origin
         : "https://iolinki.com",
     Vary: "Origin",
-    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
   };
 }
 function error(request, status, message) {
@@ -131,9 +133,12 @@ export async function handleCatalogRequest(
   request,
   fetcher = fetch,
   cache = defaultCache(),
+  env = {},
 ) {
   if (request.method === "OPTIONS")
     return new Response(null, { status: 204, headers: cors(request) });
+  if (request.method === "POST" && new URL(request.url).pathname === "/order")
+    return handleOrder(request, env, cors(request));
   if (request.method !== "GET")
     return error(request, 405, "Use GET for public catalog reads.");
   const url = new URL(request.url);
@@ -214,7 +219,7 @@ export async function handleCatalogRequest(
   }
 }
 export default {
-  fetch(request) {
-    return handleCatalogRequest(request);
+  fetch(request, env) {
+    return handleCatalogRequest(request, fetch, defaultCache(), env);
   },
 };

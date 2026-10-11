@@ -130,6 +130,7 @@ button.ghost:hover { background: var(--soft); }
 .buy button.primary { width: 100%; padding: 10px; }
 .buy .result { font-size: 13px; margin-top: 8px; }
 .no { color: #b42318; }
+.buy .ok { color: #1a7f37; }
 
 .scroll { overflow-x: auto; }
 .ports-table { border-collapse: collapse; width: 100%; font-size: 13px; }

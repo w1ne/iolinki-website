@@ -74,12 +74,32 @@ function simNearest(station, item, refs, reach) {
 // nearest conveyor passing the sensor, the part held at a stop, or a timed
 // pulse when the sensor stands alone.
 function simPresent(station, item, t, boxes) {
+  const stop = simNearest(station, item, ["stop"], 3);
+  if (stop) {
+    return simStop(stop, t).held;
+  }
   const belt = simNearest(station, item, ["conveyor"], 2.5);
   if (belt) {
     return boxes.some((box) => box.belt === belt.uid && Math.abs(box.at[0] - item.at[0]) < 0.45);
   }
   const phase = t / 6 + simPhase(item.uid);
-  return (phase % 1) < (simNearest(station, item, ["stop"], 3) ? 0.6 : 0.35);
+  return (phase % 1) < 0.35;
+}
+
+// A stop cycle: the part slides in, is held, then slides out downstream.
+const STOP_CYCLE_S = 6;
+function simStop(stop, t) {
+  const p = ((t / STOP_CYCLE_S + simPhase(stop.uid)) % 1 + 1) % 1;
+  if (p < 0.15) {
+    return { held: false, slide: -1.6 + (1.6 * p) / 0.15 };
+  }
+  if (p < 0.75) {
+    return { held: true, slide: 0 };
+  }
+  if (p < 0.9) {
+    return { held: false, slide: (0.45 * (p - 0.75)) / 0.15 };
+  }
+  return { held: false, slide: -9 };
 }
 
 function simSwitchPoints(def, item) {
@@ -210,7 +230,11 @@ function simStep(station, library, sim, dt) {
   if (sample) {
     sim.last = sim.t;
   }
-  return { t: sim.t, boxes: boxes, readings: readings, tanks: simTanks(station, readings) };
+  const stops = {};
+  station.items.filter((item) => item.ref === "stop").forEach((stop) => {
+    stops[stop.uid] = simStop(stop, sim.t);
+  });
+  return { t: sim.t, boxes: boxes, readings: readings, tanks: simTanks(station, readings), stops: stops };
 }
 
 // Fill fraction for each tank: from a level sensor on it, else a slow cycle.

@@ -4,5 +4,9 @@
   "account_id": "53f45abe9550f62856af4475880e0a77",
   "compatibility_date": "2026-10-02",
   "workers_dev": true,
-  "preview_urls": false
+  "preview_urls": false,
+  // Installation requests are kept here before they are mailed.
+  "kv_namespaces": [{ "binding": "ORDERS", "id": "ad53db72c5f14bb4ae4f37eba26e74b3" }],
+  // Mail to the owner through Cloudflare Email Routing (kernelcad.com zone, verified destination).
+  "send_email": [{ "name": "MAIL", "destination_address": "shylenkoa@gmail.com" }]
 }
