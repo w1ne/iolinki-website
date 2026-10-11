@@ -1,0 +1,7 @@
+master,port,mode,tag,part,vendor_id,device_id,validation,data_storage,cycle_min_ms,cycle_recommended_ms,pd_in_bytes,pd_out_bytes,parameter,kind,value,unit,isdu_index,isdu_subindex,datatype,raw,raw_hex,status
+master1,X1,iolink,B1,IG6214,310,1344,type_compatible,backup_restore,3.2,3.2,4,0,Switching point,setting,4.2857,mm,60,1,IntegerT,2152,08 68,ok
+master1,X1,iolink,B1,IG6214,310,1344,type_compatible,backup_restore,3.2,3.2,4,0,Output function,option,normally open,,61,1,UIntegerT,0,00,ok
+master1,X1,iolink,B1,IG6214,310,1344,type_compatible,backup_restore,3.2,3.2,4,0,Switching output,option,PNP,,500,0,UIntegerT,0,00,ok
+master1,X2,deactivated,,,,,,,,,,,,,,,,,,,,
+master1,X3,deactivated,,,,,,,,,,,,,,,,,,,,
+master1,X4,deactivated,,,,,,,,,,,,,,,,,,,,

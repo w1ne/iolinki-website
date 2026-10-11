@@ -10,6 +10,7 @@
 
     <link rel="stylesheet" href="/assets/css/site.css" />
     <script src="/assets/js/site.js" defer></script>
+    <script src="/assets/js/blog.js" defer></script>
 
     <!-- BEGIN GENERATED SEO -->
     <meta property="og:type" content="article" />
@@ -25,7 +26,7 @@
     <meta name="twitter:title" content="Coolant flow monitoring on a machine tool | iolinki" />
     <meta name="twitter:description" content="Coolant flow monitoring with an ifm SA5000 in relative mode: switch and reset points in percent, power-on delay, a Beckhoff EP6224 EtherCAT master, Run mode and the ISDU writes." />
     <meta name="twitter:image" content="https://iolinki.com/assets/images/og-card.png" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://iolinki.com/#organization","name":"iolinki","url":"https://iolinki.com/","logo":"https://iolinki.com/favicon.svg","sameAs":["https://github.com/w1ne/iolinki","https://github.com/w1ne/iolinki-master","https://github.com/w1ne/iolinki-website"]},{"@type":"WebSite","@id":"https://iolinki.com/#website","name":"iolinki","url":"https://iolinki.com/","inLanguage":"en","publisher":{"@id":"https://iolinki.com/#organization"}},{"@type":"WebPage","@id":"https://iolinki.com/blog/machine-tool-coolant-flow.html#webpage","url":"https://iolinki.com/blog/machine-tool-coolant-flow.html","name":"Coolant flow monitoring on a machine tool | iolinki","description":"Coolant flow monitoring with an ifm SA5000 in relative mode: switch and reset points in percent, power-on delay, a Beckhoff EP6224 EtherCAT master, Run mode and the ISDU writes.","inLanguage":"en","isPartOf":{"@id":"https://iolinki.com/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"iolinki","item":"https://iolinki.com/"},{"@type":"ListItem","position":2,"name":"Coolant flow monitoring on a machine tool","item":"https://iolinki.com/blog/machine-tool-coolant-flow.html"}]},{"@type":"BlogPosting","@id":"https://iolinki.com/blog/machine-tool-coolant-flow.html#article","headline":"Coolant flow on a machine tool: teach the normal flow, switch on a percentage","description":"Coolant flow monitoring with an ifm SA5000 in relative mode: switch and reset points in percent, power-on delay, a Beckhoff EP6224 EtherCAT master, Run mode and the ISDU writes.","datePublished":"2026-10-11","dateModified":"2026-10-11","image":"https://iolinki.com/assets/images/blog/coolant-flow-3d.webp","url":"https://iolinki.com/blog/machine-tool-coolant-flow.html","mainEntityOfPage":{"@id":"https://iolinki.com/blog/machine-tool-coolant-flow.html#webpage"},"inLanguage":"en","author":{"@type":"Person","name":"Andrii Shylenko"},"publisher":{"@id":"https://iolinki.com/#organization"}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://iolinki.com/#organization","name":"iolinki","url":"https://iolinki.com/","logo":"https://iolinki.com/favicon.svg","sameAs":["https://github.com/w1ne/iolinki","https://github.com/w1ne/iolinki-master","https://github.com/w1ne/iolinki-website"]},{"@type":"WebSite","@id":"https://iolinki.com/#website","name":"iolinki","url":"https://iolinki.com/","inLanguage":"en","publisher":{"@id":"https://iolinki.com/#organization"}},{"@type":"WebPage","@id":"https://iolinki.com/blog/machine-tool-coolant-flow.html#webpage","url":"https://iolinki.com/blog/machine-tool-coolant-flow.html","name":"Coolant flow monitoring on a machine tool | iolinki","description":"Coolant flow monitoring with an ifm SA5000 in relative mode: switch and reset points in percent, power-on delay, a Beckhoff EP6224 EtherCAT master, Run mode and the ISDU writes.","inLanguage":"en","isPartOf":{"@id":"https://iolinki.com/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"iolinki","item":"https://iolinki.com/"},{"@type":"ListItem","position":2,"name":"Coolant flow monitoring on a machine tool","item":"https://iolinki.com/blog/machine-tool-coolant-flow.html"}]},{"@type":"BlogPosting","@id":"https://iolinki.com/blog/machine-tool-coolant-flow.html#article","headline":"Coolant flow on a machine tool: teach the normal flow, switch on a percentage","description":"Coolant flow monitoring with an ifm SA5000 in relative mode: switch and reset points in percent, power-on delay, a Beckhoff EP6224 EtherCAT master, Run mode and the ISDU writes.","datePublished":"2026-10-11","dateModified":"2026-10-11","image":"https://iolinki.com/assets/images/blog/coolant-flow-hero.webp","url":"https://iolinki.com/blog/machine-tool-coolant-flow.html","mainEntityOfPage":{"@id":"https://iolinki.com/blog/machine-tool-coolant-flow.html#webpage"},"inLanguage":"en","author":{"@type":"Person","name":"Andrii Shylenko"},"publisher":{"@id":"https://iolinki.com/#organization"}}]}</script>
     <!-- END GENERATED SEO -->
   </head>
   <body>
@@ -53,71 +54,86 @@
         </nav>
       </div>
     </header>
-    <main id="main" class="document" tabindex="-1">
+    <main id="main" class="document post" tabindex="-1">
       <header>
         <p class="eyebrow"><a href="/blog/">Blog</a> · Application</p>
-        <h1>Coolant flow on a machine tool: teach the normal flow, switch on a percentage</h1>
-        <p>If the coolant stops, the tool and the part pay for it within seconds. A flow sensor in the coolant line stops the cycle before that happens and reports the coolant temperature too.</p>
+        <h1>Coolant flow on a machine tool</h1>
+        <p>Stop the cycle before the tool runs dry, and read the coolant temperature from the same sensor.</p>
         <p class="post-meta"><time datetime="2026-10-11">11 October 2026</time> · Andrii Shylenko</p>
       </header>
       <section class="wrapper style5">
         <div class="inner guide-content">
-          <h2>The job</h2>
-          <p>A machine tool pumps coolant to the cutting zone. A clogged filter, a kinked hose or a worn pump reduces the flow without any alarm from the pump itself. We want the machine to know that coolant really flows, and we want the coolant temperature in the same device.</p>
-
-          <h2>The sensor</h2>
-          <p>We used the ifm SA5000, a calorimetric flow sensor with a 45 mm probe and an M18 x 1.5 process connection. The datasheet: liquids 0.04 to 3 m/s, media water, glycol solutions, air and oils, medium temperature −20 to 90 °C, pressure rating 100 bar. It also measures the medium temperature, −20 to 90 °C with 0.2 °C resolution.</p>
-          <p>Coolant emulsion is not on the media list. For that case ifm recommends relative mode: you run the machine at its normal flow and teach it, and the sensor then shows flow as 0 to 100 % of the taught high flow. Relative mode is the factory setting, device ID 533 in the datasheet.</p>
-
-          <h2>The setting, checked</h2>
-          <p>We want “flow OK” while the flow is at 60 % of normal or more, and we want it to drop at 50 %. The IODD allows SP1 from 5 to 100 % and rP1 from 0 to 96 %, so 60 and 50 fit, and rP1 is below SP1.</p>
-          <p>Two datasheet numbers belong in the PLC program, not in the sensor. The power-on delay is 10 s, so ignore the flow signal for the first 10 s after the sensor gets power. The response time for water is 0.5 s (glycol 0.8 s, oil 1.8 s). A flow loss reaches the PLC that much later.</p>
-          <figure class="shot">
-            <img src="/assets/images/blog/coolant-flow-3d.webp" width="1360" height="850" loading="lazy" alt="3D station: pump and pipe run with the SA5000 in the line, Beckhoff EP6224-2022 master and flow SP1 60 percent and rP1 50 percent settings" />
-            <figcaption>The SA5000 in the coolant line on port X1 of a Beckhoff EP6224-2022.</figcaption>
+          <figure class="station-embed" data-station-embed="/studio/?embed=1#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJiZWNraG9mZi1lcDYyMjQtMjAyMiIsImF0IjpbMC4yLDJdfSx7InVpZCI6ImVxMSIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJwdW1wIiwiYXQiOlstMiwwXX0seyJ1aWQiOiJlcTIiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoicGlwZSIsImF0IjpbMiwwXX0seyJ1aWQiOiJlcTMiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoiY2FiaW5ldCIsImF0IjpbLTMuMiwtMi45XX0seyJ1aWQiOiJGMSIsImtpbmQiOiJzZW5zb3IiLCJyZWYiOiJpZm0tc2E1MDAwIiwiYXQiOlsyLjUsMC42XSwic2V0dGluZ3MiOnsiZmxvd19zcDEiOjYwLCJmbG93X3JwMSI6NTB9LCJvcHRpb25zIjp7Im1lZGl1bSI6InJlbGF0aXZlIn0sIm1hc3RlciI6Im1hc3RlcjEiLCJwb3J0IjoxfV19">
+            <div class="embed-frame">
+              <img src="/assets/images/blog/coolant-flow-hero.webp" width="1276" height="659" alt="3D station: coolant pump and pipe with the SA5000 at 82 percent ON, Beckhoff EP6224-2022 master with its cable, control cabinet" />
+              <button type="button" class="embed-play">Turn it and press Run</button>
+            </div>
+            <figcaption>Coolant pump, pipe, SA5000 in the line, Beckhoff EP6224-2022 box. Press Run and watch the flow switch. <a href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJiZWNraG9mZi1lcDYyMjQtMjAyMiIsImF0IjpbMC4yLDJdfSx7InVpZCI6ImVxMSIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJwdW1wIiwiYXQiOlstMiwwXX0seyJ1aWQiOiJlcTIiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoicGlwZSIsImF0IjpbMiwwXX0seyJ1aWQiOiJlcTMiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoiY2FiaW5ldCIsImF0IjpbLTMuMiwtMi45XX0seyJ1aWQiOiJGMSIsImtpbmQiOiJzZW5zb3IiLCJyZWYiOiJpZm0tc2E1MDAwIiwiYXQiOlsyLjUsMC42XSwic2V0dGluZ3MiOnsiZmxvd19zcDEiOjYwLCJmbG93X3JwMSI6NTB9LCJvcHRpb25zIjp7Im1lZGl1bSI6InJlbGF0aXZlIn0sIm1hc3RlciI6Im1hc3RlcjEiLCJwb3J0IjoxfV19">Open it in the studio</a>.</figcaption>
           </figure>
+          <h2>The problem</h2>
+          <p>A clogged filter, a kinked hose or a worn pump cuts the coolant flow, and the pump itself raises no alarm. The machine keeps cutting, and the tool and the part pay for it within seconds.</p>
 
-          <h2>Master, port and cable</h2>
-          <p>This machine's control runs EtherCAT, so we used a Beckhoff EP6224-2022, a 4-port IO-Link box. Beckhoff gives 1.4 A sensor supply per port and 4 A for all four. The SA5000 draws less than 100 mA and needs a class A port. The route is 6.3 m, so the order has a 10 m M12 cable.</p>
-          <p>The datasheet accuracy figure assumes 1.5 m of straight pipe before the sensor in a DN25 line. In relative mode you teach in place, so the exact number matters less, but keep the sensor away from bends and valves where you can.</p>
-
+          <h2>The station</h2>
+          <ul class="facts">
+            <li><b>Sensor</b> ifm SA5000, calorimetric flow and temperature, 45 mm probe, M18 x 1.5, port class A</li>
+            <li><b>Master</b> Beckhoff EP6224-2022, 4 ports, EtherCAT. 1.4 A per port, 4 A total</li>
+            <li><b>Port</b> X1, 6.4 m route, 10 m cable</li>
+          </ul>
+          <div class="shot-pair">
           <figure class="shot">
-            <img src="/assets/images/blog/coolant-flow-ports.webp" width="706" height="188" loading="lazy" alt="Ports tab of the station with the live process data of port X1" />
-            <figcaption>The Ports tab: flow, temperature and both outputs in 32 bits of process data.</figcaption>
+            <a href="/assets/images/blog/coolant-flow-wiring.webp"><img src="/assets/images/blog/coolant-flow-wiring.webp" width="608" height="300" alt="Wiring: the master with the sensor on port X1 and the free ports" loading="lazy" /></a>
+            <figcaption>Wiring: SA5000 on X1 of the EP6224.</figcaption>
           </figure>
-
-          <h2>Run mode</h2>
-          <p>Run mode varies the flow. OUT1 switches on above 60 % and drops at 50 %. The 32-bit process data carries the flow in bits 16 to 31 in %, the temperature in bits 2 to 15 at 0.1 °C per count, and OUT2 and OUT1 in bits 1 and 0. In the screenshot the master reads <code>00 4B 03 71</code>: flow 0x004B = 75 %, temperature 0x0371 shifted right by two = 220, that is 22.0 °C, and OUT1 on. The simulated temperature is a fixed room value; on the machine you see your coolant.</p>
           <figure class="shot">
-            <img src="/assets/images/blog/coolant-flow-run.webp" width="1360" height="850" loading="lazy" alt="Run mode: SA5000 at about 75 percent flow with OUT1 switched and process data 00 4B 03 71" />
-            <figcaption>Run mode: flow at 75 % of the taught value, OUT1 switched, temperature in the same process data.</figcaption>
+            <a href="/assets/images/blog/coolant-flow-ports.webp"><img src="/assets/images/blog/coolant-flow-ports.webp" width="786" height="188" alt="Port table with live value, process data layout, cycle time and settings" loading="lazy" /></a>
+            <figcaption>Ports: flow in bits 16 to 31 in %, temperature in bits 2 to 15 at 0.1 °C, OUT2 and OUT1 in bits 1 and 0.</figcaption>
           </figure>
+          </div>
 
-          <h2>Commissioning file</h2>
-          <div class="table-wrapper">
+          <h2>The settings that matter</h2>
+          <div class="table-wrapper settings-table">
             <table>
-              <thead><tr><th>Parameter</th><th>Value</th><th>Index.sub</th><th>Raw</th><th>Type</th></tr></thead>
+              <thead><tr><th>Setting</th><th>Value</th><th>Why</th><th>Datasheet / IODD</th></tr></thead>
               <tbody>
-                <tr><td>Flow switch point SP1</td><td>60 %</td><td><code>583.0</code></td><td><code>60</code> (<code>00 3C</code>)</td><td>IntegerT 16</td></tr>
-                <tr><td>Flow reset point rP1</td><td>50 %</td><td><code>584.0</code></td><td><code>50</code> (<code>00 32</code>)</td><td>IntegerT 16</td></tr>
-                <tr><td>Operating mode</td><td>relative</td><td>not filed</td><td>-</td><td>-</td></tr>
+                <tr><td data-label="Setting">Operating mode</td><td data-label="Value"><strong>relative (factory)</strong></td><td data-label="Why">Emulsion is not on the media list; teach the normal flow on the machine, then flow reads 0 to 100 %</td><td data-label="Datasheet / IODD">Media: water, glycol, air, oils. Relative mode is DeviceID 533</td></tr>
+                <tr><td data-label="Setting">Switch point SP1</td><td data-label="Value"><strong>60 %</strong></td><td data-label="Why">“Flow OK” from 60 % of normal flow</td><td data-label="Datasheet / IODD">SP1 5 to 100 % (IODD)</td></tr>
+                <tr><td data-label="Setting">Reset point rP1</td><td data-label="Value"><strong>50 %</strong></td><td data-label="Why">Drops at half the normal flow</td><td data-label="Datasheet / IODD">rP1 0 to 96 % (IODD)</td></tr>
+                <tr><td data-label="Setting">In the PLC</td><td data-label="Value"><strong>10 s, then 0.5 s</strong></td><td data-label="Why">Ignore the signal for 10 s after power-on. A flow loss arrives 0.5 s later (water)</td><td data-label="Datasheet / IODD">Power-on delay 10 s; response 0.5 s water, 0.8 s glycol, 1.8 s oil</td></tr>
               </tbody>
             </table>
           </div>
-          <p>The report flags the operating mode as a data gap: the studio has no ISDU index for it. Relative is the factory setting, so a new sensor needs no write. If someone changed it, set it back on the sensor. The teach of the normal flow is done on the running machine at commissioning; the commissioning file cannot do that part.</p>
+          <p>The studio has no ISDU index for the operating mode, so the report lists it as a data gap. Relative is the factory setting, so a new sensor needs no write. The teach is done on the running machine.</p>
+
+          <h2>Run it</h2>
           <figure class="shot">
-            <img src="/assets/images/blog/coolant-flow-writes.webp" width="718" height="349" loading="lazy" alt="Station report section Parameter writes for the SA5000 with the operating mode listed as a data gap" />
-            <figcaption>Parameter writes and the data gap note in the station report.</figcaption>
+            <a href="/assets/images/blog/coolant-flow-run.webp"><img src="/assets/images/blog/coolant-flow-run.webp" width="1136" height="652" alt="Run mode: SA5000 at 74.8 percent, OUT1 switched, process data 00 4B 03 71" loading="lazy" /></a>
+            <figcaption>Flow at 74.8 % of the taught value, OUT1 on. Process data <code>00 4B 03 71</code>: flow 0x004B is 75 %, temperature 0x0371 shifted right by two is 220, that is 22.0 °C (a fixed room value in the simulation), and bit 0 is OUT1.</figcaption>
           </figure>
 
-          <h2>Buy and install</h2>
-          <p>The order is the EP6224-2022, the SA5000 and a 10 m cable. The station report adds wiring, ports, power and the installer checklist. Buy and install sends the request to us, and we reply with a price and an install date. We do the teach on site. No payment is taken in the studio.</p>
-          <div class="station-link">
-            <p><strong>Open the station.</strong> SA5000 in relative mode, SP1 60 % and rP1 50 %, on port X1 of a Beckhoff EP6224-2022.</p>
-            <p><a class="button primary" href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJiZWNraG9mZi1lcDYyMjQtMjAyMiIsImF0IjpbMC41LC0xLjhdfSx7InVpZCI6ImVxMSIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJwdW1wIiwiYXQiOlstMiwwXX0seyJ1aWQiOiJlcTIiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoicGlwZSIsImF0IjpbMiwwXX0seyJ1aWQiOiJlcTMiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoiY2FiaW5ldCIsImF0IjpbLTUuNSwtMy42XX0seyJ1aWQiOiJGMSIsImtpbmQiOiJzZW5zb3IiLCJyZWYiOiJpZm0tc2E1MDAwIiwiYXQiOlsyLjUsMC42XSwic2V0dGluZ3MiOnsiZmxvd19zcDEiOjYwLCJmbG93X3JwMSI6NTB9LCJvcHRpb25zIjp7Im1lZGl1bSI6InJlbGF0aXZlIn0sIm1hc3RlciI6Im1hc3RlcjEiLCJwb3J0IjoxfV19">Open this station in the studio</a></p>
-          </div>
-
-          <p>You can also ask ChatGPT for it. With the iolinki connector (<code>https://mcp.iolinki.com/mcp</code>, setup on the <a href="/iodd-mcp.html">MCP page</a>), ChatGPT calls the same engine, shows the station in the chat and gives you the same studio link with the Buy button.</p>
+          <h2>What you get</h2>
+          <p>The commissioning file has every port: validation IDs, cycle time, data storage, and each parameter as ISDU index, subindex and raw value. This is port X1 from the real file, trimmed to the fields that matter:</p>
+          <pre><code>{
+  &quot;port&quot;: 1, &quot;mode&quot;: &quot;iolink&quot;, &quot;tag&quot;: &quot;F1&quot;,
+  &quot;device&quot;: {
+    &quot;part&quot;: &quot;SA5000&quot;, &quot;vendor_id&quot;: 310, &quot;device_id&quot;: 533,
+    &quot;validation&quot;: &quot;type_compatible&quot;, &quot;data_storage&quot;: &quot;backup_restore&quot;,
+    &quot;cycle_time_ms&quot;: {&quot;device_min&quot;: 3, &quot;recommended&quot;: 3},
+    &quot;parameters&quot;: [
+      {&quot;name&quot;: &quot;Flow switch point SP1&quot;, &quot;value&quot;: 60, &quot;unit&quot;: &quot;%&quot;, &quot;index&quot;: 583, &quot;subindex&quot;: 0, &quot;raw&quot;: 60, &quot;raw_hex&quot;: &quot;00 3C&quot;},
+      {&quot;name&quot;: &quot;Flow reset point rP1&quot;, &quot;value&quot;: 50, &quot;unit&quot;: &quot;%&quot;, &quot;index&quot;: 584, &quot;subindex&quot;: 0, &quot;raw&quot;: 50, &quot;raw_hex&quot;: &quot;00 32&quot;},
+      {&quot;name&quot;: &quot;Operating mode&quot;, &quot;value&quot;: &quot;relative&quot;, &quot;status&quot;: &quot;no_index&quot;}
+    ]
+  }
+}
+</code></pre>
+          <p class="downloads">Download: <a href="/assets/blog/coolant-flow/iolink-station-commissioning.json" download>commissioning file (JSON)</a> · <a href="/assets/blog/coolant-flow/iolink-station-commissioning.csv" download>CSV</a> · <a href="/assets/blog/coolant-flow/iolink-station-report.pdf">station report (PDF)</a></p>
+          <figure class="shot wide">
+            <a href="/assets/images/blog/coolant-flow-report.webp"><img src="/assets/images/blog/coolant-flow-report.webp" width="1272" height="409" alt="Three pages of the PDF station report: cover with the 3D layout, ports and process data, parameter writes" loading="lazy" /></a>
+            <figcaption>The station report, printed from the studio: cover with the 3D layout, ports and process data, and the parameter writes. Two more pages have the bill of materials and the installer checklist.</figcaption>
+          </figure>
+          <p><strong>Buy and install.</strong> One button in the studio sends the station to us. We reply with a price and an install date, buy the parts, mount and wire them, and write the settings on site. No payment is taken in the studio.</p>
+          <p><a class="button primary" href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJiZWNraG9mZi1lcDYyMjQtMjAyMiIsImF0IjpbMC4yLDJdfSx7InVpZCI6ImVxMSIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJwdW1wIiwiYXQiOlstMiwwXX0seyJ1aWQiOiJlcTIiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoicGlwZSIsImF0IjpbMiwwXX0seyJ1aWQiOiJlcTMiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoiY2FiaW5ldCIsImF0IjpbLTMuMiwtMi45XX0seyJ1aWQiOiJGMSIsImtpbmQiOiJzZW5zb3IiLCJyZWYiOiJpZm0tc2E1MDAwIiwiYXQiOlsyLjUsMC42XSwic2V0dGluZ3MiOnsiZmxvd19zcDEiOjYwLCJmbG93X3JwMSI6NTB9LCJvcHRpb25zIjp7Im1lZGl1bSI6InJlbGF0aXZlIn0sIm1hc3RlciI6Im1hc3RlcjEiLCJwb3J0IjoxfV19">Open this station in the studio</a></p>
+          <p class="muted-note">The same station comes out of ChatGPT with the iolinki connector (<code>https://mcp.iolinki.com/mcp</code>, setup on the <a href="/iodd-mcp.html">MCP page</a>): describe the job and it builds, checks and shows the station in the chat.</p>
 
           <h2>Sources</h2>
           <ul class="sources">

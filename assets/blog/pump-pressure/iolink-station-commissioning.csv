@@ -1,0 +1,7 @@
+master,port,mode,tag,part,vendor_id,device_id,validation,data_storage,cycle_min_ms,cycle_recommended_ms,pd_in_bytes,pd_out_bytes,parameter,kind,value,unit,isdu_index,isdu_subindex,datatype,raw,raw_hex,status
+master1,X1,iolink,P1,PN7092,310,401,type_compatible,backup_restore,2.3,2.3,2,0,Set point SP1,setting,40,bar,583,0,IntegerT,400,01 90,ok
+master1,X1,iolink,P1,PN7092,310,401,type_compatible,backup_restore,2.3,2.3,2,0,Reset point rP1,setting,37,bar,584,0,IntegerT,370,01 72,ok
+master1,X1,iolink,P1,PN7092,310,401,type_compatible,backup_restore,2.3,2.3,2,0,Output function,option,normally open,,580,0,UIntegerT,3,03,ok
+master1,X2,deactivated,,,,,,,,,,,,,,,,,,,,
+master1,X3,deactivated,,,,,,,,,,,,,,,,,,,,
+master1,X4,deactivated,,,,,,,,,,,,,,,,,,,,

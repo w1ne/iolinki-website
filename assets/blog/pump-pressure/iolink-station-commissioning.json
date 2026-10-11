@@ -1,0 +1,155 @@
+{
+  "schema": "iolinki.commissioning",
+  "version": 1,
+  "generated_at": "2026-10-11T00:00:00Z",
+  "generated_by": "iolinki station studio",
+  "station": {
+    "title": "IO-Link station",
+    "link": "https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJzaWVtZW5zLTZlczcxNDgtNmphMDAtMGFiMCIsImF0IjpbLTAuNiwyXX0seyJ1aWQiOiJlcTEiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoicHVtcCIsImF0IjpbLTIsMF19LHsidWlkIjoiZXEyIiwia2luZCI6ImVxdWlwbWVudCIsInJlZiI6InBpcGUiLCJhdCI6WzIsMF19LHsidWlkIjoiZXEzIiwia2luZCI6ImVxdWlwbWVudCIsInJlZiI6ImNhYmluZXQiLCJhdCI6Wy0zLjIsLTIuOV19LHsidWlkIjoiUDEiLCJraW5kIjoic2Vuc29yIiwicmVmIjoiaWZtLXBuNzA5MiIsImF0IjpbMSwwLjZdLCJzZXR0aW5ncyI6eyJzcDEiOjQwLCJycDEiOjM3fSwib3B0aW9ucyI6eyJvdXRwdXQiOiJub3JtYWxseSBvcGVuIn0sIm1hc3RlciI6Im1hc3RlcjEiLCJwb3J0IjoxfV19"
+  },
+  "masters": [
+    {
+      "uid": "master1",
+      "part": "SIMATIC ET 200eco PN 4 IO-Link (6ES7148-6JA00-0AB0)",
+      "vendor": "Siemens",
+      "vendor_id": 42,
+      "fieldbus": "PROFINET IO (IRT, integrated switch)",
+      "port_count": 4,
+      "ports": [
+        {
+          "port": 1,
+          "mode": "iolink",
+          "tag": "P1",
+          "device": {
+            "part": "PN7092",
+            "vendor": "ifm electronic",
+            "vendor_id": 310,
+            "device_id": 401,
+            "iodd_file": "ifm-000191_V104326821-20140909-IODD1.1.xml",
+            "bitrate": "COM2",
+            "validation": {
+              "recommended": "type_compatible",
+              "vendor_id": 310,
+              "device_id": 401,
+              "alternatives": [
+                "none",
+                "type_compatible",
+                "identical"
+              ],
+              "serial_number": null
+            },
+            "data_storage": {
+              "recommended": "backup_restore",
+              "note": "Parameters are kept in the master so a replacement device is loaded automatically. Needs a device that supports data storage; check the IODD."
+            },
+            "cycle_time_ms": {
+              "device_min": 2.3,
+              "recommended": 2.3
+            },
+            "process_data": {
+              "in_bits": 16,
+              "in_bytes": 2,
+              "out_bits": 0,
+              "out_bytes": 0,
+              "in_layout": [
+                {
+                  "name": "Pressure",
+                  "bit_offset": 2,
+                  "bits": 14,
+                  "gradient": 0.1,
+                  "unit": "bar"
+                },
+                {
+                  "name": "Switch status [OUT2].",
+                  "bit_offset": 1,
+                  "bits": 1,
+                  "gradient": null,
+                  "unit": null
+                },
+                {
+                  "name": "Switch status [OUT1].",
+                  "bit_offset": 0,
+                  "bits": 1,
+                  "gradient": null,
+                  "unit": null
+                }
+              ]
+            },
+            "parameters": [
+              {
+                "key": "sp1",
+                "name": "Set point SP1",
+                "kind": "setting",
+                "unit": "bar",
+                "value": 40,
+                "entered": 40,
+                "note": null,
+                "index": 583,
+                "subindex": 0,
+                "datatype": "IntegerT",
+                "bit_length": 16,
+                "raw": 400,
+                "raw_hex": "01 90",
+                "clamped": false,
+                "status": "ok"
+              },
+              {
+                "key": "rp1",
+                "name": "Reset point rP1",
+                "kind": "setting",
+                "unit": "bar",
+                "value": 37,
+                "entered": 37,
+                "note": null,
+                "index": 584,
+                "subindex": 0,
+                "datatype": "IntegerT",
+                "bit_length": 16,
+                "raw": 370,
+                "raw_hex": "01 72",
+                "clamped": false,
+                "status": "ok"
+              },
+              {
+                "key": "output",
+                "name": "Output function",
+                "kind": "option",
+                "unit": "",
+                "value": "normally open",
+                "entered": null,
+                "note": null,
+                "index": 580,
+                "subindex": 0,
+                "datatype": "UIntegerT",
+                "bit_length": 8,
+                "raw": 3,
+                "raw_hex": "03",
+                "clamped": false,
+                "status": "ok"
+              }
+            ]
+          }
+        },
+        {
+          "port": 2,
+          "mode": "deactivated",
+          "tag": null,
+          "device": null
+        },
+        {
+          "port": 3,
+          "mode": "deactivated",
+          "tag": null,
+          "device": null
+        },
+        {
+          "port": 4,
+          "mode": "deactivated",
+          "tag": null,
+          "device": null
+        }
+      ]
+    }
+  ],
+  "warnings": []
+}

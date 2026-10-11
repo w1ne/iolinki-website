@@ -1,0 +1,138 @@
+{
+  "schema": "iolinki.commissioning",
+  "version": 1,
+  "generated_at": "2026-10-11T00:00:00Z",
+  "generated_by": "iolinki station studio",
+  "station": {
+    "title": "IO-Link station",
+    "link": "https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJzaWNrLXNpZzIwMC0wYTA1MTIyMDAiLCJhdCI6WzIuNiwxLjZdfSx7InVpZCI6ImVxMSIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJ0YW5rIiwiYXQiOlswLDBdfSx7InVpZCI6ImVxMiIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJjYWJpbmV0IiwiYXQiOlstMi44LC0yLjRdfSx7InVpZCI6IkwxIiwia2luZCI6InNlbnNvciIsInJlZiI6ImlmbS1scjIwNTAiLCJhdCI6WzEuMywwXSwic2V0dGluZ3MiOnsic3AiOjgwMCwicnAiOjc4MH0sIm9wdGlvbnMiOnt9LCJtYXN0ZXIiOiJtYXN0ZXIxIiwicG9ydCI6MX1dfQ"
+  },
+  "masters": [
+    {
+      "uid": "master1",
+      "part": "SIG200-0A0512200 (1089796)",
+      "vendor": "SICK",
+      "vendor_id": null,
+      "fieldbus": "EtherNet/IP",
+      "port_count": 4,
+      "ports": [
+        {
+          "port": 1,
+          "mode": "iolink",
+          "tag": "L1",
+          "device": {
+            "part": "LR2050",
+            "vendor": "ifm electronic",
+            "vendor_id": 310,
+            "device_id": 479,
+            "iodd_file": "ifm-0001DF-20150720-IODD1.1.xml",
+            "bitrate": "COM2",
+            "validation": {
+              "recommended": "type_compatible",
+              "vendor_id": 310,
+              "device_id": 479,
+              "alternatives": [
+                "none",
+                "type_compatible",
+                "identical"
+              ],
+              "serial_number": null
+            },
+            "data_storage": {
+              "recommended": "backup_restore",
+              "note": "Parameters are kept in the master so a replacement device is loaded automatically. Needs a device that supports data storage; check the IODD."
+            },
+            "cycle_time_ms": {
+              "device_min": 2.3,
+              "recommended": 2.3
+            },
+            "process_data": {
+              "in_bits": 16,
+              "in_bytes": 2,
+              "out_bits": 0,
+              "out_bytes": 0,
+              "in_layout": [
+                {
+                  "name": "Level",
+                  "bit_offset": 2,
+                  "bits": 14,
+                  "gradient": 1,
+                  "unit": "mm"
+                },
+                {
+                  "name": "OUT2",
+                  "bit_offset": 1,
+                  "bits": 1,
+                  "gradient": null,
+                  "unit": null
+                },
+                {
+                  "name": "OUT1",
+                  "bit_offset": 0,
+                  "bits": 1,
+                  "gradient": null,
+                  "unit": null
+                }
+              ]
+            },
+            "parameters": [
+              {
+                "key": "sp",
+                "name": "Set point SP",
+                "kind": "setting",
+                "unit": "mm",
+                "value": 800,
+                "entered": 800,
+                "note": null,
+                "index": 583,
+                "subindex": 0,
+                "datatype": "IntegerT",
+                "bit_length": 16,
+                "raw": 800,
+                "raw_hex": "03 20",
+                "clamped": false,
+                "status": "ok"
+              },
+              {
+                "key": "rp",
+                "name": "Reset point rP",
+                "kind": "setting",
+                "unit": "mm",
+                "value": 780,
+                "entered": 780,
+                "note": null,
+                "index": 584,
+                "subindex": 0,
+                "datatype": "IntegerT",
+                "bit_length": 16,
+                "raw": 780,
+                "raw_hex": "03 0C",
+                "clamped": false,
+                "status": "ok"
+              }
+            ]
+          }
+        },
+        {
+          "port": 2,
+          "mode": "deactivated",
+          "tag": null,
+          "device": null
+        },
+        {
+          "port": 3,
+          "mode": "deactivated",
+          "tag": null,
+          "device": null
+        },
+        {
+          "port": 4,
+          "mode": "deactivated",
+          "tag": null,
+          "device": null
+        }
+      ]
+    }
+  ],
+  "warnings": []
+}

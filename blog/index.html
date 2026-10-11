@@ -56,35 +56,55 @@
     <main id="main" class="document" tabindex="-1">
       <header>
         <h1>Blog</h1>
-        <p>IO-Link applications from real plants, built step by step in the <a href="/studio/">station studio</a>. Every post links to the station it describes.</p>
+        <p>One plant problem per post, one station that solves it. Built in the <a href="/studio/">station studio</a>; every post lets you turn the station and press Run.</p>
       </header>
       <section class="wrapper style5">
         <div class="inner guide-content">
-          <ul class="post-list">
+          <ul class="post-grid">
             <li>
-              <h2><a href="/blog/stainless-part-at-conveyor-stop.html">A stainless part at a conveyor stop, detected with an IO-Link inductive sensor</a></h2>
-              <p>The station only clamps or picks when the part is really sitting on the stop. Here the parts are stainless, and that changes the setting.</p>
-              <p class="post-meta"><time datetime="2026-10-11">11 October 2026</time> · <a href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJpZm0tYWwxMTAwIiwiYXQiOlsyLjYsLTEuOF19LHsidWlkIjoiZXExIiwia2luZCI6ImVxdWlwbWVudCIsInJlZiI6ImNvbnZleW9yIiwiYXQiOlstMS41LDBdfSx7InVpZCI6ImVxMiIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJzdG9wIiwiYXQiOlszLDBdfSx7InVpZCI6ImVxMyIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJjYWJpbmV0IiwiYXQiOlstNS41LC0zLjZdfSx7InVpZCI6IkIxIiwia2luZCI6InNlbnNvciIsInJlZiI6ImlmbS1pZzYyMTQiLCJhdCI6WzQuNiwwXSwic2V0dGluZ3MiOnsic3dpdGNoX3BvaW50IjozfSwib3B0aW9ucyI6eyJvdXRwdXQiOiJub3JtYWxseSBvcGVuIiwicG9sYXJpdHkiOiJQTlAifSwidGFyZ2V0Ijoic3RhaW5sZXNzIiwibWFzdGVyIjoibWFzdGVyMSIsInBvcnQiOjF9XX0">Open the station</a></p>
+              <a class="post-card" href="/blog/stainless-part-at-conveyor-stop.html">
+                <img src="/assets/images/blog/stop-stainless-hero.webp" width="1276" height="659" alt="A stainless part at a conveyor stop: the station in 3D" loading="lazy" />
+                <span class="post-card-text">
+                  <strong>A stainless part at a conveyor stop</strong>
+                  <span>The clamp only closes when the part really sits on the stop. With stainless parts the sensor has to be set differently.</span>
+                </span>
+              </a>
             </li>
             <li>
-              <h2><a href="/blog/pump-discharge-pressure-switch.html">Pump discharge pressure: a switch point, a reset point and nothing that chatters</a></h2>
-              <p>The PLC needs one clean signal: the pump has built pressure. With a set point and a reset point the signal does not chatter when the pressure ripples around the limit.</p>
-              <p class="post-meta"><time datetime="2026-10-11">11 October 2026</time> · <a href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJzaWVtZW5zLTZlczcxNDgtNmphMDAtMGFiMCIsImF0IjpbLTAuNSwtMS44XX0seyJ1aWQiOiJlcTEiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoicHVtcCIsImF0IjpbLTIsMF19LHsidWlkIjoiZXEyIiwia2luZCI6ImVxdWlwbWVudCIsInJlZiI6InBpcGUiLCJhdCI6WzIsMF19LHsidWlkIjoiZXEzIiwia2luZCI6ImVxdWlwbWVudCIsInJlZiI6ImNhYmluZXQiLCJhdCI6Wy01LjUsLTMuNl19LHsidWlkIjoiUDEiLCJraW5kIjoic2Vuc29yIiwicmVmIjoiaWZtLXBuNzA5MiIsImF0IjpbMSwwLjZdLCJzZXR0aW5ncyI6eyJzcDEiOjQwLCJycDEiOjM3fSwib3B0aW9ucyI6eyJvdXRwdXQiOiJub3JtYWxseSBvcGVuIn0sIm1hc3RlciI6Im1hc3RlcjEiLCJwb3J0IjoxfV19">Open the station</a></p>
+              <a class="post-card" href="/blog/pump-discharge-pressure-switch.html">
+                <img src="/assets/images/blog/pump-pressure-hero.webp" width="1276" height="659" alt="Pump discharge pressure that does not chatter: the station in 3D" loading="lazy" />
+                <span class="post-card-text">
+                  <strong>Pump discharge pressure that does not chatter</strong>
+                  <span>One clean “pressure OK” signal for the PLC, with a set point and a reset point so the output does not flicker on pump ripple.</span>
+                </span>
+              </a>
             </li>
             <li>
-              <h2><a href="/blog/tank-level-guided-wave-radar.html">Tank level and overfill with one guided wave radar sensor</a></h2>
-              <p>One sensor in the tank lid gives the PLC the level in millimetres and a hard “full” switch that does not depend on the PLC program.</p>
-              <p class="post-meta"><time datetime="2026-10-11">11 October 2026</time> · <a href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJzaWNrLXNpZzIwMC0wYTA1MTIyMDAiLCJhdCI6WzIuNSwtMS44XX0seyJ1aWQiOiJlcTEiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoidGFuayIsImF0IjpbMCwwXX0seyJ1aWQiOiJlcTIiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoiY2FiaW5ldCIsImF0IjpbLTUuNSwtMy42XX0seyJ1aWQiOiJMMSIsImtpbmQiOiJzZW5zb3IiLCJyZWYiOiJpZm0tbHIyMDUwIiwiYXQiOlsxLjMsMF0sInNldHRpbmdzIjp7InNwIjo4MDAsInJwIjo3ODB9LCJvcHRpb25zIjp7fSwibWFzdGVyIjoibWFzdGVyMSIsInBvcnQiOjF9XX0">Open the station</a></p>
+              <a class="post-card" href="/blog/tank-level-guided-wave-radar.html">
+                <img src="/assets/images/blog/tank-level-hero.webp" width="1276" height="659" alt="Tank level and overfill with one radar sensor: the station in 3D" loading="lazy" />
+                <span class="post-card-text">
+                  <strong>Tank level and overfill with one radar sensor</strong>
+                  <span>The level in millimetres and a hard “full” switch from one sensor in the tank lid.</span>
+                </span>
+              </a>
             </li>
             <li>
-              <h2><a href="/blog/machine-tool-coolant-flow.html">Coolant flow on a machine tool: teach the normal flow, switch on a percentage</a></h2>
-              <p>If the coolant stops, the tool and the part pay for it within seconds. A flow sensor in the coolant line stops the cycle before that happens and reports the coolant temperature too.</p>
-              <p class="post-meta"><time datetime="2026-10-11">11 October 2026</time> · <a href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJiZWNraG9mZi1lcDYyMjQtMjAyMiIsImF0IjpbMC41LC0xLjhdfSx7InVpZCI6ImVxMSIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJwdW1wIiwiYXQiOlstMiwwXX0seyJ1aWQiOiJlcTIiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoicGlwZSIsImF0IjpbMiwwXX0seyJ1aWQiOiJlcTMiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoiY2FiaW5ldCIsImF0IjpbLTUuNSwtMy42XX0seyJ1aWQiOiJGMSIsImtpbmQiOiJzZW5zb3IiLCJyZWYiOiJpZm0tc2E1MDAwIiwiYXQiOlsyLjUsMC42XSwic2V0dGluZ3MiOnsiZmxvd19zcDEiOjYwLCJmbG93X3JwMSI6NTB9LCJvcHRpb25zIjp7Im1lZGl1bSI6InJlbGF0aXZlIn0sIm1hc3RlciI6Im1hc3RlcjEiLCJwb3J0IjoxfV19">Open the station</a></p>
+              <a class="post-card" href="/blog/machine-tool-coolant-flow.html">
+                <img src="/assets/images/blog/coolant-flow-hero.webp" width="1276" height="659" alt="Coolant flow on a machine tool: the station in 3D" loading="lazy" />
+                <span class="post-card-text">
+                  <strong>Coolant flow on a machine tool</strong>
+                  <span>Stop the cycle before the tool runs dry, and read the coolant temperature from the same sensor.</span>
+                </span>
+              </a>
             </li>
             <li>
-              <h2><a href="/blog/box-detection-on-conveyor.html">Box detection on a conveyor with a laser distance sensor</a></h2>
-              <p>A distance sensor across the belt sees the boxes and ignores the guard rail behind them. Over IO-Link it also tells you how far away each box was.</p>
-              <p class="post-meta"><time datetime="2026-10-11">11 October 2026</time> · <a href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJ0dXJjay10YmVuLXMyLTRpb2wiLCJhdCI6Wy0xLjYsLTIuNl19LHsidWlkIjoiZXExIiwia2luZCI6ImVxdWlwbWVudCIsInJlZiI6ImNvbnZleW9yIiwiYXQiOlswLDBdfSx7InVpZCI6ImVxMiIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJjYWJpbmV0IiwiYXQiOlstNS41LC0zLjZdfSx7InVpZCI6IkIxIiwia2luZCI6InNlbnNvciIsInJlZiI6ImlmbS1vNWQxMDAiLCJhdCI6WzAsLTEuNF0sInNldHRpbmdzIjp7InN3aXRjaF9wb2ludCI6NTAwfSwib3B0aW9ucyI6eyJvdXRwdXQiOiJub3JtYWxseSBvcGVuIn0sIm1hc3RlciI6Im1hc3RlcjEiLCJwb3J0IjoxfV19">Open the station</a></p>
+              <a class="post-card" href="/blog/box-detection-on-conveyor.html">
+                <img src="/assets/images/blog/box-conveyor-hero.webp" width="1276" height="659" alt="Box detection on a conveyor: the station in 3D" loading="lazy" />
+                <span class="post-card-text">
+                  <strong>Box detection on a conveyor</strong>
+                  <span>Count the boxes, ignore the guard rail behind them, and get the distance to every box over IO-Link.</span>
+                </span>
+              </a>
             </li>
           </ul>
         </div>

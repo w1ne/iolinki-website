@@ -10,6 +10,7 @@
 
     <link rel="stylesheet" href="/assets/css/site.css" />
     <script src="/assets/js/site.js" defer></script>
+    <script src="/assets/js/blog.js" defer></script>
 
     <!-- BEGIN GENERATED SEO -->
     <meta property="og:type" content="article" />
@@ -25,7 +26,7 @@
     <meta name="twitter:title" content="Tank level and overfill with guided wave radar | iolinki" />
     <meta name="twitter:description" content="Continuous level and a full signal on a water-based tank with an ifm LR2050: probe length limits, set and reset points, a SICK SIG200 master, Run mode and the ISDU writes." />
     <meta name="twitter:image" content="https://iolinki.com/assets/images/og-card.png" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://iolinki.com/#organization","name":"iolinki","url":"https://iolinki.com/","logo":"https://iolinki.com/favicon.svg","sameAs":["https://github.com/w1ne/iolinki","https://github.com/w1ne/iolinki-master","https://github.com/w1ne/iolinki-website"]},{"@type":"WebSite","@id":"https://iolinki.com/#website","name":"iolinki","url":"https://iolinki.com/","inLanguage":"en","publisher":{"@id":"https://iolinki.com/#organization"}},{"@type":"WebPage","@id":"https://iolinki.com/blog/tank-level-guided-wave-radar.html#webpage","url":"https://iolinki.com/blog/tank-level-guided-wave-radar.html","name":"Tank level and overfill with guided wave radar | iolinki","description":"Continuous level and a full signal on a water-based tank with an ifm LR2050: probe length limits, set and reset points, a SICK SIG200 master, Run mode and the ISDU writes.","inLanguage":"en","isPartOf":{"@id":"https://iolinki.com/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"iolinki","item":"https://iolinki.com/"},{"@type":"ListItem","position":2,"name":"Tank level and overfill with guided wave radar","item":"https://iolinki.com/blog/tank-level-guided-wave-radar.html"}]},{"@type":"BlogPosting","@id":"https://iolinki.com/blog/tank-level-guided-wave-radar.html#article","headline":"Tank level and overfill with one guided wave radar sensor","description":"Continuous level and a full signal on a water-based tank with an ifm LR2050: probe length limits, set and reset points, a SICK SIG200 master, Run mode and the ISDU writes.","datePublished":"2026-10-11","dateModified":"2026-10-11","image":"https://iolinki.com/assets/images/blog/tank-level-3d.webp","url":"https://iolinki.com/blog/tank-level-guided-wave-radar.html","mainEntityOfPage":{"@id":"https://iolinki.com/blog/tank-level-guided-wave-radar.html#webpage"},"inLanguage":"en","author":{"@type":"Person","name":"Andrii Shylenko"},"publisher":{"@id":"https://iolinki.com/#organization"}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://iolinki.com/#organization","name":"iolinki","url":"https://iolinki.com/","logo":"https://iolinki.com/favicon.svg","sameAs":["https://github.com/w1ne/iolinki","https://github.com/w1ne/iolinki-master","https://github.com/w1ne/iolinki-website"]},{"@type":"WebSite","@id":"https://iolinki.com/#website","name":"iolinki","url":"https://iolinki.com/","inLanguage":"en","publisher":{"@id":"https://iolinki.com/#organization"}},{"@type":"WebPage","@id":"https://iolinki.com/blog/tank-level-guided-wave-radar.html#webpage","url":"https://iolinki.com/blog/tank-level-guided-wave-radar.html","name":"Tank level and overfill with guided wave radar | iolinki","description":"Continuous level and a full signal on a water-based tank with an ifm LR2050: probe length limits, set and reset points, a SICK SIG200 master, Run mode and the ISDU writes.","inLanguage":"en","isPartOf":{"@id":"https://iolinki.com/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"iolinki","item":"https://iolinki.com/"},{"@type":"ListItem","position":2,"name":"Tank level and overfill with guided wave radar","item":"https://iolinki.com/blog/tank-level-guided-wave-radar.html"}]},{"@type":"BlogPosting","@id":"https://iolinki.com/blog/tank-level-guided-wave-radar.html#article","headline":"Tank level and overfill with one guided wave radar sensor","description":"Continuous level and a full signal on a water-based tank with an ifm LR2050: probe length limits, set and reset points, a SICK SIG200 master, Run mode and the ISDU writes.","datePublished":"2026-10-11","dateModified":"2026-10-11","image":"https://iolinki.com/assets/images/blog/tank-level-hero.webp","url":"https://iolinki.com/blog/tank-level-guided-wave-radar.html","mainEntityOfPage":{"@id":"https://iolinki.com/blog/tank-level-guided-wave-radar.html#webpage"},"inLanguage":"en","author":{"@type":"Person","name":"Andrii Shylenko"},"publisher":{"@id":"https://iolinki.com/#organization"}}]}</script>
     <!-- END GENERATED SEO -->
   </head>
   <body>
@@ -53,72 +54,86 @@
         </nav>
       </div>
     </header>
-    <main id="main" class="document" tabindex="-1">
+    <main id="main" class="document post" tabindex="-1">
       <header>
         <p class="eyebrow"><a href="/blog/">Blog</a> · Application</p>
-        <h1>Tank level and overfill with one guided wave radar sensor</h1>
-        <p>One sensor in the tank lid gives the PLC the level in millimetres and a hard “full” switch that does not depend on the PLC program.</p>
+        <h1>Tank level and overfill with one radar sensor</h1>
+        <p>The level in millimetres and a hard “full” switch from one sensor in the tank lid.</p>
         <p class="post-meta"><time datetime="2026-10-11">11 October 2026</time> · Andrii Shylenko</p>
       </header>
       <section class="wrapper style5">
         <div class="inner guide-content">
-          <h2>The job</h2>
-          <p>A metal tank holds a water-based medium, for example the rinse tank of a parts washer or a coolant reservoir. The PLC refills it and must never overfill it. Many plants use two float switches for this. A continuous level sensor replaces both and shows the level, so the operator sees the tank emptying long before the low alarm.</p>
-          <p>We use OUT1 as the overfill switch at 800 mm. The low alarm comes from the level value in the PLC.</p>
-
-          <h2>The sensor</h2>
-          <p>We used the ifm LR2050, a guided wave radar sensor. From the datasheet: probe length L 150 to 2000 mm, G 3/4 process connection, process temperature −20 to 100 °C, pressure rating 16 bar, measuring error ±7 mm, resolution 1 mm, sampling rate 4 Hz. Recommended media are water, water-based media, oils and oil-based media. Media with a dielectric constant of 1.8 to 5, such as oils, need a coaxial pipe.</p>
-          <p>Two limits depend on the probe you order. The set point SP is 15 to L−30 mm and the reset point rP is 10 to L−35 mm, in 1 mm steps, with a hysteresis of more than 5 mm. There is also an inactive range of 30 mm at the top and 10 mm at the bottom of the probe.</p>
-
-          <h2>The setting, checked</h2>
-          <p>We planned a 1000 mm probe. That makes SP at most 970 mm and rP at most 965 mm. SP 800 mm and rP 780 mm fit, and the 20 mm hysteresis is above the 5 mm minimum. The low alarm must sit above the bottom inactive range, so the PLC alarm at 150 mm is safe.</p>
-          <p>Be careful here. The studio does not know your probe length yet. It checks SP and rP against the longest probe, 2000 mm, so it shows 15–1970 mm. With a short probe you must check L−30 yourself. The studio does check that rP is below SP: set both to 800 and it answers “Reset point rP must be below Set point SP.”</p>
-          <p>The datasheet also has an EMC note: the emission limits are met in a closed metal tank. In a plastic or open tank a different EMC class applies. Check that before you mount it on a plastic tank.</p>
-          <figure class="shot">
-            <img src="/assets/images/blog/tank-level-3d.webp" width="1360" height="850" loading="lazy" alt="3D station: process tank with the LR2050 in the lid, SICK SIG200 master and SP 800 mm and rP 780 mm settings" />
-            <figcaption>The LR2050 on the tank, wired to port X1 of a SICK SIG200.</figcaption>
+          <figure class="station-embed" data-station-embed="/studio/?embed=1#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJzaWNrLXNpZzIwMC0wYTA1MTIyMDAiLCJhdCI6WzIuNiwxLjZdfSx7InVpZCI6ImVxMSIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJ0YW5rIiwiYXQiOlswLDBdfSx7InVpZCI6ImVxMiIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJjYWJpbmV0IiwiYXQiOlstMi44LC0yLjRdfSx7InVpZCI6IkwxIiwia2luZCI6InNlbnNvciIsInJlZiI6ImlmbS1scjIwNTAiLCJhdCI6WzEuMywwXSwic2V0dGluZ3MiOnsic3AiOjgwMCwicnAiOjc4MH0sIm9wdGlvbnMiOnt9LCJtYXN0ZXIiOiJtYXN0ZXIxIiwicG9ydCI6MX1dfQ">
+            <div class="embed-frame">
+              <img src="/assets/images/blog/tank-level-hero.webp" width="1276" height="659" alt="3D station: process tank with the LR2050 reading 860 mm ON, SICK SIG200 master with the cable to the sensor, control cabinet" />
+              <button type="button" class="embed-play">Turn it and press Run</button>
+            </div>
+            <figcaption>Tank, LR2050 in the lid, SICK SIG200 next to it. Press Run and watch the tank fill and the full switch act. <a href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJzaWNrLXNpZzIwMC0wYTA1MTIyMDAiLCJhdCI6WzIuNiwxLjZdfSx7InVpZCI6ImVxMSIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJ0YW5rIiwiYXQiOlswLDBdfSx7InVpZCI6ImVxMiIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJjYWJpbmV0IiwiYXQiOlstMi44LC0yLjRdfSx7InVpZCI6IkwxIiwia2luZCI6InNlbnNvciIsInJlZiI6ImlmbS1scjIwNTAiLCJhdCI6WzEuMywwXSwic2V0dGluZ3MiOnsic3AiOjgwMCwicnAiOjc4MH0sIm9wdGlvbnMiOnt9LCJtYXN0ZXIiOiJtYXN0ZXIxIiwicG9ydCI6MX1dfQ">Open it in the studio</a>.</figcaption>
           </figure>
+          <h2>The problem</h2>
+          <p>A metal tank with a water-based medium, such as a washer rinse tank or a coolant reservoir, is refilled by the PLC. Two float switches give full and empty but nothing in between, and a stuck float overfills the tank. The operator only learns the tank is low when the alarm comes.</p>
 
-          <h2>Master, port and cable</h2>
-          <p>Port X1 of a SICK SIG200, a 4-port IO-Link master with EtherNet/IP. The SICK datasheet gives up to 500 mA on pin 1 per port and 3 A for all outputs together. The LR2050 draws less than 50 mA and needs a class A port. The route in the model is 3.9 m, so the order has a 5 m M12 cable.</p>
-
+          <h2>The station</h2>
+          <ul class="facts">
+            <li><b>Sensor</b> ifm LR2050, guided wave radar, G 3/4, probe 150 to 2000 mm (ordered separately), port class A</li>
+            <li><b>Master</b> SICK SIG200, 4 ports, EtherNet/IP. 500 mA per port, 3 A total</li>
+            <li><b>Port</b> X1, 4.6 m route, 10 m cable</li>
+          </ul>
+          <div class="shot-pair">
           <figure class="shot">
-            <img src="/assets/images/blog/tank-level-ports.webp" width="706" height="150" loading="lazy" alt="Ports tab of the station with the live process data of port X1" />
-            <figcaption>The Ports tab: level in bits 2 to 15, OUT2 and OUT1 in bits 1 and 0.</figcaption>
+            <a href="/assets/images/blog/tank-level-wiring.webp"><img src="/assets/images/blog/tank-level-wiring.webp" width="608" height="300" alt="Wiring: the master with the sensor on port X1 and the free ports" loading="lazy" /></a>
+            <figcaption>Wiring: LR2050 on X1 of the SIG200.</figcaption>
           </figure>
-
-          <h2>Run mode</h2>
-          <p>In Run mode the tank fills and drains. The output switches on at 800 mm and stays on until the level falls to 780 mm. In the screenshot the level is 791 mm on the way down and OUT1 is still on. That is the hysteresis doing its job.</p>
-          <p>The process data is 16 bits: level in bits 2 to 15 at 1 mm per count, OUT2 in bit 1 and OUT1 in bit 0. The master reads <code>0C 5D</code>: 0x0C5D shifted right by two is 791 mm, and bit 0 is set.</p>
           <figure class="shot">
-            <img src="/assets/images/blog/tank-level-run.webp" width="1360" height="850" loading="lazy" alt="Run mode: LR2050 reads 791 mm while falling, OUT1 still switched, process data 0C 5D" />
-            <figcaption>Run mode on the way down: 791 mm, OUT1 still on between rP and SP.</figcaption>
+            <a href="/assets/images/blog/tank-level-ports.webp"><img src="/assets/images/blog/tank-level-ports.webp" width="786" height="150" alt="Port table with live value, process data layout, cycle time and settings" loading="lazy" /></a>
+            <figcaption>Ports: level in bits 2 to 15 at 1 mm, OUT2 and OUT1 in bits 1 and 0.</figcaption>
           </figure>
+          </div>
 
-          <h2>Commissioning file</h2>
-          <div class="table-wrapper">
+          <h2>The settings that matter</h2>
+          <div class="table-wrapper settings-table">
             <table>
-              <thead><tr><th>Parameter</th><th>Value</th><th>Index.sub</th><th>Raw</th><th>Type</th></tr></thead>
+              <thead><tr><th>Setting</th><th>Value</th><th>Why</th><th>Datasheet / IODD</th></tr></thead>
               <tbody>
-                <tr><td>Set point SP</td><td>800 mm</td><td><code>583.0</code></td><td><code>800</code> (<code>03 20</code>)</td><td>IntegerT 16</td></tr>
-                <tr><td>Reset point rP</td><td>780 mm</td><td><code>584.0</code></td><td><code>780</code> (<code>03 0C</code>)</td><td>IntegerT 16</td></tr>
+                <tr><td data-label="Setting">Set point SP</td><td data-label="Value"><strong>800 mm</strong></td><td data-label="Why">Full: OUT1 switches on here</td><td data-label="Datasheet / IODD">SP 15 to L−30 mm, steps of 1 mm</td></tr>
+                <tr><td data-label="Setting">Reset point rP</td><td data-label="Value"><strong>780 mm</strong></td><td data-label="Why">OUT1 drops after 20 mm of draining</td><td data-label="Datasheet / IODD">rP 10 to L−35 mm, hysteresis over 5 mm</td></tr>
+                <tr><td data-label="Setting">Probe length L</td><td data-label="Value"><strong>1000 mm (our choice)</strong></td><td data-label="Why">Limits SP to 970 mm and rP to 965 mm</td><td data-label="Datasheet / IODD">Inactive zone 30 mm at the top, 10 mm at the bottom</td></tr>
+                <tr><td data-label="Setting">Low alarm</td><td data-label="Value"><strong>150 mm, in the PLC</strong></td><td data-label="Why">Read from the level value, above the bottom inactive zone</td><td data-label="Datasheet / IODD">Measuring error ±7 mm, resolution 1 mm</td></tr>
               </tbody>
             </table>
           </div>
-          <p>Validation is vendor 310, device 479. Cycle time 2.3 ms. Data storage is set to backup and restore, so a replacement sensor gets the switch points from the master. Write the probe length and medium on the sensor at commissioning; the studio does not export those two yet.</p>
+          <p>The studio does not know your probe length yet. It checks against the longest probe, 2000 mm, so check L−30 yourself. It does check that rP sits below SP. The EMC figures in the datasheet assume a closed metal tank; a plastic or open tank falls under a different EMC class.</p>
+
+          <h2>Run it</h2>
           <figure class="shot">
-            <img src="/assets/images/blog/tank-level-writes.webp" width="718" height="223" loading="lazy" alt="Station report section Parameter writes for the LR2050: 583.0 raw 800 and 584.0 raw 780" />
-            <figcaption>The parameter writes in the station report.</figcaption>
+            <a href="/assets/images/blog/tank-level-run.webp"><img src="/assets/images/blog/tank-level-run.webp" width="1136" height="652" alt="Run mode: LR2050 at 899 mm, OUT1 switched, process data 0E 0D, trace of the level crossing SP 800" loading="lazy" /></a>
+            <figcaption>The tank above the full mark: 899 mm, OUT1 on. Process data <code>0E 0D</code>: 0x0E0D shifted right by two is 899 mm, and bit 0 is OUT1.</figcaption>
           </figure>
 
-          <h2>Buy and install</h2>
-          <p>The order list has the SIG200, the LR2050 and a 5 m cable. The probe rod is a separate ifm accessory and is not in the studio's order list. Write the probe length you want in the install request. Buy and install sends the request to us, and we reply with a price and an install date. No payment is taken in the studio.</p>
-          <div class="station-link">
-            <p><strong>Open the station.</strong> LR2050 with SP 800 mm and rP 780 mm on port X1 of a SICK SIG200. Press Run and watch the tank fill.</p>
-            <p><a class="button primary" href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJzaWNrLXNpZzIwMC0wYTA1MTIyMDAiLCJhdCI6WzIuNSwtMS44XX0seyJ1aWQiOiJlcTEiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoidGFuayIsImF0IjpbMCwwXX0seyJ1aWQiOiJlcTIiLCJraW5kIjoiZXF1aXBtZW50IiwicmVmIjoiY2FiaW5ldCIsImF0IjpbLTUuNSwtMy42XX0seyJ1aWQiOiJMMSIsImtpbmQiOiJzZW5zb3IiLCJyZWYiOiJpZm0tbHIyMDUwIiwiYXQiOlsxLjMsMF0sInNldHRpbmdzIjp7InNwIjo4MDAsInJwIjo3ODB9LCJvcHRpb25zIjp7fSwibWFzdGVyIjoibWFzdGVyMSIsInBvcnQiOjF9XX0">Open this station in the studio</a></p>
-          </div>
-
-          <p>You can also ask ChatGPT for it. With the iolinki connector (<code>https://mcp.iolinki.com/mcp</code>, setup on the <a href="/iodd-mcp.html">MCP page</a>), ChatGPT calls the same engine, shows the station in the chat and gives you the same studio link with the Buy button.</p>
+          <h2>What you get</h2>
+          <p>The commissioning file has every port: validation IDs, cycle time, data storage, and each parameter as ISDU index, subindex and raw value. This is port X1 from the real file, trimmed to the fields that matter:</p>
+          <pre><code>{
+  &quot;port&quot;: 1, &quot;mode&quot;: &quot;iolink&quot;, &quot;tag&quot;: &quot;L1&quot;,
+  &quot;device&quot;: {
+    &quot;part&quot;: &quot;LR2050&quot;, &quot;vendor_id&quot;: 310, &quot;device_id&quot;: 479,
+    &quot;validation&quot;: &quot;type_compatible&quot;, &quot;data_storage&quot;: &quot;backup_restore&quot;,
+    &quot;cycle_time_ms&quot;: {&quot;device_min&quot;: 2.3, &quot;recommended&quot;: 2.3},
+    &quot;parameters&quot;: [
+      {&quot;name&quot;: &quot;Set point SP&quot;, &quot;value&quot;: 800, &quot;unit&quot;: &quot;mm&quot;, &quot;index&quot;: 583, &quot;subindex&quot;: 0, &quot;raw&quot;: 800, &quot;raw_hex&quot;: &quot;03 20&quot;},
+      {&quot;name&quot;: &quot;Reset point rP&quot;, &quot;value&quot;: 780, &quot;unit&quot;: &quot;mm&quot;, &quot;index&quot;: 584, &quot;subindex&quot;: 0, &quot;raw&quot;: 780, &quot;raw_hex&quot;: &quot;03 0C&quot;}
+    ]
+  }
+}
+</code></pre>
+          <p class="downloads">Download: <a href="/assets/blog/tank-level/iolink-station-commissioning.json" download>commissioning file (JSON)</a> · <a href="/assets/blog/tank-level/iolink-station-commissioning.csv" download>CSV</a> · <a href="/assets/blog/tank-level/iolink-station-report.pdf">station report (PDF)</a></p>
+          <figure class="shot wide">
+            <a href="/assets/images/blog/tank-level-report.webp"><img src="/assets/images/blog/tank-level-report.webp" width="1272" height="409" alt="Three pages of the PDF station report: cover with the 3D layout, ports and process data, parameter writes" loading="lazy" /></a>
+            <figcaption>The station report, printed from the studio: cover with the 3D layout, ports and process data, and the parameter writes. Two more pages have the bill of materials and the installer checklist.</figcaption>
+          </figure>
+          <p><strong>Buy and install.</strong> One button in the studio sends the station to us. We reply with a price and an install date, buy the parts, mount and wire them, and write the settings on site. No payment is taken in the studio.</p>
+          <p><a class="button primary" href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJzaWNrLXNpZzIwMC0wYTA1MTIyMDAiLCJhdCI6WzIuNiwxLjZdfSx7InVpZCI6ImVxMSIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJ0YW5rIiwiYXQiOlswLDBdfSx7InVpZCI6ImVxMiIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJjYWJpbmV0IiwiYXQiOlstMi44LC0yLjRdfSx7InVpZCI6IkwxIiwia2luZCI6InNlbnNvciIsInJlZiI6ImlmbS1scjIwNTAiLCJhdCI6WzEuMywwXSwic2V0dGluZ3MiOnsic3AiOjgwMCwicnAiOjc4MH0sIm9wdGlvbnMiOnt9LCJtYXN0ZXIiOiJtYXN0ZXIxIiwicG9ydCI6MX1dfQ">Open this station in the studio</a></p>
+          <p class="muted-note">The same station comes out of ChatGPT with the iolinki connector (<code>https://mcp.iolinki.com/mcp</code>, setup on the <a href="/iodd-mcp.html">MCP page</a>): describe the job and it builds, checks and shows the station in the chat.</p>
+          <p>One thing is not in the order list: the probe rod, a separate ifm accessory. Write the length you want in the install request. The probe length and medium are set on the sensor at commissioning; the studio does not export them yet.</p>
 
           <h2>Sources</h2>
           <ul class="sources">

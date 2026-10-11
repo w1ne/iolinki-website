@@ -10,6 +10,7 @@
 
     <link rel="stylesheet" href="/assets/css/site.css" />
     <script src="/assets/js/site.js" defer></script>
+    <script src="/assets/js/blog.js" defer></script>
 
     <!-- BEGIN GENERATED SEO -->
     <meta property="og:type" content="article" />
@@ -25,7 +26,7 @@
     <meta name="twitter:title" content="Box detection on a conveyor with a laser distance sensor | iolinki" />
     <meta name="twitter:description" content="Detecting cartons across a conveyor with an ifm O5D100: switching distance, background suppression, a Turck TBEN-S2-4IOL master, Run mode with distance in the process data, and the ISDU writes." />
     <meta name="twitter:image" content="https://iolinki.com/assets/images/og-card.png" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://iolinki.com/#organization","name":"iolinki","url":"https://iolinki.com/","logo":"https://iolinki.com/favicon.svg","sameAs":["https://github.com/w1ne/iolinki","https://github.com/w1ne/iolinki-master","https://github.com/w1ne/iolinki-website"]},{"@type":"WebSite","@id":"https://iolinki.com/#website","name":"iolinki","url":"https://iolinki.com/","inLanguage":"en","publisher":{"@id":"https://iolinki.com/#organization"}},{"@type":"WebPage","@id":"https://iolinki.com/blog/box-detection-on-conveyor.html#webpage","url":"https://iolinki.com/blog/box-detection-on-conveyor.html","name":"Box detection on a conveyor with a laser distance sensor | iolinki","description":"Detecting cartons across a conveyor with an ifm O5D100: switching distance, background suppression, a Turck TBEN-S2-4IOL master, Run mode with distance in the process data, and the ISDU writes.","inLanguage":"en","isPartOf":{"@id":"https://iolinki.com/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"iolinki","item":"https://iolinki.com/"},{"@type":"ListItem","position":2,"name":"Box detection on a conveyor with a laser distance sensor","item":"https://iolinki.com/blog/box-detection-on-conveyor.html"}]},{"@type":"BlogPosting","@id":"https://iolinki.com/blog/box-detection-on-conveyor.html#article","headline":"Box detection on a conveyor with a laser distance sensor","description":"Detecting cartons across a conveyor with an ifm O5D100: switching distance, background suppression, a Turck TBEN-S2-4IOL master, Run mode with distance in the process data, and the ISDU writes.","datePublished":"2026-10-11","dateModified":"2026-10-11","image":"https://iolinki.com/assets/images/blog/box-conveyor-3d.webp","url":"https://iolinki.com/blog/box-detection-on-conveyor.html","mainEntityOfPage":{"@id":"https://iolinki.com/blog/box-detection-on-conveyor.html#webpage"},"inLanguage":"en","author":{"@type":"Person","name":"Andrii Shylenko"},"publisher":{"@id":"https://iolinki.com/#organization"}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://iolinki.com/#organization","name":"iolinki","url":"https://iolinki.com/","logo":"https://iolinki.com/favicon.svg","sameAs":["https://github.com/w1ne/iolinki","https://github.com/w1ne/iolinki-master","https://github.com/w1ne/iolinki-website"]},{"@type":"WebSite","@id":"https://iolinki.com/#website","name":"iolinki","url":"https://iolinki.com/","inLanguage":"en","publisher":{"@id":"https://iolinki.com/#organization"}},{"@type":"WebPage","@id":"https://iolinki.com/blog/box-detection-on-conveyor.html#webpage","url":"https://iolinki.com/blog/box-detection-on-conveyor.html","name":"Box detection on a conveyor with a laser distance sensor | iolinki","description":"Detecting cartons across a conveyor with an ifm O5D100: switching distance, background suppression, a Turck TBEN-S2-4IOL master, Run mode with distance in the process data, and the ISDU writes.","inLanguage":"en","isPartOf":{"@id":"https://iolinki.com/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"iolinki","item":"https://iolinki.com/"},{"@type":"ListItem","position":2,"name":"Box detection on a conveyor with a laser distance sensor","item":"https://iolinki.com/blog/box-detection-on-conveyor.html"}]},{"@type":"BlogPosting","@id":"https://iolinki.com/blog/box-detection-on-conveyor.html#article","headline":"Box detection on a conveyor with a laser distance sensor","description":"Detecting cartons across a conveyor with an ifm O5D100: switching distance, background suppression, a Turck TBEN-S2-4IOL master, Run mode with distance in the process data, and the ISDU writes.","datePublished":"2026-10-11","dateModified":"2026-10-11","image":"https://iolinki.com/assets/images/blog/box-conveyor-hero.webp","url":"https://iolinki.com/blog/box-detection-on-conveyor.html","mainEntityOfPage":{"@id":"https://iolinki.com/blog/box-detection-on-conveyor.html#webpage"},"inLanguage":"en","author":{"@type":"Person","name":"Andrii Shylenko"},"publisher":{"@id":"https://iolinki.com/#organization"}}]}</script>
     <!-- END GENERATED SEO -->
   </head>
   <body>
@@ -53,70 +54,84 @@
         </nav>
       </div>
     </header>
-    <main id="main" class="document" tabindex="-1">
+    <main id="main" class="document post" tabindex="-1">
       <header>
         <p class="eyebrow"><a href="/blog/">Blog</a> · Application</p>
-        <h1>Box detection on a conveyor with a laser distance sensor</h1>
-        <p>A distance sensor across the belt sees the boxes and ignores the guard rail behind them. Over IO-Link it also tells you how far away each box was.</p>
+        <h1>Box detection on a conveyor</h1>
+        <p>Count the boxes, ignore the guard rail behind them, and get the distance to every box over IO-Link.</p>
         <p class="post-meta"><time datetime="2026-10-11">11 October 2026</time> · Andrii Shylenko</p>
       </header>
       <section class="wrapper style5">
         <div class="inner guide-content">
-          <h2>The job</h2>
-          <p>Cartons travel on a belt conveyor. The PLC counts them and starts the next station when one arrives. The sensor sits at the side of the belt and looks across it. On the far side there is a guard rail and sometimes a person walking by. Neither may count as a box.</p>
-
-          <h2>The sensor</h2>
-          <p>We used the ifm O5D100, a laser distance sensor with background suppression. The datasheet: measuring range 0.03 to 2 m on white paper with 90 % remission, background suppression from more than 2 m up to 20 m, red laser light at 650 nm, laser class 1, light spot under 5 mm at 2 m, switching frequency 15 Hz, extraneous light on the object at most 8 klx. The IODD sets the switch point SP1 from 5 to 200 cm.</p>
-          <p>The 90 % white figure matters. Brown cardboard reflects less, so check the switch point with your real boxes. The 15 Hz switching frequency matters too: the gap between two boxes, divided by the belt speed, must be longer than one switching cycle, or two boxes count as one.</p>
-
-          <h2>The setting, checked</h2>
-          <p>The belt is narrower than the distance to the guard rail. We set the switching distance to 500 mm: everything closer is a box, the rail behind it is ignored. 500 mm is inside the 50 to 2000 mm the IODD allows. Output normally open, so the pin is 24 V while a box is in front of the sensor.</p>
-          <p>The setting is in millimetres in the studio and in centimetres in the IODD. The commissioning file writes the raw value in the IODD unit: 500 mm becomes 50.</p>
-          <figure class="shot">
-            <img src="/assets/images/blog/box-conveyor-3d.webp" width="1360" height="850" loading="lazy" alt="3D station: belt conveyor with cartons, the O5D100 at the side of the belt, Turck TBEN-S2-4IOL master and the switching distance setting" />
-            <figcaption>The O5D100 looking across the belt, on port X1 of a Turck TBEN-S2-4IOL.</figcaption>
+          <figure class="station-embed" data-station-embed="/studio/?embed=1#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJ0dXJjay10YmVuLXMyLTRpb2wiLCJhdCI6Wy0xLjYsLTIuNl19LHsidWlkIjoiZXExIiwia2luZCI6ImVxdWlwbWVudCIsInJlZiI6ImNvbnZleW9yIiwiYXQiOlswLDBdfSx7InVpZCI6ImVxMiIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJjYWJpbmV0IiwiYXQiOlstNC4yLC0yLjldfSx7InVpZCI6IkIxIiwia2luZCI6InNlbnNvciIsInJlZiI6ImlmbS1vNWQxMDAiLCJhdCI6WzAsLTEuNF0sInNldHRpbmdzIjp7InN3aXRjaF9wb2ludCI6NTAwfSwib3B0aW9ucyI6eyJvdXRwdXQiOiJub3JtYWxseSBvcGVuIn0sIm1hc3RlciI6Im1hc3RlcjEiLCJwb3J0IjoxfV19">
+            <div class="embed-frame">
+              <img src="/assets/images/blog/box-conveyor-hero.webp" width="1276" height="659" alt="3D station: belt conveyor with cartons, the O5D100 at the side of the belt reading 350 mm ON, Turck TBEN-S2-4IOL master with its cable, control cabinet" />
+              <button type="button" class="embed-play">Turn it and press Run</button>
+            </div>
+            <figcaption>Belt with cartons, O5D100 looking across it, Turck TBEN-S2-4IOL. Press Run and count the boxes. <a href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJ0dXJjay10YmVuLXMyLTRpb2wiLCJhdCI6Wy0xLjYsLTIuNl19LHsidWlkIjoiZXExIiwia2luZCI6ImVxdWlwbWVudCIsInJlZiI6ImNvbnZleW9yIiwiYXQiOlswLDBdfSx7InVpZCI6ImVxMiIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJjYWJpbmV0IiwiYXQiOlstNC4yLC0yLjldfSx7InVpZCI6IkIxIiwia2luZCI6InNlbnNvciIsInJlZiI6ImlmbS1vNWQxMDAiLCJhdCI6WzAsLTEuNF0sInNldHRpbmdzIjp7InN3aXRjaF9wb2ludCI6NTAwfSwib3B0aW9ucyI6eyJvdXRwdXQiOiJub3JtYWxseSBvcGVuIn0sIm1hc3RlciI6Im1hc3RlcjEiLCJwb3J0IjoxfV19">Open it in the studio</a>.</figcaption>
           </figure>
+          <h2>The problem</h2>
+          <p>A photoelectric sensor across a belt counts boxes, but it also counts the guard rail on the far side, a reflective label, or a person walking past. Miscounts stop the next station or ship a short pallet.</p>
 
-          <h2>Master, port and cable</h2>
-          <p>Port X1 of a Turck TBEN-S2-4IOL, a compact 4-port master that speaks PROFINET, EtherNet/IP and Modbus TCP. The Turck datasheet gives max. 4 A for the supply of ports C0 to C3 together and notes that this supply is not short-circuit proof, so protect the V2 supply in the cabinet. The O5D100 draws under 75 mA. The route is 4.7 m; the order has a 10 m cable.</p>
-
+          <h2>The station</h2>
+          <ul class="facts">
+            <li><b>Sensor</b> ifm O5D100, laser distance with background suppression, class 1 laser, port class A</li>
+            <li><b>Master</b> Turck TBEN-S2-4IOL, 4 ports, PROFINET, EtherNet/IP or Modbus TCP</li>
+            <li><b>Port</b> X1, 4.7 m route, 10 m cable. The C0 to C3 supply is not short-circuit proof (4 A per group), so protect V2 in the cabinet</li>
+          </ul>
+          <div class="shot-pair">
           <figure class="shot">
-            <img src="/assets/images/blog/box-conveyor-ports.webp" width="706" height="150" loading="lazy" alt="Ports tab of the station with the live process data of port X1" />
-            <figcaption>The Ports tab: distance in centimetres from bit 4, OUT1 in bit 0, 6.4 ms cycle.</figcaption>
+            <a href="/assets/images/blog/box-conveyor-wiring.webp"><img src="/assets/images/blog/box-conveyor-wiring.webp" width="608" height="300" alt="Wiring: the master with the sensor on port X1 and the free ports" loading="lazy" /></a>
+            <figcaption>Wiring: O5D100 on X1 of the TBEN-S2-4IOL.</figcaption>
           </figure>
-
-          <h2>Run mode</h2>
-          <p>In Run mode the boxes move along the belt. The output switches each time a box passes the sensor, and the trace shows one pulse per box. The process data is 16 bits: distance in bits 4 to 15 in centimetres and OUT1 in bit 0. In the screenshot the master reads <code>02 31</code>: 0x231 shifted right by four is 35 cm, and bit 0 is set.</p>
-          <p>That distance is the useful part. A PLC can tell a box near the rail from a box in the middle, or see that a box is lying across the belt.</p>
           <figure class="shot">
-            <img src="/assets/images/blog/box-conveyor-run.webp" width="1360" height="850" loading="lazy" alt="Run mode: O5D100 reads 350 mm with OUT1 switched and process data 02 31; the trace shows one pulse per box" />
-            <figcaption>Run mode: one pulse per box, 350 mm and process data 02 31 while a box passes.</figcaption>
+            <a href="/assets/images/blog/box-conveyor-ports.webp"><img src="/assets/images/blog/box-conveyor-ports.webp" width="786" height="150" alt="Port table with live value, process data layout, cycle time and settings" loading="lazy" /></a>
+            <figcaption>Ports: distance in bits 4 to 15 in cm, OUT1 in bit 0, 6.4 ms cycle.</figcaption>
           </figure>
+          </div>
 
-          <h2>Commissioning file</h2>
-          <div class="table-wrapper">
+          <h2>The settings that matter</h2>
+          <div class="table-wrapper settings-table">
             <table>
-              <thead><tr><th>Parameter</th><th>Value</th><th>Index.sub</th><th>Raw</th><th>Type</th></tr></thead>
+              <thead><tr><th>Setting</th><th>Value</th><th>Why</th><th>Datasheet / IODD</th></tr></thead>
               <tbody>
-                <tr><td>Switching distance</td><td>500 mm</td><td><code>60.1</code></td><td><code>50</code> (<code>00 32</code>)</td><td>UIntegerT 16</td></tr>
-                <tr><td>Output function</td><td>normally open</td><td><code>61.1</code></td><td><code>0</code></td><td>UIntegerT 8</td></tr>
+                <tr><td data-label="Setting">Switching distance</td><td data-label="Value"><strong>500 mm (raw 50 cm)</strong></td><td data-label="Why">Everything closer is a box; the rail beyond is ignored</td><td data-label="Datasheet / IODD">Measuring range 0.03 to 2 m on 90 % white; IODD SP1 5 to 200 cm</td></tr>
+                <tr><td data-label="Setting">Output</td><td data-label="Value"><strong>normally open</strong></td><td data-label="Why">24 V while a box is in front</td><td data-label="Datasheet / IODD">Two complementary outputs</td></tr>
+                <tr><td data-label="Setting">Box gap</td><td data-label="Value"><strong>check on site</strong></td><td data-label="Why">Gap ÷ belt speed must be longer than one switching cycle</td><td data-label="Datasheet / IODD">Switching frequency 15 Hz</td></tr>
               </tbody>
             </table>
           </div>
-          <p>Validation is vendor 310, device 372. The device minimum cycle time is 6.4 ms, and the file recommends exactly that. Do not set the master port faster.</p>
+          <p>The 2 m range is for white paper at 90 % remission. Brown cardboard reflects less, so check the switch point with your real boxes. Extraneous light on the object must stay under 8 klx.</p>
+
+          <h2>Run it</h2>
           <figure class="shot">
-            <img src="/assets/images/blog/box-conveyor-writes.webp" width="718" height="223" loading="lazy" alt="Station report section Parameter writes for the O5D100: 60.1 raw 50 and 61.1 raw 0" />
-            <figcaption>The parameter writes in the station report.</figcaption>
+            <a href="/assets/images/blog/box-conveyor-run.webp"><img src="/assets/images/blog/box-conveyor-run.webp" width="1136" height="652" alt="Run mode: O5D100 at 350 mm, OUT1 switched, process data 02 31, one OUT1 pulse per box in the trace" loading="lazy" /></a>
+            <figcaption>A box in front of the sensor: 350 mm, OUT1 on, one pulse per box in the trace. Process data <code>02 31</code>: 0x231 shifted right by four is 35 cm, and bit 0 is OUT1.</figcaption>
           </figure>
 
-          <h2>Buy and install</h2>
-          <p>The order list has the TBEN-S2-4IOL, the O5D100 and a 10 m cable. The station report is the paper for the installer: picture, wiring, ports, power, writes and a checklist. Buy and install sends the request to us. We reply with a price and an install date, and we check the switch point on your boxes on site. No payment is taken in the studio.</p>
-          <div class="station-link">
-            <p><strong>Open the station.</strong> O5D100 at 500 mm on port X1 of a Turck TBEN-S2-4IOL. Press Run and count the boxes.</p>
-            <p><a class="button primary" href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJ0dXJjay10YmVuLXMyLTRpb2wiLCJhdCI6Wy0xLjYsLTIuNl19LHsidWlkIjoiZXExIiwia2luZCI6ImVxdWlwbWVudCIsInJlZiI6ImNvbnZleW9yIiwiYXQiOlswLDBdfSx7InVpZCI6ImVxMiIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJjYWJpbmV0IiwiYXQiOlstNS41LC0zLjZdfSx7InVpZCI6IkIxIiwia2luZCI6InNlbnNvciIsInJlZiI6ImlmbS1vNWQxMDAiLCJhdCI6WzAsLTEuNF0sInNldHRpbmdzIjp7InN3aXRjaF9wb2ludCI6NTAwfSwib3B0aW9ucyI6eyJvdXRwdXQiOiJub3JtYWxseSBvcGVuIn0sIm1hc3RlciI6Im1hc3RlcjEiLCJwb3J0IjoxfV19">Open this station in the studio</a></p>
-          </div>
-
-          <p>You can also ask ChatGPT for it. With the iolinki connector (<code>https://mcp.iolinki.com/mcp</code>, setup on the <a href="/iodd-mcp.html">MCP page</a>), ChatGPT calls the same engine, shows the station in the chat and gives you the same studio link with the Buy button.</p>
+          <h2>What you get</h2>
+          <p>The commissioning file has every port: validation IDs, cycle time, data storage, and each parameter as ISDU index, subindex and raw value. This is port X1 from the real file, trimmed to the fields that matter:</p>
+          <pre><code>{
+  &quot;port&quot;: 1, &quot;mode&quot;: &quot;iolink&quot;, &quot;tag&quot;: &quot;B1&quot;,
+  &quot;device&quot;: {
+    &quot;part&quot;: &quot;O5D100&quot;, &quot;vendor_id&quot;: 310, &quot;device_id&quot;: 372,
+    &quot;validation&quot;: &quot;type_compatible&quot;, &quot;data_storage&quot;: &quot;backup_restore&quot;,
+    &quot;cycle_time_ms&quot;: {&quot;device_min&quot;: 6.4, &quot;recommended&quot;: 6.4},
+    &quot;parameters&quot;: [
+      {&quot;name&quot;: &quot;Switching distance&quot;, &quot;value&quot;: 500, &quot;unit&quot;: &quot;mm&quot;, &quot;index&quot;: 60, &quot;subindex&quot;: 1, &quot;raw&quot;: 50, &quot;raw_hex&quot;: &quot;00 32&quot;},
+      {&quot;name&quot;: &quot;Output function&quot;, &quot;value&quot;: &quot;normally open&quot;, &quot;index&quot;: 61, &quot;subindex&quot;: 1, &quot;raw&quot;: 0, &quot;raw_hex&quot;: &quot;00&quot;}
+    ]
+  }
+}
+</code></pre>
+          <p class="downloads">Download: <a href="/assets/blog/box-conveyor/iolink-station-commissioning.json" download>commissioning file (JSON)</a> · <a href="/assets/blog/box-conveyor/iolink-station-commissioning.csv" download>CSV</a> · <a href="/assets/blog/box-conveyor/iolink-station-report.pdf">station report (PDF)</a></p>
+          <figure class="shot wide">
+            <a href="/assets/images/blog/box-conveyor-report.webp"><img src="/assets/images/blog/box-conveyor-report.webp" width="1272" height="409" alt="Three pages of the PDF station report: cover with the 3D layout, ports and process data, parameter writes" loading="lazy" /></a>
+            <figcaption>The station report, printed from the studio: cover with the 3D layout, ports and process data, and the parameter writes. Two more pages have the bill of materials and the installer checklist.</figcaption>
+          </figure>
+          <p><strong>Buy and install.</strong> One button in the studio sends the station to us. We reply with a price and an install date, buy the parts, mount and wire them, and write the settings on site. No payment is taken in the studio.</p>
+          <p><a class="button primary" href="https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJ0dXJjay10YmVuLXMyLTRpb2wiLCJhdCI6Wy0xLjYsLTIuNl19LHsidWlkIjoiZXExIiwia2luZCI6ImVxdWlwbWVudCIsInJlZiI6ImNvbnZleW9yIiwiYXQiOlswLDBdfSx7InVpZCI6ImVxMiIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJjYWJpbmV0IiwiYXQiOlstNC4yLC0yLjldfSx7InVpZCI6IkIxIiwia2luZCI6InNlbnNvciIsInJlZiI6ImlmbS1vNWQxMDAiLCJhdCI6WzAsLTEuNF0sInNldHRpbmdzIjp7InN3aXRjaF9wb2ludCI6NTAwfSwib3B0aW9ucyI6eyJvdXRwdXQiOiJub3JtYWxseSBvcGVuIn0sIm1hc3RlciI6Im1hc3RlcjEiLCJwb3J0IjoxfV19">Open this station in the studio</a></p>
+          <p class="muted-note">The same station comes out of ChatGPT with the iolinki connector (<code>https://mcp.iolinki.com/mcp</code>, setup on the <a href="/iodd-mcp.html">MCP page</a>): describe the job and it builds, checks and shows the station in the chat.</p>
 
           <h2>Sources</h2>
           <ul class="sources">

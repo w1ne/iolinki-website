@@ -1,0 +1,131 @@
+{
+  "schema": "iolinki.commissioning",
+  "version": 1,
+  "generated_at": "2026-10-11T00:00:00Z",
+  "generated_by": "iolinki station studio",
+  "station": {
+    "title": "IO-Link station",
+    "link": "https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJ0dXJjay10YmVuLXMyLTRpb2wiLCJhdCI6Wy0xLjYsLTIuNl19LHsidWlkIjoiZXExIiwia2luZCI6ImVxdWlwbWVudCIsInJlZiI6ImNvbnZleW9yIiwiYXQiOlswLDBdfSx7InVpZCI6ImVxMiIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJjYWJpbmV0IiwiYXQiOlstNC4yLC0yLjldfSx7InVpZCI6IkIxIiwia2luZCI6InNlbnNvciIsInJlZiI6ImlmbS1vNWQxMDAiLCJhdCI6WzAsLTEuNF0sInNldHRpbmdzIjp7InN3aXRjaF9wb2ludCI6NTAwfSwib3B0aW9ucyI6eyJvdXRwdXQiOiJub3JtYWxseSBvcGVuIn0sIm1hc3RlciI6Im1hc3RlcjEiLCJwb3J0IjoxfV19"
+  },
+  "masters": [
+    {
+      "uid": "master1",
+      "part": "TBEN-S2-4IOL",
+      "vendor": "Turck",
+      "vendor_id": null,
+      "fieldbus": "PROFINET, EtherNet/IP, Modbus TCP, CC-Link IE field basic",
+      "port_count": 4,
+      "ports": [
+        {
+          "port": 1,
+          "mode": "iolink",
+          "tag": "B1",
+          "device": {
+            "part": "O5D100",
+            "vendor": "ifm electronic",
+            "vendor_id": 310,
+            "device_id": 372,
+            "iodd_file": "ifm-000174-20210526-IODD1.1.xml",
+            "bitrate": "COM2",
+            "validation": {
+              "recommended": "type_compatible",
+              "vendor_id": 310,
+              "device_id": 372,
+              "alternatives": [
+                "none",
+                "type_compatible",
+                "identical"
+              ],
+              "serial_number": null
+            },
+            "data_storage": {
+              "recommended": "backup_restore",
+              "note": "Parameters are kept in the master so a replacement device is loaded automatically. Needs a device that supports data storage; check the IODD."
+            },
+            "cycle_time_ms": {
+              "device_min": 6.4,
+              "recommended": 6.4
+            },
+            "process_data": {
+              "in_bits": 16,
+              "in_bytes": 2,
+              "out_bits": 0,
+              "out_bytes": 0,
+              "in_layout": [
+                {
+                  "name": "Distance",
+                  "bit_offset": 4,
+                  "bits": 12,
+                  "gradient": 1,
+                  "unit": "cm"
+                },
+                {
+                  "name": "Switch state [OUT1]",
+                  "bit_offset": 0,
+                  "bits": 1,
+                  "gradient": null,
+                  "unit": null
+                }
+              ]
+            },
+            "parameters": [
+              {
+                "key": "switch_point",
+                "name": "Switching distance",
+                "kind": "setting",
+                "unit": "mm",
+                "value": 500,
+                "entered": 500,
+                "note": null,
+                "index": 60,
+                "subindex": 1,
+                "datatype": "UIntegerT",
+                "bit_length": 16,
+                "raw": 50,
+                "raw_hex": "00 32",
+                "clamped": false,
+                "status": "ok"
+              },
+              {
+                "key": "output",
+                "name": "Output function",
+                "kind": "option",
+                "unit": "",
+                "value": "normally open",
+                "entered": null,
+                "note": null,
+                "index": 61,
+                "subindex": 1,
+                "datatype": "UIntegerT",
+                "bit_length": 8,
+                "raw": 0,
+                "raw_hex": "00",
+                "clamped": false,
+                "status": "ok"
+              }
+            ]
+          }
+        },
+        {
+          "port": 2,
+          "mode": "deactivated",
+          "tag": null,
+          "device": null
+        },
+        {
+          "port": 3,
+          "mode": "deactivated",
+          "tag": null,
+          "device": null
+        },
+        {
+          "port": 4,
+          "mode": "deactivated",
+          "tag": null,
+          "device": null
+        }
+      ]
+    }
+  ],
+  "warnings": []
+}

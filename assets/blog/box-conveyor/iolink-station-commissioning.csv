@@ -1,0 +1,6 @@
+master,port,mode,tag,part,vendor_id,device_id,validation,data_storage,cycle_min_ms,cycle_recommended_ms,pd_in_bytes,pd_out_bytes,parameter,kind,value,unit,isdu_index,isdu_subindex,datatype,raw,raw_hex,status
+master1,X1,iolink,B1,O5D100,310,372,type_compatible,backup_restore,6.4,6.4,2,0,Switching distance,setting,500,mm,60,1,UIntegerT,50,00 32,ok
+master1,X1,iolink,B1,O5D100,310,372,type_compatible,backup_restore,6.4,6.4,2,0,Output function,option,normally open,,61,1,UIntegerT,0,00,ok
+master1,X2,deactivated,,,,,,,,,,,,,,,,,,,,
+master1,X3,deactivated,,,,,,,,,,,,,,,,,,,,
+master1,X4,deactivated,,,,,,,,,,,,,,,,,,,,

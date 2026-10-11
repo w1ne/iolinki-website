@@ -1,0 +1,176 @@
+{
+  "schema": "iolinki.commissioning",
+  "version": 1,
+  "generated_at": "2026-10-11T00:00:00Z",
+  "generated_by": "iolinki station studio",
+  "station": {
+    "title": "IO-Link station",
+    "link": "https://iolinki.com/studio/#s=eyJ2IjoxLCJmbG9vciI6WzE0LDldLCJpdGVtcyI6W3sidWlkIjoibWFzdGVyMSIsImtpbmQiOiJtYXN0ZXIiLCJyZWYiOiJpZm0tYWwxMTAwIiwiYXQiOlszLDEuOF19LHsidWlkIjoiZXExIiwia2luZCI6ImVxdWlwbWVudCIsInJlZiI6ImNvbnZleW9yIiwiYXQiOlstMS41LDBdfSx7InVpZCI6ImVxMiIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJzdG9wIiwiYXQiOlszLDBdfSx7InVpZCI6ImVxMyIsImtpbmQiOiJlcXVpcG1lbnQiLCJyZWYiOiJjYWJpbmV0IiwiYXQiOlswLjYsLTMuNF19LHsidWlkIjoiQjEiLCJraW5kIjoic2Vuc29yIiwicmVmIjoiaWZtLWlnNjIxNCIsImF0IjpbNC42LDBdLCJzZXR0aW5ncyI6eyJzd2l0Y2hfcG9pbnQiOjN9LCJvcHRpb25zIjp7Im91dHB1dCI6Im5vcm1hbGx5IG9wZW4iLCJwb2xhcml0eSI6IlBOUCJ9LCJ0YXJnZXQiOiJzdGFpbmxlc3MiLCJtYXN0ZXIiOiJtYXN0ZXIxIiwicG9ydCI6MX1dfQ"
+  },
+  "masters": [
+    {
+      "uid": "master1",
+      "part": "AL1100",
+      "vendor": "ifm electronic",
+      "vendor_id": null,
+      "fieldbus": "PROFINET (CC-C, IRT switch)",
+      "port_count": 4,
+      "ports": [
+        {
+          "port": 1,
+          "mode": "iolink",
+          "tag": "B1",
+          "device": {
+            "part": "IG6214",
+            "vendor": "ifm electronic",
+            "vendor_id": 310,
+            "device_id": 1344,
+            "iodd_file": "ifm-000540-20210210-IODD1.1.xml",
+            "bitrate": "COM2",
+            "validation": {
+              "recommended": "type_compatible",
+              "vendor_id": 310,
+              "device_id": 1344,
+              "alternatives": [
+                "none",
+                "type_compatible",
+                "identical"
+              ],
+              "serial_number": null
+            },
+            "data_storage": {
+              "recommended": "backup_restore",
+              "note": "Parameters are kept in the master so a replacement device is loaded automatically. Needs a device that supports data storage; check the IODD."
+            },
+            "cycle_time_ms": {
+              "device_min": 3.2,
+              "recommended": 3.2
+            },
+            "process_data": {
+              "in_bits": 32,
+              "in_bytes": 4,
+              "out_bits": 0,
+              "out_bytes": 0,
+              "in_layout": [
+                {
+                  "name": "PDV1",
+                  "bit_offset": 16,
+                  "bits": 16,
+                  "gradient": 0.001647058824,
+                  "unit": "mm"
+                },
+                {
+                  "name": "Device status",
+                  "bit_offset": 4,
+                  "bits": 4,
+                  "gradient": null,
+                  "unit": null
+                },
+                {
+                  "name": "S2CT",
+                  "bit_offset": 3,
+                  "bits": 1,
+                  "gradient": null,
+                  "unit": null
+                },
+                {
+                  "name": "S1CT",
+                  "bit_offset": 2,
+                  "bits": 1,
+                  "gradient": null,
+                  "unit": null
+                },
+                {
+                  "name": "SSC2",
+                  "bit_offset": 1,
+                  "bits": 1,
+                  "gradient": null,
+                  "unit": null
+                },
+                {
+                  "name": "SSC1",
+                  "bit_offset": 0,
+                  "bits": 1,
+                  "gradient": null,
+                  "unit": null
+                }
+              ]
+            },
+            "parameters": [
+              {
+                "key": "switch_point",
+                "name": "Switching point",
+                "kind": "setting",
+                "unit": "mm",
+                "value": 4.2857,
+                "entered": 3,
+                "note": "3 mm on stainless × 1/0.7",
+                "index": 60,
+                "subindex": 1,
+                "datatype": "IntegerT",
+                "bit_length": 16,
+                "raw": 2152,
+                "raw_hex": "08 68",
+                "clamped": false,
+                "status": "ok"
+              },
+              {
+                "key": "output",
+                "name": "Output function",
+                "kind": "option",
+                "unit": "",
+                "value": "normally open",
+                "entered": null,
+                "note": null,
+                "index": 61,
+                "subindex": 1,
+                "datatype": "UIntegerT",
+                "bit_length": 8,
+                "raw": 0,
+                "raw_hex": "00",
+                "clamped": false,
+                "status": "ok"
+              },
+              {
+                "key": "polarity",
+                "name": "Switching output",
+                "kind": "option",
+                "unit": "",
+                "value": "PNP",
+                "entered": null,
+                "note": null,
+                "index": 500,
+                "subindex": 0,
+                "datatype": "UIntegerT",
+                "bit_length": 8,
+                "raw": 0,
+                "raw_hex": "00",
+                "clamped": false,
+                "status": "ok"
+              }
+            ]
+          }
+        },
+        {
+          "port": 2,
+          "mode": "deactivated",
+          "tag": null,
+          "device": null
+        },
+        {
+          "port": 3,
+          "mode": "deactivated",
+          "tag": null,
+          "device": null
+        },
+        {
+          "port": 4,
+          "mode": "deactivated",
+          "tag": null,
+          "device": null
+        }
+      ]
+    }
+  ],
+  "warnings": []
+}

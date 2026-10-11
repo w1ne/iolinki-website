@@ -1,0 +1,7 @@
+master,port,mode,tag,part,vendor_id,device_id,validation,data_storage,cycle_min_ms,cycle_recommended_ms,pd_in_bytes,pd_out_bytes,parameter,kind,value,unit,isdu_index,isdu_subindex,datatype,raw,raw_hex,status
+master1,X1,iolink,F1,SA5000,310,533,type_compatible,backup_restore,3,3,4,0,Flow switch point SP1,setting,60,%,583,0,IntegerT,60,00 3C,ok
+master1,X1,iolink,F1,SA5000,310,533,type_compatible,backup_restore,3,3,4,0,Flow reset point rP1,setting,50,%,584,0,IntegerT,50,00 32,ok
+master1,X1,iolink,F1,SA5000,310,533,type_compatible,backup_restore,3,3,4,0,Operating mode,option,relative,,,,,,,no_index
+master1,X2,deactivated,,,,,,,,,,,,,,,,,,,,
+master1,X3,deactivated,,,,,,,,,,,,,,,,,,,,
+master1,X4,deactivated,,,,,,,,,,,,,,,,,,,,

@@ -1,0 +1,6 @@
+master,port,mode,tag,part,vendor_id,device_id,validation,data_storage,cycle_min_ms,cycle_recommended_ms,pd_in_bytes,pd_out_bytes,parameter,kind,value,unit,isdu_index,isdu_subindex,datatype,raw,raw_hex,status
+master1,X1,iolink,L1,LR2050,310,479,type_compatible,backup_restore,2.3,2.3,2,0,Set point SP,setting,800,mm,583,0,IntegerT,800,03 20,ok
+master1,X1,iolink,L1,LR2050,310,479,type_compatible,backup_restore,2.3,2.3,2,0,Reset point rP,setting,780,mm,584,0,IntegerT,780,03 0C,ok
+master1,X2,deactivated,,,,,,,,,,,,,,,,,,,,
+master1,X3,deactivated,,,,,,,,,,,,,,,,,,,,
+master1,X4,deactivated,,,,,,,,,,,,,,,,,,,,

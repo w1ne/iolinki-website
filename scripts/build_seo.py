@@ -29,11 +29,11 @@ PAGES={
  'blog/box-detection-on-conveyor.html':('Box detection on a conveyor with a laser distance sensor | iolinki','Detecting cartons across a conveyor with an ifm O5D100: switching distance, background suppression, a Turck TBEN-S2-4IOL master, Run mode with distance in the process data, and the ISDU writes.'),
 }
 BLOG={
- 'blog/stainless-part-at-conveyor-stop.html':('A stainless part at a conveyor stop, detected with an IO-Link inductive sensor','2026-10-11','/assets/images/blog/stop-stainless-3d.webp'),
- 'blog/pump-discharge-pressure-switch.html':('Pump discharge pressure: a switch point, a reset point and nothing that chatters','2026-10-11','/assets/images/blog/pump-pressure-3d.webp'),
- 'blog/tank-level-guided-wave-radar.html':('Tank level and overfill with one guided wave radar sensor','2026-10-11','/assets/images/blog/tank-level-3d.webp'),
- 'blog/machine-tool-coolant-flow.html':('Coolant flow on a machine tool: teach the normal flow, switch on a percentage','2026-10-11','/assets/images/blog/coolant-flow-3d.webp'),
- 'blog/box-detection-on-conveyor.html':('Box detection on a conveyor with a laser distance sensor','2026-10-11','/assets/images/blog/box-conveyor-3d.webp'),
+ 'blog/stainless-part-at-conveyor-stop.html':('A stainless part at a conveyor stop, detected with an IO-Link inductive sensor','2026-10-11','/assets/images/blog/stop-stainless-hero.webp'),
+ 'blog/pump-discharge-pressure-switch.html':('Pump discharge pressure: a switch point, a reset point and nothing that chatters','2026-10-11','/assets/images/blog/pump-pressure-hero.webp'),
+ 'blog/tank-level-guided-wave-radar.html':('Tank level and overfill with one guided wave radar sensor','2026-10-11','/assets/images/blog/tank-level-hero.webp'),
+ 'blog/machine-tool-coolant-flow.html':('Coolant flow on a machine tool: teach the normal flow, switch on a percentage','2026-10-11','/assets/images/blog/coolant-flow-hero.webp'),
+ 'blog/box-detection-on-conveyor.html':('Box detection on a conveyor with a laser distance sensor','2026-10-11','/assets/images/blog/box-conveyor-hero.webp'),
 }
 CALLBACKS=['purchase-success.html','purchase-cancelled.html','generic.html','elements.html']
 NS='http://www.sitemaps.org/schemas/sitemap/0.9'
